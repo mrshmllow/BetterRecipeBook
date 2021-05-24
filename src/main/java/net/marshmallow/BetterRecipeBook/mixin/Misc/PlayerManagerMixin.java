@@ -1,4 +1,4 @@
-package net.marshmallow.BetterRecipeBook.mixin;
+package net.marshmallow.BetterRecipeBook.mixin.Misc;
 
 import net.marshmallow.BetterRecipeBook.BetterRecipeBook;
 import net.minecraft.network.ClientConnection;
