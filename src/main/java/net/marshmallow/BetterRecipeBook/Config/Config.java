@@ -15,4 +15,7 @@ public class Config implements ConfigData {
 
     @ConfigEntry.Gui.CollapsibleObject(startExpanded = true)
     public Scrolling scrollingModule = new Scrolling();
+
+    @ConfigEntry.Gui.Tooltip()
+    public boolean showAlternativesOnHover = true;
 }

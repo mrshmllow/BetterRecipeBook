@@ -15,5 +15,8 @@
   "text.autoconfig.betterrecipebook.option.enableBounce": "Enable button bouncing",
   "text.autoconfig.betterrecipebook.option.enableBounce.@Tooltip": "Enable the little bounce animation when you unlock a new item",
 
+  "text.autoconfig.betterrecipebook.option.showAlternativesOnHover": "Only show alternate recipe on hover",
+  "text.autoconfig.betterrecipebook.option.showAlternativesOnHover.@Tooltip": "Show the full-item in the alternatives list instead of their recipe so its easy to see",
+
   "betterrecipebook.permission_failed": "§cBetter Recipe Book: No permission! We wont remind you from now on."
 }
