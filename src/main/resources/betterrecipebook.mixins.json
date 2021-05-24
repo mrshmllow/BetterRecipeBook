@@ -1,0 +1,23 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "net.marshmallow.BetterRecipeBook.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "PlayerManagerMixin",
+    "RecipeResultCollectionAccessor",
+    "RecipeAlternativesWidget.AlternativeButtonWidgetAccessor"
+  ],
+  "client": [
+    "RecipeToastMixin",
+    "AnimatedResultButtonAccessor",
+    "RecipeBookMixin",
+    "RecipeBookResultsMixin",
+    "Input.KeyboardMixin",
+    "Input.MouseMixin",
+    "RecipeAlternativesWidget.RecipeAlternativesWidgetMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

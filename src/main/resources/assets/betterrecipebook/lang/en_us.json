@@ -1,0 +1,19 @@
+{
+  "text.autoconfig.betterrecipebook.title": "Better Recipe Book Config",
+
+  "text.autoconfig.betterrecipebook.option.unlockAll": "Automatically unlock all recipes",
+
+  "text.autoconfig.betterrecipebook.option.scrollingModule": "Scroll Settings",
+  "text.autoconfig.betterrecipebook.option.scrollingModule.scrollAround": "Scroll in circles",
+  "text.autoconfig.betterrecipebook.option.scrollingModule.scrollAround.@Tooltip": "When you reach the end of the book, wrap back and keep scrolling from the start (Like JEI)",
+
+  "text.autoconfig.betterrecipebook.option.scrollingModule.enableScrolling": "Enable Scrolling in the Recipe Book",
+
+  "text.autoconfig.betterrecipebook.option.enabledCheating": "Enable cheating",
+  "text.autoconfig.betterrecipebook.option.enabledCheating.@Tooltip": "Will /give when you click on an item",
+
+  "text.autoconfig.betterrecipebook.option.enableBounce": "Enable button bouncing",
+  "text.autoconfig.betterrecipebook.option.enableBounce.@Tooltip": "Enable the little bounce animation when you unlock a new item",
+
+  "betterrecipebook.permission_failed": "§cBetter Recipe Book: No permission! We wont remind you from now on."
+}

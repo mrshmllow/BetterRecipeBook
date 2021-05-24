@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "id": "betterrecipebook",
+  "version": "${version}",
+  "name": "Better Recipe Book",
+  "description": "Add some quality of life changes to the recipe book",
+  "authors": [
+    "marshmallow"
+  ],
+  "contact": {
+  },
+  "license": "CC0-1.0",
+  "icon": "assets/betterrecipebook/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "net.marshmallow.BetterRecipeBook.BetterRecipeBook"
+    ],
+    "modmenu": [
+      "net.marshmallow.BetterRecipeBook.ModMenuIntegration"
+    ]
+  },
+  "mixins": [
+    "betterrecipebook.mixins.json"
+  ],
+  "accessWidener": "betterrecipebook.accessWidener",
+  "depends": {
+    "fabricloader": ">=0.7.4",
+    "fabric": "*",
+    "minecraft": "1.16.x"
+  },
+  "suggests": {
+    "another-mod": "*"
+  }
+}
