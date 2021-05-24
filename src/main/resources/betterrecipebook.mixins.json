@@ -4,17 +4,18 @@
   "package": "net.marshmallow.BetterRecipeBook.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "PlayerManagerMixin",
-    "RecipeResultCollectionAccessor",
-    "RecipeAlternativesWidget.AlternativeButtonWidgetAccessor"
+    "Misc.PlayerManagerMixin"
   ],
   "client": [
-    "RecipeToastMixin",
+    "RecipeResultCollectionAccessor",
+    "RecipeAlternativesWidget.AlternativeButtonWidgetAccessor",
+    "RecipeAlternativesWidget.AlternativeButtonWidgetMixin",
     "AnimatedResultButtonAccessor",
     "RecipeBookMixin",
     "RecipeBookResultsMixin",
     "Input.KeyboardMixin",
     "Input.MouseMixin",
+    "Misc.RecipeToastMixin",
     "RecipeAlternativesWidget.RecipeAlternativesWidgetMixin"
   ],
   "injectors": {
