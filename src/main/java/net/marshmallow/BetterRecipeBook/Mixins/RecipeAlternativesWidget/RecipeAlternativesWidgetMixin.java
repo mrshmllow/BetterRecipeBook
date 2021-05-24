@@ -1,4 +1,4 @@
-package net.marshmallow.BetterRecipeBook.mixin.RecipeAlternativesWidget;
+package net.marshmallow.BetterRecipeBook.Mixins.RecipeAlternativesWidget;
 
 import net.marshmallow.BetterRecipeBook.BetterRecipeBook;
 import net.minecraft.client.gui.screen.recipebook.RecipeAlternativesWidget;

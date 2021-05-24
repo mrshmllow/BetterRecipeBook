@@ -1,4 +1,4 @@
-package net.marshmallow.BetterRecipeBook.mixin;
+package net.marshmallow.BetterRecipeBook.Mixins;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

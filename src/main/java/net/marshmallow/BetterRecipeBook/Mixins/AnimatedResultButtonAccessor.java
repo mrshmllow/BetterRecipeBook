@@ -1,4 +1,4 @@
-package net.marshmallow.BetterRecipeBook.mixin;
+package net.marshmallow.BetterRecipeBook.Mixins;
 
 import net.minecraft.client.gui.screen.recipebook.AnimatedResultButton;
 import net.minecraft.client.gui.screen.recipebook.RecipeResultCollection;

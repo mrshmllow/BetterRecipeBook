@@ -1,4 +1,4 @@
-package net.marshmallow.BetterRecipeBook.mixin.RecipeAlternativesWidget;
+package net.marshmallow.BetterRecipeBook.Mixins.RecipeAlternativesWidget;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.marshmallow.BetterRecipeBook.BetterRecipeBook;

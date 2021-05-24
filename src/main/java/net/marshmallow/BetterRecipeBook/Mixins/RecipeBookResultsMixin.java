@@ -1,4 +1,4 @@
-package net.marshmallow.BetterRecipeBook.mixin;
+package net.marshmallow.BetterRecipeBook.Mixins;
 
 import net.marshmallow.BetterRecipeBook.BetterRecipeBook;
 import net.minecraft.client.MinecraftClient;
@@ -8,10 +8,6 @@ import net.minecraft.client.gui.screen.recipebook.RecipeBookResults;
 import net.minecraft.client.gui.screen.recipebook.RecipeResultCollection;
 import net.minecraft.client.gui.widget.ToggleButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.item.ItemStack;
-import net.minecraft.recipe.book.RecipeBook;
-import net.minecraft.text.TranslatableText;
-import net.minecraft.util.registry.Registry;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
