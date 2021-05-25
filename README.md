@@ -1,9 +1,13 @@
-# Fabric Example Mod
+# Better Recipe Book
 
-## Setup
+Adds a few quality of life changes to the recipe book.
 
-For setup instructions please see the [fabric wiki page](https://fabricmc.net/wiki/tutorial:setup) that relates to the IDE that you are using.
+### Features
 
-## License
-
-This template is available under the CC0 license. Feel free to learn from it and incorporate it in your own projects.
+- Adds scrolling to the recipe book
+    - Option for 'scrolling in circles' (I couldn't think of any other term). Like JEI, it will wrap back to the start when you reach the end. (And vice versa)
+- Optionally unlock all recipes when you log in to a server/world.
+  - This also suppresses the "Recipe Unlocked" toast when enabled
+- Remove the "Bounce" animation when you unlock a new recipe.
+- Simple cheating mode (Requires operator permissions)
+- Show the item in the alternatives list instead of their recipe so its easy to see
