@@ -8,6 +8,7 @@ import net.minecraft.client.gui.screen.recipebook.RecipeBookResults;
 import net.minecraft.client.gui.screen.recipebook.RecipeResultCollection;
 import net.minecraft.client.gui.widget.ToggleButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.recipe.Recipe;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
@@ -68,8 +69,11 @@ public abstract class RecipeBookResultsMixin {
                 } while(!animatedResultButton.mouseClicked(mouseX, mouseY, button));
 
                 RecipeResultCollection recipeResultCollection = ((AnimatedResultButtonAccessor) animatedResultButton).getResults();
+                List<Recipe<?>> recipes = ((RecipeResultCollectionAccessor) recipeResultCollection).getRecipes();
 
-                BetterRecipeBook.cheat(((RecipeResultCollectionAccessor) recipeResultCollection).getRecipes().get(0).getOutput().getItem());
+                if (recipes.size() == 1) {
+                        BetterRecipeBook.cheat(recipes.get(0).getOutput().getItem());
+                }
             }
         }
     }
