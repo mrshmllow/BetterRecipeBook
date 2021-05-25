@@ -18,7 +18,7 @@ public class RecipeAlternativesWidgetMixin {
     @Final @Shadow
     private List<RecipeAlternativesWidget.AlternativeButtonWidget> alternativeButtons;
 
-    @Inject(at = @At("HEAD"), method = "mouseClicked")
+    @Inject(at = @At("HEAD"), method = "mouseClicked", cancellable = true)
     public void mouseClicked(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir) {
         if (BetterRecipeBook.config.enabledCheating) {
             Iterator<RecipeAlternativesWidget.AlternativeButtonWidget> var6 = alternativeButtons.iterator();
@@ -35,6 +35,7 @@ public class RecipeAlternativesWidgetMixin {
             Recipe<?> recipe = ((AlternativeButtonWidgetAccessor) alternativeButtonWidget).recipe();
 
             BetterRecipeBook.cheat(recipe.getOutput().getItem());
+            cir.cancel();
         }
     }
 }
