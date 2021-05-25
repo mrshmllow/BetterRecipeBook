@@ -5,17 +5,19 @@
   "compatibilityLevel": "JAVA_8",
   "mixins": [
     "TexturedButtonWidgetMixin",
-    "PlayerManagerMixin"
+    "AnimatedResultButtonAccessor",
+    "PlayerManagerMixin",
+    "RecipeResultCollectionAccessor"
   ],
   "client": [
     "AlternativeButtonWidgetAccessor",
-    "RecipeBookResultsMixin",
+    "AlternativeButtonWidgetMixin",
     "KeyboardMixin",
     "MouseMixin",
+    "RecipeAlternativesWidgetMixin",
+    "RecipeBookMixin",
+    "RecipeBookResultsMixin",
     "RecipeToastMixin",
-    "AlternativeButtonWidgetAccessor",
-    "AlternativeButtonWidgetMixin",
-    "RecipeAlternativesWidgetMixin"
   ],
   "injectors": {
     "defaultRequire": 1

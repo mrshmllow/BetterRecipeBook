@@ -8,5 +8,5 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 @Mixin(RecipeAlternativesWidget.AlternativeButtonWidget.class)
 public interface AlternativeButtonWidgetAccessor {
     @Accessor("recipe")
-    Recipe<?> getRecipe();
+    Recipe<?> recipe();
 }

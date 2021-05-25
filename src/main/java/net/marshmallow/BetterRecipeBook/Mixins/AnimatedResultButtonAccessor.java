@@ -8,5 +8,5 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 @Mixin(AnimatedResultButton.class)
 public interface AnimatedResultButtonAccessor {
     @Accessor("results")
-    RecipeResultCollection getResults();
+    RecipeResultCollection results();
 }

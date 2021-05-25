@@ -5,7 +5,6 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.recipebook.AnimatedResultButton;
 import net.minecraft.client.gui.screen.recipebook.RecipeAlternativesWidget;
 import net.minecraft.client.gui.screen.recipebook.RecipeBookResults;
-import net.minecraft.client.gui.screen.recipebook.RecipeResultCollection;
 import net.minecraft.client.gui.widget.ToggleButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.recipe.Recipe;
@@ -68,8 +67,7 @@ public abstract class RecipeBookResultsMixin {
                     animatedResultButton = iterator.next();
                 } while(!animatedResultButton.mouseClicked(mouseX, mouseY, button));
 
-                RecipeResultCollection recipeResultCollection = ((AnimatedResultButtonAccessor) animatedResultButton).getResults();
-                List<Recipe<?>> recipes = ((RecipeResultCollectionAccessor) recipeResultCollection).getRecipes();
+                List<Recipe<?>> recipes = ((AnimatedResultButtonAccessor) animatedResultButton).results().getRecipes(false);
 
                 if (recipes.size() == 1) {
                     BetterRecipeBook.cheat(recipes.get(0).getOutput().getItem());
