@@ -72,7 +72,7 @@ public abstract class RecipeBookResultsMixin {
                 List<Recipe<?>> recipes = ((RecipeResultCollectionAccessor) recipeResultCollection).getRecipes();
 
                 if (recipes.size() == 1) {
-                        BetterRecipeBook.cheat(recipes.get(0).getOutput().getItem());
+                    BetterRecipeBook.cheat(recipes.get(0).getOutput().getItem());
                 }
             }
         }
