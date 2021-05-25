@@ -5,6 +5,8 @@ import me.shedaniel.autoconfig.annotation.ConfigEntry;
 
 @me.shedaniel.autoconfig.annotation.Config(name = "betterrecipebook")
 public class Config implements ConfigData {
+    public boolean enableBook = true;
+
     public boolean unlockAll = true;
 
     @ConfigEntry.Gui.Tooltip()
