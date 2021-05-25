@@ -1,4 +1,4 @@
-package net.marshmallow.BetterRecipeBook.Mixins.RecipeAlternativesWidget;
+package net.marshmallow.BetterRecipeBook.Mixins;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.marshmallow.BetterRecipeBook.BetterRecipeBook;
@@ -44,7 +44,7 @@ public abstract class AlternativeButtonWidgetMixin extends AbstractButtonWidget 
             RenderSystem.pushMatrix();
 
             int i = 0;
-            int j = 26;
+            int j = 0;
 
             if (!craftable) {
                 i += 26;

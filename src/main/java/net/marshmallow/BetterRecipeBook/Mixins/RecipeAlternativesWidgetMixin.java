@@ -1,6 +1,7 @@
-package net.marshmallow.BetterRecipeBook.Mixins.RecipeAlternativesWidget;
+package net.marshmallow.BetterRecipeBook.Mixins;
 
 import net.marshmallow.BetterRecipeBook.BetterRecipeBook;
+import net.marshmallow.BetterRecipeBook.Mixins.AlternativeButtonWidgetAccessor;
 import net.minecraft.client.gui.screen.recipebook.RecipeAlternativesWidget;
 import net.minecraft.recipe.Recipe;
 import org.spongepowered.asm.mixin.Final;
@@ -18,7 +19,7 @@ public class RecipeAlternativesWidgetMixin {
     @Final @Shadow
     private List<RecipeAlternativesWidget.AlternativeButtonWidget> alternativeButtons;
 
-    @Inject(at = @At("RETURN"), method = "mouseClicked")
+    @Inject(at = @At("HEAD"), method = "mouseClicked")
     public void mouseClicked(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir) {
         if (BetterRecipeBook.config.enabledCheating) {
             Iterator<RecipeAlternativesWidget.AlternativeButtonWidget> var6 = alternativeButtons.iterator();

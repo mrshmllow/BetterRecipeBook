@@ -1,4 +1,4 @@
-package net.marshmallow.BetterRecipeBook.Mixins.Misc;
+package net.marshmallow.BetterRecipeBook.Mixins;
 
 import net.marshmallow.BetterRecipeBook.BetterRecipeBook;
 import net.minecraft.client.toast.RecipeToast;
