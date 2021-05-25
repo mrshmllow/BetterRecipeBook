@@ -8,7 +8,7 @@ public class Config implements ConfigData {
     public boolean unlockAll = true;
 
     @ConfigEntry.Gui.Tooltip()
-    public boolean enabledCheating = true;
+    public boolean enabledCheating = false;
 
     @ConfigEntry.Gui.Tooltip()
     public boolean enableBounce = false;
