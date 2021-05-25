@@ -8,8 +8,9 @@
     "marshmallow"
   ],
   "contact": {
+    "issues": "https://github.com/marshamallow/BetterRecipeBook"
   },
-  "license": "CC0-1.0",
+  "license": "MIT",
   "icon": "assets/betterrecipebook/icon.png",
   "environment": "*",
   "entrypoints": {
@@ -30,6 +31,6 @@
     "minecraft": "1.16.x"
   },
   "suggests": {
-    "another-mod": "*"
+    "iamverysmart": "*"
   }
 }
