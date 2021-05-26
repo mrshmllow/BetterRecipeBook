@@ -9,4 +9,4 @@ Adds a few quality of life changes to the recipe book.
 - Optionally unlock all recipes when you log in to a server/world.
   - This also suppresses the "Recipe Unlocked" toast when enabled
 - Remove the "Bounce" animation when you unlock a new recipe.
-- Show the item in the alternatives list instead of their recipe so its easy to see
+- Show the item in the alternatives list instead of their recipe, so it's easy to see
