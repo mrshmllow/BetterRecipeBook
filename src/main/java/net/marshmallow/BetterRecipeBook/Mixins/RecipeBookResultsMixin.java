@@ -77,7 +77,7 @@ public abstract class RecipeBookResultsMixin {
      * @author marshmallow
      */
     @Overwrite
-    public void hideShowPageButtons() {
+    void hideShowPageButtons() {
         if (BetterRecipeBook.config.scrollingModule.scrollAround && !(pageCount <= 1)) {
             nextPageButton.visible = true;
             prevPageButton.visible = true;
