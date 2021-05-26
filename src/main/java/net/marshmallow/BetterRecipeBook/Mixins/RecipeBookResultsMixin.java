@@ -28,14 +28,10 @@ public abstract class RecipeBookResultsMixin {
     private int pageCount;
     @Shadow
     protected abstract void refreshResultButtons();
-    @Final @Shadow
-    private RecipeAlternativesWidget alternatesWidget;
     @Shadow
     private ToggleButtonWidget nextPageButton;
     @Shadow
     private ToggleButtonWidget prevPageButton;
-    @Final @Shadow
-    private List<AnimatedResultButton> resultButtons;
 
     @Inject(at = @At("HEAD"), method = "mouseClicked")
     public void mouseClickedHead(double mouseX, double mouseY, int button, int areaLeft, int areaTop, int areaWidth, int areaHeight, CallbackInfoReturnable<Boolean> cir) {
@@ -47,30 +43,6 @@ public abstract class RecipeBookResultsMixin {
             } else if (prevPageButton.mouseClicked(mouseX, mouseY, button)) {
                 if (currentPage <= 0) {
                     currentPage = pageCount;
-                }
-            }
-        }
-    }
-
-    @Inject(at = @At("RETURN"), method = "mouseClicked")
-    public void mouseClickedReturn(double mouseX, double mouseY, int button, int areaLeft, int areaTop, int areaWidth, int areaHeight, CallbackInfoReturnable<Boolean> cir) {
-        if (!alternatesWidget.isVisible() && !nextPageButton.mouseClicked(mouseX, mouseY, button) && !prevPageButton.mouseClicked(mouseX, mouseY, button) && BetterRecipeBook.config.enabledCheating) {
-            if (button == 0) {
-                Iterator<AnimatedResultButton> iterator = resultButtons.iterator();
-
-                AnimatedResultButton animatedResultButton;
-                do {
-                    if (!iterator.hasNext()) {
-                        return;
-                    }
-
-                    animatedResultButton = iterator.next();
-                } while(!animatedResultButton.mouseClicked(mouseX, mouseY, button));
-
-                List<Recipe<?>> recipes = ((AnimatedResultButtonAccessor) animatedResultButton).results().getRecipes(false);
-
-                if (recipes.size() == 1) {
-                    BetterRecipeBook.cheat(recipes.get(0).getOutput().getItem());
                 }
             }
         }

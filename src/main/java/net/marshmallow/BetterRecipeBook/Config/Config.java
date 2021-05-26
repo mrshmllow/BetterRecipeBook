@@ -10,9 +10,6 @@ public class Config implements ConfigData {
     public boolean unlockAll = true;
 
     @ConfigEntry.Gui.Tooltip()
-    public boolean enabledCheating = false;
-
-    @ConfigEntry.Gui.Tooltip()
     public boolean enableBounce = false;
 
     @ConfigEntry.Gui.CollapsibleObject(startExpanded = true)
