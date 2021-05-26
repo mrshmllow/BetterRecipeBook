@@ -3,7 +3,7 @@
   "id": "betterrecipebook",
   "version": "${version}",
   "name": "Better Recipe Book",
-  "description": "Add some quality of life changes to the recipe book",
+  "description": "Adds some quality of life changes to the recipe book",
   "authors": [
     "marshmallow"
   ],
