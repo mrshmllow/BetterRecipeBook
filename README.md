@@ -2,6 +2,8 @@
 
 Adds a few quality of life changes to the recipe book.
 
+Does not require fabirc api.
+
 ## Features
 
 - Optionally completely disable the recipe book
