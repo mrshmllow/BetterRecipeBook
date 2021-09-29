@@ -5,7 +5,9 @@ import net.marshmallow.BetterRecipeBook.BetterRecipeBook;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.recipebook.RecipeAlternativesWidget;
 import net.minecraft.client.gui.widget.ClickableWidget;
+import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeGridAligner;
@@ -25,8 +27,6 @@ public abstract class AlternativeButtonWidgetMixin extends ClickableWidget imple
 
     @Final @Shadow
     private boolean craftable;
-    // @Final @Shadow
-    // protected List<RecipeAlternativesWidget.AlternativeButtonWidget.InputSlot> slots;
     @Final @Shadow
     private Recipe<?> recipe;
 
@@ -52,17 +52,18 @@ public abstract class AlternativeButtonWidgetMixin extends ClickableWidget imple
 
             this.drawTexture(matrices, this.x, this.y, i, j, this.width, this.height);
 
-            MatrixStack matrixStack = RenderSystem.getModelViewStack();
-            matrixStack.push();
+            ItemRenderer itemRenderer = MinecraftClient.getInstance().getItemRenderer();
+            ItemStack recipeOutput = this.recipe.getOutput();
 
-            matrixStack.translate(0, 0, 125.0D);
-            matrixStack.translate(0, 0, 0);
-            // matrixStack.push();
-
-            MinecraftClient.getInstance().getItemRenderer().renderInGuiWithOverrides(recipe.getOutput(), this.x + 4, this.y + 4);
-            matrixStack.pop();
-
+            MatrixStack s = RenderSystem.getModelViewStack();
+            s.push();
+            s.method_34425(matrices.peek().getModel().copy()); // No idea what this does
+            itemRenderer.renderInGuiWithOverrides(recipeOutput, this.x + 4, this.y + 4); // Why do we do this twice?
+            itemRenderer.renderGuiItemOverlay(MinecraftClient.getInstance().textRenderer, recipeOutput, this.x + 4, this.y + 4); // ^
+            RenderSystem.enableDepthTest();
+            s.pop();
             RenderSystem.applyModelViewMatrix();
+            RenderSystem.disableDepthTest();
 
             ci.cancel();
         }
