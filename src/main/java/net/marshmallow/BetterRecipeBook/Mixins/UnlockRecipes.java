@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(PlayerManager.class)
-public class PlayerManagerMixin {
+public class UnlockRecipes {
     @Inject(at = @At("RETURN"), method = "onPlayerConnect")
     public void onPlayerConnect(ClientConnection con, ServerPlayerEntity player, CallbackInfo ci) {
         if (BetterRecipeBook.config.unlockAll) {

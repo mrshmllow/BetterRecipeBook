@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(TexturedButtonWidget.class)
-public class TexturedButtonWidgetMixin {
+public class RemoveBookButton {
     @Final @Shadow
     private Identifier texture;
 

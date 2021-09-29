@@ -21,7 +21,7 @@ import java.util.Iterator;
 import java.util.List;
 
 @Mixin(RecipeBookResults.class)
-public abstract class RecipeBookResultsMixin {
+public abstract class ScrollablePages {
     @Shadow
     private int currentPage;
     @Shadow

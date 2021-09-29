@@ -22,7 +22,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 
 @Mixin(RecipeAlternativesWidget.AlternativeButtonWidget.class)
-public abstract class AlternativeButtonWidgetMixin extends ClickableWidget implements RecipeGridAligner<Ingredient> {
+public abstract class AlternativeRecipes extends ClickableWidget implements RecipeGridAligner<Ingredient> {
     private static final Identifier BACKGROUND_TEXTURE = new Identifier("betterrecipebook:textures/gui/alt_button_blank.png");
 
     @Final @Shadow
@@ -32,7 +32,7 @@ public abstract class AlternativeButtonWidgetMixin extends ClickableWidget imple
 
     @Shadow public abstract void renderButton(MatrixStack matrices, int mouseX, int mouseY, float delta);
 
-    public AlternativeButtonWidgetMixin(int x, int y, int width, int height, Text message) {
+    public AlternativeRecipes(int x, int y, int width, int height, Text message) {
         super(x, y, width, height, message);
     }
 

@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(RecipeBookWidget.class)
-public class RecipeBookWidgetMixin {
+public class DisableBook {
     @Inject(at = @At("HEAD"), method = "isOpen", cancellable = true)
     public void isOpen(CallbackInfoReturnable<Boolean> cir) {
         if (!BetterRecipeBook.config.enableBook) {

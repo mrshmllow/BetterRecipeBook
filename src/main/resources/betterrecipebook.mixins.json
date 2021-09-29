@@ -4,16 +4,16 @@
   "package": "net.marshmallow.BetterRecipeBook.Mixins",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "PlayerManagerMixin"
+    "UnlockRecipes"
   ],
   "client": [
-    "AlternativeButtonWidgetMixin",
-    "MouseMixin",
-    "RecipeBookMixin",
-    "RecipeBookResultsMixin",
-    "RecipeBookWidgetMixin",
-    "RecipeToastMixin",
-    "TexturedButtonWidgetMixin"
+    "AlternativeRecipes",
+    "DisableBook",
+    "DisableBounce",
+    "MouseScrollHandler",
+    "RemoveBookButton",
+    "RemoveToasts",
+    "ScrollablePages"
   ],
   "injectors": {
     "defaultRequire": 1

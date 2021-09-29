@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import java.util.Set;
 
 @Mixin(RecipeBook.class)
-public class RecipeBookMixin {
+public class DisableBounce {
     @Final @Shadow
     protected Set<Identifier> toBeDisplayed;
 

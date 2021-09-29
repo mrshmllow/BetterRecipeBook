@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Mouse.class)
-public class MouseMixin {
+public class MouseScrollHandler {
     @Shadow
     private double eventDeltaWheel;
 
