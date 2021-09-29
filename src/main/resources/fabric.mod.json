@@ -32,6 +32,6 @@
     "cloth-config2": ">=5.0.38"
   },
   "suggests": {
-    "iamverysmart": "*"
+    "modmenu": "*"
   }
 }
