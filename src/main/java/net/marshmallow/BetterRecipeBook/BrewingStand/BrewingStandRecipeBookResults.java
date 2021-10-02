@@ -3,6 +3,7 @@ package net.marshmallow.BetterRecipeBook.BrewingStand;
 import com.google.common.collect.Lists;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.marshmallow.BetterRecipeBook.BetterRecipeBook;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.recipebook.RecipeResultCollection;
 import net.minecraft.client.gui.widget.ToggleButtonWidget;
@@ -80,6 +81,18 @@ public class BrewingStandRecipeBookResults {
     }
 
     public boolean mouseClicked(double mouseX, double mouseY, int button, int areaLeft, int areaTop, int areaWidth, int areaHeight) {
+        if (BetterRecipeBook.config.scrollingModule.enableScrolling) {
+            if (nextPageButton.mouseClicked(mouseX, mouseY, button)) {
+                if (currentPage >= pageCount - 1) {
+                    currentPage = -1;
+                }
+            } else if (prevPageButton.mouseClicked(mouseX, mouseY, button)) {
+                if (currentPage <= 0) {
+                    currentPage = pageCount;
+                }
+            }
+        }
+
         this.lastClickedRecipe = null;
         this.resultCollection = null;
         if (this.nextPageButton.mouseClicked(mouseX, mouseY, button)) {
@@ -121,11 +134,34 @@ public class BrewingStandRecipeBookResults {
     }
 
     private void hideShowPageButtons() {
-        this.nextPageButton.visible = this.pageCount > 1 && this.currentPage < this.pageCount - 1;
-        this.prevPageButton.visible = this.pageCount > 1 && this.currentPage > 0;
+        if (BetterRecipeBook.config.scrollingModule.scrollAround && !(pageCount <= 1)) {
+            nextPageButton.visible = true;
+            prevPageButton.visible = true;
+        } else {
+            nextPageButton.visible = pageCount > 1 && currentPage < pageCount - 1;
+            prevPageButton.visible = pageCount > 1 && currentPage > 0;
+        }
     }
 
     public void draw(MatrixStack matrices, int x, int y, int mouseX, int mouseY, float delta) {
+        if (BetterRecipeBook.queuedScroll != 0 && BetterRecipeBook.config.scrollingModule.enableScrolling) {
+            int queuedPage = BetterRecipeBook.queuedScroll + currentPage;
+
+            if (queuedPage <= pageCount - 1 && queuedPage >= 0) {
+                currentPage += BetterRecipeBook.queuedScroll;
+            } else if (BetterRecipeBook.config.scrollingModule.scrollAround) {
+                if (queuedPage < 0) {
+                    currentPage = pageCount - 1;
+                } else if (queuedPage > pageCount - 1) {
+                    currentPage = 0;
+                }
+            }
+
+            refreshResultButtons();
+            BetterRecipeBook.queuedScroll = 0;
+        }
+
+
         if (this.pageCount > 1) {
             int var10000 = this.currentPage + 1;
             String string = var10000 + "/" + this.pageCount;
