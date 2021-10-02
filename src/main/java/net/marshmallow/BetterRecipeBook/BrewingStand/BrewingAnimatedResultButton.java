@@ -142,7 +142,7 @@ public class BrewingAnimatedResultButton extends ClickableWidget {
 
         list.add(new LiteralText(inputStack.getName().getString()).formatted(colour));
 
-        if (BetterRecipeBook.pinnedRecipeManager.has(this.potionRecipe.recipe)) {
+        if (BetterRecipeBook.pinnedRecipeManager.hasPotion(this.potionRecipe.recipe)) {
             list.add(new TranslatableText("betterrecipebook.gui.pin.remove"));
         } else {
             list.add(new TranslatableText("betterrecipebook.gui.pin.add"));

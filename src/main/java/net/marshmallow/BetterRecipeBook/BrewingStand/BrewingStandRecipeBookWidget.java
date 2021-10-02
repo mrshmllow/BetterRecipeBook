@@ -241,7 +241,7 @@ public class BrewingStandRecipeBookWidget extends DrawableHelper implements Draw
         List<BrewingResult> tempResults = Lists.newArrayList(results);
 
         for (BrewingResult brewingResult : tempResults) {
-            if (BetterRecipeBook.pinnedRecipeManager.has(brewingResult.recipe)) {
+            if (BetterRecipeBook.pinnedRecipeManager.hasPotion(brewingResult.recipe)) {
                 results.remove(brewingResult);
                 results.add(0, brewingResult);
             }
@@ -419,7 +419,7 @@ public class BrewingStandRecipeBookWidget extends DrawableHelper implements Draw
             } else if (keyCode == GLFW.GLFW_KEY_F) {
                 for (BrewingAnimatedResultButton resultButton : this.recipesArea.resultButtons) {
                     if (resultButton.isHovered()) {
-                        BetterRecipeBook.pinnedRecipeManager.addOrRemoveFavourite(resultButton.getRecipe().recipe);
+                        BetterRecipeBook.pinnedRecipeManager.addOrRemoveFavouritePotion(resultButton.getRecipe().recipe);
                         this.refreshResults(false);
                         return true;
                     }
