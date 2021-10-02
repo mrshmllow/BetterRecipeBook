@@ -28,20 +28,5 @@ public class BetterRecipeBook implements ModInitializer {
         config = AutoConfig.getConfigHolder(Config.class).getConfig();
     }
 
-    public static void cheat(Item item) {
-        assert MinecraftClient.getInstance().player != null;
-        if (MinecraftClient.getInstance().player.hasPermissionLevel(2)) {
-            int amount = 1;
-            if (isHoldingShift) {
-                amount = item.getMaxCount();
-            }
-
-            MinecraftClient.getInstance().player.sendChatMessage("/give @s " + Registry.ITEM.getId(item) + " " + amount);
-        } else {
-            if (!hasWarnedNoPermission) {
-                MinecraftClient.getInstance().player.sendMessage(new TranslatableText("betterrecipebook.permission_failed"), false);
-                hasWarnedNoPermission = true;
-            }
-        }
     }
 }
