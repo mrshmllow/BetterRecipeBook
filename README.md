@@ -4,6 +4,10 @@ Adds a few quality of life changes to the recipe book.
 
 ## Features
 
+- Brewing Stand recipe book
+
+![brewing recipe book](https://github.com/mrshmllow/BetterRecipeBook/raw/main/.github/images/demo_brewing_recipe_book.png)
+
 - Optionally completely disable the recipe book
 
 ![enabled/disabled](https://github.com/mrshmllow/BetterRecipeBook/raw/main/.github/images/demo_disabled.png)
