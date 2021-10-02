@@ -6,7 +6,7 @@ Adds a few quality of life changes to the recipe book.
 
 - Brewing Stand recipe book
 
-![brewing recipe book](https://github.com/mrshmllow/BetterRecipeBook/raw/main/.github/images/demo_brewing_recipe_book.png)
+![brewing recipe book](https://raw.githubusercontent.com/mrshmllow/BetterRecipeBook/1.17/.github/images/demo_brewing_recipe_book.png)
 
 - Optionally completely disable the recipe book
 
