@@ -1,6 +1,7 @@
 package net.marshmallow.BetterRecipeBook.Mixins;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import net.marshmallow.BetterRecipeBook.BetterRecipeBook;
 import net.marshmallow.BetterRecipeBook.BrewingStand.BrewingStandRecipeBookWidget;
 import net.minecraft.client.gui.screen.ingame.BrewingStandScreen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
@@ -41,18 +42,22 @@ public abstract class BrewingStand extends HandledScreen<BrewingStandScreenHandl
 
     @Inject(method = "init", at = @At("RETURN"))
     protected void init(CallbackInfo ci) {
-        this.narrow = this.width < 379;
-        this.recipeBook.initialize(this.width, this.height, this.client, narrow, this.handler);
-        this.open = true;
-        this.x = this.recipeBook.findLeftEdge(this.width, this.backgroundWidth);
-        this.addDrawableChild(new TexturedButtonWidget(this.x + 135, this.height / 2 - 50, 20, 18, 0, 0, 19, RECIPE_BUTTON_TEXTURE, (button) -> {
-            this.recipeBook.toggleOpen();
+        if (BetterRecipeBook.config.enableBook) {
+            this.narrow = this.width < 379;
+            this.recipeBook.initialize(this.width, this.height, this.client, narrow, this.handler);
+            this.open = true;
             this.x = this.recipeBook.findLeftEdge(this.width, this.backgroundWidth);
-            ((TexturedButtonWidget)button).setPos(this.x + 135, this.height / 2 - 50);
-            this.mouseDown = true;
-        }));
-        this.addSelectableChild(this.recipeBook);
-        this.setInitialFocus(this.recipeBook);
+
+            this.addDrawableChild(new TexturedButtonWidget(this.x + 135, this.height / 2 - 50, 20, 18, 0, 0, 19, RECIPE_BUTTON_TEXTURE, (button) -> {
+                this.recipeBook.toggleOpen();
+                this.x = this.recipeBook.findLeftEdge(this.width, this.backgroundWidth);
+                ((TexturedButtonWidget)button).setPos(this.x + 135, this.height / 2 - 50);
+                this.mouseDown = true;
+            }));
+
+            this.addSelectableChild(this.recipeBook);
+            this.setInitialFocus(this.recipeBook);
+        }
     }
 
     /**
