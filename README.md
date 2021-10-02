@@ -8,6 +8,8 @@ Adds a few quality of life changes to the recipe book.
 
 ![brewing recipe book](https://raw.githubusercontent.com/mrshmllow/BetterRecipeBook/1.17/.github/images/demo_brewing_recipe_book.png)
 
+- Pin recipes to the top of your book by pressing F.
+
 - Optionally completely disable the recipe book
 
 ![enabled/disabled](https://github.com/mrshmllow/BetterRecipeBook/raw/main/.github/images/demo_disabled.png)
