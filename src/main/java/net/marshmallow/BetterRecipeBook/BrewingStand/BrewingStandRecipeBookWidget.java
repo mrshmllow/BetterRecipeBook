@@ -5,24 +5,19 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.marshmallow.BetterRecipeBook.Mixins.Accessors.BrewingRecipeRegistryRecipeAccessor;
-import net.marshmallow.BetterRecipeBook.Mixins.Accessors.BrewingStandScreenHandlerAccessor;
-import net.marshmallow.BetterRecipeBook.Mixins.Accessors.PlayerInventoryAccessor;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.Drawable;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.Selectable;
-import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.screen.recipebook.RecipeBookGhostSlots;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.ToggleButtonWidget;
-import net.minecraft.client.network.ClientPlayerInteractionManager;
 import net.minecraft.client.recipebook.BrewingRecipeBookGroup;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.potion.Potion;
@@ -58,7 +53,7 @@ public class BrewingStandRecipeBookWidget extends DrawableHelper implements Draw
     @Nullable
     private TextFieldWidget searchField;
     private final RecipeMatcher recipeFinder = new RecipeMatcher();
-    protected ToggleButtonWidget toggleCraftableButton;
+    protected ToggleButtonWidget toggleBrewableButton;
     private static final Text SEARCH_HINT_TEXT;
     private final List<BrewingRecipeGroupButtonWidget> tabButtons = Lists.newArrayList();
     @Nullable
@@ -109,7 +104,7 @@ public class BrewingStandRecipeBookWidget extends DrawableHelper implements Draw
         this.searchField.setText(string);
         this.recipesArea.initialize(this.client, i, j);
         this.tabButtons.clear();
-        this.toggleCraftableButton = new ToggleButtonWidget(i + 110, j + 12, 26, 16, this.recipeBook.isFilteringCraftable());
+        this.toggleBrewableButton = new ToggleButtonWidget(i + 110, j + 12, 26, 16, this.recipeBook.isFilteringCraftable());
         this.setBookButtonTexture();
         Iterator var4 = BrewingRecipeBookGroup.getGroups().iterator();
 
@@ -190,9 +185,9 @@ public class BrewingStandRecipeBookWidget extends DrawableHelper implements Draw
                 return true;
             } else if (this.searchField.mouseClicked(mouseX, mouseY, button)) {
                 return true;
-            } else if (this.toggleCraftableButton.mouseClicked(mouseX, mouseY, button)) {
+            } else if (this.toggleBrewableButton.mouseClicked(mouseX, mouseY, button)) {
                 boolean bl = this.toggleFilteringCraftable();
-                this.toggleCraftableButton.setToggled(bl);
+                this.toggleBrewableButton.setToggled(bl);
                 this.refreshResults(false);
                 return true;
             } else {
@@ -310,7 +305,7 @@ public class BrewingStandRecipeBookWidget extends DrawableHelper implements Draw
                 recipeGroupButtonWidget.render(matrices, mouseX, mouseY, delta);
             }
 
-            this.toggleCraftableButton.render(matrices, mouseX, mouseY, delta);
+            this.toggleBrewableButton.render(matrices, mouseX, mouseY, delta);
             this.recipesArea.draw(matrices, i, j, mouseX, mouseY, delta);
             matrices.pop();
         }
@@ -346,7 +341,7 @@ public class BrewingStandRecipeBookWidget extends DrawableHelper implements Draw
     }
 
     protected void setBookButtonTexture() {
-        this.toggleCraftableButton.setTextureUV(152, 41, 28, 18, TEXTURE);
+        this.toggleBrewableButton.setTextureUV(152, 41, 28, 18, TEXTURE);
     }
 
     @Override
@@ -363,7 +358,7 @@ public class BrewingStandRecipeBookWidget extends DrawableHelper implements Draw
     public void drawTooltip(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
         if (this.isOpen()) {
             this.recipesArea.drawTooltip(matrices, mouseX, mouseY);
-            if (this.toggleCraftableButton.isHovered()) {
+            if (this.toggleBrewableButton.isHovered()) {
                 Text text = this.getCraftableButtonText();
                 if (this.client.currentScreen != null) {
                     this.client.currentScreen.renderTooltip(matrices, text, mouseX, mouseY);
@@ -375,7 +370,7 @@ public class BrewingStandRecipeBookWidget extends DrawableHelper implements Draw
     }
 
     private Text getCraftableButtonText() {
-        return this.toggleCraftableButton.isToggled() ? this.getToggleCraftableButtonText() : TOGGLE_ALL_RECIPES_TEXT;
+        return this.toggleBrewableButton.isToggled() ? this.getToggleCraftableButtonText() : TOGGLE_ALL_RECIPES_TEXT;
     }
 
     protected Text getToggleCraftableButtonText() {
@@ -459,7 +454,7 @@ public class BrewingStandRecipeBookWidget extends DrawableHelper implements Draw
 
     static {
         SEARCH_HINT_TEXT = (new TranslatableText("gui.recipebook.search_hint")).formatted(Formatting.ITALIC).formatted(Formatting.GRAY);
-        TOGGLE_CRAFTABLE_RECIPES_TEXT = new TranslatableText("gui.recipebook.toggleRecipes.craftable");
+        TOGGLE_CRAFTABLE_RECIPES_TEXT = new TranslatableText("betterrecipebook.gui.togglePotions.brewable");
         TOGGLE_ALL_RECIPES_TEXT = new TranslatableText("gui.recipebook.toggleRecipes.all");
     }
 }

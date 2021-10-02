@@ -17,5 +17,7 @@
   "text.autoconfig.betterrecipebook.option.showAlternativesOnHover": "Only show alternate's recipe on hover",
   "text.autoconfig.betterrecipebook.option.showAlternativesOnHover.@Tooltip": "Show the item in the alternatives list instead of their recipe so its easy to see",
 
-  "betterrecipebook.permission_failed": "§cBetter Recipe Book: No permission! We wont remind you from now on."
+  "betterrecipebook.permission_failed": "§cBetter Recipe Book: No permission! We wont remind you from now on.",
+
+  "betterrecipebook.gui.togglePotions.brewable": "Showing Brewable"
 }
