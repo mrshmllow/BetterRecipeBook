@@ -22,6 +22,7 @@ import net.minecraft.potion.PotionUtil;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
@@ -111,8 +112,16 @@ public class BrewingAnimatedResultButton extends ClickableWidget {
 
         list.add(potionRecipe.itemStack.getName());
         PotionUtil.buildTooltip(potionRecipe.itemStack, list, 1);
-        list.add(((BrewingRecipeRegistryRecipeAccessor) potionRecipe.recipe).getIngredient().getMatchingStacks()[0].getName());
-        list.add(new LiteralText("+"));
+        list.add(new LiteralText(""));
+
+        Formatting colour = Formatting.DARK_GRAY;
+        if (getRecipe().hasIngredient(group)) {
+            colour = Formatting.WHITE;
+        }
+
+        list.add(new LiteralText(((BrewingRecipeRegistryRecipeAccessor) potionRecipe.recipe).getIngredient().getMatchingStacks()[0].getName().getString()).formatted(colour));
+
+        list.add(new LiteralText("+").formatted(Formatting.DARK_GRAY));
 
         Potion inputPotion = (Potion) ((BrewingRecipeRegistryRecipeAccessor<?>) this.potionRecipe.recipe).getInput();
 
@@ -127,7 +136,12 @@ public class BrewingAnimatedResultButton extends ClickableWidget {
         }
 
         inputStack.getOrCreateNbt().putString("Potion", identifier.toString());
-        list.add(inputStack.getName());
+
+        if (!getRecipe().hasInput(group)) {
+            colour = Formatting.DARK_GRAY;
+        }
+
+        list.add(new LiteralText(inputStack.getName().getString()).formatted(colour));
         
         return list;
     }

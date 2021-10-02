@@ -25,16 +25,16 @@ public class BrewingResult {
         this.input = Registry.POTION.getId((Potion) ((BrewingRecipeRegistryRecipeAccessor<?>) recipe).getInput());
     }
 
-    public boolean hasMaterials(BrewingRecipeBookGroup group) {
-        boolean hasIngredient = false;
-        boolean hasInput = false;
-
+    public boolean hasIngredient(BrewingRecipeBookGroup group) {
         for (ItemStack itemStack : ((BrewingRecipeRegistryRecipeAccessor) this.recipe).getIngredient().getMatchingStacks()) {
             if (MinecraftClient.getInstance().player.getInventory().contains(itemStack)) {
-                hasIngredient = true;
+                return true;
             }
         }
+        return false;
+    }
 
+    public boolean hasInput(BrewingRecipeBookGroup group) {
         Potion inputPotion = (Potion) ((BrewingRecipeRegistryRecipeAccessor<?>) this.recipe).getInput();
 
         Identifier identifier = Registry.POTION.getId(inputPotion);
@@ -58,10 +58,17 @@ public class BrewingResult {
 
                 assert inputStack.getNbt() != null;
                 if (inputStack.getNbt().equals(itemStack.getNbt()) && inputStack.getItem().equals(itemStack.getItem())) {
-                    hasInput = true;
+                    return true;
                 }
             }
         }
+
+        return false;
+    }
+
+    public boolean hasMaterials(BrewingRecipeBookGroup group) {
+        boolean hasIngredient = hasIngredient(group);
+        boolean hasInput = hasInput(group);
 
         return hasIngredient && hasInput;
     }
