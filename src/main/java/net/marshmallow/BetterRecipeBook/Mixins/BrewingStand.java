@@ -1,14 +1,17 @@
 package net.marshmallow.BetterRecipeBook.Mixins;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.marshmallow.BetterRecipeBook.BrewingStand.BrewingStandRecipeBookWidget;
 import net.minecraft.client.gui.screen.ingame.BrewingStandScreen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.widget.TexturedButtonWidget;
+import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.screen.BrewingStandScreenHandler;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.MathHelper;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
@@ -75,10 +78,17 @@ public abstract class BrewingStand extends HandledScreen<BrewingStandScreenHandl
         // this.mouseY = (float)mouseY;
     }
 
-    @ModifyArg(method = "drawBackground", index = 1, at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/ingame/BrewingStandScreen;drawTexture(Lnet/minecraft/client/util/math/MatrixStack;IIIIII)V"))
+    @ModifyArg(
+            method = "drawBackground",
+            index = 1,
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/client/gui/screen/ingame/BrewingStandScreen;drawTexture(Lnet/minecraft/client/util/math/MatrixStack;IIIIII)V"
+            )
+    )
     public int drawBackground(int i) {
         if (this.recipeBook.isOpen()) {
-            return (this.width - this.backgroundWidth) / 2 + 77;
+            return i + 77;
         } else {
             return i;
         }
