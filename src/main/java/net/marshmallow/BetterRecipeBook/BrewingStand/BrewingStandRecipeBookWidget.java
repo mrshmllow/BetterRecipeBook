@@ -4,7 +4,9 @@ import com.google.common.collect.Lists;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.marshmallow.BetterRecipeBook.BetterRecipeBook;
 import net.marshmallow.BetterRecipeBook.Mixins.Accessors.BrewingRecipeRegistryRecipeAccessor;
+import net.marshmallow.BetterRecipeBook.Mixins.Accessors.RecipeBookResultsAccessor;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.Drawable;
@@ -12,7 +14,9 @@ import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.Selectable;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
+import net.minecraft.client.gui.screen.recipebook.AnimatedResultButton;
 import net.minecraft.client.gui.screen.recipebook.RecipeBookGhostSlots;
+import net.minecraft.client.gui.screen.recipebook.RecipeResultCollection;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.ToggleButtonWidget;
 import net.minecraft.client.recipebook.BrewingRecipeBookGroup;
@@ -72,12 +76,9 @@ public class BrewingStandRecipeBookWidget extends DrawableHelper implements Draw
         this.narrow = narrow;
         client.player.currentScreenHandler = brewingStandScreenHandler;
         this.recipeBook = new ClientBrewingStandRecipeBook();
-        this.open = false;
+        this.open = true;
         // this.cachedInvChangeCount = client.player.getInventory().getChangeCount();
-        // this.open = this.isGuiOpen();
-        // if (this.open) {
-        //     this.reset();
-        // }
+        this.reset();
 
         // Fix
         this.leftOffset = this.narrow ? 0 : 86;
@@ -235,6 +236,15 @@ public class BrewingStandRecipeBookWidget extends DrawableHelper implements Draw
 
         if (this.recipeBook.isFilteringCraftable()) {
             results.removeIf((brewingResult) -> !brewingResult.hasMaterials(currentTab.getGroup()));
+        }
+
+        List<BrewingResult> tempResults = Lists.newArrayList(results);
+
+        for (BrewingResult brewingResult : tempResults) {
+            if (BetterRecipeBook.pinnedRecipeManager.has(brewingResult.recipe)) {
+                results.remove(brewingResult);
+                results.add(0, brewingResult);
+            }
         }
 
         this.recipesArea.setResults(results, resetCurrentPage, currentTab.getGroup());
@@ -406,6 +416,15 @@ public class BrewingStandRecipeBookWidget extends DrawableHelper implements Draw
                 return true;
             } else if (this.searchField.isFocused() && this.searchField.isVisible()) {
                 return true;
+            } else if (keyCode == GLFW.GLFW_KEY_F) {
+                for (BrewingAnimatedResultButton resultButton : this.recipesArea.resultButtons) {
+                    if (resultButton.isHovered()) {
+                        BetterRecipeBook.pinnedRecipeManager.addOrRemoveFavourite(resultButton.getRecipe().recipe);
+                        this.refreshResults(false);
+                        return true;
+                    }
+                }
+                return false;
             } else if (this.client.options.keyChat.matchesKey(keyCode, scanCode) && !this.searchField.isFocused()) {
                 this.searching = true;
                 this.searchField.setTextFieldFocused(true);

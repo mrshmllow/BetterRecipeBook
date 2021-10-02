@@ -4,22 +4,25 @@
   "package": "net.marshmallow.BetterRecipeBook.Mixins",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "UnlockRecipes"
+    "UnlockRecipes",
   ],
   "client": [
     "AlternativeRecipes",
+    "BrewingStand",
     "DisableBook",
     "DisableBounce",
     "MouseScrollHandler",
     "RemoveBookButton",
     "RemoveToasts",
     "ScrollablePages",
-    "BrewingStand",
     "Accessors.BrewingRecipeRegistryAccessor",
     "Accessors.BrewingRecipeRegistryRecipeAccessor",
-    "Accessors.IngredientAccessor",
     "Accessors.BrewingStandScreenHandlerAccessor",
-    "Accessors.PlayerInventoryAccessor"
+    "Accessors.IngredientAccessor",
+    "Accessors.PlayerInventoryAccessor",
+    "Accessors.RecipeBookResultsAccessor",
+    "Pins.Pins",
+    "Pins.Tooltip"
   ],
   "injectors": {
     "defaultRequire": 1

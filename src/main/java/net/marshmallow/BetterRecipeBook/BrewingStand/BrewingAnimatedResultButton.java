@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.marshmallow.BetterRecipeBook.BetterRecipeBook;
 import net.marshmallow.BetterRecipeBook.Mixins.Accessors.BrewingRecipeRegistryRecipeAccessor;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
@@ -140,7 +141,13 @@ public class BrewingAnimatedResultButton extends ClickableWidget {
         }
 
         list.add(new LiteralText(inputStack.getName().getString()).formatted(colour));
-        
+
+        if (BetterRecipeBook.pinnedRecipeManager.has(this.potionRecipe.recipe)) {
+            list.add(new TranslatableText("betterrecipebook.gui.pin.remove"));
+        } else {
+            list.add(new TranslatableText("betterrecipebook.gui.pin.add"));
+        }
+
         return list;
     }
 }

@@ -17,7 +17,7 @@ import java.util.List;
 @Environment(EnvType.CLIENT)
 public class BrewingStandRecipeBookResults {
     private List<BrewingResult> recipeCollection;
-    private final List<BrewingAnimatedResultButton> resultButtons = Lists.newArrayListWithCapacity(20);
+    public final List<BrewingAnimatedResultButton> resultButtons = Lists.newArrayListWithCapacity(20);
     private int pageCount;
     private int currentPage;
     private ToggleButtonWidget nextPageButton;

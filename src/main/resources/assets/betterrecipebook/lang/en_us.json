@@ -19,5 +19,6 @@
 
   "betterrecipebook.permission_failed": "§cBetter Recipe Book: No permission! We wont remind you from now on.",
 
-  "betterrecipebook.gui.togglePotions.brewable": "Showing Brewable"
+  "betterrecipebook.gui.pin.add": "Press F to pin this recipe",
+  "betterrecipebook.gui.pin.remove": "Press F to unpin this recipe"
 }
