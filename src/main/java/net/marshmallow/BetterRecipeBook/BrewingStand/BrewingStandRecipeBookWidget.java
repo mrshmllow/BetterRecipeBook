@@ -186,7 +186,7 @@ public class BrewingStandRecipeBookWidget extends DrawableHelper implements Draw
             } else if (this.searchField.mouseClicked(mouseX, mouseY, button)) {
                 return true;
             } else if (this.toggleBrewableButton.mouseClicked(mouseX, mouseY, button)) {
-                boolean bl = this.toggleFilteringCraftable();
+                boolean bl = this.toggleFilteringBrewable();
                 this.toggleBrewableButton.setToggled(bl);
                 this.refreshResults(false);
                 return true;
@@ -219,7 +219,7 @@ public class BrewingStandRecipeBookWidget extends DrawableHelper implements Draw
         }
     }
 
-    private boolean toggleFilteringCraftable() {
+    private boolean toggleFilteringBrewable() {
         boolean bl = !this.recipeBook.isFilteringCraftable();
         this.recipeBook.setFilteringCraftable(bl);
         return bl;
