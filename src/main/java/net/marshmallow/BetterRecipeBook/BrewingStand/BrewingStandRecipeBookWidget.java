@@ -81,13 +81,13 @@ public class BrewingStandRecipeBookWidget extends DrawableHelper implements Draw
         this.reset();
 
         // Fix
-        this.leftOffset = this.narrow ? 0 : 86;
+        this.leftOffset = this.narrow ? 0 : 162;
 
         client.keyboard.setRepeatEvents(true);
     }
 
     public void reset() {
-        this.leftOffset = this.narrow ? 0 : 86;
+        this.leftOffset = this.narrow ? 0 : 162;
         int i = (this.parentWidth - 147) / 2 - this.leftOffset;
         int j = (this.parentHeight - 166) / 2;
         this.recipeFinder.clear();

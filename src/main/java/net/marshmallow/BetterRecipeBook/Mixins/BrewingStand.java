@@ -43,11 +43,11 @@ public abstract class BrewingStand extends HandledScreen<BrewingStandScreenHandl
             this.narrow = this.width < 379;
             this.recipeBook.initialize(this.width, this.height, this.client, narrow, this.handler);
             this.open = true;
-            this.x = this.recipeBook.findLeftEdge(this.width, this.backgroundWidth);
+            //this.x = this.recipeBook.findLeftEdge(this.width, this.backgroundWidth);
 
             this.addDrawableChild(new TexturedButtonWidget(this.x + 135, this.height / 2 - 50, 20, 18, 0, 0, 19, RECIPE_BUTTON_TEXTURE, (button) -> {
                 this.recipeBook.toggleOpen();
-                this.x = this.recipeBook.findLeftEdge(this.width, this.backgroundWidth);
+                //this.x = this.recipeBook.findLeftEdge(this.width, this.backgroundWidth);
                 ((TexturedButtonWidget)button).setPos(this.x + 135, this.height / 2 - 50);
                 this.mouseDown = true;
             }));
@@ -89,10 +89,6 @@ public abstract class BrewingStand extends HandledScreen<BrewingStandScreenHandl
             )
     )
     public int drawBackground(int i) {
-        if (this.recipeBook.isOpen()) {
-            return i + 77;
-        } else {
-            return i;
-        }
+        return i;
     }
 }
