@@ -1,18 +1,15 @@
 package net.marshmallow.BetterRecipeBook.Mixins;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.marshmallow.BetterRecipeBook.BetterRecipeBook;
 import net.marshmallow.BetterRecipeBook.BrewingStand.BrewingStandRecipeBookWidget;
 import net.minecraft.client.gui.screen.ingame.BrewingStandScreen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.widget.TexturedButtonWidget;
-import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.screen.BrewingStandScreenHandler;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.MathHelper;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
