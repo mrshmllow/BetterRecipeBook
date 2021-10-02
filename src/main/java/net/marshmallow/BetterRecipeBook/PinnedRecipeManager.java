@@ -79,6 +79,7 @@ public class PinnedRecipeManager {
             for (Recipe<?> recipe : target.getAllRecipes()) {
                 if (recipe.getId().equals(identifier)) {
                     this.pinned.remove(identifier);
+                    this.store();
                     return;
                 }
             }
@@ -94,6 +95,7 @@ public class PinnedRecipeManager {
         for (Identifier identifier : this.pinned) {
             if (identifier.equals(targetIdentifier)) {
                 this.pinned.remove(targetIdentifier);
+                this.store();
                 return;
             }
         }
