@@ -13,7 +13,13 @@
     "MouseScrollHandler",
     "RemoveBookButton",
     "RemoveToasts",
-    "ScrollablePages"
+    "ScrollablePages",
+    "BrewingStand",
+    "Accessors.BrewingRecipeRegistryAccessor",
+    "Accessors.BrewingRecipeRegistryRecipeAccessor",
+    "Accessors.IngredientAccessor",
+    "Accessors.BrewingStandScreenHandlerAccessor",
+    "Accessors.PlayerInventoryAccessor"
   ],
   "injectors": {
     "defaultRequire": 1
