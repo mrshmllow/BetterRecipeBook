@@ -1,20 +1,67 @@
 package net.marshmallow.BetterRecipeBook;
 
+import com.google.common.reflect.TypeToken;
+import com.google.gson.Gson;
+import com.google.gson.stream.JsonReader;
+import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
+import net.fabricmc.fabric.impl.resource.loader.ResourceManagerHelperImpl;
 import net.marshmallow.BetterRecipeBook.Mixins.Accessors.BrewingRecipeRegistryRecipeAccessor;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.recipebook.RecipeResultCollection;
+import net.minecraft.network.MessageType;
 import net.minecraft.potion.Potion;
 import net.minecraft.recipe.BrewingRecipeRegistry;
 import net.minecraft.recipe.Recipe;
+import net.minecraft.text.LiteralText;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
+import org.apache.commons.io.IOUtils;
 
+import java.io.*;
+import java.lang.reflect.Type;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.List;
 
 public class PinnedRecipeManager {
     public List<Identifier> pinned;
 
-    public PinnedRecipeManager(List<Identifier> pinned) {
-        this.pinned = pinned;
+    public void read() {
+        Gson gson = new Gson();
+        JsonReader reader = null;
+
+        try {
+            File pinsFile = new File(MinecraftClient.getInstance().runDirectory, "brb.pins");
+
+            if (pinsFile.exists()) {
+                reader = new JsonReader(new FileReader(pinsFile.getAbsolutePath()));
+                Type type = new TypeToken<List<Identifier>>() {}.getType();
+                List<Identifier> data = gson.fromJson(reader, type);
+                pinned = data;
+            } else {
+                pinned = new ArrayList<>();
+            }
+        } catch (Throwable var8) {
+            BetterRecipeBook.LOGGER.error("brb.pins could not be read.");
+        } finally {
+            IOUtils.closeQuietly(reader);
+        }
+    }
+
+    private void store() {
+        Gson gson = new Gson();
+        OutputStreamWriter writer = null;
+
+        try {
+            File pinsFile = new File(MinecraftClient.getInstance().runDirectory, "brb.pins");
+            writer = new OutputStreamWriter(new FileOutputStream(pinsFile), StandardCharsets.UTF_8);
+            writer.write(gson.toJson(this.pinned));
+        } catch (Throwable var8) {
+            BetterRecipeBook.LOGGER.error("brb.pins could not be saved.");
+        } finally {
+            IOUtils.closeQuietly(writer);
+        }
     }
 
     private boolean recipeResultCollectionToString(RecipeResultCollection target) {
@@ -38,6 +85,7 @@ public class PinnedRecipeManager {
         }
 
         this.pinned.add(target.getAllRecipes().get(0).getId());
+        this.store();
     }
 
     public void addOrRemoveFavouritePotion(BrewingRecipeRegistry.Recipe target) {
@@ -51,6 +99,7 @@ public class PinnedRecipeManager {
         }
 
         this.pinned.add(targetIdentifier);
+        this.store();
     }
 
     public boolean has(Object target) {
