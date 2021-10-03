@@ -36,13 +36,13 @@ public class PinnedRecipeManager {
                 reader = new JsonReader(new FileReader(pinsFile.getAbsolutePath()));
                 Type type = new TypeToken<List<Identifier>>() {}.getType();
                 pinned = gson.fromJson(reader, type);
-            } else {
-                pinned = new ArrayList<>();
             }
         } catch (Throwable var8) {
-            pinned = new ArrayList<>();
             BetterRecipeBook.LOGGER.error("brb.pins could not be read.");
         } finally {
+            if (pinned == null) {
+                pinned = new ArrayList<>();
+            }
             IOUtils.closeQuietly(reader);
         }
     }
