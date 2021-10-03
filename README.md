@@ -10,6 +10,8 @@ Adds a few quality of life changes to the recipe book.
 
 - Pin recipes to the top of your book by pressing F.
 
+- Keeps crafting screens centered when you open the recipe book
+
 - Optionally completely disable the recipe book
 
 ![enabled/disabled](https://github.com/mrshmllow/BetterRecipeBook/raw/main/.github/images/demo_disabled.png)
