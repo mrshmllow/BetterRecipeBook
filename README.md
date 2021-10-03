@@ -25,7 +25,7 @@ Adds a few quality of life changes to the recipe book.
 ![demo alt](https://github.com/mrshmllow/BetterRecipeBook/raw/main/.github/images/demo_alternatives.png)
 
 ## Current known bugs
-- ### [Known vinilla bugs](https://github.com/mrshmllow/BetterRecipeBook/labels/Vanilla%20bug)
+- ### [Known vanilla bugs](https://github.com/mrshmllow/BetterRecipeBook/labels/Vanilla%20bug)
     - [With a alterative recipes menu open, typing into the search bar won't close the menu.](https://github.com/mrshmllow/BetterRecipeBook/raw/main/.github/images/demo_bug_1.png)
     - Submit your own to be fixed [on github](https://github.com/mrshmllow/BetterRecipeBook/labels/Vanilla%20bug), make sure to include a [offical bug report](https://bugs.mojang.com/projects/MC/summary)
 - ### [Known mod bugs](https://github.com/mrshmllow/BetterRecipeBook/labels/bug)
