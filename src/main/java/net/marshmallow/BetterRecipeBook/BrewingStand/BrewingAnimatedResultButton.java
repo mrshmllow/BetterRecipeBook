@@ -94,16 +94,22 @@ public class BrewingAnimatedResultButton extends ClickableWidget {
     }
 
     public void appendNarrations(NarrationMessageBuilder builder) {
-        // TODO: FIX
-        ItemStack itemStack = new ItemStack(Items.GUNPOWDER);
-        builder.put(NarrationPart.TITLE, (Text)(new TranslatableText("narration.recipe", new Object[]{itemStack.getName()})));
-        builder.put(NarrationPart.USAGE, (Text)(new TranslatableText("narration.button.usage.hovered")));
-        // if (this.resultCollection.getResults(this.recipeBook.isFilteringCraftable(this.craftingScreenHandler)).size() > 1) {
-        //     builder.put(NarrationPart.USAGE, new TranslatableText("narration.button.usage.hovered"), new TranslatableText("narration.recipe.usage.more"));
-        // } else {
-        //     builder.put(NarrationPart.USAGE, (Text)(new TranslatableText("narration.button.usage.hovered")));
-        // }
+        Potion inputPotion = (Potion) ((BrewingRecipeRegistryRecipeAccessor<?>) this.potionRecipe.recipe).getInput();
 
+        Identifier identifier = Registry.POTION.getId(inputPotion);
+        ItemStack inputStack;
+        if (group == BrewingRecipeBookGroup.BREWING_SPLASH_POTION) {
+            inputStack = new ItemStack(Items.SPLASH_POTION);
+        } else if (group == BrewingRecipeBookGroup.BREWING_LINGERING_POTION) {
+            inputStack = new ItemStack(Items.LINGERING_POTION);
+        } else {
+            inputStack = new ItemStack(Items.POTION);
+        }
+
+        inputStack.getOrCreateNbt().putString("Potion", identifier.toString());
+
+        builder.put(NarrationPart.TITLE, new TranslatableText("narration.recipe", inputStack.getName()));
+        builder.put(NarrationPart.USAGE, new TranslatableText("narration.button.usage.hovered"));
     }
 
     public List<Text> getTooltip() {
