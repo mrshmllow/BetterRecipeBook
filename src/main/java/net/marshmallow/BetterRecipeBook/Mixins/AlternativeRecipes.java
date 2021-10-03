@@ -54,17 +54,9 @@ public abstract class AlternativeRecipes extends ClickableWidget implements Reci
 
             ItemRenderer itemRenderer = MinecraftClient.getInstance().getItemRenderer();
             ItemStack recipeOutput = this.recipe.getOutput();
+            itemRenderer.renderInGuiWithOverrides(recipeOutput, this.x + 4, this.y + 4, 0, 200);
 
-            MatrixStack s = RenderSystem.getModelViewStack();
-            s.push();
-            s.method_34425(matrices.peek().getModel().copy()); // No idea what this does
-            itemRenderer.renderInGuiWithOverrides(recipeOutput, this.x + 4, this.y + 4); // Why do we do this twice?
-            itemRenderer.renderGuiItemOverlay(MinecraftClient.getInstance().textRenderer, recipeOutput, this.x + 4, this.y + 4); // ^
-            RenderSystem.enableDepthTest();
-            s.pop();
-            RenderSystem.applyModelViewMatrix();
-            RenderSystem.disableDepthTest();
-
+            matrices.pop();
             ci.cancel();
         }
     }
