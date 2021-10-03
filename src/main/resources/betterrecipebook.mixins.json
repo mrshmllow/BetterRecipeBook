@@ -17,8 +17,6 @@
     "ScrollablePages",
     "Accessors.BrewingRecipeRegistryAccessor",
     "Accessors.BrewingRecipeRegistryRecipeAccessor",
-    "Accessors.BrewingStandScreenHandlerAccessor",
-    "Accessors.IngredientAccessor",
     "Accessors.PlayerInventoryAccessor",
     "Accessors.RecipeBookResultsAccessor",
     "Accessors.TexturedButtonWidgetAccessor",

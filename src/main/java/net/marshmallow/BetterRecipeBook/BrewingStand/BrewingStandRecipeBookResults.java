@@ -5,11 +5,8 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.marshmallow.BetterRecipeBook.BetterRecipeBook;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.recipebook.RecipeResultCollection;
 import net.minecraft.client.gui.widget.ToggleButtonWidget;
-import net.minecraft.client.recipebook.BrewingRecipeBookGroup;
 import net.minecraft.client.util.math.MatrixStack;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Iterator;
 import java.util.List;
@@ -23,11 +20,8 @@ public class BrewingStandRecipeBookResults {
     private ToggleButtonWidget nextPageButton;
     private ToggleButtonWidget prevPageButton;
     private MinecraftClient client;
-    private ClientBrewingStandRecipeBook recipeBook;
     private BrewingAnimatedResultButton hoveredResultButton;
     private BrewingResult lastClickedRecipe;
-    @Nullable
-    private RecipeResultCollection resultCollection;
     BrewingRecipeBookGroup group;
 
     public BrewingStandRecipeBookResults() {
@@ -80,7 +74,7 @@ public class BrewingStandRecipeBookResults {
         this.hideShowPageButtons();
     }
 
-    public boolean mouseClicked(double mouseX, double mouseY, int button, int areaLeft, int areaTop, int areaWidth, int areaHeight) {
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (BetterRecipeBook.config.scrollingModule.enableScrolling) {
             if (nextPageButton.mouseClicked(mouseX, mouseY, button)) {
                 if (currentPage >= pageCount - 1) {
@@ -94,7 +88,6 @@ public class BrewingStandRecipeBookResults {
         }
 
         this.lastClickedRecipe = null;
-        this.resultCollection = null;
         if (this.nextPageButton.mouseClicked(mouseX, mouseY, button)) {
             ++this.currentPage;
             this.refreshResultButtons();
@@ -104,7 +97,7 @@ public class BrewingStandRecipeBookResults {
             this.refreshResultButtons();
             return true;
         } else {
-            Iterator var10 = this.resultButtons.iterator();
+            Iterator<BrewingAnimatedResultButton> var10 = this.resultButtons.iterator();
 
             BrewingAnimatedResultButton animatedResultButton;
             do {
@@ -112,7 +105,7 @@ public class BrewingStandRecipeBookResults {
                     return false;
                 }
 
-                animatedResultButton = (BrewingAnimatedResultButton)var10.next();
+                animatedResultButton = var10.next();
             } while(!animatedResultButton.mouseClicked(mouseX, mouseY, button));
 
             if (button == 0) {
@@ -166,7 +159,7 @@ public class BrewingStandRecipeBookResults {
             int var10000 = this.currentPage + 1;
             String string = var10000 + "/" + this.pageCount;
             int i = this.client.textRenderer.getWidth(string);
-            this.client.textRenderer.draw(matrices, (String)string, (float)(x - i / 2 + 73), (float)(y + 141), -1);
+            this.client.textRenderer.draw(matrices, string, (float)(x - i / 2 + 73), (float)(y + 141), -1);
         }
 
         this.hoveredResultButton = null;

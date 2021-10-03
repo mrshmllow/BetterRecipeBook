@@ -7,8 +7,6 @@ import net.marshmallow.BetterRecipeBook.Config.Config;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.ArrayList;
-
 public class BetterRecipeBook implements ModInitializer {
     public static int queuedScroll;
     public static boolean hasWarnedNoPermission;

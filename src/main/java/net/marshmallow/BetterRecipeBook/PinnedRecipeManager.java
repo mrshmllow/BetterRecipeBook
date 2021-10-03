@@ -3,22 +3,20 @@ package net.marshmallow.BetterRecipeBook;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
-import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
-import net.fabricmc.fabric.impl.resource.loader.ResourceManagerHelperImpl;
 import net.marshmallow.BetterRecipeBook.Mixins.Accessors.BrewingRecipeRegistryRecipeAccessor;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.recipebook.RecipeResultCollection;
-import net.minecraft.network.MessageType;
 import net.minecraft.potion.Potion;
 import net.minecraft.recipe.BrewingRecipeRegistry;
 import net.minecraft.recipe.Recipe;
-import net.minecraft.text.LiteralText;
-import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import org.apache.commons.io.IOUtils;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.OutputStreamWriter;
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -37,8 +35,7 @@ public class PinnedRecipeManager {
             if (pinsFile.exists()) {
                 reader = new JsonReader(new FileReader(pinsFile.getAbsolutePath()));
                 Type type = new TypeToken<List<Identifier>>() {}.getType();
-                List<Identifier> data = gson.fromJson(reader, type);
-                pinned = data;
+                pinned = gson.fromJson(reader, type);
             } else {
                 pinned = new ArrayList<>();
             }
@@ -64,7 +61,7 @@ public class PinnedRecipeManager {
             IOUtils.closeQuietly(writer);
         }
     }
-    
+
     public void addOrRemoveFavourite(RecipeResultCollection target) {
         for (Identifier identifier : this.pinned) {
             for (Recipe<?> recipe : target.getAllRecipes()) {
@@ -80,8 +77,8 @@ public class PinnedRecipeManager {
         this.store();
     }
 
-    public void addOrRemoveFavouritePotion(BrewingRecipeRegistry.Recipe target) {
-        Identifier targetIdentifier = Registry.POTION.getId(((BrewingRecipeRegistryRecipeAccessor<Potion>) target).getOutput());
+    public void addOrRemoveFavouritePotion(BrewingRecipeRegistry.Recipe<?> target) {
+        Identifier targetIdentifier = Registry.POTION.getId((Potion) ((BrewingRecipeRegistryRecipeAccessor<?>) target).getOutput());
 
         for (Identifier identifier : this.pinned) {
             if (identifier.equals(targetIdentifier)) {
@@ -106,8 +103,8 @@ public class PinnedRecipeManager {
         return false;
     }
 
-    public boolean hasPotion(BrewingRecipeRegistry.Recipe target) {
-        Identifier targetIdentifier = Registry.POTION.getId(((BrewingRecipeRegistryRecipeAccessor<Potion>) target).getOutput());
+    public boolean hasPotion(BrewingRecipeRegistry.Recipe<?> target) {
+        Identifier targetIdentifier = Registry.POTION.getId((Potion) ((BrewingRecipeRegistryRecipeAccessor<?>) target).getOutput());
 
         for (Identifier identifier : this.pinned) {
             if (targetIdentifier.equals(identifier)) {

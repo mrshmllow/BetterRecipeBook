@@ -28,6 +28,7 @@ public class MoveEffects {
     @ModifyVariable(method = "drawStatusEffects(Lnet/minecraft/client/util/math/MatrixStack;)V", at = @At("STORE"), ordinal = 0)
     private int moveEffectsRight(int i) {
         if (BetterRecipeBook.config.statusEffects) {
+            assert MinecraftClient.getInstance().player != null;
             if (MinecraftClient.getInstance().player.isCreative()) {
                 return i + 323;
             } else {

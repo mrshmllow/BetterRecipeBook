@@ -10,10 +10,8 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.screen.BrewingStandScreenHandler;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
@@ -23,14 +21,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class BrewingStand extends HandledScreen<BrewingStandScreenHandler> {
     private final BrewingStandRecipeBookWidget recipeBook = new BrewingStandRecipeBookWidget();
     private static final Identifier RECIPE_BUTTON_TEXTURE = new Identifier("textures/gui/recipe_button.png");
-    @Final
-    @Shadow
-    private static int[] BUBBLE_PROGRESS;
-    @Final
-    @Shadow
-    private static Identifier TEXTURE;
-    private boolean open;
-    private boolean mouseDown;
     private boolean narrow;
 
     public BrewingStand(BrewingStandScreenHandler handler, PlayerInventory inventory, Text title) {
@@ -41,8 +31,8 @@ public abstract class BrewingStand extends HandledScreen<BrewingStandScreenHandl
     protected void init(CallbackInfo ci) {
         if (BetterRecipeBook.config.enableBook) {
             this.narrow = this.width < 379;
+            assert this.client != null;
             this.recipeBook.initialize(this.width, this.height, this.client, narrow, this.handler);
-            this.open = true;
 
             if (!BetterRecipeBook.config.keepCentered) {
                 this.x = this.recipeBook.findLeftEdge(this.width, this.backgroundWidth);
@@ -54,7 +44,6 @@ public abstract class BrewingStand extends HandledScreen<BrewingStandScreenHandl
                     this.x = this.recipeBook.findLeftEdge(this.width, this.backgroundWidth);
                 }
                 ((TexturedButtonWidget)button).setPos(this.x + 135, this.height / 2 - 50);
-                this.mouseDown = true;
             }));
 
             this.addSelectableChild(this.recipeBook);
@@ -63,7 +52,7 @@ public abstract class BrewingStand extends HandledScreen<BrewingStandScreenHandl
     }
 
     /**
-     * @author
+     * @author marshmallow
      */
     @Overwrite
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
@@ -81,8 +70,6 @@ public abstract class BrewingStand extends HandledScreen<BrewingStandScreenHandl
 
         this.drawMouseoverTooltip(matrices, mouseX, mouseY);
         this.recipeBook.drawTooltip(matrices, this.x, this.y, mouseX, mouseY);
-        // this.mouseX = (float)mouseX;
-        // this.mouseY = (float)mouseY;
     }
 
     @ModifyArg(

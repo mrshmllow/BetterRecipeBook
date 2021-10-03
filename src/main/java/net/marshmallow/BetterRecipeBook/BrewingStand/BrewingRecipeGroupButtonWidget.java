@@ -7,7 +7,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ToggleButtonWidget;
-import net.minecraft.client.recipebook.BrewingRecipeBookGroup;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.util.math.MatrixStack;
@@ -16,36 +15,11 @@ import net.minecraft.item.ItemStack;
 @Environment(EnvType.CLIENT)
 public class BrewingRecipeGroupButtonWidget extends ToggleButtonWidget {
     private final BrewingRecipeBookGroup group;
-    private static final float field_32412 = 15.0F;
-    private ClientBrewingStandRecipeBook recipeBook;
 
-    public BrewingRecipeGroupButtonWidget(BrewingRecipeBookGroup category, ClientBrewingStandRecipeBook recipeBook) {
+    public BrewingRecipeGroupButtonWidget(BrewingRecipeBookGroup category) {
         super(0, 0, 35, 27, false);
         this.group = category;
-        this.recipeBook = recipeBook;
         this.setTextureUV(153, 2, 35, 0, BrewingStandRecipeBookWidget.TEXTURE);
-    }
-
-    public void checkForNewRecipes(MinecraftClient client) {
-        ClientBrewingStandRecipeBook clientRecipeBook = recipeBook;
-        // List<RecipeResultCollection> list = clientRecipeBook.getResultsForGroup(this.category);
-        // if (client.player.currentScreenHandler instanceof AbstractRecipeScreenHandler) {
-        //     Iterator var4 = list.iterator();
-//
-        //     while(var4.hasNext()) {
-        //         RecipeResultCollection recipeResultCollection = (RecipeResultCollection)var4.next();
-        //         Iterator var6 = recipeResultCollection.getResults(clientRecipeBook.isFilteringCraftable((AbstractRecipeScreenHandler)client.player.currentScreenHandler)).iterator();
-//
-        //         while(var6.hasNext()) {
-        //             Recipe<?> recipe = (Recipe)var6.next();
-        //             if (clientRecipeBook.shouldDisplay(recipe)) {
-        //                 this.bounce = 15.0F;
-        //                 return;
-        //             }
-        //         }
-        //     }
-//
-        // }
     }
 
     public void renderButton(MatrixStack matrices, int mouseX, int mouseY, float delta) {
@@ -78,10 +52,10 @@ public class BrewingRecipeGroupButtonWidget extends ToggleButtonWidget {
         List<ItemStack> list = this.group.getIcons();
         int i = this.toggled ? -2 : 0;
         if (list.size() == 1) {
-            itemRenderer.renderInGui((ItemStack)list.get(0), this.x + 9 + i, this.y + 5);
+            itemRenderer.renderInGui(list.get(0), this.x + 9 + i, this.y + 5);
         } else if (list.size() == 2) {
-            itemRenderer.renderInGui((ItemStack)list.get(0), this.x + 3 + i, this.y + 5);
-            itemRenderer.renderInGui((ItemStack)list.get(1), this.x + 14 + i, this.y + 5);
+            itemRenderer.renderInGui(list.get(0), this.x + 3 + i, this.y + 5);
+            itemRenderer.renderInGui(list.get(1), this.x + 14 + i, this.y + 5);
         }
 
     }

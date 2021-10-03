@@ -13,9 +13,4 @@ public interface BrewingRecipeRegistryAccessor {
     static List<BrewingRecipeRegistry.Recipe<Potion>> getPotionRecipes() {
         throw new AssertionError();
     }
-
-    @Accessor("ITEM_RECIPES")
-    static List<BrewingRecipeRegistry.Recipe<Potion>> getItemRecipes() {
-        throw new AssertionError();
-    }
 }

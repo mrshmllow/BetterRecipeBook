@@ -2,7 +2,6 @@ package net.marshmallow.BetterRecipeBook.BrewingStand;
 
 import net.marshmallow.BetterRecipeBook.Mixins.Accessors.BrewingRecipeRegistryAccessor;
 import net.marshmallow.BetterRecipeBook.Mixins.Accessors.BrewingRecipeRegistryRecipeAccessor;
-import net.minecraft.client.recipebook.BrewingRecipeBookGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.potion.Potion;

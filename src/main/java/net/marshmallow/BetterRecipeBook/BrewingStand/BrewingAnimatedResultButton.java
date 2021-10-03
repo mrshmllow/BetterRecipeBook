@@ -11,7 +11,6 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.screen.narration.NarrationPart;
 import net.minecraft.client.gui.widget.ClickableWidget;
-import net.minecraft.client.recipebook.BrewingRecipeBookGroup;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
@@ -25,7 +24,6 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
-import java.util.Iterator;
 import java.util.List;
 
 @Environment(EnvType.CLIENT)
@@ -33,7 +31,6 @@ public class BrewingAnimatedResultButton extends ClickableWidget {
     private float time;
     private static final Identifier BACKGROUND_TEXTURE = new Identifier("textures/gui/recipe_book.png");
     private BrewingResult potionRecipe;
-    private ClientBrewingStandRecipeBook recipeBook;
     private BrewingRecipeBookGroup group;
 
     public BrewingAnimatedResultButton() {
@@ -60,19 +57,9 @@ public class BrewingAnimatedResultButton extends ClickableWidget {
         }
 
         int j = 206;
-        // if (this.resultCollection.getResults(this.recipeBook.isFilteringCraftable(this.craftingScreenHandler)).size() > 1) {
-        //     j += 25;
-        // }
-
         MatrixStack matrixStack = RenderSystem.getModelViewStack();
-
         this.drawTexture(matrices, this.x, this.y, i, j, this.width, this.height);
-
         int k = 4;
-        // if (this.resultCollection.hasSingleOutput() && this.getResults().size() > 1) {
-        //     minecraftClient.getItemRenderer().renderInGuiWithOverrides(itemStack, this.x + k + 1, this.y + k + 1, 0, 10);
-        //     --k;
-        // }
 
         matrixStack.push();
         matrixStack.method_34425(matrices.peek().getModel().copy()); // No idea what this does
@@ -120,11 +107,11 @@ public class BrewingAnimatedResultButton extends ClickableWidget {
         list.add(new LiteralText(""));
 
         Formatting colour = Formatting.DARK_GRAY;
-        if (getRecipe().hasIngredient(group)) {
+        if (getRecipe().hasIngredient()) {
             colour = Formatting.WHITE;
         }
 
-        list.add(new LiteralText(((BrewingRecipeRegistryRecipeAccessor) potionRecipe.recipe).getIngredient().getMatchingStacks()[0].getName().getString()).formatted(colour));
+        list.add(new LiteralText(((BrewingRecipeRegistryRecipeAccessor<?>) potionRecipe.recipe).getIngredient().getMatchingStacks()[0].getName().getString()).formatted(colour));
 
         list.add(new LiteralText("+").formatted(Formatting.DARK_GRAY));
 

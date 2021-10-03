@@ -32,11 +32,14 @@ public abstract class Pins {
 
     @Inject(method = "keyPressed", at = @At(value = "HEAD"))
     public void add(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
-        if (keyCode == GLFW.GLFW_KEY_F && !this.searchField.keyPressed(keyCode, scanCode, modifiers)) {
-            for (AnimatedResultButton resultButton : ((RecipeBookResultsAccessor) this.recipesArea).getResultButtons()) {
-                if (resultButton.isHovered()) {
-                    BetterRecipeBook.pinnedRecipeManager.addOrRemoveFavourite(resultButton.getResultCollection());
-                    this.refreshResults(false);
+        if (keyCode == GLFW.GLFW_KEY_F) {
+            assert this.searchField != null;
+            if (!this.searchField.keyPressed(keyCode, scanCode, modifiers)) {
+                for (AnimatedResultButton resultButton : ((RecipeBookResultsAccessor) this.recipesArea).getResultButtons()) {
+                    if (resultButton.isHovered()) {
+                        BetterRecipeBook.pinnedRecipeManager.addOrRemoveFavourite(resultButton.getResultCollection());
+                        this.refreshResults(false);
+                    }
                 }
             }
         }
@@ -53,6 +56,5 @@ public abstract class Pins {
             }
         }
 
-        list2 = list3;
     }
 }

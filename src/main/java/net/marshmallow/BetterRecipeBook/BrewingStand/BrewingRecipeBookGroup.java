@@ -1,11 +1,9 @@
-package net.minecraft.client.recipebook;
+package net.marshmallow.BetterRecipeBook.BrewingStand;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.item.ItemStack;
@@ -21,10 +19,9 @@ public enum BrewingRecipeBookGroup {
     public static final BrewingRecipeBookGroup POTION = BREWING_POTION;
     public static final BrewingRecipeBookGroup SPLASH = BREWING_SPLASH_POTION;
     public static final BrewingRecipeBookGroup LINGERING = BREWING_LINGERING_POTION;
-    public static final Map<BrewingRecipeBookGroup, List<BrewingRecipeBookGroup>> SEARCH_MAP = ImmutableMap.of(BREWING_SEARCH, ImmutableList.of(BREWING_POTION, BREWING_SPLASH_POTION, BREWING_LINGERING_POTION));
     private final List<ItemStack> icons;
 
-    private BrewingRecipeBookGroup(ItemStack... entries) {
+    BrewingRecipeBookGroup(ItemStack... entries) {
         this.icons = ImmutableList.copyOf(entries);
     }
 
