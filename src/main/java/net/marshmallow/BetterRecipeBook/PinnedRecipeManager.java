@@ -64,18 +64,8 @@ public class PinnedRecipeManager {
             IOUtils.closeQuietly(writer);
         }
     }
-
-    private boolean recipeResultCollectionToString(RecipeResultCollection target) {
-        for (Recipe<?> recipe : target.getAllRecipes()) {
-            recipe.getId();
-        }
-
-        return new RecipeResultCollection(target.getAllRecipes()).getAllRecipes().equals(target.getAllRecipes());
-    }
-
+    
     public void addOrRemoveFavourite(RecipeResultCollection target) {
-        recipeResultCollectionToString(target);
-
         for (Identifier identifier : this.pinned) {
             for (Recipe<?> recipe : target.getAllRecipes()) {
                 if (recipe.getId().equals(identifier)) {
