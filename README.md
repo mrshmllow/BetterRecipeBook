@@ -1,6 +1,8 @@
 # Better Recipe Book
 
-Adds a few quality of life changes to the recipe book.
+Adds a 'few' quality of life changes to the recipe book.
+
+Every feature is optional (Even the book itself!)
 
 ## Features
 
@@ -11,6 +13,7 @@ Adds a few quality of life changes to the recipe book.
 - Pin recipes to the top of your book by pressing F.
 
 - Keeps crafting screens centered when you open the recipe book
+    - Keeps status effects visible 
 
 - Optionally completely disable the recipe book
 
