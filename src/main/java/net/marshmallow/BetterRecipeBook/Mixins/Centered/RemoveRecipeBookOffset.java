@@ -1,4 +1,4 @@
-package net.marshmallow.BetterRecipeBook.Mixins;
+package net.marshmallow.BetterRecipeBook.Mixins.Centered;
 
 import net.marshmallow.BetterRecipeBook.BetterRecipeBook;
 import net.minecraft.client.gui.DrawableHelper;

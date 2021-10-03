@@ -23,7 +23,8 @@
     "Accessors.RecipeBookResultsAccessor",
     "Pins.Pins",
     "Pins.Tooltip",
-    "RemoveRecipeBookOffset"
+    "Centered.RemoveRecipeBookOffset",
+    "Centered.MoveEffects"
   ],
   "injectors": {
     "defaultRequire": 1

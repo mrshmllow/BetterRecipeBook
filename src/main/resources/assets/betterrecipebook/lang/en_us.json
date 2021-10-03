@@ -7,6 +7,8 @@
 
   "text.autoconfig.betterrecipebook.option.keepCentered": "Keep crafting screens centered",
 
+  "text.autoconfig.betterrecipebook.option.statusEffects": "Show status effects with recipe book open",
+
   "text.autoconfig.betterrecipebook.option.scrollingModule": "Scroll Settings",
   "text.autoconfig.betterrecipebook.option.scrollingModule.scrollAround": "Scroll in circles",
   "text.autoconfig.betterrecipebook.option.scrollingModule.scrollAround.@Tooltip": "When you reach the end of the book, wrap back and keep scrolling from the start (Like JEI)",
