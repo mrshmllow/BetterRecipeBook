@@ -9,6 +9,8 @@ public class Config implements ConfigData {
 
     public boolean unlockAll = true;
 
+    public boolean keepCentered = true;
+
     @ConfigEntry.Gui.Tooltip()
     public boolean enableBounce = false;
 
