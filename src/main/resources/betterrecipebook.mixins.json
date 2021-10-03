@@ -21,8 +21,10 @@
     "Accessors.IngredientAccessor",
     "Accessors.PlayerInventoryAccessor",
     "Accessors.RecipeBookResultsAccessor",
+    "Accessors.TexturedButtonWidgetAccessor",
     "Pins.Pins",
     "Pins.Tooltip",
+    "Pins.RemoveButtonFocus",
     "Centered.RemoveRecipeBookOffset",
     "Centered.MoveEffects"
   ],
