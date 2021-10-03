@@ -22,7 +22,8 @@
     "Accessors.PlayerInventoryAccessor",
     "Accessors.RecipeBookResultsAccessor",
     "Pins.Pins",
-    "Pins.Tooltip"
+    "Pins.Tooltip",
+    "RemoveRecipeBookOffset"
   ],
   "injectors": {
     "defaultRequire": 1
