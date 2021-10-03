@@ -43,6 +43,7 @@ public class PinnedRecipeManager {
                 pinned = new ArrayList<>();
             }
         } catch (Throwable var8) {
+            pinned = new ArrayList<>();
             BetterRecipeBook.LOGGER.error("brb.pins could not be read.");
         } finally {
             IOUtils.closeQuietly(reader);
