@@ -80,14 +80,22 @@ public class BrewingStandRecipeBookWidget extends DrawableHelper implements Draw
         // this.cachedInvChangeCount = client.player.getInventory().getChangeCount();
         this.reset();
 
-        // Fix
-        this.leftOffset = this.narrow ? 0 : 86;
+        if (BetterRecipeBook.config.keepCentered) {
+            this.leftOffset = this.narrow ? 0 : 162;
+        } else {
+            this.leftOffset = this.narrow ? 0 : 86;
+        }
 
         client.keyboard.setRepeatEvents(true);
     }
 
     public void reset() {
-        this.leftOffset = this.narrow ? 0 : 86;
+        if (BetterRecipeBook.config.keepCentered) {
+            this.leftOffset = this.narrow ? 0 : 162;
+        } else {
+            this.leftOffset = this.narrow ? 0 : 86;
+        }
+
         int i = (this.parentWidth - 147) / 2 - this.leftOffset;
         int j = (this.parentHeight - 166) / 2;
         this.recipeFinder.clear();
