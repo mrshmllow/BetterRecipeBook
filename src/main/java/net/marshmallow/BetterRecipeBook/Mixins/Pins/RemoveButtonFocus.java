@@ -37,10 +37,12 @@ public interface RemoveButtonFocus {
         } while(!element.mouseClicked(mouseX, mouseY, button));
 
         if (element instanceof TexturedButtonWidget) {
-            if (!((TexturedButtonWidgetAccessor) element).getTexture().equals(new Identifier("textures/gui/recipe_button.png"))) {
-                this.setFocused(element);
+            if (((TexturedButtonWidgetAccessor) element).getTexture().equals(new Identifier("textures/gui/recipe_button.png"))) {
+                return true;
             }
         }
+
+        this.setFocused(element);
 
         if (button == 0) {
             this.setDragging(true);
