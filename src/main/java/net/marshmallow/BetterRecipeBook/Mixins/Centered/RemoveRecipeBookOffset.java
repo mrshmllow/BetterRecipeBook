@@ -22,7 +22,7 @@ public class RemoveRecipeBookOffset extends DrawableHelper {
     )
     public void center(CallbackInfo ci) {
         if (BetterRecipeBook.config.keepCentered) {
-            this.leftOffset = this.narrow ? 0 : 162;
+            this.leftOffset = this.narrow ? 0 : 164;
         } else {
             this.leftOffset = this.narrow ? 0 : 86;
         }

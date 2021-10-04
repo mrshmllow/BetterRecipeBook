@@ -32,7 +32,7 @@ public class MoveEffects {
             if (MinecraftClient.getInstance().player.isCreative()) {
                 return i + 323;
             } else {
-                return i + 304;
+                return i + 323;
             }
         } else {
             return i;
