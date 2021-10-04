@@ -21,6 +21,19 @@ Every feature is optional (Even the book itself!)
 
 ![instant crafting](https://raw.githubusercontent.com/mrshmllow/BetterRecipeBook/1.17/.github/images/demo_instant_crafting.png)
 
+- Show the item in the alternatives list instead of their recipe, so it's easy to see what your clicking on.
+  ![demo alt](https://github.com/mrshmllow/BetterRecipeBook/raw/main/.github/images/demo_alternatives.png)
+
+- Show furnace recipes so you can actually see them
+
+**Now**
+
+![now](https://raw.githubusercontent.com/mrshmllow/BetterRecipeBook/1.17/.github/images/furnace/now.png)
+
+**Then**
+
+![then](https://raw.githubusercontent.com/mrshmllow/BetterRecipeBook/1.17/.github/images/furnace/then.png)
+
 - Optionally completely disable the recipe book
 
 ![enabled/disabled](https://github.com/mrshmllow/BetterRecipeBook/raw/main/.github/images/demo_disabled.png)
@@ -32,8 +45,6 @@ Every feature is optional (Even the book itself!)
 - Optionally unlock all recipes when you log in to a server/world.
   - This also suppresses the "Recipe Unlocked" toast when enabled
 - Remove the "Bounce" animation when you unlock a new recipe.
-- Show the item in the alternatives list instead of their recipe, so it's easy to see what your clicking on.
-![demo alt](https://github.com/mrshmllow/BetterRecipeBook/raw/main/.github/images/demo_alternatives.png)
 
 ## Current known bugs
 - ### [Known vanilla bugs](https://github.com/mrshmllow/BetterRecipeBook/labels/Vanilla%20bug)
