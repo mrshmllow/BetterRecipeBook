@@ -15,6 +15,7 @@ public class BetterRecipeBook implements ModInitializer {
     public static Config config;
 
     public static PinnedRecipeManager pinnedRecipeManager;
+    public static InstantCraftingManager instantCraftingManager;
 
     public static final Logger LOGGER = LogManager.getLogger("betterrecipebook");
 
@@ -30,5 +31,6 @@ public class BetterRecipeBook implements ModInitializer {
 
         pinnedRecipeManager = new PinnedRecipeManager();
         pinnedRecipeManager.read();
+        instantCraftingManager = new InstantCraftingManager(config.instantCraftModule.instantCraft);
     }
 }

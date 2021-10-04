@@ -12,6 +12,9 @@ public class Config implements ConfigData {
     public boolean keepCentered = true;
     public boolean statusEffects = true;
 
+    @ConfigEntry.Gui.CollapsibleObject(startExpanded = true)
+    public InstantCraft instantCraftModule = new InstantCraft();
+
     @ConfigEntry.Gui.Tooltip()
     public boolean enableBounce = false;
 

@@ -20,11 +20,14 @@
     "Accessors.PlayerInventoryAccessor",
     "Accessors.RecipeBookResultsAccessor",
     "Accessors.TexturedButtonWidgetAccessor",
-    "Pins.Pins",
-    "Pins.Tooltip",
-    "Pins.RemoveButtonFocus",
+    "Centered.MoveEffects",
     "Centered.RemoveRecipeBookOffset",
-    "Centered.MoveEffects"
+    "InstantCraft.ClientPlayerInteractionManagerMixin",
+    "InstantCraft.ClientPlayNetworkHandlerMixin",
+    "InstantCraft.Toggle",
+    "Pins.Pins",
+    "Pins.RemoveButtonFocus",
+    "Pins.Tooltip"
   ],
   "injectors": {
     "defaultRequire": 1
