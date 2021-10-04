@@ -53,7 +53,13 @@ public abstract class AlternativeRecipes extends ClickableWidget implements Reci
 
             ItemRenderer itemRenderer = MinecraftClient.getInstance().getItemRenderer();
             ItemStack recipeOutput = this.recipe.getOutput();
-            itemRenderer.renderInGuiWithOverrides(recipeOutput, this.x + 4, this.y + 4, 0, 200);
+
+            RenderSystem.getModelViewStack().push();
+            RenderSystem.getModelViewStack().method_34425(matrices.peek().getModel().copy());
+            itemRenderer.renderInGuiWithOverrides(recipeOutput, this.x + 4, this.y + 4);
+            RenderSystem.enableDepthTest();
+            RenderSystem.getModelViewStack().pop();
+            RenderSystem.applyModelViewMatrix();
 
             matrices.pop();
             ci.cancel();
