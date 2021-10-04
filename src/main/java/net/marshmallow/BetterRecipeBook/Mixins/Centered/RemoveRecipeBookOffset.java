@@ -38,7 +38,7 @@ public class RemoveRecipeBookOffset extends DrawableHelper {
 
     @Inject(method = "isWide", at = @At("RETURN"), cancellable = true)
     public void isWide(CallbackInfoReturnable<Boolean> cir) {
-        if (this.leftOffset == 162 || this.leftOffset == 86) {
+        if (this.leftOffset >= 162 || this.leftOffset >= 86) {
             cir.setReturnValue(true);
         }
     }
