@@ -30,7 +30,6 @@ public abstract class AlternativeRecipes extends ClickableWidget implements Reci
     @Final @Shadow
     Recipe<?> recipe;
 
-    @Shadow public abstract void renderButton(MatrixStack matrices, int mouseX, int mouseY, float delta);
 
     public AlternativeRecipes(int x, int y, int width, int height, Text message) {
         super(x, y, width, height, message);
