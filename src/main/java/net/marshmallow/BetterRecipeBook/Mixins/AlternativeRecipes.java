@@ -20,6 +20,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.util.List;
+
 
 @Mixin(RecipeAlternativesWidget.AlternativeButtonWidget.class)
 public abstract class AlternativeRecipes extends ClickableWidget implements RecipeGridAligner<Ingredient> {
@@ -29,40 +31,55 @@ public abstract class AlternativeRecipes extends ClickableWidget implements Reci
     private boolean craftable;
     @Final @Shadow
     Recipe<?> recipe;
-
+    @Shadow public abstract void renderButton(MatrixStack matrices, int mouseX, int mouseY, float delta);
+    @Shadow @Final protected List<RecipeAlternativesWidget.AlternativeButtonWidget.InputSlot> slots;
 
     public AlternativeRecipes(int x, int y, int width, int height, Text message) {
         super(x, y, width, height, message);
     }
 
-
     @Inject(at = @At("HEAD"), method = "renderButton", cancellable = true)
     public void renderButton(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci) {
-        if (!this.isHovered() && BetterRecipeBook.config.showAlternativesOnHover) {
-            RenderSystem.setShaderTexture(0, BACKGROUND_TEXTURE);
+        RenderSystem.setShaderTexture(0, BACKGROUND_TEXTURE);
+        int i = 0;
+        int j = 0;
+
+        if (BetterRecipeBook.config.darkMode) {
+            j = 52;
+        }
+
+        if (!craftable) {
+            i += 26;
+        }
+
+        if (this.slots.size() == 1) {
             matrices.push();
+            this.drawTexture(matrices, this.x, this.y, i, j, this.width, this.height);
+            MatrixStack matrixStack = RenderSystem.getModelViewStack();
 
-            int i = 0;
-            int j = 0;
+            matrixStack.push();
+            matrixStack.method_34425(matrices.peek().getModel().copy());
+            MinecraftClient.getInstance().getItemRenderer().renderInGuiWithOverrides(this.slots.get(0).stacks[0], this.x + 4, this.y + 4);
+            RenderSystem.enableDepthTest();
+            matrixStack.pop();
+            RenderSystem.applyModelViewMatrix();
 
-            if (BetterRecipeBook.config.darkMode) {
-                j = 52;
-            }
-
-            if (!craftable) {
-                i += 26;
-            }
-
+            matrices.pop();
+            ci.cancel();
+        } else if (!this.isHovered() && BetterRecipeBook.config.showAlternativesOnHover) {
+            matrices.push();
             this.drawTexture(matrices, this.x, this.y, i, j, this.width, this.height);
 
             ItemRenderer itemRenderer = MinecraftClient.getInstance().getItemRenderer();
             ItemStack recipeOutput = this.recipe.getOutput();
 
-            RenderSystem.getModelViewStack().push();
-            RenderSystem.getModelViewStack().method_34425(matrices.peek().getModel().copy());
+            MatrixStack matrixStack = RenderSystem.getModelViewStack();
+
+            matrixStack.push();
+            matrixStack.method_34425(matrices.peek().getModel().copy());
             itemRenderer.renderInGuiWithOverrides(recipeOutput, this.x + 4, this.y + 4);
             RenderSystem.enableDepthTest();
-            RenderSystem.getModelViewStack().pop();
+            matrixStack.pop();
             RenderSystem.applyModelViewMatrix();
 
             matrices.pop();
