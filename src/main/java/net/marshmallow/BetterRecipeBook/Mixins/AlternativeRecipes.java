@@ -52,7 +52,7 @@ public abstract class AlternativeRecipes extends ClickableWidget implements Reci
             i += 26;
         }
 
-        if (this.slots.size() == 1) {
+        if (this.slots.size() == 1 && this.isHovered()) {
             matrices.push();
             this.drawTexture(matrices, this.x, this.y, i, j, this.width, this.height);
             MatrixStack matrixStack = RenderSystem.getModelViewStack();
