@@ -38,7 +38,7 @@ public abstract class Toggle {
         int i = (this.parentWidth - 147) / 2 - this.leftOffset;
         int j = (this.parentHeight - 166) / 2;
 
-        this.instantCraftButton = new ToggleButtonWidget(i + 110, j + 170, 26, 16, BetterRecipeBook.config.instantCraftModule.instantCraft);
+        this.instantCraftButton = new ToggleButtonWidget(i + 110, j + 137, 26, 16, BetterRecipeBook.config.instantCraftModule.instantCraft);
         this.instantCraftButton.setTextureUV(0, 0, 28, 18, BUTTON_TEXTURE);
     }
 
