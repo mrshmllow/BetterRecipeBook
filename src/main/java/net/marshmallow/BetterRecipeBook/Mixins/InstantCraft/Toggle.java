@@ -39,10 +39,14 @@ public abstract class Toggle {
         int j = (this.parentHeight - 166) / 2;
 
         this.instantCraftButton = new ToggleButtonWidget(i + 110, j + 137, 26, 16, BetterRecipeBook.config.instantCraftModule.instantCraft);
-        this.instantCraftButton.setTextureUV(0, 0, 28, 18, BUTTON_TEXTURE);
+        if (BetterRecipeBook.config.darkMode) {
+            this.instantCraftButton.setTextureUV(0, 36, 28, 18, BUTTON_TEXTURE);
+        } else {
+            this.instantCraftButton.setTextureUV(0, 0, 28, 18, BUTTON_TEXTURE);
+        }
     }
 
-    @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/util/math/MatrixStack;pop()V"))
+    @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/recipebook/RecipeBookResults;draw(Lnet/minecraft/client/util/math/MatrixStack;IIIIF)V"))
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci) {
         if (!BetterRecipeBook.config.instantCraftModule.showButton) {
             return;
