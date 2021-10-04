@@ -12,8 +12,14 @@ Every feature is optional (Even the book itself!)
 
 - Pin recipes to the top of your book by pressing F.
 
-- Keeps crafting screens centered when you open the recipe book
-    - Keeps status effects visible 
+- Keeps crafting screens centered when you open the recipe book. Similar to [centered inventory](https://www.curseforge.com/minecraft/mc-mods/centered-inventory)
+    - Keeps status effects visible
+
+![centered inventory](https://raw.githubusercontent.com/mrshmllow/BetterRecipeBook/1.17/.github/images/demo_centered_inventory.png)
+
+- Adds an instant crafting toggle. Enable it to craft with one click. Hold shift to craft as many as possible. Similar to [one click crafting](https://modrinth.com/mod/oneclickcrafting)
+
+![instant crafting](https://raw.githubusercontent.com/mrshmllow/BetterRecipeBook/1.17/.github/images/demo_instant_crafting.png)
 
 - Optionally completely disable the recipe book
 
