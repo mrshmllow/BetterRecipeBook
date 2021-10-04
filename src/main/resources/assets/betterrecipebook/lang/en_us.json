@@ -1,6 +1,8 @@
 {
   "text.autoconfig.betterrecipebook.title": "Better Recipe Book Config",
   "text.autoconfig.betterrecipebook.option.enableBook": "Enable the recipe book",
+  "text.autoconfig.betterrecipebook.option.darkMode": "Enable dark mode variants. Requires a full resourcepack",
+  "text.autoconfig.betterrecipebook.option.darkMode.@Tooltip": "Only enable this if you use a darkmode resourcepack like vanilla tweaks.",
   "text.autoconfig.betterrecipebook.option.unlockAll": "Automatically unlock all recipes",
   "text.autoconfig.betterrecipebook.option.keepCentered": "Keep crafting screens centered",
   "text.autoconfig.betterrecipebook.option.statusEffects": "Show status effects with recipe book open",

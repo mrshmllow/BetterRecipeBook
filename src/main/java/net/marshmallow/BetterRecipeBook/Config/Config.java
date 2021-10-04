@@ -7,6 +7,9 @@ import me.shedaniel.autoconfig.annotation.ConfigEntry;
 public class Config implements ConfigData {
     public boolean enableBook = true;
 
+    @ConfigEntry.Gui.Tooltip()
+    public boolean darkMode = false;
+
     public boolean unlockAll = true;
 
     public boolean keepCentered = true;

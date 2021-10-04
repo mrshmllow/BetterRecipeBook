@@ -45,6 +45,10 @@ public abstract class AlternativeRecipes extends ClickableWidget implements Reci
             int i = 0;
             int j = 0;
 
+            if (BetterRecipeBook.config.darkMode) {
+                j = 52;
+            }
+
             if (!craftable) {
                 i += 26;
             }
