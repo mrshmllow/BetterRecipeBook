@@ -27,7 +27,8 @@
     "InstantCraft.Toggle",
     "Pins.Pins",
     "Pins.RemoveButtonFocus",
-    "Pins.Tooltip"
+    "Pins.Tooltip",
+    "Pins.Icon"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -49,14 +49,23 @@ public class BrewingAnimatedResultButton extends ClickableWidget {
 
         MinecraftClient minecraftClient = MinecraftClient.getInstance();
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderTexture(0, BACKGROUND_TEXTURE);
-        int i = 29 + 25;
+
+        int i;
+        int j;
+        if (BetterRecipeBook.pinnedRecipeManager.hasPotion(potionRecipe.recipe)) {
+            RenderSystem.setShaderTexture(0, new Identifier("betterrecipebook:textures/gui/pinned.png"));
+            i = 25;
+            j = 0;
+        } else {
+            RenderSystem.setShaderTexture(0, BACKGROUND_TEXTURE);
+            i = 29 + 25;
+            j = 206;
+        }
 
         if (potionRecipe.hasMaterials(group)) {
             i -= 25;
         }
 
-        int j = 206;
         MatrixStack matrixStack = RenderSystem.getModelViewStack();
         this.drawTexture(matrices, this.x, this.y, i, j, this.width, this.height);
         int k = 4;
