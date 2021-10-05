@@ -329,7 +329,7 @@ public class BrewingStandRecipeBookWidget extends DrawableHelper implements Draw
 
     @Override
     public SelectionType getType() {
-        return null;
+        return this.open ? Selectable.SelectionType.HOVERED : Selectable.SelectionType.NONE;
     }
 
     public void drawTooltip(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
