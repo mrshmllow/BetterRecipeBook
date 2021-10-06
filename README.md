@@ -25,7 +25,7 @@ Every feature is optional (Even the book itself!)
   ![demo alt](https://github.com/mrshmllow/BetterRecipeBook/raw/main/.github/images/demo_alternatives.png)
 
 - Optionally un-group items, saving you a right click. Great if you like to pin individual recipes
-  ![un group](https://github.com/mrshmllow/BetterRecipeBook/raw/main/.github/images/demo_un_grouped.png)
+  ![un group](https://raw.githubusercontent.com/mrshmllow/BetterRecipeBook/1.17/.github/images/demo_un_grouped.png)
 
 - Show furnace recipes so you can actually see them
 
