@@ -33,5 +33,6 @@
   "betterrecipebook.gui.pin.remove": "Press F to unpin this recipe",
   "betterrecipebook.gui.togglePotions.brewable": "Showing Breable",
   "betterrecipebook.gui.instantCraft.on": "Instant crafting is on",
-  "betterrecipebook.gui.instantCraft.off": "Instant crafting is off"
+  "betterrecipebook.gui.instantCraft.off": "Instant crafting is off",
+  "betterrecipebook.gui.settings.open": "Open settings"
 }
