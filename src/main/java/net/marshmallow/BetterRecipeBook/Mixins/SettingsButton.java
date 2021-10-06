@@ -55,6 +55,15 @@ public abstract class SettingsButton {
             assert this.client.player != null;
             if (!this.client.player.isSpectator()) {
                 cir.setReturnValue(true);
+        if (this.settingsButton != null) {
+            if (this.settingsButton.mouseClicked(mouseX, mouseY, button) && this.isOpen() && BetterRecipeBook.config.settingsButton) {
+                assert this.client.player != null;
+                if (!this.client.player.isSpectator()) {
+                    assert this.client.player != null;
+                    if (!this.client.player.isSpectator()) {
+                        cir.setReturnValue(true);
+                    }
+                }
             }
         }
     }
