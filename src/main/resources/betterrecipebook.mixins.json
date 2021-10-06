@@ -15,9 +15,12 @@
     "RemoveBookButton",
     "RemoveToasts",
     "ScrollablePages",
+    "SettingsButton",
     "Accessors.BrewingRecipeRegistryAccessor",
     "Accessors.BrewingRecipeRegistryRecipeAccessor",
     "Accessors.PlayerInventoryAccessor",
+    "Accessors.RecipeAlternativesWidgetAccessor",
+    "Accessors.AlternativeButtonWidgetAccessor",
     "Accessors.RecipeBookResultsAccessor",
     "Accessors.TexturedButtonWidgetAccessor",
     "Centered.MoveEffects",
@@ -25,13 +28,12 @@
     "InstantCraft.ClientPlayerInteractionManagerMixin",
     "InstantCraft.ClientPlayNetworkHandlerMixin",
     "InstantCraft.Toggle",
-    "UnGroup.SplitGrouped",
-    "UnGroup.Search",
     "Pins.Icon",
     "Pins.Pins",
     "Pins.RemoveButtonFocus",
     "Pins.Tooltip",
-    "SettingsButton"
+    "UnGroup.Search",
+    "UnGroup.SplitGrouped"
   ],
   "injectors": {
     "defaultRequire": 1
