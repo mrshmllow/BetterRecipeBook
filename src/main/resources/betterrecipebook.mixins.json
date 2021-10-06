@@ -25,6 +25,7 @@
     "InstantCraft.ClientPlayerInteractionManagerMixin",
     "InstantCraft.ClientPlayNetworkHandlerMixin",
     "InstantCraft.Toggle",
+    "NoGrouped.SplitGrouped",
     "Pins.Icon",
     "Pins.Pins",
     "Pins.RemoveButtonFocus",
