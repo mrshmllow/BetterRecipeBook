@@ -55,7 +55,6 @@ public abstract class SettingsButton {
             if (this.settingsButton.mouseClicked(mouseX, mouseY, button) && this.isOpen() && BetterRecipeBook.config.settingsButton) {
                 assert this.client.player != null;
                 if (!this.client.player.isSpectator()) {
-                    assert this.client.player != null;
                     if (!this.client.player.isSpectator()) {
                         cir.setReturnValue(true);
                     }
