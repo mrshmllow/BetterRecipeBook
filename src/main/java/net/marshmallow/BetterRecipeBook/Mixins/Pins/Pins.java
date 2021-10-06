@@ -35,6 +35,8 @@ public abstract class Pins {
 
     @Inject(method = "keyPressed", at = @At(value = "HEAD"), cancellable = true)
     public void add(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
+        if (this.searchField == null) return;
+
         if (keyCode == GLFW.GLFW_KEY_F) {
             RecipeAlternativesWidget alternatesWidget = ((RecipeBookResultsAccessor) this.recipesArea).getAlternatesWidget();
             List<RecipeAlternativesWidget.AlternativeButtonWidget> alternativeButtons = ((RecipeAlternativesWidgetAccessor) alternatesWidget).getAlternativeButtons();
@@ -43,14 +45,12 @@ public abstract class Pins {
                     RecipeResultCollection recipeResultCollection = new RecipeResultCollection(Collections.singletonList(((AlternativeButtonWidgetAccessor) alternativeButton).getRecipe()));
                     recipeResultCollection.initialize(this.recipeBook);
                     BetterRecipeBook.pinnedRecipeManager.addOrRemoveFavourite(recipeResultCollection);
-                    assert this.searchField != null;
                     this.searchField.changeFocus(false);
                     this.refreshResults(false);
                     cir.setReturnValue(true);
                 }
             }
 
-            assert this.searchField != null;
             if (!this.searchField.keyPressed(keyCode, scanCode, modifiers)) {
                 for (AnimatedResultButton resultButton : ((RecipeBookResultsAccessor) this.recipesArea).getResultButtons()) {
                     if (resultButton.isHovered()) {
