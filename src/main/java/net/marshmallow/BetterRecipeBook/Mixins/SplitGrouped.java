@@ -1,4 +1,4 @@
-package net.marshmallow.BetterRecipeBook.Mixins.NoGrouped;
+package net.marshmallow.BetterRecipeBook.Mixins;
 
 import com.google.common.collect.Lists;
 import net.marshmallow.BetterRecipeBook.BetterRecipeBook;
