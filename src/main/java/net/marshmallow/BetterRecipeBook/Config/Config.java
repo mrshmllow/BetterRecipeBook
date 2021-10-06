@@ -4,26 +4,32 @@ import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
 
 @me.shedaniel.autoconfig.annotation.Config(name = "betterrecipebook")
+@me.shedaniel.autoconfig.annotation.Config.Gui.Background("minecraft:textures/block/blue_concrete_powder.png")
 public class Config implements ConfigData {
     public boolean enableBook = true;
 
     @ConfigEntry.Gui.Tooltip()
-    public boolean darkMode = false;
+    public boolean settingsButton = true;
 
-    public boolean unlockAll = true;
+    @ConfigEntry.Gui.Tooltip()
+    public boolean darkMode = false;
 
     public boolean keepCentered = true;
     public boolean statusEffects = true;
 
-    @ConfigEntry.Gui.CollapsibleObject(startExpanded = true)
-    public InstantCraft instantCraftModule = new InstantCraft();
+    @ConfigEntry.Category("newRecipes")
+    @ConfigEntry.Gui.TransitiveObject()
+    public NewRecipes newRecipes = new NewRecipes();
 
-    @ConfigEntry.Gui.Tooltip()
-    public boolean enableBounce = false;
+    @ConfigEntry.Category("instantCraft")
+    @ConfigEntry.Gui.TransitiveObject()
+    public InstantCraft instantCraft = new InstantCraft();
 
-    @ConfigEntry.Gui.CollapsibleObject(startExpanded = true)
-    public Scrolling scrollingModule = new Scrolling();
+    @ConfigEntry.Category("alternativeRecipes")
+    @ConfigEntry.Gui.TransitiveObject()
+    public AlternativeRecipes alternativeRecipes = new AlternativeRecipes();
 
-    @ConfigEntry.Gui.Tooltip()
-    public boolean showAlternativesOnHover = true;
+    @ConfigEntry.Category("scrolling")
+    @ConfigEntry.Gui.TransitiveObject()
+    public Scrolling scrolling = new Scrolling();
 }

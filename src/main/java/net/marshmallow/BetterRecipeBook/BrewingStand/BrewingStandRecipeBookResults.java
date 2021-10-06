@@ -75,7 +75,7 @@ public class BrewingStandRecipeBookResults {
     }
 
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (BetterRecipeBook.config.scrollingModule.enableScrolling) {
+        if (BetterRecipeBook.config.scrolling.enableScrolling) {
             if (nextPageButton.mouseClicked(mouseX, mouseY, button)) {
                 if (currentPage >= pageCount - 1) {
                     currentPage = -1;
@@ -127,7 +127,7 @@ public class BrewingStandRecipeBookResults {
     }
 
     private void hideShowPageButtons() {
-        if (BetterRecipeBook.config.scrollingModule.scrollAround && !(pageCount <= 1)) {
+        if (BetterRecipeBook.config.scrolling.scrollAround && !(pageCount <= 1)) {
             nextPageButton.visible = true;
             prevPageButton.visible = true;
         } else {
@@ -137,12 +137,12 @@ public class BrewingStandRecipeBookResults {
     }
 
     public void draw(MatrixStack matrices, int x, int y, int mouseX, int mouseY, float delta) {
-        if (BetterRecipeBook.queuedScroll != 0 && BetterRecipeBook.config.scrollingModule.enableScrolling) {
+        if (BetterRecipeBook.queuedScroll != 0 && BetterRecipeBook.config.scrolling.enableScrolling) {
             int queuedPage = BetterRecipeBook.queuedScroll + currentPage;
 
             if (queuedPage <= pageCount - 1 && queuedPage >= 0) {
                 currentPage += BetterRecipeBook.queuedScroll;
-            } else if (BetterRecipeBook.config.scrollingModule.scrollAround) {
+            } else if (BetterRecipeBook.config.scrolling.scrollAround) {
                 if (queuedPage < 0) {
                     currentPage = pageCount - 1;
                 } else if (queuedPage > pageCount - 1) {

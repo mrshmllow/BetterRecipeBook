@@ -4,7 +4,7 @@ import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.annotation.Config;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
 
-@Config(name= "scrolling_module")
+@Config(name= "scrolling")
 public class Scrolling implements ConfigData {
     public boolean enableScrolling = true;
 

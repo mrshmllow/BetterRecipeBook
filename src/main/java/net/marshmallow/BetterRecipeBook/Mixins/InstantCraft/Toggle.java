@@ -31,7 +31,7 @@ public abstract class Toggle {
 
     @Inject(method = "reset", at = @At("RETURN"))
     public void reset(CallbackInfo ci) {
-        if (!BetterRecipeBook.config.instantCraftModule.showButton) {
+        if (!BetterRecipeBook.config.instantCraft.showButton) {
             return;
         }
 
@@ -48,7 +48,7 @@ public abstract class Toggle {
 
     @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/recipebook/RecipeBookResults;draw(Lnet/minecraft/client/util/math/MatrixStack;IIIIF)V"))
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci) {
-        if (!BetterRecipeBook.config.instantCraftModule.showButton) {
+        if (!BetterRecipeBook.config.instantCraft.showButton) {
             return;
         }
 
@@ -57,7 +57,7 @@ public abstract class Toggle {
 
     @Inject(method = "mouseClicked", at = @At("HEAD"), cancellable = true)
     public void mouseClicked(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir) {
-        if (this.isOpen() && BetterRecipeBook.config.instantCraftModule.showButton) {
+        if (this.isOpen() && BetterRecipeBook.config.instantCraft.showButton) {
             assert this.client.player != null;
             if (!this.client.player.isSpectator()) {
                 if (this.instantCraftButton.mouseClicked(mouseX, mouseY, button)) {
@@ -71,7 +71,7 @@ public abstract class Toggle {
 
     @Inject(method = "drawTooltip", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/recipebook/RecipeBookWidget;drawGhostSlotTooltip(Lnet/minecraft/client/util/math/MatrixStack;IIII)V"))
     public void drawTooltip(MatrixStack matrices, int x, int y, int mouseX, int mouseY, CallbackInfo ci) {
-        if (!BetterRecipeBook.config.instantCraftModule.showButton) {
+        if (!BetterRecipeBook.config.instantCraft.showButton) {
             return;
         }
 
