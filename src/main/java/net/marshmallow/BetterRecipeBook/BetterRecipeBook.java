@@ -3,6 +3,7 @@ package net.marshmallow.BetterRecipeBook;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.Toml4jConfigSerializer;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.loader.api.FabricLoader;
 import net.marshmallow.BetterRecipeBook.Config.Config;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -11,6 +12,7 @@ public class BetterRecipeBook implements ModInitializer {
     public static int queuedScroll;
     public static boolean hasWarnedNoPermission;
     public static boolean isFilteringNone;
+    public static boolean inventorioLoaded;
 
     public static Config config;
 
@@ -32,5 +34,8 @@ public class BetterRecipeBook implements ModInitializer {
         pinnedRecipeManager = new PinnedRecipeManager();
         pinnedRecipeManager.read();
         instantCraftingManager = new InstantCraftingManager(config.instantCraftModule.instantCraft);
+        instantCraftingManager = new InstantCraftingManager(config.instantCraft.instantCraft);
+
+        inventorioLoaded = FabricLoader.getInstance().isModLoaded("inventorio");
     }
 }
