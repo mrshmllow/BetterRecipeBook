@@ -29,9 +29,7 @@
     "fabricloader": ">=0.11.3",
     "fabric": "*",
     "minecraft": "1.17.x",
-    "cloth-config2": ">=5.0.38"
-  },
-  "suggests": {
+    "cloth-config2": ">=5.0.38",
     "modmenu": "*"
   }
 }
