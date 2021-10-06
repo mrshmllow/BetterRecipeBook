@@ -1,4 +1,4 @@
-package net.marshmallow.BetterRecipeBook.Mixins.Settings;
+package net.marshmallow.BetterRecipeBook.Mixins;
 
 import me.shedaniel.autoconfig.AutoConfig;
 import net.marshmallow.BetterRecipeBook.BetterRecipeBook;
@@ -18,7 +18,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(RecipeBookWidget.class)
-public abstract class Button {
+public abstract class SettingsButton {
     private static final Identifier BUTTON_TEXTURE = new Identifier("betterrecipebook:textures/gui/buttons.png");
     @Shadow
     protected MinecraftClient client;

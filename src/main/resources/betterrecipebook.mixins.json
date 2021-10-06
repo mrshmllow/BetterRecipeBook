@@ -30,7 +30,7 @@
     "Pins.Pins",
     "Pins.RemoveButtonFocus",
     "Pins.Tooltip",
-    "Settings.Button"
+    "SettingsButton"
   ],
   "injectors": {
     "defaultRequire": 1
