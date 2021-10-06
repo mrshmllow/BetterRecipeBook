@@ -21,8 +21,6 @@ public class RemoveRecipeBookOffset extends DrawableHelper {
             at = @At(value = "FIELD", target = "Lnet/minecraft/client/gui/screen/recipebook/RecipeBookWidget;leftOffset:I")
     )
     public void center(CallbackInfo ci) {
-        if (BetterRecipeBook.config.keepCentered) {
-            this.leftOffset = this.narrow ? 0 : 164;
         if (BetterRecipeBook.inventorioLoaded) {
             this.leftOffset = this.narrow ? 0 : 86;
         } else if (BetterRecipeBook.config.keepCentered) {

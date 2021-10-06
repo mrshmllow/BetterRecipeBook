@@ -34,7 +34,6 @@ public class BetterRecipeBook implements ModInitializer {
         pinnedRecipeManager = new PinnedRecipeManager();
         pinnedRecipeManager.read();
         instantCraftingManager = new InstantCraftingManager(config.instantCraftModule.instantCraft);
-        instantCraftingManager = new InstantCraftingManager(config.instantCraft.instantCraft);
 
         inventorioLoaded = FabricLoader.getInstance().isModLoaded("inventorio");
     }
