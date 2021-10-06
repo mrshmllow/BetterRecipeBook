@@ -47,7 +47,6 @@ public abstract class SettingsButton {
         }
 
         this.settingsButton = new TexturedButtonWidget(i + 11, j + 137, 16, 16, u, 73, 18, BUTTON_TEXTURE, button -> {
-            System.out.println("Yes");
             MinecraftClient.getInstance().setScreen(AutoConfig.getConfigScreen(Config.class, MinecraftClient.getInstance().currentScreen).get());
         });
     }
