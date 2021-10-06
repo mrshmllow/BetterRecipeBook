@@ -2,9 +2,11 @@ package net.marshmallow.BetterRecipeBook.BrewingStand;
 
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.systems.RenderSystem;
+import me.shedaniel.autoconfig.AutoConfig;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.marshmallow.BetterRecipeBook.BetterRecipeBook;
+import net.marshmallow.BetterRecipeBook.Config.Config;
 import net.marshmallow.BetterRecipeBook.Mixins.Accessors.BrewingRecipeRegistryRecipeAccessor;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
@@ -15,6 +17,7 @@ import net.minecraft.client.gui.Selectable;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.screen.recipebook.RecipeBookGhostSlots;
 import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.client.gui.widget.TexturedButtonWidget;
 import net.minecraft.client.gui.widget.ToggleButtonWidget;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
@@ -39,6 +42,7 @@ import java.util.*;
 @Environment(EnvType.CLIENT)
 public class BrewingStandRecipeBookWidget extends DrawableHelper implements Drawable, Element, Selectable {
     public static final Identifier TEXTURE = new Identifier("textures/gui/recipe_book.png");
+    private static final Identifier BUTTON_TEXTURE = new Identifier("betterrecipebook:textures/gui/buttons.png");
     protected BrewingStandScreenHandler brewingStandScreenHandler;
     MinecraftClient client;
     private int parentWidth;
@@ -58,9 +62,11 @@ public class BrewingStandRecipeBookWidget extends DrawableHelper implements Draw
     @Nullable
     private BrewingRecipeGroupButtonWidget currentTab;
     private boolean searching;
+    protected TexturedButtonWidget settingsButton;
     private String searchText;
     private static final Text TOGGLE_CRAFTABLE_RECIPES_TEXT;
     private static final Text TOGGLE_ALL_RECIPES_TEXT;
+    private static final Text OPEN_SETTINGS_TEXT;
 
 
     public void initialize(int parentWidth, int parentHeight, MinecraftClient client, boolean narrow, BrewingStandScreenHandler brewingStandScreenHandler) {
@@ -123,6 +129,17 @@ public class BrewingStandRecipeBookWidget extends DrawableHelper implements Draw
 
         if (this.currentTab == null) {
             this.currentTab = this.tabButtons.get(0);
+        }
+
+        if (BetterRecipeBook.config.settingsButton) {
+            int u = 0;
+            if (BetterRecipeBook.config.darkMode) {
+                u = 18;
+            }
+
+            this.settingsButton = new TexturedButtonWidget(i + 11, j + 137, 16, 16, u, 73, 18, BUTTON_TEXTURE, button -> {
+                MinecraftClient.getInstance().setScreen(AutoConfig.getConfigScreen(Config.class, MinecraftClient.getInstance().currentScreen).get());
+            });
         }
 
         this.currentTab.setToggled(true);
@@ -189,7 +206,8 @@ public class BrewingStandRecipeBookWidget extends DrawableHelper implements Draw
                     this.toggleBrewableButton.setToggled(bl);
                     this.refreshResults(false);
                     return true;
-                } else {
+                }
+                if (!this.settingsButton.mouseClicked(mouseX, mouseY, button) || !BetterRecipeBook.config.settingsButton) {
                     Iterator<BrewingRecipeGroupButtonWidget> var6 = this.tabButtons.iterator();
 
                     BrewingRecipeGroupButtonWidget recipeGroupButtonWidget;
@@ -199,7 +217,7 @@ public class BrewingStandRecipeBookWidget extends DrawableHelper implements Draw
                         }
 
                         recipeGroupButtonWidget = var6.next();
-                    } while(!recipeGroupButtonWidget.mouseClicked(mouseX, mouseY, button));
+                    } while (!recipeGroupButtonWidget.mouseClicked(mouseX, mouseY, button));
 
                     if (this.currentTab != recipeGroupButtonWidget) {
                         if (this.currentTab != null) {
@@ -211,8 +229,8 @@ public class BrewingStandRecipeBookWidget extends DrawableHelper implements Draw
                         this.refreshResults(true);
                     }
 
-                    return true;
                 }
+                return true;
             }
         } else {
             return false;
@@ -292,6 +310,11 @@ public class BrewingStandRecipeBookWidget extends DrawableHelper implements Draw
             }
 
             this.toggleBrewableButton.render(matrices, mouseX, mouseY, delta);
+
+            if (BetterRecipeBook.config.settingsButton) {
+                this.settingsButton.render(matrices, mouseX, mouseY, delta);
+            }
+
             this.recipesArea.draw(matrices, i, j, mouseX, mouseY, delta);
             matrices.pop();
         }
@@ -339,6 +362,12 @@ public class BrewingStandRecipeBookWidget extends DrawableHelper implements Draw
                 Text text = this.getCraftableButtonText();
                 if (this.client.currentScreen != null) {
                     this.client.currentScreen.renderTooltip(matrices, text, mouseX, mouseY);
+                }
+            }
+
+            if (this.settingsButton.isHovered() && BetterRecipeBook.config.settingsButton) {
+                if (this.client.currentScreen != null) {
+                    this.client.currentScreen.renderTooltip(matrices, OPEN_SETTINGS_TEXT, mouseX, mouseY);
                 }
             }
 
@@ -447,5 +476,6 @@ public class BrewingStandRecipeBookWidget extends DrawableHelper implements Draw
         SEARCH_HINT_TEXT = (new TranslatableText("gui.recipebook.search_hint")).formatted(Formatting.ITALIC).formatted(Formatting.GRAY);
         TOGGLE_CRAFTABLE_RECIPES_TEXT = new TranslatableText("betterrecipebook.gui.togglePotions.brewable");
         TOGGLE_ALL_RECIPES_TEXT = new TranslatableText("gui.recipebook.toggleRecipes.all");
+        OPEN_SETTINGS_TEXT = new TranslatableText("betterrecipebook.gui.settings.open");
     }
 }
