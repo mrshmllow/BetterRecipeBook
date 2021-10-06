@@ -152,7 +152,8 @@ public class BrewingStandRecipeBookWidget extends DrawableHelper implements Draw
             if (this.recipesArea.mouseClicked(mouseX, mouseY, button)) {
                 BrewingResult recipe = this.recipesArea.getLastClickedRecipe();
                 if (recipe != null) {
-                    assert this.currentTab != null;
+                    if (this.currentTab == null) return false;
+
                     if (recipe.hasMaterials(this.currentTab.getGroup())) {
                         Potion inputPotion = (Potion) ((BrewingRecipeRegistryRecipeAccessor<?>) recipe.recipe).getInput();
                         Ingredient ingredient = ((BrewingRecipeRegistryRecipeAccessor<?>) recipe.recipe).getIngredient();

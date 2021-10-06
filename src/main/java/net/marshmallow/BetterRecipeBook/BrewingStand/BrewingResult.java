@@ -50,7 +50,8 @@ public class BrewingResult {
         assert MinecraftClient.getInstance().player != null;
         for (DefaultedList<ItemStack> itemStacks : ((PlayerInventoryAccessor) MinecraftClient.getInstance().player.getInventory()).getCombinedInventory()) {
             for (ItemStack o : itemStacks) {
-                assert inputStack.getNbt() != null;
+                if (inputStack.getNbt() == null) return false;
+
                 if (inputStack.getNbt().equals(o.getNbt()) && inputStack.getItem().equals(o.getItem())) {
                     return true;
                 }
