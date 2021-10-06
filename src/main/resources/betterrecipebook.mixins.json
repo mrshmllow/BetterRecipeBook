@@ -25,10 +25,11 @@
     "InstantCraft.ClientPlayerInteractionManagerMixin",
     "InstantCraft.ClientPlayNetworkHandlerMixin",
     "InstantCraft.Toggle",
+    "Pins.Icon",
     "Pins.Pins",
     "Pins.RemoveButtonFocus",
     "Pins.Tooltip",
-    "Pins.Icon"
+    "Settings.Button"
   ],
   "injectors": {
     "defaultRequire": 1
