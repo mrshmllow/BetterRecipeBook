@@ -5,7 +5,8 @@
   "name": "Better Recipe Book",
   "description": "Adds some quality of life changes to the recipe book",
   "authors": [
-    "marshmallow"
+    "marshmallow",
+    "ruvaldak"
   ],
   "contact": {
     "issues": "https://github.com/marshamallow/BetterRecipeBook"
