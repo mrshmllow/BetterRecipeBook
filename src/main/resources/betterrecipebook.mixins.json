@@ -2,7 +2,7 @@
   "required": true,
   "minVersion": "0.8",
   "package": "net.marshmallow.BetterRecipeBook.Mixins",
-  "compatibilityLevel": "JAVA_8",
+  "compatibilityLevel": "JAVA_16",
   "mixins": [
     "UnlockRecipes",
   ],
@@ -23,7 +23,6 @@
     "Accessors.AlternativeButtonWidgetAccessor",
     "Accessors.RecipeBookResultsAccessor",
     "Accessors.TexturedButtonWidgetAccessor",
-    "Centered.MoveEffects",
     "Centered.RemoveRecipeBookOffset",
     "InstantCraft.ClientPlayerInteractionManagerMixin",
     "InstantCraft.ClientPlayNetworkHandlerMixin",

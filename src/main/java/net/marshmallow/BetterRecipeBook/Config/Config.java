@@ -15,7 +15,6 @@ public class Config implements ConfigData {
     public boolean darkMode = false;
 
     public boolean keepCentered = true;
-    public boolean statusEffects = true;
 
     @ConfigEntry.Category("newRecipes")
     @ConfigEntry.Gui.TransitiveObject()
