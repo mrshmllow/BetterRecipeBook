@@ -43,7 +43,7 @@ public abstract class SettingsButton {
                 u = 18;
             }
 
-            this.settingsButton = new TexturedButtonWidget(i + 11, j + 137, 16, 16, u, 73, 18, BUTTON_TEXTURE, button -> {
+            this.settingsButton = new TexturedButtonWidget(i + 11, j + 137, 16, 18, u, 77, 19, BUTTON_TEXTURE, button -> {
                 MinecraftClient.getInstance().setScreen(AutoConfig.getConfigScreen(Config.class, MinecraftClient.getInstance().currentScreen).get());
             });
         }
