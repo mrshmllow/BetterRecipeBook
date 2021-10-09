@@ -38,11 +38,11 @@ public abstract class Toggle {
         int i = (this.parentWidth - 147) / 2 - this.leftOffset;
         int j = (this.parentHeight - 166) / 2;
 
-        this.instantCraftButton = new ToggleButtonWidget(i + 110, j + 137, 26, 16, BetterRecipeBook.instantCraftingManager.on);
+        this.instantCraftButton = new ToggleButtonWidget(i + 110, j + 137, 26, 16 + 2, BetterRecipeBook.instantCraftingManager.on);
         if (BetterRecipeBook.config.darkMode) {
-            this.instantCraftButton.setTextureUV(0, 36, 28, 18, BUTTON_TEXTURE);
+            this.instantCraftButton.setTextureUV(0, 36 + 2, 28, 18 + 1, BUTTON_TEXTURE);
         } else {
-            this.instantCraftButton.setTextureUV(0, 0, 28, 18, BUTTON_TEXTURE);
+            this.instantCraftButton.setTextureUV(0, 0, 28, 18 + 1, BUTTON_TEXTURE);
         }
     }
 
