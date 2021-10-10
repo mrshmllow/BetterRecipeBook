@@ -7,6 +7,7 @@ import net.marshmallow.BetterRecipeBook.BetterRecipeBook;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ToggleButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.screen.BrewingStandScreenHandler;
 
 import java.util.Iterator;
 import java.util.List;
@@ -23,6 +24,7 @@ public class BrewingStandRecipeBookResults {
     private BrewingAnimatedResultButton hoveredResultButton;
     private BrewingResult lastClickedRecipe;
     BrewingRecipeBookGroup group;
+    private BrewingStandScreenHandler brewingStandScreenHandler;
 
     public BrewingStandRecipeBookResults() {
         for(int i = 0; i < 20; ++i) {
@@ -31,8 +33,9 @@ public class BrewingStandRecipeBookResults {
 
     }
 
-    public void initialize(MinecraftClient client, int parentLeft, int parentTop) {
+    public void initialize(MinecraftClient client, int parentLeft, int parentTop, BrewingStandScreenHandler brewingStandScreenHandler) {
         this.client = client;
+        this.brewingStandScreenHandler = brewingStandScreenHandler;
         // this.recipeBook = client.player.getRecipeBook();
 
         for(int i = 0; i < this.resultButtons.size(); ++i) {
@@ -64,7 +67,7 @@ public class BrewingStandRecipeBookResults {
             BrewingAnimatedResultButton animatedResultButton = this.resultButtons.get(j);
             if (i + j < this.recipeCollection.size()) {
                 BrewingResult output = this.recipeCollection.get(i + j);
-                animatedResultButton.showPotionRecipe(output, group);
+                animatedResultButton.showPotionRecipe(output, group, brewingStandScreenHandler);
                 animatedResultButton.visible = true;
             } else {
                 animatedResultButton.visible = false;

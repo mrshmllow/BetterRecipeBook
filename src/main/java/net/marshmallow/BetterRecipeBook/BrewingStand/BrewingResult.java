@@ -1,14 +1,13 @@
 package net.marshmallow.BetterRecipeBook.BrewingStand;
 
 import net.marshmallow.BetterRecipeBook.Mixins.Accessors.BrewingRecipeRegistryRecipeAccessor;
-import net.marshmallow.BetterRecipeBook.Mixins.Accessors.PlayerInventoryAccessor;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.potion.Potion;
 import net.minecraft.recipe.BrewingRecipeRegistry;
+import net.minecraft.screen.BrewingStandScreenHandler;
+import net.minecraft.screen.slot.Slot;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.registry.Registry;
 
 public class BrewingResult {
@@ -22,17 +21,16 @@ public class BrewingResult {
         this.input = Registry.POTION.getId((Potion) ((BrewingRecipeRegistryRecipeAccessor<?>) recipe).getInput());
     }
 
-    public boolean hasIngredient() {
+    public boolean hasIngredient(BrewingStandScreenHandler handledScreen) {
         for (ItemStack itemStack : ((BrewingRecipeRegistryRecipeAccessor<?>) this.recipe).getIngredient().getMatchingStacks()) {
-            assert MinecraftClient.getInstance().player != null;
-            if (MinecraftClient.getInstance().player.getInventory().contains(itemStack)) {
-                return true;
+            for (Slot slot : handledScreen.slots) {
+                if (itemStack.getItem().equals(slot.getStack().getItem())) return true;
             }
         }
         return false;
     }
 
-    public boolean hasInput(BrewingRecipeBookGroup group) {
+    public boolean hasInput(BrewingRecipeBookGroup group, BrewingStandScreenHandler handledScreen) {
         Potion inputPotion = (Potion) ((BrewingRecipeRegistryRecipeAccessor<?>) this.recipe).getInput();
 
         Identifier identifier = Registry.POTION.getId(inputPotion);
@@ -47,23 +45,19 @@ public class BrewingResult {
 
         inputStack.getOrCreateNbt().putString("Potion", identifier.toString());
 
-        assert MinecraftClient.getInstance().player != null;
-        for (DefaultedList<ItemStack> itemStacks : ((PlayerInventoryAccessor) MinecraftClient.getInstance().player.getInventory()).getCombinedInventory()) {
-            for (ItemStack o : itemStacks) {
-                if (inputStack.getNbt() == null) return false;
+        for (Slot slot : handledScreen.slots) {
+            ItemStack itemStack = slot.getStack();
 
-                if (inputStack.getNbt().equals(o.getNbt()) && inputStack.getItem().equals(o.getItem())) {
-                    return true;
-                }
-            }
+            if (inputStack.getNbt() == null) return false;
+            if (inputStack.getNbt().equals(itemStack.getNbt()) && inputStack.getItem().equals(itemStack.getItem())) return true;
         }
 
         return false;
     }
 
-    public boolean hasMaterials(BrewingRecipeBookGroup group) {
-        boolean hasIngredient = hasIngredient();
-        boolean hasInput = hasInput(group);
+    public boolean hasMaterials(BrewingRecipeBookGroup group, BrewingStandScreenHandler handledScreen) {
+        boolean hasIngredient = hasIngredient(handledScreen);
+        boolean hasInput = hasInput(group, handledScreen);
 
         return hasIngredient && hasInput;
     }

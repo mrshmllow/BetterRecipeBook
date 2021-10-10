@@ -114,7 +114,7 @@ public class BrewingStandRecipeBookWidget extends DrawableHelper implements Draw
         this.searchField.setVisible(true);
         this.searchField.setEditableColor(16777215);
         this.searchField.setText(string);
-        this.recipesArea.initialize(this.client, i, j);
+        this.recipesArea.initialize(this.client, i, j, brewingStandScreenHandler);
         this.tabButtons.clear();
         this.toggleBrewableButton = new ToggleButtonWidget(i + 110, j + 12, 26, 16, this.recipeBook.isFilteringCraftable());
         this.setBookButtonTexture();
@@ -154,7 +154,7 @@ public class BrewingStandRecipeBookWidget extends DrawableHelper implements Draw
                 if (recipe != null) {
                     if (this.currentTab == null) return false;
 
-                    if (recipe.hasMaterials(this.currentTab.getGroup())) {
+                    if (recipe.hasMaterials(this.currentTab.getGroup(), brewingStandScreenHandler)) {
                         Potion inputPotion = (Potion) ((BrewingRecipeRegistryRecipeAccessor<?>) recipe.recipe).getInput();
                         Ingredient ingredient = ((BrewingRecipeRegistryRecipeAccessor<?>) recipe.recipe).getIngredient();
                         Identifier identifier = Registry.POTION.getId(inputPotion);
@@ -210,6 +210,7 @@ public class BrewingStandRecipeBookWidget extends DrawableHelper implements Draw
                 } else if (this.settingsButton != null) {
                     if (this.settingsButton.mouseClicked(mouseX, mouseY, button) && BetterRecipeBook.config.settingsButton) {
                         return true;
+                    }
                 }
 
                 Iterator<BrewingRecipeGroupButtonWidget> var6 = this.tabButtons.iterator();
@@ -256,7 +257,7 @@ public class BrewingStandRecipeBookWidget extends DrawableHelper implements Draw
         }
 
         if (this.recipeBook.isFilteringCraftable()) {
-            results.removeIf((brewingResult) -> !brewingResult.hasMaterials(currentTab.getGroup()));
+            results.removeIf((brewingResult) -> !brewingResult.hasMaterials(currentTab.getGroup(), brewingStandScreenHandler));
         }
 
         List<BrewingResult> tempResults = Lists.newArrayList(results);
