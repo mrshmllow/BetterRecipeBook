@@ -368,7 +368,7 @@ public class BrewingStandRecipeBookWidget extends DrawableHelper implements Draw
                 }
             }
 
-            if (this.settingsButton == null) {
+            if (this.settingsButton != null) {
                 if (this.settingsButton.isHovered() && BetterRecipeBook.config.settingsButton) {
                     if (this.client.currentScreen != null) {
                         this.client.currentScreen.renderTooltip(matrices, OPEN_SETTINGS_TEXT, mouseX, mouseY);
