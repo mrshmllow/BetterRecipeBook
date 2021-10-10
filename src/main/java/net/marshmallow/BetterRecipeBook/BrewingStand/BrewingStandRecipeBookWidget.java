@@ -207,33 +207,32 @@ public class BrewingStandRecipeBookWidget extends DrawableHelper implements Draw
                     this.toggleBrewableButton.setToggled(bl);
                     this.refreshResults(false);
                     return true;
+                } else if (this.settingsButton != null) {
+                    if (this.settingsButton.mouseClicked(mouseX, mouseY, button) && BetterRecipeBook.config.settingsButton) {
+                        return true;
                 }
-                if (this.settingsButton != null) {
-                    if (!this.settingsButton.mouseClicked(mouseX, mouseY, button) || !BetterRecipeBook.config.settingsButton) {
-                        Iterator<BrewingRecipeGroupButtonWidget> var6 = this.tabButtons.iterator();
 
-                        BrewingRecipeGroupButtonWidget recipeGroupButtonWidget;
-                        do {
-                            if (!var6.hasNext()) {
-                                return false;
-                            }
+                Iterator<BrewingRecipeGroupButtonWidget> var6 = this.tabButtons.iterator();
 
-                            recipeGroupButtonWidget = var6.next();
-                        } while (!recipeGroupButtonWidget.mouseClicked(mouseX, mouseY, button));
-
-                        if (this.currentTab != recipeGroupButtonWidget) {
-                            if (this.currentTab != null) {
-                                this.currentTab.setToggled(false);
-                            }
-
-                            this.currentTab = recipeGroupButtonWidget;
-                            this.currentTab.setToggled(true);
-                            this.refreshResults(true);
-                        }
-
+                BrewingRecipeGroupButtonWidget recipeGroupButtonWidget;
+                do {
+                    if (!var6.hasNext()) {
+                        return false;
                     }
+
+                    recipeGroupButtonWidget = var6.next();
+                } while (!recipeGroupButtonWidget.mouseClicked(mouseX, mouseY, button));
+
+                if (this.currentTab != recipeGroupButtonWidget) {
+                    if (this.currentTab != null) {
+                        this.currentTab.setToggled(false);
+                    }
+
+                    this.currentTab = recipeGroupButtonWidget;
+                    this.currentTab.setToggled(true);
+                    this.refreshResults(true);
                 }
-                return true;
+                return false;
             }
         } else {
             return false;
