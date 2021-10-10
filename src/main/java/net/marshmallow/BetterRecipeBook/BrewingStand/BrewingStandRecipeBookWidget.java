@@ -208,28 +208,30 @@ public class BrewingStandRecipeBookWidget extends DrawableHelper implements Draw
                     this.refreshResults(false);
                     return true;
                 }
-                if (!this.settingsButton.mouseClicked(mouseX, mouseY, button) || !BetterRecipeBook.config.settingsButton) {
-                    Iterator<BrewingRecipeGroupButtonWidget> var6 = this.tabButtons.iterator();
+                if (this.settingsButton != null) {
+                    if (!this.settingsButton.mouseClicked(mouseX, mouseY, button) || !BetterRecipeBook.config.settingsButton) {
+                        Iterator<BrewingRecipeGroupButtonWidget> var6 = this.tabButtons.iterator();
 
-                    BrewingRecipeGroupButtonWidget recipeGroupButtonWidget;
-                    do {
-                        if (!var6.hasNext()) {
-                            return false;
+                        BrewingRecipeGroupButtonWidget recipeGroupButtonWidget;
+                        do {
+                            if (!var6.hasNext()) {
+                                return false;
+                            }
+
+                            recipeGroupButtonWidget = var6.next();
+                        } while (!recipeGroupButtonWidget.mouseClicked(mouseX, mouseY, button));
+
+                        if (this.currentTab != recipeGroupButtonWidget) {
+                            if (this.currentTab != null) {
+                                this.currentTab.setToggled(false);
+                            }
+
+                            this.currentTab = recipeGroupButtonWidget;
+                            this.currentTab.setToggled(true);
+                            this.refreshResults(true);
                         }
 
-                        recipeGroupButtonWidget = var6.next();
-                    } while (!recipeGroupButtonWidget.mouseClicked(mouseX, mouseY, button));
-
-                    if (this.currentTab != recipeGroupButtonWidget) {
-                        if (this.currentTab != null) {
-                            this.currentTab.setToggled(false);
-                        }
-
-                        this.currentTab = recipeGroupButtonWidget;
-                        this.currentTab.setToggled(true);
-                        this.refreshResults(true);
                     }
-
                 }
                 return true;
             }
@@ -366,9 +368,11 @@ public class BrewingStandRecipeBookWidget extends DrawableHelper implements Draw
                 }
             }
 
-            if (this.settingsButton.isHovered() && BetterRecipeBook.config.settingsButton) {
-                if (this.client.currentScreen != null) {
-                    this.client.currentScreen.renderTooltip(matrices, OPEN_SETTINGS_TEXT, mouseX, mouseY);
+            if (this.settingsButton == null) {
+                if (this.settingsButton.isHovered() && BetterRecipeBook.config.settingsButton) {
+                    if (this.client.currentScreen != null) {
+                        this.client.currentScreen.renderTooltip(matrices, OPEN_SETTINGS_TEXT, mouseX, mouseY);
+                    }
                 }
             }
 
