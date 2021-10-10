@@ -78,7 +78,7 @@ public class BrewingStandRecipeBookWidget extends DrawableHelper implements Draw
         assert client.player != null;
         client.player.currentScreenHandler = brewingStandScreenHandler;
         this.recipeBook = new ClientBrewingStandRecipeBook();
-        this.open = true;
+        this.open = BetterRecipeBook.rememberedBrewingOpen;
         // this.cachedInvChangeCount = client.player.getInventory().getChangeCount();
         this.reset();
 
@@ -116,6 +116,7 @@ public class BrewingStandRecipeBookWidget extends DrawableHelper implements Draw
         this.searchField.setText(string);
         this.recipesArea.initialize(this.client, i, j, brewingStandScreenHandler);
         this.tabButtons.clear();
+        this.recipeBook.setFilteringCraftable(BetterRecipeBook.rememberedBrewingToggle);
         this.toggleBrewableButton = new ToggleButtonWidget(i + 110, j + 12, 26, 16, this.recipeBook.isFilteringCraftable());
         this.setBookButtonTexture();
 
@@ -205,6 +206,7 @@ public class BrewingStandRecipeBookWidget extends DrawableHelper implements Draw
                 } else if (this.toggleBrewableButton.mouseClicked(mouseX, mouseY, button)) {
                     boolean bl = this.toggleFilteringBrewable();
                     this.toggleBrewableButton.setToggled(bl);
+                    BetterRecipeBook.rememberedBrewingToggle = bl;
                     this.refreshResults(false);
                     return true;
                 } else if (this.settingsButton != null) {
@@ -243,6 +245,7 @@ public class BrewingStandRecipeBookWidget extends DrawableHelper implements Draw
     private boolean toggleFilteringBrewable() {
         boolean bl = !this.recipeBook.isFilteringCraftable();
         this.recipeBook.setFilteringCraftable(bl);
+        BetterRecipeBook.rememberedBrewingToggle = bl;
         return bl;
     }
 

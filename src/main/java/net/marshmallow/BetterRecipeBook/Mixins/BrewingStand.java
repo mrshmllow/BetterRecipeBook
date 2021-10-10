@@ -40,6 +40,7 @@ public abstract class BrewingStand extends HandledScreen<BrewingStandScreenHandl
 
             this.addDrawableChild(new TexturedButtonWidget(this.x + 135, this.height / 2 - 50, 20, 18, 0, 0, 19, RECIPE_BUTTON_TEXTURE, (button) -> {
                 this.recipeBook.toggleOpen();
+                BetterRecipeBook.rememberedBrewingOpen = this.recipeBook.isOpen();
                 if (!BetterRecipeBook.config.keepCentered) {
                     this.x = this.recipeBook.findLeftEdge(this.width, this.backgroundWidth);
                 }

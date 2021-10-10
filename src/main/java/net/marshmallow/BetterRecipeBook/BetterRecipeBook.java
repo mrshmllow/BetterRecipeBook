@@ -17,6 +17,9 @@ public class BetterRecipeBook implements ModInitializer {
     public static PinnedRecipeManager pinnedRecipeManager;
     public static InstantCraftingManager instantCraftingManager;
 
+    public static boolean rememberedBrewingOpen = true;
+    public static boolean rememberedBrewingToggle = false;
+
     public static final Logger LOGGER = LogManager.getLogger("betterrecipebook");
 
     @Override
