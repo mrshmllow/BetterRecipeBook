@@ -17,6 +17,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionUtil;
+import net.minecraft.screen.BrewingStandScreenHandler;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
@@ -32,14 +33,16 @@ public class BrewingAnimatedResultButton extends ClickableWidget {
     private static final Identifier BACKGROUND_TEXTURE = new Identifier("textures/gui/recipe_book.png");
     private BrewingResult potionRecipe;
     private BrewingRecipeBookGroup group;
+    private BrewingStandScreenHandler brewingStandScreenHandler;
 
     public BrewingAnimatedResultButton() {
         super(0, 0, 25, 25, LiteralText.EMPTY);
     }
 
-    public void showPotionRecipe(BrewingResult potionRecipe, BrewingRecipeBookGroup group) {
+    public void showPotionRecipe(BrewingResult potionRecipe, BrewingRecipeBookGroup group, BrewingStandScreenHandler brewingStandScreenHandler) {
         this.potionRecipe = potionRecipe;
         this.group = group;
+        this.brewingStandScreenHandler = brewingStandScreenHandler;
     }
 
     public void renderButton(MatrixStack matrices, int mouseX, int mouseY, float delta) {
@@ -62,7 +65,7 @@ public class BrewingAnimatedResultButton extends ClickableWidget {
             j = 206;
         }
 
-        if (potionRecipe.hasMaterials(group)) {
+        if (potionRecipe.hasMaterials(group, brewingStandScreenHandler)) {
             i -= 25;
         }
 
@@ -116,7 +119,7 @@ public class BrewingAnimatedResultButton extends ClickableWidget {
         list.add(new LiteralText(""));
 
         Formatting colour = Formatting.DARK_GRAY;
-        if (getRecipe().hasIngredient()) {
+        if (getRecipe().hasIngredient(brewingStandScreenHandler)) {
             colour = Formatting.WHITE;
         }
 
@@ -138,7 +141,7 @@ public class BrewingAnimatedResultButton extends ClickableWidget {
 
         inputStack.getOrCreateNbt().putString("Potion", identifier.toString());
 
-        if (!getRecipe().hasInput(group)) {
+        if (!getRecipe().hasInput(group, brewingStandScreenHandler)) {
             colour = Formatting.DARK_GRAY;
         }
 

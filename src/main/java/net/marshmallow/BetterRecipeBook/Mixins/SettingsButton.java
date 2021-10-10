@@ -72,6 +72,7 @@ public abstract class SettingsButton {
 
     @Inject(method = "drawTooltip", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/recipebook/RecipeBookWidget;drawGhostSlotTooltip(Lnet/minecraft/client/util/math/MatrixStack;IIII)V"))
     public void drawTooltip(MatrixStack matrices, int x, int y, int mouseX, int mouseY, CallbackInfo ci) {
+        if (this.settingsButton == null) return;
         if (this.settingsButton.isHovered() && BetterRecipeBook.config.settingsButton) {
             if (this.client.currentScreen != null) {
                 this.client.currentScreen.renderTooltip(matrices, OPEN_SETTINGS_TEXT, mouseX, mouseY);

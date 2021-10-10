@@ -78,7 +78,7 @@ public class BrewingStandRecipeBookWidget extends DrawableHelper implements Draw
         assert client.player != null;
         client.player.currentScreenHandler = brewingStandScreenHandler;
         this.recipeBook = new ClientBrewingStandRecipeBook();
-        this.open = true;
+        this.open = BetterRecipeBook.rememberedBrewingOpen;
         // this.cachedInvChangeCount = client.player.getInventory().getChangeCount();
         this.reset();
 
@@ -114,8 +114,9 @@ public class BrewingStandRecipeBookWidget extends DrawableHelper implements Draw
         this.searchField.setVisible(true);
         this.searchField.setEditableColor(16777215);
         this.searchField.setText(string);
-        this.recipesArea.initialize(this.client, i, j);
+        this.recipesArea.initialize(this.client, i, j, brewingStandScreenHandler);
         this.tabButtons.clear();
+        this.recipeBook.setFilteringCraftable(BetterRecipeBook.rememberedBrewingToggle);
         this.toggleBrewableButton = new ToggleButtonWidget(i + 110, j + 12, 26, 16, this.recipeBook.isFilteringCraftable());
         this.setBookButtonTexture();
 
@@ -154,7 +155,7 @@ public class BrewingStandRecipeBookWidget extends DrawableHelper implements Draw
                 if (recipe != null) {
                     if (this.currentTab == null) return false;
 
-                    if (recipe.hasMaterials(this.currentTab.getGroup())) {
+                    if (recipe.hasMaterials(this.currentTab.getGroup(), brewingStandScreenHandler)) {
                         Potion inputPotion = (Potion) ((BrewingRecipeRegistryRecipeAccessor<?>) recipe.recipe).getInput();
                         Ingredient ingredient = ((BrewingRecipeRegistryRecipeAccessor<?>) recipe.recipe).getIngredient();
                         Identifier identifier = Registry.POTION.getId(inputPotion);
@@ -205,33 +206,36 @@ public class BrewingStandRecipeBookWidget extends DrawableHelper implements Draw
                 } else if (this.toggleBrewableButton.mouseClicked(mouseX, mouseY, button)) {
                     boolean bl = this.toggleFilteringBrewable();
                     this.toggleBrewableButton.setToggled(bl);
+                    BetterRecipeBook.rememberedBrewingToggle = bl;
                     this.refreshResults(false);
                     return true;
+                } else if (this.settingsButton != null) {
+                    if (this.settingsButton.mouseClicked(mouseX, mouseY, button) && BetterRecipeBook.config.settingsButton) {
+                        return true;
+                    }
                 }
-                if (!this.settingsButton.mouseClicked(mouseX, mouseY, button) || !BetterRecipeBook.config.settingsButton) {
-                    Iterator<BrewingRecipeGroupButtonWidget> var6 = this.tabButtons.iterator();
 
-                    BrewingRecipeGroupButtonWidget recipeGroupButtonWidget;
-                    do {
-                        if (!var6.hasNext()) {
-                            return false;
-                        }
+                Iterator<BrewingRecipeGroupButtonWidget> var6 = this.tabButtons.iterator();
 
-                        recipeGroupButtonWidget = var6.next();
-                    } while (!recipeGroupButtonWidget.mouseClicked(mouseX, mouseY, button));
-
-                    if (this.currentTab != recipeGroupButtonWidget) {
-                        if (this.currentTab != null) {
-                            this.currentTab.setToggled(false);
-                        }
-
-                        this.currentTab = recipeGroupButtonWidget;
-                        this.currentTab.setToggled(true);
-                        this.refreshResults(true);
+                BrewingRecipeGroupButtonWidget recipeGroupButtonWidget;
+                do {
+                    if (!var6.hasNext()) {
+                        return false;
                     }
 
+                    recipeGroupButtonWidget = var6.next();
+                } while (!recipeGroupButtonWidget.mouseClicked(mouseX, mouseY, button));
+
+                if (this.currentTab != recipeGroupButtonWidget) {
+                    if (this.currentTab != null) {
+                        this.currentTab.setToggled(false);
+                    }
+
+                    this.currentTab = recipeGroupButtonWidget;
+                    this.currentTab.setToggled(true);
+                    this.refreshResults(true);
                 }
-                return true;
+                return false;
             }
         } else {
             return false;
@@ -241,6 +245,7 @@ public class BrewingStandRecipeBookWidget extends DrawableHelper implements Draw
     private boolean toggleFilteringBrewable() {
         boolean bl = !this.recipeBook.isFilteringCraftable();
         this.recipeBook.setFilteringCraftable(bl);
+        BetterRecipeBook.rememberedBrewingToggle = bl;
         return bl;
     }
 
@@ -255,7 +260,7 @@ public class BrewingStandRecipeBookWidget extends DrawableHelper implements Draw
         }
 
         if (this.recipeBook.isFilteringCraftable()) {
-            results.removeIf((brewingResult) -> !brewingResult.hasMaterials(currentTab.getGroup()));
+            results.removeIf((brewingResult) -> !brewingResult.hasMaterials(currentTab.getGroup(), brewingStandScreenHandler));
         }
 
         List<BrewingResult> tempResults = Lists.newArrayList(results);
@@ -366,9 +371,11 @@ public class BrewingStandRecipeBookWidget extends DrawableHelper implements Draw
                 }
             }
 
-            if (this.settingsButton.isHovered() && BetterRecipeBook.config.settingsButton) {
-                if (this.client.currentScreen != null) {
-                    this.client.currentScreen.renderTooltip(matrices, OPEN_SETTINGS_TEXT, mouseX, mouseY);
+            if (this.settingsButton != null) {
+                if (this.settingsButton.isHovered() && BetterRecipeBook.config.settingsButton) {
+                    if (this.client.currentScreen != null) {
+                        this.client.currentScreen.renderTooltip(matrices, OPEN_SETTINGS_TEXT, mouseX, mouseY);
+                    }
                 }
             }
 
