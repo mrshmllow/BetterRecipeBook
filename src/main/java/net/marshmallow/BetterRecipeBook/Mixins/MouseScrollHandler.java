@@ -20,7 +20,7 @@ public class MouseScrollHandler {
 
     @Inject(at = @At(value = "RETURN"), method = "onMouseScroll")
     public void onMouseScroll(long window, double arg1, double vertical, CallbackInfo ci) {
-        if (BetterRecipeBook.queuedScroll == 0 && BetterRecipeBook.config.scrollingModule.enableScrolling) {
+        if (BetterRecipeBook.queuedScroll == 0 && BetterRecipeBook.config.scrolling.enableScrolling) {
             assert client.player != null;
 
             double d = (this.client.options.discreteMouseScroll ? Math.signum(vertical) : vertical) * this.client.options.mouseWheelSensitivity;

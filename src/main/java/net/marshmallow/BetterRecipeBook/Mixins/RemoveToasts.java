@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class RemoveToasts {
     @Inject(at = @At("HEAD"), method = "draw", cancellable = true)
     private void draw(MatrixStack matrices, ToastManager manager, long startTime, CallbackInfoReturnable<Toast.Visibility> cir) {
-        if (BetterRecipeBook.config.unlockAll) {
+        if (BetterRecipeBook.config.newRecipes.unlockAll) {
             cir.setReturnValue(Toast.Visibility.HIDE);
         }
     }

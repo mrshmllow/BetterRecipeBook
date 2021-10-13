@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class UnlockRecipes {
     @Inject(at = @At("RETURN"), method = "onPlayerConnect")
     public void onPlayerConnect(ClientConnection con, ServerPlayerEntity player, CallbackInfo ci) {
-        if (BetterRecipeBook.config.unlockAll) {
+        if (BetterRecipeBook.config.newRecipes.unlockAll) {
             player.unlockRecipes(player.server.getRecipeManager().values());
         }
         BetterRecipeBook.hasWarnedNoPermission = false;
