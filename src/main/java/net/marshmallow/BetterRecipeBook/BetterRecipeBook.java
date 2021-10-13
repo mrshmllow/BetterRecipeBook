@@ -19,6 +19,9 @@ public class BetterRecipeBook implements ModInitializer {
     public static PinnedRecipeManager pinnedRecipeManager;
     public static InstantCraftingManager instantCraftingManager;
 
+    public static boolean rememberedBrewingOpen = true;
+    public static boolean rememberedBrewingToggle = false;
+
     public static final Logger LOGGER = LogManager.getLogger("betterrecipebook");
 
     @Override
@@ -33,7 +36,7 @@ public class BetterRecipeBook implements ModInitializer {
 
         pinnedRecipeManager = new PinnedRecipeManager();
         pinnedRecipeManager.read();
-        instantCraftingManager = new InstantCraftingManager(config.instantCraftModule.instantCraft);
+        instantCraftingManager = new InstantCraftingManager(config.instantCraft.instantCraft);
 
         inventorioLoaded = FabricLoader.getInstance().isModLoaded("inventorio");
     }

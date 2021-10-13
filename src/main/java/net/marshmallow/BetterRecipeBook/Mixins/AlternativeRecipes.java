@@ -66,7 +66,7 @@ public abstract class AlternativeRecipes extends ClickableWidget implements Reci
 
             matrices.pop();
             ci.cancel();
-        } else if (!this.isHovered() && BetterRecipeBook.config.showAlternativesOnHover) {
+        } else if (!this.isHovered() && BetterRecipeBook.config.alternativeRecipes.onHover) {
             matrices.push();
             this.drawTexture(matrices, this.x, this.y, i, j, this.width, this.height);
 

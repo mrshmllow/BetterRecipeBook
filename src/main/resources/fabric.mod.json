@@ -5,7 +5,8 @@
   "name": "Better Recipe Book",
   "description": "Adds some quality of life changes to the recipe book",
   "authors": [
-    "marshmallow"
+    "marshmallow",
+    "ruvaldak"
   ],
   "contact": {
     "issues": "https://github.com/marshamallow/BetterRecipeBook"
@@ -29,9 +30,7 @@
     "fabricloader": ">=0.11.3",
     "fabric": "*",
     "minecraft": "1.17.x",
-    "cloth-config2": ">=5.0.38"
-  },
-  "suggests": {
+    "cloth-config2": ">=5.0.38",
     "modmenu": "*"
   }
 }

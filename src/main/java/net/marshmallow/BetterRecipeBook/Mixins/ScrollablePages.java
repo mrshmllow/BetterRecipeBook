@@ -28,7 +28,7 @@ public abstract class ScrollablePages {
 
     @Inject(at = @At("HEAD"), method = "mouseClicked")
     public void mouseClickedHead(double mouseX, double mouseY, int button, int areaLeft, int areaTop, int areaWidth, int areaHeight, CallbackInfoReturnable<Boolean> cir) {
-        if (BetterRecipeBook.config.scrollingModule.enableScrolling) {
+        if (BetterRecipeBook.config.scrolling.enableScrolling) {
             if (nextPageButton.mouseClicked(mouseX, mouseY, button)) {
                 if (currentPage >= pageCount - 1) {
                     currentPage = -1;
@@ -43,12 +43,12 @@ public abstract class ScrollablePages {
 
     @Inject(at = @At("HEAD"), method = "draw")
     public void draw(MatrixStack matrixStack, int i, int j, int k, int l, float f, CallbackInfo ci) {
-        if (BetterRecipeBook.queuedScroll != 0 && BetterRecipeBook.config.scrollingModule.enableScrolling) {
+        if (BetterRecipeBook.queuedScroll != 0 && BetterRecipeBook.config.scrolling.enableScrolling) {
             int queuedPage = BetterRecipeBook.queuedScroll + currentPage;
 
             if (queuedPage <= pageCount - 1 && queuedPage >= 0) {
                 currentPage += BetterRecipeBook.queuedScroll;
-            } else if (BetterRecipeBook.config.scrollingModule.scrollAround) {
+            } else if (BetterRecipeBook.config.scrolling.scrollAround) {
                 if (queuedPage < 0) {
                     currentPage = pageCount - 1;
                 } else if (queuedPage > pageCount - 1) {
@@ -71,7 +71,7 @@ public abstract class ScrollablePages {
      */
     @Overwrite
     void hideShowPageButtons() {
-        if (BetterRecipeBook.config.scrollingModule.scrollAround && !(pageCount <= 1)) {
+        if (BetterRecipeBook.config.scrolling.scrollAround && !(pageCount <= 1)) {
             nextPageButton.visible = true;
             prevPageButton.visible = true;
         } else {

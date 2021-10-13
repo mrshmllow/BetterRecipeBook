@@ -24,7 +24,7 @@ public class DisableBounce {
     @Overwrite
     @Environment(EnvType.CLIENT)
     public boolean shouldDisplay(Recipe<?> recipe) {
-        if (!BetterRecipeBook.config.enableBounce) {
+        if (!BetterRecipeBook.config.newRecipes.enableBounce) {
             return false;
         } else {
             return toBeDisplayed.contains(recipe.getId());

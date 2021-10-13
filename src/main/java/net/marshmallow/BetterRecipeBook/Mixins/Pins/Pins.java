@@ -2,13 +2,13 @@ package net.marshmallow.BetterRecipeBook.Mixins.Pins;
 
 import com.google.common.collect.Lists;
 import net.marshmallow.BetterRecipeBook.BetterRecipeBook;
+import net.marshmallow.BetterRecipeBook.Mixins.Accessors.AlternativeButtonWidgetAccessor;
+import net.marshmallow.BetterRecipeBook.Mixins.Accessors.RecipeAlternativesWidgetAccessor;
 import net.marshmallow.BetterRecipeBook.Mixins.Accessors.RecipeBookResultsAccessor;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.recipebook.AnimatedResultButton;
-import net.minecraft.client.gui.screen.recipebook.RecipeBookResults;
-import net.minecraft.client.gui.screen.recipebook.RecipeBookWidget;
-import net.minecraft.client.gui.screen.recipebook.RecipeResultCollection;
+import net.minecraft.client.gui.screen.recipebook.*;
 import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.client.recipebook.ClientRecipeBook;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 import org.spongepowered.asm.mixin.Final;
@@ -20,6 +20,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
+import java.util.Collections;
 import java.util.List;
 
 @Mixin(RecipeBookWidget.class)
@@ -30,15 +31,32 @@ public abstract class Pins {
 
     @Shadow protected abstract void refreshResults(boolean resetCurrentPage);
 
-    @Inject(method = "keyPressed", at = @At(value = "HEAD"))
+    @Shadow private ClientRecipeBook recipeBook;
+
+    @Inject(method = "keyPressed", at = @At(value = "HEAD"), cancellable = true)
     public void add(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
+        if (this.searchField == null) return;
+
         if (keyCode == GLFW.GLFW_KEY_F) {
-            assert this.searchField != null;
+            RecipeAlternativesWidget alternatesWidget = ((RecipeBookResultsAccessor) this.recipesArea).getAlternatesWidget();
+            List<RecipeAlternativesWidget.AlternativeButtonWidget> alternativeButtons = ((RecipeAlternativesWidgetAccessor) alternatesWidget).getAlternativeButtons();
+            for (RecipeAlternativesWidget.AlternativeButtonWidget alternativeButton : alternativeButtons) {
+                if (alternativeButton.isHovered()) {
+                    RecipeResultCollection recipeResultCollection = new RecipeResultCollection(Collections.singletonList(((AlternativeButtonWidgetAccessor) alternativeButton).getRecipe()));
+                    recipeResultCollection.initialize(this.recipeBook);
+                    BetterRecipeBook.pinnedRecipeManager.addOrRemoveFavourite(recipeResultCollection);
+                    this.searchField.changeFocus(false);
+                    this.refreshResults(false);
+                    cir.setReturnValue(true);
+                }
+            }
+
             if (!this.searchField.keyPressed(keyCode, scanCode, modifiers)) {
                 for (AnimatedResultButton resultButton : ((RecipeBookResultsAccessor) this.recipesArea).getResultButtons()) {
                     if (resultButton.isHovered()) {
                         BetterRecipeBook.pinnedRecipeManager.addOrRemoveFavourite(resultButton.getResultCollection());
                         this.refreshResults(false);
+                        cir.setReturnValue(true);
                     }
                 }
             }
