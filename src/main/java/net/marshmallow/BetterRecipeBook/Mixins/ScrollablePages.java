@@ -61,6 +61,14 @@ public abstract class ScrollablePages {
         }
     }
 
+    @Inject(at = @At("HEAD"), method = "refreshResultButtons", cancellable = true)
+    public void avoidIndexOutOfBounds(CallbackInfo ci) {
+        if (pageCount == 0 && currentPage == -1) {
+            currentPage = 0;
+            ci.cancel();
+        }
+    }
+
     @Inject(at = @At("RETURN"), method = "initialize")
     public void initialize(MinecraftClient minecraftClient, int parentLeft, int parentTop, CallbackInfo ci) {
         BetterRecipeBook.queuedScroll = 0;
@@ -71,7 +79,7 @@ public abstract class ScrollablePages {
      */
     @Overwrite
     void hideShowPageButtons() {
-        if (BetterRecipeBook.config.scrolling.scrollAround && !(pageCount <= 1)) {
+        if (BetterRecipeBook.config.scrolling.scrollAround && !(pageCount < 1)) {
             nextPageButton.visible = true;
             prevPageButton.visible = true;
         } else {

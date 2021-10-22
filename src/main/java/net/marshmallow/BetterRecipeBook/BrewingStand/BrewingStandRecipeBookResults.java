@@ -61,6 +61,11 @@ public class BrewingStandRecipeBookResults {
     }
 
     private void refreshResultButtons() {
+        if (pageCount == 0 && currentPage == -1) {
+            currentPage = 0;
+            return;
+        }
+
         int i = 20 * this.currentPage;
 
         for(int j = 0; j < this.resultButtons.size(); ++j) {
@@ -130,7 +135,7 @@ public class BrewingStandRecipeBookResults {
     }
 
     private void hideShowPageButtons() {
-        if (BetterRecipeBook.config.scrolling.scrollAround && !(pageCount <= 1)) {
+        if (BetterRecipeBook.config.scrolling.scrollAround && !(pageCount < 1)) {
             nextPageButton.visible = true;
             prevPageButton.visible = true;
         } else {
