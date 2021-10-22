@@ -1,0 +1,38 @@
+{
+  "text.autoconfig.betterrecipebook.title": "Настройки Better Recipe Book",
+
+  "text.autoconfig.betterrecipebook.category.default": "Основные",
+  "text.autoconfig.betterrecipebook.option.enableBook": "Включить книгу рецептов",
+  "text.autoconfig.betterrecipebook.option.darkMode": "Включить варианты тёмного оформления",
+  "text.autoconfig.betterrecipebook.option.darkMode.@Tooltip": "Включайте это только если вы используете ресурспаки\nс тёмной темой наподобие Vanilla Tweaks.",
+  "text.autoconfig.betterrecipebook.option.keepCentered": "Отключить смещение окна создания",
+  "text.autoconfig.betterrecipebook.option.statusEffects": "Показывать эффекты при открытой книге рецептов",
+  "text.autoconfig.betterrecipebook.option.settingsButton": "Показывать кнопку настроек",
+  "text.autoconfig.betterrecipebook.option.settingsButton.@Tooltip": "Без неё вам придётся пользоваться ModMenu,\nчтобы снова попасть сюда.",
+
+  "text.autoconfig.betterrecipebook.category.instantCraft": "Моментальное создание",
+  "text.autoconfig.betterrecipebook.option.instantCraft.instantCraft": "Создавать моментально по умолчанию",
+  "text.autoconfig.betterrecipebook.option.instantCraft.showButton": "Показывать кнопку моментального крафта",
+
+  "text.autoconfig.betterrecipebook.category.scrolling": "Прокрутка",
+  "text.autoconfig.betterrecipebook.option.scrolling.scrollAround": "Цикличная прокрутка",
+  "text.autoconfig.betterrecipebook.option.scrolling.scrollAround.@Tooltip": "Возможность продолжать просмотр с первой страницы\nпри достижении конца книги (как в JEI)",
+  "text.autoconfig.betterrecipebook.option.scrolling.enableScrolling": "Прокрутка колёсиком в книге рецептов",
+
+  "text.autoconfig.betterrecipebook.category.alternativeRecipes": "Альтернативные рецепты",
+  "text.autoconfig.betterrecipebook.option.alternativeRecipes.onHover": "Показывать альтернативные рецепты только при наведении",
+  "text.autoconfig.betterrecipebook.option.alternativeRecipes.onHover.@Tooltip": "Показывать в окне списка альтернатив предмет\nвместо его рецепта, чтобы улучшить заметность",
+  "text.autoconfig.betterrecipebook.option.alternativeRecipes.noGrouped": "Разгруппировать альтернативные рецепты",
+
+  "text.autoconfig.betterrecipebook.category.newRecipes": "Новые рецепты",
+  "text.autoconfig.betterrecipebook.option.newRecipes.unlockAll": "Автоматически разблокировывать все рецепты",
+  "text.autoconfig.betterrecipebook.option.newRecipes.enableBounce": "Включить анимацию разблокировки",
+  "text.autoconfig.betterrecipebook.option.newRecipes.enableBounce.@Tooltip": "Анимация маленького подпрыгивания\nпри разблокировке нового предмета",
+
+  "betterrecipebook.gui.pin.add": "§8§oЗакрепить на F",
+  "betterrecipebook.gui.pin.remove": "§8§oОткрепить на F",
+  "betterrecipebook.gui.togglePotions.brewable": "Доступно к варке",
+  "betterrecipebook.gui.instantCraft.on": "Моментальное создание",
+  "betterrecipebook.gui.instantCraft.off": "Обычное создание",
+  "betterrecipebook.gui.settings.open": "Настройки"
+}

@@ -67,6 +67,7 @@ public class BrewingStandRecipeBookWidget extends DrawableHelper implements Draw
     private static final Text TOGGLE_CRAFTABLE_RECIPES_TEXT;
     private static final Text TOGGLE_ALL_RECIPES_TEXT;
     private static final Text OPEN_SETTINGS_TEXT;
+    boolean doubleRefresh = true;
 
 
     public void initialize(int parentWidth, int parentHeight, MinecraftClient client, boolean narrow, BrewingStandScreenHandler brewingStandScreenHandler) {
@@ -295,6 +296,11 @@ public class BrewingStandRecipeBookWidget extends DrawableHelper implements Draw
 
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+        if (doubleRefresh) {
+            // Minecraft doesn't populate the inventory on initialization so this is the only solution I have
+            refreshResults(true);
+            doubleRefresh = false;
+        }
         if (this.isOpen()) {
             matrices.push();
             matrices.translate(0.0D, 0.0D, 100.0D);
