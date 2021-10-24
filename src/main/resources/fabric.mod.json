@@ -29,9 +29,7 @@
   "accessWidener": "betterrecipebook.accessWidener",
   "depends": {
     "fabricloader": ">=0.11.3",
-    "fabric": "*",
-    "minecraft": "1.18.x",
-    "cloth-config2": ">=5.0.38",
-    "modmenu": "*"
+    "minecraft": "1.17.x",
+    "cloth-config2": ">=5.0.38"
   }
 }
