@@ -154,13 +154,13 @@ public class BrewingStandRecipeBookWidget extends DrawableHelper implements Draw
                 BrewingResult result = this.recipesArea.getLastClickedRecipe();
                 if (result != null) {
                     if (this.currentTab == null) return false;
+                    this.ghostSlots.reset();
 
                     if (!result.hasMaterials(this.currentTab.getGroup(), brewingStandScreenHandler)) {
                         showGhostRecipe(result, brewingStandScreenHandler.slots);
                         return false;
                     }
 
-                    this.ghostSlots.reset();
                     Potion inputPotion = (Potion) ((BrewingRecipeRegistryRecipeAccessor<?>) result.recipe).getInput();
                     Ingredient ingredient = ((BrewingRecipeRegistryRecipeAccessor<?>) result.recipe).getIngredient();
                     Identifier identifier = Registry.POTION.getId(inputPotion);
