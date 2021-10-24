@@ -10,7 +10,8 @@
     "Felix14-v2"
   ],
   "contact": {
-    "issues": "https://github.com/marshamallow/BetterRecipeBook"
+    "issues": "https://github.com/marshamallow/BetterRecipeBook",
+    "homepage": "https://www.curseforge.com/minecraft/mc-mods/brb"
   },
   "license": "MIT",
   "icon": "assets/betterrecipebook/icon.png",
