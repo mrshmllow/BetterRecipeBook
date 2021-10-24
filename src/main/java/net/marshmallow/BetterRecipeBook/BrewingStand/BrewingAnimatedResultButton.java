@@ -125,7 +125,7 @@ public class BrewingAnimatedResultButton extends ClickableWidget {
 
         list.add(new LiteralText(((BrewingRecipeRegistryRecipeAccessor<?>) potionRecipe.recipe).getIngredient().getMatchingStacks()[0].getName().getString()).formatted(colour));
 
-        list.add(new LiteralText("+").formatted(Formatting.DARK_GRAY));
+        list.add(new LiteralText("↓").formatted(Formatting.DARK_GRAY));
 
         Potion inputPotion = (Potion) ((BrewingRecipeRegistryRecipeAccessor<?>) this.potionRecipe.recipe).getInput();
 
