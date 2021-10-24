@@ -93,19 +93,7 @@ public class BrewingAnimatedResultButton extends ClickableWidget {
     }
 
     public void appendNarrations(NarrationMessageBuilder builder) {
-        Potion inputPotion = (Potion) ((BrewingRecipeRegistryRecipeAccessor<?>) this.potionRecipe.recipe).getInput();
-
-        Identifier identifier = Registry.POTION.getId(inputPotion);
-        ItemStack inputStack;
-        if (group == BrewingRecipeBookGroup.BREWING_SPLASH_POTION) {
-            inputStack = new ItemStack(Items.SPLASH_POTION);
-        } else if (group == BrewingRecipeBookGroup.BREWING_LINGERING_POTION) {
-            inputStack = new ItemStack(Items.LINGERING_POTION);
-        } else {
-            inputStack = new ItemStack(Items.POTION);
-        }
-
-        inputStack.getOrCreateNbt().putString("Potion", identifier.toString());
+        ItemStack inputStack = this.potionRecipe.inputAsItemStack(group);
 
         builder.put(NarrationPart.TITLE, new TranslatableText("narration.recipe", inputStack.getName()));
         builder.put(NarrationPart.USAGE, new TranslatableText("narration.button.usage.hovered"));
@@ -127,19 +115,7 @@ public class BrewingAnimatedResultButton extends ClickableWidget {
 
         list.add(new LiteralText("↓").formatted(Formatting.DARK_GRAY));
 
-        Potion inputPotion = (Potion) ((BrewingRecipeRegistryRecipeAccessor<?>) this.potionRecipe.recipe).getInput();
-
-        Identifier identifier = Registry.POTION.getId(inputPotion);
-        ItemStack inputStack;
-        if (group == BrewingRecipeBookGroup.BREWING_SPLASH_POTION) {
-            inputStack = new ItemStack(Items.SPLASH_POTION);
-        } else if (group == BrewingRecipeBookGroup.BREWING_LINGERING_POTION) {
-            inputStack = new ItemStack(Items.LINGERING_POTION);
-        } else {
-            inputStack = new ItemStack(Items.POTION);
-        }
-
-        inputStack.getOrCreateNbt().putString("Potion", identifier.toString());
+        ItemStack inputStack = this.potionRecipe.inputAsItemStack(group);
 
         if (!getRecipe().hasInput(group, brewingStandScreenHandler)) {
             colour = Formatting.DARK_GRAY;
