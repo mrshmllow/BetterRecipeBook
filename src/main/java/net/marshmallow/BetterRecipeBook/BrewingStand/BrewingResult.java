@@ -11,12 +11,12 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
 public class BrewingResult {
-    public ItemStack itemStack;
+    public ItemStack ingredient;
     public BrewingRecipeRegistry.Recipe<?> recipe;
     public Identifier input;
     
-    public BrewingResult (ItemStack itemStack, BrewingRecipeRegistry.Recipe<?> recipe) {
-        this.itemStack = itemStack;
+    public BrewingResult (ItemStack ingredient, BrewingRecipeRegistry.Recipe<?> recipe) {
+        this.ingredient = ingredient;
         this.recipe = recipe;
         this.input = Registry.POTION.getId((Potion) ((BrewingRecipeRegistryRecipeAccessor<?>) recipe).getInput());
     }
@@ -30,7 +30,7 @@ public class BrewingResult {
         return false;
     }
 
-    public boolean hasInput(BrewingRecipeBookGroup group, BrewingStandScreenHandler handledScreen) {
+    public ItemStack inputAsItemStack(BrewingRecipeBookGroup group) {
         Potion inputPotion = (Potion) ((BrewingRecipeRegistryRecipeAccessor<?>) this.recipe).getInput();
 
         Identifier identifier = Registry.POTION.getId(inputPotion);
@@ -44,6 +44,13 @@ public class BrewingResult {
         }
 
         inputStack.getOrCreateNbt().putString("Potion", identifier.toString());
+        return inputStack;
+    }
+
+    public boolean hasInput(BrewingRecipeBookGroup group, BrewingStandScreenHandler handledScreen) {
+        Potion inputPotion = (Potion) ((BrewingRecipeRegistryRecipeAccessor<?>) this.recipe).getInput();
+
+        ItemStack inputStack = inputAsItemStack(group);
 
         for (Slot slot : handledScreen.slots) {
             ItemStack itemStack = slot.getStack();
