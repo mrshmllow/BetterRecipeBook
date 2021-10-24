@@ -34,11 +34,11 @@ public class ClientBrewingStandRecipeBook extends RecipeBook {
 
         for (BrewingRecipeRegistry.Recipe<Potion> potionRecipe : recipeCollection) {
             if (group == BrewingRecipeBookGroup.BREWING_POTION) {
-                brewingResults.add(new BrewingResult(PotionUtil.setPotion(new ItemStack(Items.POTION), (Potion) ((BrewingRecipeRegistryRecipeAccessor)potionRecipe).getOutput()), potionRecipe));
+                brewingResults.add(new BrewingResult(PotionUtil.setPotion(new ItemStack(Items.POTION), (Potion) ((BrewingRecipeRegistryRecipeAccessor<?>)potionRecipe).getOutput()), potionRecipe));
             } else if (group == BrewingRecipeBookGroup.BREWING_SPLASH_POTION) {
-                brewingResults.add(new BrewingResult(PotionUtil.setPotion(new ItemStack(Items.SPLASH_POTION), (Potion) ((BrewingRecipeRegistryRecipeAccessor)potionRecipe).getOutput()), potionRecipe));
+                brewingResults.add(new BrewingResult(PotionUtil.setPotion(new ItemStack(Items.SPLASH_POTION), (Potion) ((BrewingRecipeRegistryRecipeAccessor<?>)potionRecipe).getOutput()), potionRecipe));
             } else if (group == BrewingRecipeBookGroup.BREWING_LINGERING_POTION) {
-                brewingResults.add(new BrewingResult(PotionUtil.setPotion(new ItemStack(Items.LINGERING_POTION), (Potion) ((BrewingRecipeRegistryRecipeAccessor)potionRecipe).getOutput()), potionRecipe));
+                brewingResults.add(new BrewingResult(PotionUtil.setPotion(new ItemStack(Items.LINGERING_POTION), (Potion) ((BrewingRecipeRegistryRecipeAccessor<?>)potionRecipe).getOutput()), potionRecipe));
             }
         }
 
