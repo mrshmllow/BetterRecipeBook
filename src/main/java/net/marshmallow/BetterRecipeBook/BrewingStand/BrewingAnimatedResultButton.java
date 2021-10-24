@@ -75,8 +75,8 @@ public class BrewingAnimatedResultButton extends ClickableWidget {
 
         matrixStack.push();
         matrixStack.method_34425(matrices.peek().getModel().copy()); // No idea what this does
-        minecraftClient.getItemRenderer().renderInGuiWithOverrides(potionRecipe.itemStack, this.x + k, this.y + k); // Why do we do this twice?
-        minecraftClient.getItemRenderer().renderGuiItemOverlay(MinecraftClient.getInstance().textRenderer, potionRecipe.itemStack, this.x + k, this.y + k); // ^
+        minecraftClient.getItemRenderer().renderInGuiWithOverrides(potionRecipe.ingredient, this.x + k, this.y + k); // Why do we do this twice?
+        minecraftClient.getItemRenderer().renderGuiItemOverlay(MinecraftClient.getInstance().textRenderer, potionRecipe.ingredient, this.x + k, this.y + k); // ^
         RenderSystem.enableDepthTest();
         matrixStack.pop();
         RenderSystem.applyModelViewMatrix();
@@ -114,8 +114,8 @@ public class BrewingAnimatedResultButton extends ClickableWidget {
     public List<Text> getTooltip() {
         List<Text> list = Lists.newArrayList();
 
-        list.add(potionRecipe.itemStack.getName());
-        PotionUtil.buildTooltip(potionRecipe.itemStack, list, 1);
+        list.add(potionRecipe.ingredient.getName());
+        PotionUtil.buildTooltip(potionRecipe.ingredient, list, 1);
         list.add(new LiteralText(""));
 
         Formatting colour = Formatting.DARK_GRAY;

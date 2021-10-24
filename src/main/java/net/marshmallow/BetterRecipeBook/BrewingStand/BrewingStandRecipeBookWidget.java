@@ -15,7 +15,6 @@ import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.Selectable;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
-import net.minecraft.client.gui.screen.recipebook.RecipeBookGhostSlots;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.TexturedButtonWidget;
 import net.minecraft.client.gui.widget.ToggleButtonWidget;
@@ -50,7 +49,7 @@ public class BrewingStandRecipeBookWidget extends DrawableHelper implements Draw
     private boolean narrow;
     ClientBrewingStandRecipeBook recipeBook;
     private int leftOffset;
-    protected final RecipeBookGhostSlots ghostSlots = new RecipeBookGhostSlots();
+    protected final BrewingRecipeBookGhostSlots ghostSlots = new BrewingRecipeBookGhostSlots();
     private boolean open;
     private final BrewingStandRecipeBookResults recipesArea = new BrewingStandRecipeBookResults();
     @Nullable
@@ -152,51 +151,54 @@ public class BrewingStandRecipeBookWidget extends DrawableHelper implements Draw
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (this.isOpen() && !Objects.requireNonNull(this.client.player).isSpectator()) {
             if (this.recipesArea.mouseClicked(mouseX, mouseY, button)) {
-                BrewingResult recipe = this.recipesArea.getLastClickedRecipe();
-                if (recipe != null) {
+                BrewingResult result = this.recipesArea.getLastClickedRecipe();
+                if (result != null) {
                     if (this.currentTab == null) return false;
 
-                    if (recipe.hasMaterials(this.currentTab.getGroup(), brewingStandScreenHandler)) {
-                        Potion inputPotion = (Potion) ((BrewingRecipeRegistryRecipeAccessor<?>) recipe.recipe).getInput();
-                        Ingredient ingredient = ((BrewingRecipeRegistryRecipeAccessor<?>) recipe.recipe).getIngredient();
-                        Identifier identifier = Registry.POTION.getId(inputPotion);
-                        ItemStack inputStack;
-                        if (this.currentTab.getGroup() == BrewingRecipeBookGroup.BREWING_SPLASH_POTION) {
-                            inputStack = new ItemStack(Items.SPLASH_POTION);
-                        } else if (this.currentTab.getGroup() == BrewingRecipeBookGroup.BREWING_LINGERING_POTION) {
-                            inputStack = new ItemStack(Items.LINGERING_POTION);
-                        } else {
-                            inputStack = new ItemStack(Items.POTION);
-                        }
+                    if (!result.hasMaterials(this.currentTab.getGroup(), brewingStandScreenHandler)) {
+                        showGhostRecipe(result, brewingStandScreenHandler.slots);
+                        return false;
+                    }
 
-                        inputStack.getOrCreateNbt().putString("Potion", identifier.toString());
+                    this.ghostSlots.reset();
+                    Potion inputPotion = (Potion) ((BrewingRecipeRegistryRecipeAccessor<?>) result.recipe).getInput();
+                    Ingredient ingredient = ((BrewingRecipeRegistryRecipeAccessor<?>) result.recipe).getIngredient();
+                    Identifier identifier = Registry.POTION.getId(inputPotion);
+                    ItemStack inputStack;
+                    if (this.currentTab.getGroup() == BrewingRecipeBookGroup.BREWING_SPLASH_POTION) {
+                        inputStack = new ItemStack(Items.SPLASH_POTION);
+                    } else if (this.currentTab.getGroup() == BrewingRecipeBookGroup.BREWING_LINGERING_POTION) {
+                        inputStack = new ItemStack(Items.LINGERING_POTION);
+                    } else {
+                        inputStack = new ItemStack(Items.POTION);
+                    }
 
-                        int slotIndex = 0;
-                        int usedInputSlots = 0;
-                        for (Slot slot : brewingStandScreenHandler.slots) {
-                            ItemStack itemStack = slot.getStack();
+                    inputStack.getOrCreateNbt().putString("Potion", identifier.toString());
 
-                            assert inputStack.getNbt() != null;
-                            if (inputStack.getNbt().equals(itemStack.getNbt()) && inputStack.getItem().equals(itemStack.getItem())) {
-                                if (usedInputSlots <= 2) {
-                                    System.out.println(usedInputSlots);
-                                    assert MinecraftClient.getInstance().interactionManager != null;
-                                    MinecraftClient.getInstance().interactionManager.clickSlot(brewingStandScreenHandler.syncId, brewingStandScreenHandler.getSlot(slotIndex).id, 0, SlotActionType.PICKUP, MinecraftClient.getInstance().player);
-                                    MinecraftClient.getInstance().interactionManager.clickSlot(brewingStandScreenHandler.syncId, brewingStandScreenHandler.getSlot(usedInputSlots).id, 0, SlotActionType.PICKUP, MinecraftClient.getInstance().player);
-                                    ++usedInputSlots;
-                                }
-                            } else if (ingredient.getMatchingStacks()[0].getItem().equals(slot.getStack().getItem())) {
+                    int slotIndex = 0;
+                    int usedInputSlots = 0;
+                    for (Slot slot : brewingStandScreenHandler.slots) {
+                        ItemStack itemStack = slot.getStack();
+
+                        assert inputStack.getNbt() != null;
+                        if (inputStack.getNbt().equals(itemStack.getNbt()) && inputStack.getItem().equals(itemStack.getItem())) {
+                            if (usedInputSlots <= 2) {
+                                System.out.println(usedInputSlots);
                                 assert MinecraftClient.getInstance().interactionManager != null;
                                 MinecraftClient.getInstance().interactionManager.clickSlot(brewingStandScreenHandler.syncId, brewingStandScreenHandler.getSlot(slotIndex).id, 0, SlotActionType.PICKUP, MinecraftClient.getInstance().player);
-                                MinecraftClient.getInstance().interactionManager.clickSlot(brewingStandScreenHandler.syncId, brewingStandScreenHandler.getSlot(3).id, 0, SlotActionType.PICKUP, MinecraftClient.getInstance().player);
+                                MinecraftClient.getInstance().interactionManager.clickSlot(brewingStandScreenHandler.syncId, brewingStandScreenHandler.getSlot(usedInputSlots).id, 0, SlotActionType.PICKUP, MinecraftClient.getInstance().player);
+                                ++usedInputSlots;
                             }
-
-                            ++slotIndex;
+                        } else if (ingredient.getMatchingStacks()[0].getItem().equals(slot.getStack().getItem())) {
+                            assert MinecraftClient.getInstance().interactionManager != null;
+                            MinecraftClient.getInstance().interactionManager.clickSlot(brewingStandScreenHandler.syncId, brewingStandScreenHandler.getSlot(slotIndex).id, 0, SlotActionType.PICKUP, MinecraftClient.getInstance().player);
+                            MinecraftClient.getInstance().interactionManager.clickSlot(brewingStandScreenHandler.syncId, brewingStandScreenHandler.getSlot(3).id, 0, SlotActionType.PICKUP, MinecraftClient.getInstance().player);
                         }
 
-                        this.refreshResults(false);
-                        this.ghostSlots.reset();
+                        ++slotIndex;
                     }
+
+                    this.refreshResults(false);
                 }
 
                 return true;
@@ -243,6 +245,17 @@ public class BrewingStandRecipeBookWidget extends DrawableHelper implements Draw
         }
     }
 
+    public void showGhostRecipe(BrewingResult result, List<Slot> slots) {
+        this.ghostSlots.addSlot(((BrewingRecipeRegistryRecipeAccessor<?>) result.recipe).getIngredient().getMatchingStacks()[0], slots.get(3).x, slots.get(3).y);
+
+        assert currentTab != null;
+        ItemStack inputStack = result.inputAsItemStack(currentTab.getGroup());
+        this.ghostSlots.addSlot(result.ingredient, slots.get(0).x, slots.get(0).y);
+        this.ghostSlots.addSlot(inputStack, slots.get(1).x, slots.get(1).y);
+        this.ghostSlots.addSlot(inputStack, slots.get(2).x, slots.get(2).y);
+    }
+
+
     private boolean toggleFilteringBrewable() {
         boolean bl = !this.recipeBook.isFilteringCraftable();
         this.recipeBook.setFilteringCraftable(bl);
@@ -257,7 +270,7 @@ public class BrewingStandRecipeBookWidget extends DrawableHelper implements Draw
         assert this.searchField != null;
         String string = this.searchField.getText();
         if (!string.isEmpty()) {
-            results.removeIf(itemStack -> !itemStack.itemStack.getName().getString().toLowerCase(Locale.ROOT).contains(string.toLowerCase(Locale.ROOT)));
+            results.removeIf(itemStack -> !itemStack.ingredient.getName().getString().toLowerCase(Locale.ROOT).contains(string.toLowerCase(Locale.ROOT)));
         }
 
         if (this.recipeBook.isFilteringCraftable()) {
@@ -401,7 +414,7 @@ public class BrewingStandRecipeBookWidget extends DrawableHelper implements Draw
         ItemStack itemStack = null;
 
         for(int i = 0; i < this.ghostSlots.getSlotCount(); ++i) {
-            RecipeBookGhostSlots.GhostInputSlot ghostInputSlot = this.ghostSlots.getSlot(i);
+            BrewingRecipeBookGhostSlots.GhostSlot ghostInputSlot = this.ghostSlots.getSlot(i);
             int j = ghostInputSlot.getX() + x;
             int k = ghostInputSlot.getY() + y;
             if (mouseX >= j && mouseY >= k && mouseX < j + 16 && mouseY < k + 16) {
