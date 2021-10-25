@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
-@Mixin(RecipeBookWidget.class)
+@Mixin(value = RecipeBookWidget.class)
 public class RemoveRecipeBookOffset extends DrawableHelper {
     @Shadow private int leftOffset;
     @Shadow private boolean narrow;
@@ -21,7 +21,9 @@ public class RemoveRecipeBookOffset extends DrawableHelper {
             at = @At(value = "FIELD", target = "Lnet/minecraft/client/gui/screen/recipebook/RecipeBookWidget;leftOffset:I")
     )
     public void center(CallbackInfo ci) {
-        if (BetterRecipeBook.config.keepCentered) {
+        if (BetterRecipeBook.inventorioLoaded) {
+            this.leftOffset = this.narrow ? 0 : 86;
+        } else if (BetterRecipeBook.config.keepCentered) {
             this.leftOffset = this.narrow ? 0 : 162;
         } else {
             this.leftOffset = this.narrow ? 0 : 86;
@@ -30,7 +32,7 @@ public class RemoveRecipeBookOffset extends DrawableHelper {
 
     @Inject(method = "findLeftEdge", locals = LocalCapture.CAPTURE_FAILHARD, at = @At(value = "RETURN"), cancellable = true)
     public void findLeftEdge(int width, int backgroundWidth, CallbackInfoReturnable<Integer> cir, int j) {
-        if (BetterRecipeBook.config.keepCentered) {
+        if (BetterRecipeBook.config.keepCentered && !BetterRecipeBook.inventorioLoaded) {
             j = (width - backgroundWidth) / 2;
         }
         cir.setReturnValue(j);
@@ -38,7 +40,7 @@ public class RemoveRecipeBookOffset extends DrawableHelper {
 
     @Inject(method = "isWide", at = @At("RETURN"), cancellable = true)
     public void isWide(CallbackInfoReturnable<Boolean> cir) {
-        if (this.leftOffset == 162 || this.leftOffset == 86) {
+        if (this.leftOffset >= 86) {
             cir.setReturnValue(true);
         }
     }
