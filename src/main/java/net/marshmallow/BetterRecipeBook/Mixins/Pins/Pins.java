@@ -46,7 +46,6 @@ public abstract class Pins {
                     RecipeResultCollection recipeResultCollection = new RecipeResultCollection(Collections.singletonList(((AlternativeButtonWidgetAccessor) alternativeButton).getRecipe()));
                     recipeResultCollection.initialize(this.recipeBook);
                     BetterRecipeBook.pinnedRecipeManager.addOrRemoveFavourite(recipeResultCollection);
-                    this.searchField.changeFocus(false);
                     this.refreshResults(false);
                     cir.setReturnValue(true);
                     return;
