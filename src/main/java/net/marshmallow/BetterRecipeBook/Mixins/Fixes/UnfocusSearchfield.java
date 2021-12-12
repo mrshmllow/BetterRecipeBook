@@ -20,9 +20,10 @@ public class UnfocusSearchfield {
 
     @Inject(method = "mouseClicked", at = @At("HEAD"))
     public void closeOnInput(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir) {
-        assert this.searchField != null;
-        if (this.searchField.mouseClicked(mouseX, mouseY, button)) {
-            ((RecipeBookResultsAccessor) this.recipesArea).getAlternatesWidget().setVisible(false);
+        if (this.searchField != null) {
+            if (this.searchField.mouseClicked(mouseX, mouseY, button)) {
+                ((RecipeBookResultsAccessor) this.recipesArea).getAlternatesWidget().setVisible(false);
+            }
         }
     }
 }
