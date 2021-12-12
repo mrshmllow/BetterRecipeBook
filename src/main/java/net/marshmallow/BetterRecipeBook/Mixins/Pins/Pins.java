@@ -49,6 +49,7 @@ public abstract class Pins {
                     this.searchField.changeFocus(false);
                     this.refreshResults(false);
                     cir.setReturnValue(true);
+                    return;
                 }
             }
 
