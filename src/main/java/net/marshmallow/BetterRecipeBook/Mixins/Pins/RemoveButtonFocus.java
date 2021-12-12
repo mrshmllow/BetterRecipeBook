@@ -1,10 +1,10 @@
 package net.marshmallow.BetterRecipeBook.Mixins.Pins;
 
 import net.marshmallow.BetterRecipeBook.Mixins.Accessors.TexturedButtonWidgetAccessor;
-import net.minecraft.client.gui.Element;
-import net.minecraft.client.gui.ParentElement;
-import net.minecraft.client.gui.widget.TexturedButtonWidget;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.gui.components.ImageButton;
+import net.minecraft.client.gui.components.events.ContainerEventHandler;
+import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
@@ -13,10 +13,10 @@ import org.spongepowered.asm.mixin.Shadow;
 import java.util.Iterator;
 import java.util.List;
 
-@Mixin(ParentElement.class)
+@Mixin(ContainerEventHandler.class)
 public interface RemoveButtonFocus {
-    @Shadow List<? extends Element> children();
-    @Shadow void setFocused(@Nullable Element focused);
+    @Shadow List<? extends GuiEventListener> children();
+    @Shadow void setFocused(@Nullable GuiEventListener focused);
     @Shadow void setDragging(boolean dragging);
 
     /**
@@ -25,9 +25,9 @@ public interface RemoveButtonFocus {
      */
     @Overwrite
     default boolean mouseClicked(double mouseX, double mouseY, int button) {
-        Iterator<? extends Element> var6 = this.children().iterator();
+        Iterator<? extends GuiEventListener> var6 = this.children().iterator();
 
-        Element element;
+        GuiEventListener element;
         do {
             if (!var6.hasNext()) {
                 return false;
@@ -36,8 +36,8 @@ public interface RemoveButtonFocus {
             element = var6.next();
         } while(!element.mouseClicked(mouseX, mouseY, button));
 
-        if (element instanceof TexturedButtonWidget) {
-            if (((TexturedButtonWidgetAccessor) element).getTexture().equals(new Identifier("textures/gui/recipe_button.png"))) {
+        if (element instanceof ImageButton) {
+            if (((TexturedButtonWidgetAccessor) element).getResourceLocation().equals(new ResourceLocation("textures/gui/recipe_button.png"))) {
                 return true;
             }
         }

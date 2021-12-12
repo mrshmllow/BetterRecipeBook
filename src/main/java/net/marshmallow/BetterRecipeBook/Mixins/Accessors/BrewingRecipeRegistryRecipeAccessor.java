@@ -1,16 +1,16 @@
 package net.marshmallow.BetterRecipeBook.Mixins.Accessors;
 
-import net.minecraft.recipe.BrewingRecipeRegistry;
-import net.minecraft.recipe.Ingredient;
+import net.minecraft.world.item.alchemy.PotionBrewing;
+import net.minecraft.world.item.crafting.Ingredient;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
-@Mixin(BrewingRecipeRegistry.Recipe.class)
+@Mixin(PotionBrewing.Mix.class)
 public interface BrewingRecipeRegistryRecipeAccessor<T> {
-    @Accessor("input")
-    T getInput();
-    @Accessor("output")
-    T getOutput();
+    @Accessor("from")
+    T getFrom();
+    @Accessor("to")
+    T getTo();
     @Accessor("ingredient")
     Ingredient getIngredient();
 }

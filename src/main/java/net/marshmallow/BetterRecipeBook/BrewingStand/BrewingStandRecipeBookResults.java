@@ -1,14 +1,13 @@
 package net.marshmallow.BetterRecipeBook.BrewingStand;
 
 import com.google.common.collect.Lists;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.marshmallow.BetterRecipeBook.BetterRecipeBook;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.widget.ToggleButtonWidget;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.screen.BrewingStandScreenHandler;
-
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.StateSwitchingButton;
+import net.minecraft.world.inventory.BrewingStandMenu;
 import java.util.Iterator;
 import java.util.List;
 
@@ -18,13 +17,13 @@ public class BrewingStandRecipeBookResults {
     public final List<BrewingAnimatedResultButton> resultButtons = Lists.newArrayListWithCapacity(20);
     private int pageCount;
     private int currentPage;
-    private ToggleButtonWidget nextPageButton;
-    private ToggleButtonWidget prevPageButton;
-    private MinecraftClient client;
+    private StateSwitchingButton nextPageButton;
+    private StateSwitchingButton prevPageButton;
+    private Minecraft client;
     private BrewingAnimatedResultButton hoveredResultButton;
     private BrewingResult lastClickedRecipe;
     BrewingRecipeBookGroup group;
-    private BrewingStandScreenHandler brewingStandScreenHandler;
+    private BrewingStandMenu brewingStandScreenHandler;
 
     public BrewingStandRecipeBookResults() {
         for(int i = 0; i < 20; ++i) {
@@ -33,7 +32,7 @@ public class BrewingStandRecipeBookResults {
 
     }
 
-    public void initialize(MinecraftClient client, int parentLeft, int parentTop, BrewingStandScreenHandler brewingStandScreenHandler) {
+    public void initialize(Minecraft client, int parentLeft, int parentTop, BrewingStandMenu brewingStandScreenHandler) {
         this.client = client;
         this.brewingStandScreenHandler = brewingStandScreenHandler;
         // this.recipeBook = client.player.getRecipeBook();
@@ -42,10 +41,10 @@ public class BrewingStandRecipeBookResults {
             this.resultButtons.get(i).setPos(parentLeft + 11 + 25 * (i % 5), parentTop + 31 + 25 * (i / 5));
         }
 
-        this.nextPageButton = new ToggleButtonWidget(parentLeft + 93, parentTop + 137, 12, 17, false);
-        this.nextPageButton.setTextureUV(1, 208, 13, 18, BrewingStandRecipeBookWidget.TEXTURE);
-        this.prevPageButton = new ToggleButtonWidget(parentLeft + 38, parentTop + 137, 12, 17, true);
-        this.prevPageButton.setTextureUV(1, 208, 13, 18, BrewingStandRecipeBookWidget.TEXTURE);
+        this.nextPageButton = new StateSwitchingButton(parentLeft + 93, parentTop + 137, 12, 17, false);
+        this.nextPageButton.initTextureValues(1, 208, 13, 18, BrewingStandRecipeBookWidget.TEXTURE);
+        this.prevPageButton = new StateSwitchingButton(parentLeft + 38, parentTop + 137, 12, 17, true);
+        this.prevPageButton.initTextureValues(1, 208, 13, 18, BrewingStandRecipeBookWidget.TEXTURE);
     }
 
     public void setResults(List<BrewingResult> recipeCollection, boolean resetCurrentPage, BrewingRecipeBookGroup group) {
@@ -124,9 +123,9 @@ public class BrewingStandRecipeBookResults {
         }
     }
 
-    public void drawTooltip(MatrixStack matrices, int x, int y) {
-        if (this.client.currentScreen != null && hoveredResultButton != null) {
-            this.client.currentScreen.renderTooltip(matrices, this.hoveredResultButton.getTooltip(), x, y);
+    public void drawTooltip(PoseStack matrices, int x, int y) {
+        if (this.client.screen != null && hoveredResultButton != null) {
+            this.client.screen.renderComponentTooltip(matrices, this.hoveredResultButton.getTooltip(), x, y);
         }
     }
 
@@ -144,7 +143,7 @@ public class BrewingStandRecipeBookResults {
         }
     }
 
-    public void draw(MatrixStack matrices, int x, int y, int mouseX, int mouseY, float delta) {
+    public void draw(PoseStack matrices, int x, int y, int mouseX, int mouseY, float delta) {
         if (BetterRecipeBook.queuedScroll != 0 && BetterRecipeBook.config.scrolling.enableScrolling) {
             int queuedPage = BetterRecipeBook.queuedScroll + currentPage;
 
@@ -166,15 +165,15 @@ public class BrewingStandRecipeBookResults {
         if (this.pageCount > 1) {
             int var10000 = this.currentPage + 1;
             String string = var10000 + "/" + this.pageCount;
-            int i = this.client.textRenderer.getWidth(string);
-            this.client.textRenderer.draw(matrices, string, (float)(x - i / 2 + 73), (float)(y + 141), -1);
+            int i = this.client.font.width(string);
+            this.client.font.draw(matrices, string, (float)(x - i / 2 + 73), (float)(y + 141), -1);
         }
 
         this.hoveredResultButton = null;
 
         for (BrewingAnimatedResultButton animatedResultButton : this.resultButtons) {
             animatedResultButton.render(matrices, mouseX, mouseY, delta);
-            if (animatedResultButton.visible && animatedResultButton.isHovered()) {
+            if (animatedResultButton.visible && animatedResultButton.isHoveredOrFocused()) {
                 this.hoveredResultButton = animatedResultButton;
             }
         }

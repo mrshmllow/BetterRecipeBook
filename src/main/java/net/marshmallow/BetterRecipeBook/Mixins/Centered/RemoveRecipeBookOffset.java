@@ -1,8 +1,8 @@
 package net.marshmallow.BetterRecipeBook.Mixins.Centered;
 
 import net.marshmallow.BetterRecipeBook.BetterRecipeBook;
-import net.minecraft.client.gui.DrawableHelper;
-import net.minecraft.client.gui.screen.recipebook.RecipeBookWidget;
+import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.screens.recipebook.RecipeBookComponent;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -11,24 +11,24 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
-@Mixin(RecipeBookWidget.class)
-public class RemoveRecipeBookOffset extends DrawableHelper {
-    @Shadow private int leftOffset;
-    @Shadow private boolean narrow;
+@Mixin(RecipeBookComponent.class)
+public class RemoveRecipeBookOffset extends GuiComponent {
+    @Shadow private int xOffset;
+    @Shadow private boolean widthTooNarrow;
 
     @Inject(
-            method = "reset",
-            at = @At(value = "FIELD", target = "Lnet/minecraft/client/gui/screen/recipebook/RecipeBookWidget;leftOffset:I")
+            method = "initVisuals",
+            at = @At(value = "FIELD", target = "Lnet/minecraft/client/gui/screens/recipebook/RecipeBookComponent;xOffset:I")
     )
     public void center(CallbackInfo ci) {
         if (BetterRecipeBook.config.keepCentered) {
-            this.leftOffset = this.narrow ? 0 : 162;
+            this.xOffset = this.widthTooNarrow ? 0 : 162;
         } else {
-            this.leftOffset = this.narrow ? 0 : 86;
+            this.xOffset = this.widthTooNarrow ? 0 : 86;
         }
     }
 
-    @Inject(method = "findLeftEdge", locals = LocalCapture.CAPTURE_FAILHARD, at = @At(value = "RETURN"), cancellable = true)
+    @Inject(method = "updateScreenPosition", locals = LocalCapture.CAPTURE_FAILHARD, at = @At(value = "RETURN"), cancellable = true)
     public void findLeftEdge(int width, int backgroundWidth, CallbackInfoReturnable<Integer> cir, int j) {
         if (BetterRecipeBook.config.keepCentered) {
             j = (width - backgroundWidth) / 2;
@@ -36,9 +36,9 @@ public class RemoveRecipeBookOffset extends DrawableHelper {
         cir.setReturnValue(j);
     }
 
-    @Inject(method = "isWide", at = @At("RETURN"), cancellable = true)
+    @Inject(method = "isOffsetNextToMainGUI", at = @At("RETURN"), cancellable = true)
     public void isWide(CallbackInfoReturnable<Boolean> cir) {
-        if (this.leftOffset == 162 || this.leftOffset == 86) {
+        if (this.xOffset == 162 || this.xOffset == 86) {
             cir.setReturnValue(true);
         }
     }

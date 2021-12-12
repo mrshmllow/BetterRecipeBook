@@ -1,17 +1,17 @@
 package net.marshmallow.BetterRecipeBook.Mixins.Accessors;
 
-import net.minecraft.client.gui.screen.recipebook.AnimatedResultButton;
-import net.minecraft.client.gui.screen.recipebook.RecipeAlternativesWidget;
-import net.minecraft.client.gui.screen.recipebook.RecipeBookResults;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
 import java.util.List;
+import net.minecraft.client.gui.screens.recipebook.OverlayRecipeComponent;
+import net.minecraft.client.gui.screens.recipebook.RecipeBookPage;
+import net.minecraft.client.gui.screens.recipebook.RecipeButton;
 
-@Mixin(RecipeBookResults.class)
+@Mixin(RecipeBookPage.class)
 public interface RecipeBookResultsAccessor {
     @Accessor()
-    List<AnimatedResultButton> getResultButtons();
+    List<RecipeButton> getButtons();
     @Accessor()
-    RecipeAlternativesWidget getAlternatesWidget();
+    OverlayRecipeComponent getOverlay();
 }

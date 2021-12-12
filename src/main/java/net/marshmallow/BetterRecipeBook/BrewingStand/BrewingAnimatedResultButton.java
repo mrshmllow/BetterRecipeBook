@@ -2,62 +2,58 @@ package net.marshmallow.BetterRecipeBook.BrewingStand;
 
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.marshmallow.BetterRecipeBook.BetterRecipeBook;
 import net.marshmallow.BetterRecipeBook.Mixins.Accessors.BrewingRecipeRegistryRecipeAccessor;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
-import net.minecraft.client.gui.screen.narration.NarrationPart;
-import net.minecraft.client.gui.widget.ClickableWidget;
-import net.minecraft.client.render.GameRenderer;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.potion.Potion;
-import net.minecraft.potion.PotionUtil;
-import net.minecraft.screen.BrewingStandScreenHandler;
-import net.minecraft.text.LiteralText;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
-
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.narration.NarratedElementType;
+import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.inventory.BrewingStandMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.alchemy.PotionUtils;
 import java.util.List;
 
 @Environment(EnvType.CLIENT)
-public class BrewingAnimatedResultButton extends ClickableWidget {
+public class BrewingAnimatedResultButton extends AbstractWidget {
     private float time;
-    private static final Identifier BACKGROUND_TEXTURE = new Identifier("textures/gui/recipe_book.png");
+    private static final ResourceLocation BACKGROUND_TEXTURE = new ResourceLocation("textures/gui/recipe_book.png");
     private BrewingResult potionRecipe;
     private BrewingRecipeBookGroup group;
-    private BrewingStandScreenHandler brewingStandScreenHandler;
+    private BrewingStandMenu brewingStandScreenHandler;
 
     public BrewingAnimatedResultButton() {
-        super(0, 0, 25, 25, LiteralText.EMPTY);
+        super(0, 0, 25, 25, TextComponent.EMPTY);
     }
 
-    public void showPotionRecipe(BrewingResult potionRecipe, BrewingRecipeBookGroup group, BrewingStandScreenHandler brewingStandScreenHandler) {
+    public void showPotionRecipe(BrewingResult potionRecipe, BrewingRecipeBookGroup group, BrewingStandMenu brewingStandScreenHandler) {
         this.potionRecipe = potionRecipe;
         this.group = group;
         this.brewingStandScreenHandler = brewingStandScreenHandler;
     }
 
-    public void renderButton(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+    public void renderButton(PoseStack matrices, int mouseX, int mouseY, float delta) {
         if (!Screen.hasControlDown()) {
             this.time += delta;
         }
 
-        MinecraftClient minecraftClient = MinecraftClient.getInstance();
+        Minecraft minecraftClient = Minecraft.getInstance();
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
 
         int i;
         int j;
 
         if (BetterRecipeBook.config.enablePinning && BetterRecipeBook.pinnedRecipeManager.hasPotion(potionRecipe.recipe)) {
-            RenderSystem.setShaderTexture(0, new Identifier("betterrecipebook:textures/gui/pinned.png"));
+            RenderSystem.setShaderTexture(0, new ResourceLocation("betterrecipebook:textures/gui/pinned.png"));
             i = 25;
             j = 0;
         } else {
@@ -70,16 +66,16 @@ public class BrewingAnimatedResultButton extends ClickableWidget {
             i -= 25;
         }
 
-        MatrixStack matrixStack = RenderSystem.getModelViewStack();
-        this.drawTexture(matrices, this.x, this.y, i, j, this.width, this.height);
+        PoseStack matrixStack = RenderSystem.getModelViewStack();
+        this.blit(matrices, this.x, this.y, i, j, this.width, this.height);
         int k = 4;
 
-        matrixStack.push();
-        matrixStack.multiplyPositionMatrix(matrices.peek().getPositionMatrix().copy()); // No idea what this does
-        minecraftClient.getItemRenderer().renderInGuiWithOverrides(potionRecipe.ingredient, this.x + k, this.y + k); // Why do we do this twice?
-        minecraftClient.getItemRenderer().renderGuiItemOverlay(MinecraftClient.getInstance().textRenderer, potionRecipe.ingredient, this.x + k, this.y + k); // ^
+        matrixStack.pushPose();
+        matrixStack.mulPoseMatrix(matrices.last().pose().copy()); // No idea what this does
+        minecraftClient.getItemRenderer().renderAndDecorateItem(potionRecipe.ingredient, this.x + k, this.y + k); // Why do we do this twice?
+        minecraftClient.getItemRenderer().renderGuiItemDecorations(Minecraft.getInstance().font, potionRecipe.ingredient, this.x + k, this.y + k); // ^
         RenderSystem.enableDepthTest();
-        matrixStack.pop();
+        matrixStack.popPose();
         RenderSystem.applyModelViewMatrix();
         RenderSystem.disableDepthTest();
     }
@@ -93,42 +89,42 @@ public class BrewingAnimatedResultButton extends ClickableWidget {
         this.y = y;
     }
 
-    public void appendNarrations(NarrationMessageBuilder builder) {
+    public void updateNarration(NarrationElementOutput builder) {
         ItemStack inputStack = this.potionRecipe.inputAsItemStack(group);
 
-        builder.put(NarrationPart.TITLE, new TranslatableText("narration.recipe", inputStack.getName()));
-        builder.put(NarrationPart.USAGE, new TranslatableText("narration.button.usage.hovered"));
+        builder.add(NarratedElementType.TITLE, new TranslatableComponent("narration.recipe", inputStack.getHoverName()));
+        builder.add(NarratedElementType.USAGE, new TranslatableComponent("narration.button.usage.hovered"));
     }
 
-    public List<Text> getTooltip() {
-        List<Text> list = Lists.newArrayList();
+    public List<Component> getTooltip() {
+        List<Component> list = Lists.newArrayList();
 
-        list.add(potionRecipe.ingredient.getName());
-        PotionUtil.buildTooltip(potionRecipe.ingredient, list, 1);
-        list.add(new LiteralText(""));
+        list.add(potionRecipe.ingredient.getHoverName());
+        PotionUtils.addPotionTooltip(potionRecipe.ingredient, list, 1);
+        list.add(new TextComponent(""));
 
-        Formatting colour = Formatting.DARK_GRAY;
+        ChatFormatting colour = ChatFormatting.DARK_GRAY;
         if (getRecipe().hasIngredient(brewingStandScreenHandler)) {
-            colour = Formatting.WHITE;
+            colour = ChatFormatting.WHITE;
         }
 
-        list.add(new LiteralText(((BrewingRecipeRegistryRecipeAccessor<?>) potionRecipe.recipe).getIngredient().getMatchingStacks()[0].getName().getString()).formatted(colour));
+        list.add(new TextComponent(((BrewingRecipeRegistryRecipeAccessor<?>) potionRecipe.recipe).getIngredient().getItems()[0].getHoverName().getString()).withStyle(colour));
 
-        list.add(new LiteralText("↓").formatted(Formatting.DARK_GRAY));
+        list.add(new TextComponent("↓").withStyle(ChatFormatting.DARK_GRAY));
 
         ItemStack inputStack = this.potionRecipe.inputAsItemStack(group);
 
         if (!getRecipe().hasInput(group, brewingStandScreenHandler)) {
-            colour = Formatting.DARK_GRAY;
+            colour = ChatFormatting.DARK_GRAY;
         }
 
-        list.add(new LiteralText(inputStack.getName().getString()).formatted(colour));
+        list.add(new TextComponent(inputStack.getHoverName().getString()).withStyle(colour));
 
         if (BetterRecipeBook.config.enablePinning) {
             if (BetterRecipeBook.pinnedRecipeManager.hasPotion(this.potionRecipe.recipe)) {
-                list.add(new TranslatableText("betterrecipebook.gui.pin.remove"));
+                list.add(new TranslatableComponent("betterrecipebook.gui.pin.remove"));
             } else {
-                list.add(new TranslatableText("betterrecipebook.gui.pin.add"));
+                list.add(new TranslatableComponent("betterrecipebook.gui.pin.add"));
             }
         }
 

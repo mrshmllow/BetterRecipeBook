@@ -1,11 +1,11 @@
 package net.marshmallow.BetterRecipeBook.Mixins.Accessors;
 
-import net.minecraft.client.gui.screen.recipebook.RecipeAlternativesWidget;
-import net.minecraft.recipe.Recipe;
+import net.minecraft.client.gui.screens.recipebook.OverlayRecipeComponent;
+import net.minecraft.world.item.crafting.Recipe;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
-@Mixin(RecipeAlternativesWidget.AlternativeButtonWidget.class)
+@Mixin(OverlayRecipeComponent.OverlayRecipeButton.class)
 public interface AlternativeButtonWidgetAccessor {
     @Accessor()
     Recipe<?> getRecipe();

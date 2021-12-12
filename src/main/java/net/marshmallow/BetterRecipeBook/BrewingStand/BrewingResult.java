@@ -1,39 +1,39 @@
 package net.marshmallow.BetterRecipeBook.BrewingStand;
 
 import net.marshmallow.BetterRecipeBook.Mixins.Accessors.BrewingRecipeRegistryRecipeAccessor;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.potion.Potion;
-import net.minecraft.recipe.BrewingRecipeRegistry;
-import net.minecraft.screen.BrewingStandScreenHandler;
-import net.minecraft.screen.slot.Slot;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.inventory.BrewingStandMenu;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.alchemy.Potion;
+import net.minecraft.world.item.alchemy.PotionBrewing;
 
 public class BrewingResult {
     public ItemStack ingredient;
-    public BrewingRecipeRegistry.Recipe<?> recipe;
-    public Identifier input;
+    public PotionBrewing.Mix<?> recipe;
+    public ResourceLocation input;
     
-    public BrewingResult (ItemStack ingredient, BrewingRecipeRegistry.Recipe<?> recipe) {
+    public BrewingResult (ItemStack ingredient, PotionBrewing.Mix<?> recipe) {
         this.ingredient = ingredient;
         this.recipe = recipe;
-        this.input = Registry.POTION.getId((Potion) ((BrewingRecipeRegistryRecipeAccessor<?>) recipe).getInput());
+        this.input = Registry.POTION.getKey((Potion) ((BrewingRecipeRegistryRecipeAccessor<?>) recipe).getFrom());
     }
 
-    public boolean hasIngredient(BrewingStandScreenHandler handledScreen) {
-        for (ItemStack itemStack : ((BrewingRecipeRegistryRecipeAccessor<?>) this.recipe).getIngredient().getMatchingStacks()) {
+    public boolean hasIngredient(BrewingStandMenu handledScreen) {
+        for (ItemStack itemStack : ((BrewingRecipeRegistryRecipeAccessor<?>) this.recipe).getIngredient().getItems()) {
             for (Slot slot : handledScreen.slots) {
-                if (itemStack.getItem().equals(slot.getStack().getItem())) return true;
+                if (itemStack.getItem().equals(slot.getItem().getItem())) return true;
             }
         }
         return false;
     }
 
     public ItemStack inputAsItemStack(BrewingRecipeBookGroup group) {
-        Potion inputPotion = (Potion) ((BrewingRecipeRegistryRecipeAccessor<?>) this.recipe).getInput();
+        Potion inputPotion = (Potion) ((BrewingRecipeRegistryRecipeAccessor<?>) this.recipe).getFrom();
 
-        Identifier identifier = Registry.POTION.getId(inputPotion);
+        ResourceLocation identifier = Registry.POTION.getKey(inputPotion);
         ItemStack inputStack;
         if (group == BrewingRecipeBookGroup.BREWING_SPLASH_POTION) {
             inputStack = new ItemStack(Items.SPLASH_POTION);
@@ -43,26 +43,26 @@ public class BrewingResult {
             inputStack = new ItemStack(Items.POTION);
         }
 
-        inputStack.getOrCreateNbt().putString("Potion", identifier.toString());
+        inputStack.getOrCreateTag().putString("Potion", identifier.toString());
         return inputStack;
     }
 
-    public boolean hasInput(BrewingRecipeBookGroup group, BrewingStandScreenHandler handledScreen) {
-        Potion inputPotion = (Potion) ((BrewingRecipeRegistryRecipeAccessor<?>) this.recipe).getInput();
+    public boolean hasInput(BrewingRecipeBookGroup group, BrewingStandMenu handledScreen) {
+        Potion inputPotion = (Potion) ((BrewingRecipeRegistryRecipeAccessor<?>) this.recipe).getFrom();
 
         ItemStack inputStack = inputAsItemStack(group);
 
         for (Slot slot : handledScreen.slots) {
-            ItemStack itemStack = slot.getStack();
+            ItemStack itemStack = slot.getItem();
 
-            if (inputStack.getNbt() == null) return false;
-            if (inputStack.getNbt().equals(itemStack.getNbt()) && inputStack.getItem().equals(itemStack.getItem())) return true;
+            if (inputStack.getTag() == null) return false;
+            if (inputStack.getTag().equals(itemStack.getTag()) && inputStack.getItem().equals(itemStack.getItem())) return true;
         }
 
         return false;
     }
 
-    public boolean hasMaterials(BrewingRecipeBookGroup group, BrewingStandScreenHandler handledScreen) {
+    public boolean hasMaterials(BrewingRecipeBookGroup group, BrewingStandMenu handledScreen) {
         boolean hasIngredient = hasIngredient(handledScreen);
         boolean hasInput = hasInput(group, handledScreen);
 

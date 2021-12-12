@@ -1,15 +1,15 @@
 package net.marshmallow.BetterRecipeBook.Mixins;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.marshmallow.BetterRecipeBook.BetterRecipeBook;
 import net.marshmallow.BetterRecipeBook.BrewingStand.BrewingStandRecipeBookWidget;
-import net.minecraft.client.gui.screen.ingame.BrewingStandScreen;
-import net.minecraft.client.gui.screen.ingame.HandledScreen;
-import net.minecraft.client.gui.widget.TexturedButtonWidget;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.screen.BrewingStandScreenHandler;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.gui.components.ImageButton;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.gui.screens.inventory.BrewingStandScreen;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.BrewingStandMenu;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.injection.At;
@@ -18,12 +18,12 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(BrewingStandScreen.class)
-public abstract class BrewingStand extends HandledScreen<BrewingStandScreenHandler> {
+public abstract class BrewingStand extends AbstractContainerScreen<BrewingStandMenu> {
     private final BrewingStandRecipeBookWidget recipeBook = new BrewingStandRecipeBookWidget();
-    private static final Identifier RECIPE_BUTTON_TEXTURE = new Identifier("textures/gui/recipe_button.png");
+    private static final ResourceLocation RECIPE_BUTTON_TEXTURE = new ResourceLocation("textures/gui/recipe_button.png");
     private boolean narrow;
 
-    public BrewingStand(BrewingStandScreenHandler handler, PlayerInventory inventory, Text title) {
+    public BrewingStand(BrewingStandMenu handler, Inventory inventory, Component title) {
         super(handler, inventory, title);
     }
 
@@ -31,23 +31,23 @@ public abstract class BrewingStand extends HandledScreen<BrewingStandScreenHandl
     protected void init(CallbackInfo ci) {
         if (BetterRecipeBook.config.enableBook) {
             this.narrow = this.width < 379;
-            assert this.client != null;
-            this.recipeBook.initialize(this.width, this.height, this.client, narrow, this.handler);
+            assert this.minecraft != null;
+            this.recipeBook.initialize(this.width, this.height, this.minecraft, narrow, this.menu);
 
             if (!BetterRecipeBook.config.keepCentered) {
-                this.x = this.recipeBook.findLeftEdge(this.width, this.backgroundWidth);
+                this.leftPos = this.recipeBook.findLeftEdge(this.width, this.imageWidth);
             }
 
-            this.addDrawableChild(new TexturedButtonWidget(this.x + 135, this.height / 2 - 50, 20, 18, 0, 0, 19, RECIPE_BUTTON_TEXTURE, (button) -> {
+            this.addRenderableWidget(new ImageButton(this.leftPos + 135, this.height / 2 - 50, 20, 18, 0, 0, 19, RECIPE_BUTTON_TEXTURE, (button) -> {
                 this.recipeBook.toggleOpen();
                 BetterRecipeBook.rememberedBrewingOpen = this.recipeBook.isOpen();
                 if (!BetterRecipeBook.config.keepCentered) {
-                    this.x = this.recipeBook.findLeftEdge(this.width, this.backgroundWidth);
+                    this.leftPos = this.recipeBook.findLeftEdge(this.width, this.imageWidth);
                 }
-                ((TexturedButtonWidget)button).setPos(this.x + 135, this.height / 2 - 50);
+                ((ImageButton)button).setPosition(this.leftPos + 135, this.height / 2 - 50);
             }));
 
-            this.addSelectableChild(this.recipeBook);
+            this.addWidget(this.recipeBook);
             this.setInitialFocus(this.recipeBook);
         }
     }
@@ -56,29 +56,29 @@ public abstract class BrewingStand extends HandledScreen<BrewingStandScreenHandl
      * @author marshmallow
      */
     @Overwrite
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+    public void render(PoseStack matrices, int mouseX, int mouseY, float delta) {
         // this.drawStatusEffects = !this.recipeBook.isOpen();
         this.renderBackground(matrices);
         if (this.recipeBook.isOpen() && this.narrow) {
-            this.drawBackground(matrices, delta, mouseX, mouseY);
+            this.renderBg(matrices, delta, mouseX, mouseY);
             super.render(matrices, mouseX, mouseY, delta);
-            this.drawMouseoverTooltip(matrices, mouseX, mouseY);
+            this.renderTooltip(matrices, mouseX, mouseY);
         } else {
             this.recipeBook.render(matrices, mouseX, mouseY, delta);
             super.render(matrices, mouseX, mouseY, delta);
-            this.recipeBook.drawGhostSlots(matrices, this.x, this.y, false, delta);
+            this.recipeBook.drawGhostSlots(matrices, this.leftPos, this.topPos, false, delta);
         }
 
-        this.drawMouseoverTooltip(matrices, mouseX, mouseY);
-        this.recipeBook.drawTooltip(matrices, this.x, this.y, mouseX, mouseY);
+        this.renderTooltip(matrices, mouseX, mouseY);
+        this.recipeBook.drawTooltip(matrices, this.leftPos, this.topPos, mouseX, mouseY);
     }
 
     @ModifyArg(
-            method = "drawBackground",
+            method = "renderBg",
             index = 1,
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/client/gui/screen/ingame/BrewingStandScreen;drawTexture(Lnet/minecraft/client/util/math/MatrixStack;IIIIII)V"
+                    target = "Lnet/minecraft/client/gui/screens/inventory/BrewingStandScreen;blit(Lcom/mojang/blaze3d/vertex/PoseStack;IIIIII)V"
             )
     )
     public int drawBackground(int i) {

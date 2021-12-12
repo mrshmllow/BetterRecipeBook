@@ -2,15 +2,14 @@ package net.marshmallow.BetterRecipeBook.BrewingStand;
 
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawableHelper;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.render.item.ItemRenderer;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.item.ItemStack;
-
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.world.item.ItemStack;
 import java.util.List;
 
 public class BrewingRecipeBookGhostSlots {
@@ -34,7 +33,7 @@ public class BrewingRecipeBookGhostSlots {
         return this.slots.size();
     }
 
-    public void draw(MatrixStack matrices, MinecraftClient client, int i, int j, boolean bl, float f) {
+    public void draw(PoseStack matrices, Minecraft client, int i, int j, boolean bl, float f) {
         if (!Screen.hasControlDown()) {
             this.time += f;
         }
@@ -44,19 +43,19 @@ public class BrewingRecipeBookGhostSlots {
             int l = ghostInputSlot.getX() + i;
             int m = ghostInputSlot.getY() + j;
             if (k == 0 && bl) {
-                DrawableHelper.fill(matrices, l - 4, m - 4, l + 20, m + 20, 822018048);
+                GuiComponent.fill(matrices, l - 4, m - 4, l + 20, m + 20, 822018048);
             } else {
-                DrawableHelper.fill(matrices, l, m, l + 16, m + 16, 822018048);
+                GuiComponent.fill(matrices, l, m, l + 16, m + 16, 822018048);
             }
 
             ItemStack itemStack = ghostInputSlot.getCurrentItemStack();
             ItemRenderer itemRenderer = client.getItemRenderer();
-            itemRenderer.renderInGui(itemStack, l, m);
+            itemRenderer.renderAndDecorateFakeItem(itemStack, l, m);
             RenderSystem.depthFunc(516);
-            DrawableHelper.fill(matrices, l, m, l + 16, m + 16, 822083583);
+            GuiComponent.fill(matrices, l, m, l + 16, m + 16, 822083583);
             RenderSystem.depthFunc(515);
             if (k == 0) {
-                itemRenderer.renderGuiItemOverlay(client.textRenderer, itemStack, l, m);
+                itemRenderer.renderGuiItemDecorations(client.font, itemStack, l, m);
             }
         }
 

@@ -1,15 +1,15 @@
 package net.marshmallow.BetterRecipeBook.Mixins;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import me.shedaniel.autoconfig.AutoConfig;
 import net.marshmallow.BetterRecipeBook.BetterRecipeBook;
 import net.marshmallow.BetterRecipeBook.Config.Config;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.recipebook.RecipeBookWidget;
-import net.minecraft.client.gui.widget.TexturedButtonWidget;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.ImageButton;
+import net.minecraft.client.gui.screens.recipebook.RecipeBookComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -17,34 +17,34 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(RecipeBookWidget.class)
+@Mixin(RecipeBookComponent.class)
 public abstract class SettingsButton {
-    private static final Identifier BUTTON_TEXTURE = new Identifier("betterrecipebook:textures/gui/buttons.png");
+    private static final ResourceLocation BUTTON_TEXTURE = new ResourceLocation("betterrecipebook:textures/gui/buttons.png");
     @Shadow
-    protected MinecraftClient client;
+    protected Minecraft minecraft;
 
-    @Shadow private int parentHeight;
-    @Shadow private int parentWidth;
-    @Shadow private int leftOffset;
+    @Shadow private int height;
+    @Shadow private int width;
+    @Shadow private int xOffset;
 
-    @Shadow public abstract boolean isOpen();
+    @Shadow public abstract boolean isVisible();
 
-    protected TexturedButtonWidget settingsButton;
-    private static final Text OPEN_SETTINGS_TEXT;
+    protected ImageButton settingsButton;
+    private static final Component OPEN_SETTINGS_TEXT;
 
-    @Inject(method = "reset", at = @At("RETURN"))
+    @Inject(method = "initVisuals", at = @At("RETURN"))
     public void reset(CallbackInfo ci) {
         if (BetterRecipeBook.config.settingsButton) {
-            int i = (this.parentWidth - 147) / 2 - this.leftOffset;
-            int j = (this.parentHeight - 166) / 2;
+            int i = (this.width - 147) / 2 - this.xOffset;
+            int j = (this.height - 166) / 2;
 
             int u = 0;
             if (BetterRecipeBook.config.darkMode) {
                 u = 18;
             }
 
-            this.settingsButton = new TexturedButtonWidget(i + 11, j + 137, 16, 18, u, 77, 19, BUTTON_TEXTURE, button -> {
-                MinecraftClient.getInstance().setScreen(AutoConfig.getConfigScreen(Config.class, MinecraftClient.getInstance().currentScreen).get());
+            this.settingsButton = new ImageButton(i + 11, j + 137, 16, 18, u, 77, 19, BUTTON_TEXTURE, button -> {
+                Minecraft.getInstance().setScreen(AutoConfig.getConfigScreen(Config.class, Minecraft.getInstance().screen).get());
             });
         }
     }
@@ -52,10 +52,10 @@ public abstract class SettingsButton {
     @Inject(method = "mouseClicked", at = @At("HEAD"), cancellable = true)
     public void mouseClicked(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir) {
         if (this.settingsButton != null) {
-            if (this.settingsButton.mouseClicked(mouseX, mouseY, button) && this.isOpen() && BetterRecipeBook.config.settingsButton) {
-                assert this.client.player != null;
-                if (!this.client.player.isSpectator()) {
-                    if (!this.client.player.isSpectator()) {
+            if (this.settingsButton.mouseClicked(mouseX, mouseY, button) && this.isVisible() && BetterRecipeBook.config.settingsButton) {
+                assert this.minecraft.player != null;
+                if (!this.minecraft.player.isSpectator()) {
+                    if (!this.minecraft.player.isSpectator()) {
                         cir.setReturnValue(true);
                     }
                 }
@@ -63,24 +63,24 @@ public abstract class SettingsButton {
         }
     }
 
-    @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/recipebook/RecipeBookResults;draw(Lnet/minecraft/client/util/math/MatrixStack;IIIIF)V"))
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci) {
+    @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/recipebook/RecipeBookPage;render(Lcom/mojang/blaze3d/vertex/PoseStack;IIIIF)V"))
+    public void render(PoseStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci) {
         if (BetterRecipeBook.config.settingsButton) {
             this.settingsButton.render(matrices, mouseX, mouseY, delta);
         }
     }
 
-    @Inject(method = "drawTooltip", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/recipebook/RecipeBookWidget;drawGhostSlotTooltip(Lnet/minecraft/client/util/math/MatrixStack;IIII)V"))
-    public void drawTooltip(MatrixStack matrices, int x, int y, int mouseX, int mouseY, CallbackInfo ci) {
+    @Inject(method = "renderTooltip", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/recipebook/RecipeBookComponent;renderGhostRecipeTooltip(Lcom/mojang/blaze3d/vertex/PoseStack;IIII)V"))
+    public void drawTooltip(PoseStack matrices, int x, int y, int mouseX, int mouseY, CallbackInfo ci) {
         if (this.settingsButton == null) return;
-        if (this.settingsButton.isHovered() && BetterRecipeBook.config.settingsButton) {
-            if (this.client.currentScreen != null) {
-                this.client.currentScreen.renderTooltip(matrices, OPEN_SETTINGS_TEXT, mouseX, mouseY);
+        if (this.settingsButton.isHoveredOrFocused() && BetterRecipeBook.config.settingsButton) {
+            if (this.minecraft.screen != null) {
+                this.minecraft.screen.renderTooltip(matrices, OPEN_SETTINGS_TEXT, mouseX, mouseY);
             }
         }
     }
 
     static {
-        OPEN_SETTINGS_TEXT = new TranslatableText("betterrecipebook.gui.settings.open");
+        OPEN_SETTINGS_TEXT = new TranslatableComponent("betterrecipebook.gui.settings.open");
     }
 }

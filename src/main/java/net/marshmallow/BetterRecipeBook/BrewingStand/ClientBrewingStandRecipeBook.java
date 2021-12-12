@@ -2,14 +2,13 @@ package net.marshmallow.BetterRecipeBook.BrewingStand;
 
 import net.marshmallow.BetterRecipeBook.Mixins.Accessors.BrewingRecipeRegistryAccessor;
 import net.marshmallow.BetterRecipeBook.Mixins.Accessors.BrewingRecipeRegistryRecipeAccessor;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.potion.Potion;
-import net.minecraft.potion.PotionUtil;
-import net.minecraft.recipe.BrewingRecipeRegistry;
-import net.minecraft.recipe.book.RecipeBook;
-import net.minecraft.recipe.book.RecipeBookCategory;
-
+import net.minecraft.stats.RecipeBook;
+import net.minecraft.world.inventory.RecipeBookType;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.alchemy.Potion;
+import net.minecraft.world.item.alchemy.PotionBrewing;
+import net.minecraft.world.item.alchemy.PotionUtils;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -23,29 +22,29 @@ public class ClientBrewingStandRecipeBook extends RecipeBook {
     }
 
     public List<BrewingResult> getResultsForCategory(BrewingRecipeBookGroup group) {
-        List<BrewingRecipeRegistry.Recipe<Potion>> recipeCollection = new ArrayList<>(BrewingRecipeRegistryAccessor.getPotionRecipes());
+        List<PotionBrewing.Mix<Potion>> recipeCollection = new ArrayList<>(BrewingRecipeRegistryAccessor.getPotionMixes());
 
         // Remove duplicates, or so they say
-        Set<BrewingRecipeRegistry.Recipe<Potion>> set = new LinkedHashSet<>(recipeCollection);
+        Set<PotionBrewing.Mix<Potion>> set = new LinkedHashSet<>(recipeCollection);
         recipeCollection.clear();
         recipeCollection.addAll(set);
 
         List<BrewingResult> brewingResults = new ArrayList<>();
 
-        for (BrewingRecipeRegistry.Recipe<Potion> potionRecipe : recipeCollection) {
+        for (PotionBrewing.Mix<Potion> potionRecipe : recipeCollection) {
             if (group == BrewingRecipeBookGroup.BREWING_POTION) {
-                brewingResults.add(new BrewingResult(PotionUtil.setPotion(new ItemStack(Items.POTION), (Potion) ((BrewingRecipeRegistryRecipeAccessor<?>)potionRecipe).getOutput()), potionRecipe));
+                brewingResults.add(new BrewingResult(PotionUtils.setPotion(new ItemStack(Items.POTION), (Potion) ((BrewingRecipeRegistryRecipeAccessor<?>)potionRecipe).getTo()), potionRecipe));
             } else if (group == BrewingRecipeBookGroup.BREWING_SPLASH_POTION) {
-                brewingResults.add(new BrewingResult(PotionUtil.setPotion(new ItemStack(Items.SPLASH_POTION), (Potion) ((BrewingRecipeRegistryRecipeAccessor<?>)potionRecipe).getOutput()), potionRecipe));
+                brewingResults.add(new BrewingResult(PotionUtils.setPotion(new ItemStack(Items.SPLASH_POTION), (Potion) ((BrewingRecipeRegistryRecipeAccessor<?>)potionRecipe).getTo()), potionRecipe));
             } else if (group == BrewingRecipeBookGroup.BREWING_LINGERING_POTION) {
-                brewingResults.add(new BrewingResult(PotionUtil.setPotion(new ItemStack(Items.LINGERING_POTION), (Potion) ((BrewingRecipeRegistryRecipeAccessor<?>)potionRecipe).getOutput()), potionRecipe));
+                brewingResults.add(new BrewingResult(PotionUtils.setPotion(new ItemStack(Items.LINGERING_POTION), (Potion) ((BrewingRecipeRegistryRecipeAccessor<?>)potionRecipe).getTo()), potionRecipe));
             }
         }
 
         return brewingResults;
     }
 
-    public boolean isFilteringCraftable(RecipeBookCategory category) {
+    public boolean isFiltering(RecipeBookType category) {
         return filteringCraftable;
     }
 

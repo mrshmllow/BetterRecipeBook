@@ -1,11 +1,11 @@
 package net.marshmallow.BetterRecipeBook;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.ingame.HandledScreen;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.recipe.Recipe;
-import net.minecraft.screen.slot.SlotActionType;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.world.inventory.ClickType;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Recipe;
 
 public class InstantCraftingManager {
     public ItemStack lastCraft;
@@ -18,7 +18,7 @@ public class InstantCraftingManager {
 
     public void recipeClicked(Recipe<?> recipe) {
         if (BetterRecipeBook.instantCraftingManager.on) {
-            lastCraft = recipe.getOutput();
+            lastCraft = recipe.getResultItem();
         }
     }
 
@@ -31,14 +31,14 @@ public class InstantCraftingManager {
             }
             return;
         }
-        if (!itemStack.isItemEqual(lastCraft)) {
+        if (!itemStack.sameItemStackIgnoreDurability(lastCraft)) {
             return;
         }
-        MinecraftClient client = MinecraftClient.getInstance();
-        if (client.interactionManager == null) return;
-        if (client.currentScreen == null) return;
-        int syncId = ((HandledScreen<?>) client.currentScreen).getScreenHandler().syncId;
-        client.interactionManager.clickSlot(syncId, 0, 0, SlotActionType.QUICK_MOVE, client.player);
+        Minecraft client = Minecraft.getInstance();
+        if (client.gameMode == null) return;
+        if (client.screen == null) return;
+        int syncId = ((AbstractContainerScreen<?>) client.screen).getMenu().containerId;
+        client.gameMode.handleInventoryMouseClick(syncId, 0, 0, ClickType.QUICK_MOVE, client.player);
         lastCraft = null;
     }
 

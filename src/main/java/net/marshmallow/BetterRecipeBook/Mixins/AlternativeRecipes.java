@@ -1,18 +1,18 @@
 package net.marshmallow.BetterRecipeBook.Mixins;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.marshmallow.BetterRecipeBook.BetterRecipeBook;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.recipebook.RecipeAlternativesWidget;
-import net.minecraft.client.gui.widget.ClickableWidget;
-import net.minecraft.client.render.item.ItemRenderer;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.item.ItemStack;
-import net.minecraft.recipe.Ingredient;
-import net.minecraft.recipe.Recipe;
-import net.minecraft.recipe.RecipeGridAligner;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.screens.recipebook.OverlayRecipeComponent;
+import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.network.chat.Component;
+import net.minecraft.recipebook.PlaceRecipe;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.Recipe;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -23,23 +23,23 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.List;
 
 
-@Mixin(RecipeAlternativesWidget.AlternativeButtonWidget.class)
-public abstract class AlternativeRecipes extends ClickableWidget implements RecipeGridAligner<Ingredient> {
-    private static final Identifier BACKGROUND_TEXTURE = new Identifier("betterrecipebook:textures/gui/alt_button_blank.png");
+@Mixin(OverlayRecipeComponent.OverlayRecipeButton.class)
+public abstract class AlternativeRecipes extends AbstractWidget implements PlaceRecipe<Ingredient> {
+    private static final ResourceLocation BACKGROUND_TEXTURE = new ResourceLocation("betterrecipebook:textures/gui/alt_button_blank.png");
 
     @Final @Shadow
-    private boolean craftable;
+    private boolean isCraftable;
     @Final @Shadow
     Recipe<?> recipe;
-    @Shadow public abstract void renderButton(MatrixStack matrices, int mouseX, int mouseY, float delta);
-    @Shadow @Final protected List<RecipeAlternativesWidget.AlternativeButtonWidget.InputSlot> slots;
+    @Shadow public abstract void renderButton(PoseStack matrices, int mouseX, int mouseY, float delta);
+    @Shadow @Final protected List<OverlayRecipeComponent.OverlayRecipeButton.Pos> ingredientPos;
 
-    public AlternativeRecipes(int x, int y, int width, int height, Text message) {
+    public AlternativeRecipes(int x, int y, int width, int height, Component message) {
         super(x, y, width, height, message);
     }
 
     @Inject(at = @At("HEAD"), method = "renderButton", cancellable = true)
-    public void renderButton(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci) {
+    public void renderButton(PoseStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci) {
         RenderSystem.setShaderTexture(0, BACKGROUND_TEXTURE);
         int i = 0;
         int j = 0;
@@ -48,41 +48,41 @@ public abstract class AlternativeRecipes extends ClickableWidget implements Reci
             j = 52;
         }
 
-        if (!craftable) {
+        if (!isCraftable) {
             i += 26;
         }
 
-        if (this.slots.size() == 1 && this.isHovered()) {
-            matrices.push();
-            this.drawTexture(matrices, this.x, this.y, i, j, this.width, this.height);
-            MatrixStack matrixStack = RenderSystem.getModelViewStack();
+        if (this.ingredientPos.size() == 1 && this.isHoveredOrFocused()) {
+            matrices.pushPose();
+            this.blit(matrices, this.x, this.y, i, j, this.width, this.height);
+            PoseStack matrixStack = RenderSystem.getModelViewStack();
 
-            matrixStack.push();
-            matrixStack.multiplyPositionMatrix(matrices.peek().getPositionMatrix().copy()); // No idea what this does
-            MinecraftClient.getInstance().getItemRenderer().renderInGuiWithOverrides(this.slots.get(0).stacks[0], this.x + 4, this.y + 4);
+            matrixStack.pushPose();
+            matrixStack.mulPoseMatrix(matrices.last().pose().copy()); // No idea what this does
+            Minecraft.getInstance().getItemRenderer().renderAndDecorateItem(this.ingredientPos.get(0).ingredients[0], this.x + 4, this.y + 4);
             RenderSystem.enableDepthTest();
-            matrixStack.pop();
+            matrixStack.popPose();
             RenderSystem.applyModelViewMatrix();
 
-            matrices.pop();
+            matrices.popPose();
             ci.cancel();
-        } else if (!this.isHovered() && BetterRecipeBook.config.alternativeRecipes.onHover) {
-            matrices.push();
-            this.drawTexture(matrices, this.x, this.y, i, j, this.width, this.height);
+        } else if (!this.isHoveredOrFocused() && BetterRecipeBook.config.alternativeRecipes.onHover) {
+            matrices.pushPose();
+            this.blit(matrices, this.x, this.y, i, j, this.width, this.height);
 
-            ItemRenderer itemRenderer = MinecraftClient.getInstance().getItemRenderer();
-            ItemStack recipeOutput = this.recipe.getOutput();
+            ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
+            ItemStack recipeOutput = this.recipe.getResultItem();
 
-            MatrixStack matrixStack = RenderSystem.getModelViewStack();
+            PoseStack matrixStack = RenderSystem.getModelViewStack();
 
-            matrixStack.push();
-            matrixStack.multiplyPositionMatrix(matrices.peek().getPositionMatrix().copy()); // No idea what this does
-            itemRenderer.renderInGuiWithOverrides(recipeOutput, this.x + 4, this.y + 4);
+            matrixStack.pushPose();
+            matrixStack.mulPoseMatrix(matrices.last().pose().copy()); // No idea what this does
+            itemRenderer.renderAndDecorateItem(recipeOutput, this.x + 4, this.y + 4);
             RenderSystem.enableDepthTest();
-            matrixStack.pop();
+            matrixStack.popPose();
             RenderSystem.applyModelViewMatrix();
 
-            matrices.pop();
+            matrices.popPose();
             ci.cancel();
         }
     }

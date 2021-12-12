@@ -5,10 +5,14 @@ import net.marshmallow.BetterRecipeBook.BetterRecipeBook;
 import net.marshmallow.BetterRecipeBook.Mixins.Accessors.AlternativeButtonWidgetAccessor;
 import net.marshmallow.BetterRecipeBook.Mixins.Accessors.RecipeAlternativesWidgetAccessor;
 import net.marshmallow.BetterRecipeBook.Mixins.Accessors.RecipeBookResultsAccessor;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.recipebook.*;
-import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.recipebook.ClientRecipeBook;
+import net.minecraft.client.ClientRecipeBook;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.gui.screens.recipebook.OverlayRecipeComponent;
+import net.minecraft.client.gui.screens.recipebook.RecipeBookComponent;
+import net.minecraft.client.gui.screens.recipebook.RecipeBookPage;
+import net.minecraft.client.gui.screens.recipebook.RecipeButton;
+import net.minecraft.client.gui.screens.recipebook.RecipeCollection;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 import org.spongepowered.asm.mixin.Final;
@@ -23,41 +27,41 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 import java.util.Collections;
 import java.util.List;
 
-@Mixin(RecipeBookWidget.class)
+@Mixin(RecipeBookComponent.class)
 public abstract class Pins {
-    @Shadow protected MinecraftClient client;
-    @Nullable @Shadow private TextFieldWidget searchField;
-    @Final @Shadow private RecipeBookResults recipesArea;
+    @Shadow protected Minecraft minecraft;
+    @Nullable @Shadow private EditBox searchBox;
+    @Final @Shadow private RecipeBookPage recipeBookPage;
 
-    @Shadow protected abstract void refreshResults(boolean resetCurrentPage);
+    @Shadow protected abstract void updateCollections(boolean resetCurrentPage);
 
-    @Shadow private ClientRecipeBook recipeBook;
+    @Shadow private ClientRecipeBook book;
 
     @Inject(method = "keyPressed", at = @At(value = "HEAD"), cancellable = true)
     public void add(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
-        if (this.searchField == null) return;
+        if (this.searchBox == null) return;
         if (!BetterRecipeBook.config.enablePinning) return;
 
-        RecipeAlternativesWidget alternatesWidget = ((RecipeBookResultsAccessor) this.recipesArea).getAlternatesWidget();
+        OverlayRecipeComponent alternatesWidget = ((RecipeBookResultsAccessor) this.recipeBookPage).getOverlay();
 
         if (keyCode == GLFW.GLFW_KEY_F) {
-            List<RecipeAlternativesWidget.AlternativeButtonWidget> alternativeButtons = ((RecipeAlternativesWidgetAccessor) alternatesWidget).getAlternativeButtons();
-            for (RecipeAlternativesWidget.AlternativeButtonWidget alternativeButton : alternativeButtons) {
-                if (alternativeButton.isHovered()) {
-                    RecipeResultCollection recipeResultCollection = new RecipeResultCollection(Collections.singletonList(((AlternativeButtonWidgetAccessor) alternativeButton).getRecipe()));
-                    recipeResultCollection.initialize(this.recipeBook);
+            List<OverlayRecipeComponent.OverlayRecipeButton> alternativeButtons = ((RecipeAlternativesWidgetAccessor) alternatesWidget).getRecipeButtons();
+            for (OverlayRecipeComponent.OverlayRecipeButton alternativeButton : alternativeButtons) {
+                if (alternativeButton.isHoveredOrFocused()) {
+                    RecipeCollection recipeResultCollection = new RecipeCollection(Collections.singletonList(((AlternativeButtonWidgetAccessor) alternativeButton).getRecipe()));
+                    recipeResultCollection.updateKnownRecipes(this.book);
                     BetterRecipeBook.pinnedRecipeManager.addOrRemoveFavourite(recipeResultCollection);
-                    this.refreshResults(false);
+                    this.updateCollections(false);
                     cir.setReturnValue(true);
                     return;
                 }
             }
 
-            if (!this.searchField.keyPressed(keyCode, scanCode, modifiers)) {
-                for (AnimatedResultButton resultButton : ((RecipeBookResultsAccessor) this.recipesArea).getResultButtons()) {
-                    if (resultButton.isHovered()) {
-                        BetterRecipeBook.pinnedRecipeManager.addOrRemoveFavourite(resultButton.getResultCollection());
-                        this.refreshResults(false);
+            if (!this.searchBox.keyPressed(keyCode, scanCode, modifiers)) {
+                for (RecipeButton resultButton : ((RecipeBookResultsAccessor) this.recipeBookPage).getButtons()) {
+                    if (resultButton.isHoveredOrFocused()) {
+                        BetterRecipeBook.pinnedRecipeManager.addOrRemoveFavourite(resultButton.getCollection());
+                        this.updateCollections(false);
                         cir.setReturnValue(true);
                     }
                 }
@@ -65,13 +69,13 @@ public abstract class Pins {
         }
     }
 
-    @Inject(method = "refreshResults", locals = LocalCapture.CAPTURE_FAILHARD, at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/recipebook/RecipeBookResults;setResults(Ljava/util/List;Z)V"))
-    private void sort(boolean resetCurrentPage, CallbackInfo ci, List<RecipeResultCollection> list, List<RecipeResultCollection> list2) {
+    @Inject(method = "updateCollections", locals = LocalCapture.CAPTURE_FAILHARD, at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/recipebook/RecipeBookPage;updateCollections(Ljava/util/List;Z)V"))
+    private void sort(boolean bl, CallbackInfo ci, List<RecipeCollection> list, List<RecipeCollection> list2) {
         if (!BetterRecipeBook.config.enablePinning) return;
 
-        List<RecipeResultCollection> list3 = Lists.newArrayList(list2);
+        List<RecipeCollection> list3 = Lists.newArrayList(list2);
 
-        for (RecipeResultCollection recipeResultCollection : list3) {
+        for (RecipeCollection recipeResultCollection : list3) {
             if (BetterRecipeBook.pinnedRecipeManager.has(recipeResultCollection)) {
                 list2.remove(recipeResultCollection);
                 list2.add(0, recipeResultCollection);

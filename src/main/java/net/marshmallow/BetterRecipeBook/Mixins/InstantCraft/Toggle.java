@@ -1,13 +1,13 @@
 package net.marshmallow.BetterRecipeBook.Mixins.InstantCraft;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.marshmallow.BetterRecipeBook.BetterRecipeBook;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.recipebook.RecipeBookWidget;
-import net.minecraft.client.gui.widget.ToggleButtonWidget;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.StateSwitchingButton;
+import net.minecraft.client.gui.screens.recipebook.RecipeBookComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -15,39 +15,39 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(RecipeBookWidget.class)
+@Mixin(RecipeBookComponent.class)
 public abstract class Toggle {
-    private static final Identifier BUTTON_TEXTURE = new Identifier("betterrecipebook:textures/gui/buttons.png");
-    @Shadow protected MinecraftClient client;
+    private static final ResourceLocation BUTTON_TEXTURE = new ResourceLocation("betterrecipebook:textures/gui/buttons.png");
+    @Shadow protected Minecraft minecraft;
 
-    @Shadow public abstract boolean isOpen();
+    @Shadow public abstract boolean isVisible();
 
-    @Shadow private int parentHeight;
-    @Shadow private int parentWidth;
-    @Shadow private int leftOffset;
-    protected ToggleButtonWidget instantCraftButton;
-    private static final Text TOGGLE_INSTANT_CRAFT_ON_TEXT;
-    private static final Text TOGGLE_INSTANT_CRAFT_OFF_TEXT;
+    @Shadow private int height;
+    @Shadow private int width;
+    @Shadow private int xOffset;
+    protected StateSwitchingButton instantCraftButton;
+    private static final Component TOGGLE_INSTANT_CRAFT_ON_TEXT;
+    private static final Component TOGGLE_INSTANT_CRAFT_OFF_TEXT;
 
-    @Inject(method = "reset", at = @At("RETURN"))
+    @Inject(method = "initVisuals", at = @At("RETURN"))
     public void reset(CallbackInfo ci) {
         if (!BetterRecipeBook.config.instantCraft.showButton) {
             return;
         }
 
-        int i = (this.parentWidth - 147) / 2 - this.leftOffset;
-        int j = (this.parentHeight - 166) / 2;
+        int i = (this.width - 147) / 2 - this.xOffset;
+        int j = (this.height - 166) / 2;
 
-        this.instantCraftButton = new ToggleButtonWidget(i + 110, j + 137, 26, 16 + 2, BetterRecipeBook.instantCraftingManager.on);
+        this.instantCraftButton = new StateSwitchingButton(i + 110, j + 137, 26, 16 + 2, BetterRecipeBook.instantCraftingManager.on);
         if (BetterRecipeBook.config.darkMode) {
-            this.instantCraftButton.setTextureUV(0, 36 + 2, 28, 18 + 1, BUTTON_TEXTURE);
+            this.instantCraftButton.initTextureValues(0, 36 + 2, 28, 18 + 1, BUTTON_TEXTURE);
         } else {
-            this.instantCraftButton.setTextureUV(0, 0, 28, 18 + 1, BUTTON_TEXTURE);
+            this.instantCraftButton.initTextureValues(0, 0, 28, 18 + 1, BUTTON_TEXTURE);
         }
     }
 
-    @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/recipebook/RecipeBookResults;draw(Lnet/minecraft/client/util/math/MatrixStack;IIIIF)V"))
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci) {
+    @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/recipebook/RecipeBookPage;render(Lcom/mojang/blaze3d/vertex/PoseStack;IIIIF)V"))
+    public void render(PoseStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci) {
         if (!BetterRecipeBook.config.instantCraft.showButton) {
             return;
         }
@@ -57,38 +57,38 @@ public abstract class Toggle {
 
     @Inject(method = "mouseClicked", at = @At("HEAD"), cancellable = true)
     public void mouseClicked(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir) {
-        if (this.isOpen() && BetterRecipeBook.config.instantCraft.showButton) {
-            assert this.client.player != null;
-            if (!this.client.player.isSpectator()) {
+        if (this.isVisible() && BetterRecipeBook.config.instantCraft.showButton) {
+            assert this.minecraft.player != null;
+            if (!this.minecraft.player.isSpectator()) {
                 if (this.instantCraftButton.mouseClicked(mouseX, mouseY, button)) {
                     boolean bl = BetterRecipeBook.instantCraftingManager.toggleOn();
-                    this.instantCraftButton.setToggled(bl);
+                    this.instantCraftButton.setStateTriggered(bl);
                     cir.setReturnValue(true);
                 }
             }
         }
     }
 
-    @Inject(method = "drawTooltip", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/recipebook/RecipeBookWidget;drawGhostSlotTooltip(Lnet/minecraft/client/util/math/MatrixStack;IIII)V"))
-    public void drawTooltip(MatrixStack matrices, int x, int y, int mouseX, int mouseY, CallbackInfo ci) {
+    @Inject(method = "renderTooltip", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/recipebook/RecipeBookComponent;renderGhostRecipeTooltip(Lcom/mojang/blaze3d/vertex/PoseStack;IIII)V"))
+    public void drawTooltip(PoseStack matrices, int x, int y, int mouseX, int mouseY, CallbackInfo ci) {
         if (!BetterRecipeBook.config.instantCraft.showButton) {
             return;
         }
 
-        if (this.instantCraftButton.isHovered()) {
-            Text text = this.getInstantCraftButtonText();
-            if (this.client.currentScreen != null) {
-                this.client.currentScreen.renderTooltip(matrices, text, mouseX, mouseY);
+        if (this.instantCraftButton.isHoveredOrFocused()) {
+            Component text = this.getInstantCraftButtonText();
+            if (this.minecraft.screen != null) {
+                this.minecraft.screen.renderTooltip(matrices, text, mouseX, mouseY);
             }
         }
     }
 
-    private Text getInstantCraftButtonText() {
-        return this.instantCraftButton.isToggled() ? TOGGLE_INSTANT_CRAFT_ON_TEXT : TOGGLE_INSTANT_CRAFT_OFF_TEXT;
+    private Component getInstantCraftButtonText() {
+        return this.instantCraftButton.isStateTriggered() ? TOGGLE_INSTANT_CRAFT_ON_TEXT : TOGGLE_INSTANT_CRAFT_OFF_TEXT;
     }
 
     static {
-        TOGGLE_INSTANT_CRAFT_ON_TEXT = new TranslatableText("betterrecipebook.gui.instantCraft.on");
-        TOGGLE_INSTANT_CRAFT_OFF_TEXT = new TranslatableText("betterrecipebook.gui.instantCraft.off");
+        TOGGLE_INSTANT_CRAFT_ON_TEXT = new TranslatableComponent("betterrecipebook.gui.instantCraft.on");
+        TOGGLE_INSTANT_CRAFT_OFF_TEXT = new TranslatableComponent("betterrecipebook.gui.instantCraft.off");
     }
 }
