@@ -2,12 +2,12 @@ package net.marshmallow.BetterRecipeBook;
 
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.Toml4jConfigSerializer;
-import net.fabricmc.api.ModInitializer;
+import net.fabricmc.api.ClientModInitializer;
 import net.marshmallow.BetterRecipeBook.Config.Config;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class BetterRecipeBook implements ModInitializer {
+public class BetterRecipeBook implements ClientModInitializer {
     public static int queuedScroll;
     public static boolean hasWarnedNoPermission;
     public static boolean isFilteringNone;
@@ -23,7 +23,7 @@ public class BetterRecipeBook implements ModInitializer {
     public static final Logger LOGGER = LogManager.getLogger("betterrecipebook");
 
     @Override
-    public void onInitialize() {
+    public void onInitializeClient() {
         queuedScroll = 0;
         hasWarnedNoPermission = false;
         isFilteringNone = true;
