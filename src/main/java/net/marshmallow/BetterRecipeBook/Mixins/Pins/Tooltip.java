@@ -22,6 +22,8 @@ public abstract class Tooltip {
 
     @Inject(method = "getTooltip", locals = LocalCapture.CAPTURE_FAILHARD, at = @At("RETURN"))
     public void getTooltip(Screen screen, CallbackInfoReturnable<List<Text>> cir, ItemStack itemStack, List<Text> list) {
+        if (!BetterRecipeBook.config.enablePinning) return;
+
         if (BetterRecipeBook.pinnedRecipeManager.has(this.getResultCollection())) {
             list.add(new TranslatableText("betterrecipebook.gui.pin.remove"));
         } else {

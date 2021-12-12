@@ -36,6 +36,7 @@ public abstract class Pins {
     @Inject(method = "keyPressed", at = @At(value = "HEAD"), cancellable = true)
     public void add(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
         if (this.searchField == null) return;
+        if (!BetterRecipeBook.config.enablePinning) return;
 
         if (keyCode == GLFW.GLFW_KEY_F) {
             RecipeAlternativesWidget alternatesWidget = ((RecipeBookResultsAccessor) this.recipesArea).getAlternatesWidget();
@@ -65,6 +66,8 @@ public abstract class Pins {
 
     @Inject(method = "refreshResults", locals = LocalCapture.CAPTURE_FAILHARD, at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/recipebook/RecipeBookResults;setResults(Ljava/util/List;Z)V"))
     private void sort(boolean resetCurrentPage, CallbackInfo ci, List<RecipeResultCollection> list, List<RecipeResultCollection> list2) {
+        if (!BetterRecipeBook.config.enablePinning) return;
+
         List<RecipeResultCollection> list3 = Lists.newArrayList(list2);
 
         for (RecipeResultCollection recipeResultCollection : list3) {

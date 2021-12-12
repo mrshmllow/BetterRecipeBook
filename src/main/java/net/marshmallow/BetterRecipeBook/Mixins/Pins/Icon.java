@@ -17,16 +17,20 @@ public class Icon {
 
     @ModifyArg(method = "renderButton", index = 1, at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderSystem;setShaderTexture(ILnet/minecraft/util/Identifier;)V"))
     public Identifier setIcon(Identifier identifier) {
+        if (!BetterRecipeBook.config.enablePinning) return identifier;
         return BetterRecipeBook.pinnedRecipeManager.has(this.resultCollection) ? new Identifier("betterrecipebook:textures/gui/pinned.png") : identifier;
     }
 
     @ModifyArg(method = "renderButton", index = 3, at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/recipebook/AnimatedResultButton;drawTexture(Lnet/minecraft/client/util/math/MatrixStack;IIIIII)V"))
     public int fixX(int i) {
+        if (!BetterRecipeBook.config.enablePinning) return i;
         return BetterRecipeBook.pinnedRecipeManager.has(this.resultCollection) ? i - 29 : i;
     }
 
     @ModifyArg(method = "renderButton", index = 4, at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/recipebook/AnimatedResultButton;drawTexture(Lnet/minecraft/client/util/math/MatrixStack;IIIIII)V"))
     public int fixY(int j) {
+        if (!BetterRecipeBook.config.enablePinning) return j;
+
         boolean bl = BetterRecipeBook.pinnedRecipeManager.has(this.resultCollection);
 
         if (BetterRecipeBook.config.darkMode && bl) {

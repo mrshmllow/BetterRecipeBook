@@ -277,12 +277,14 @@ public class BrewingStandRecipeBookWidget extends DrawableHelper implements Draw
             results.removeIf((brewingResult) -> !brewingResult.hasMaterials(currentTab.getGroup(), brewingStandScreenHandler));
         }
 
-        List<BrewingResult> tempResults = Lists.newArrayList(results);
+        if (BetterRecipeBook.config.enablePinning) {
+            List<BrewingResult> tempResults = Lists.newArrayList(results);
 
-        for (BrewingResult brewingResult : tempResults) {
-            if (BetterRecipeBook.pinnedRecipeManager.hasPotion(brewingResult.recipe)) {
-                results.remove(brewingResult);
-                results.add(0, brewingResult);
+            for (BrewingResult brewingResult : tempResults) {
+                if (BetterRecipeBook.pinnedRecipeManager.hasPotion(brewingResult.recipe)) {
+                    results.remove(brewingResult);
+                    results.add(0, brewingResult);
+                }
             }
         }
 
@@ -442,11 +444,13 @@ public class BrewingStandRecipeBookWidget extends DrawableHelper implements Draw
                 } else if (this.searchField.isFocused() && this.searchField.isVisible()) {
                     return true;
                 } else if (keyCode == GLFW.GLFW_KEY_F) {
-                    for (BrewingAnimatedResultButton resultButton : this.recipesArea.resultButtons) {
-                        if (resultButton.isHovered()) {
-                            BetterRecipeBook.pinnedRecipeManager.addOrRemoveFavouritePotion(resultButton.getRecipe().recipe);
-                            this.refreshResults(false);
-                            return true;
+                    if (BetterRecipeBook.config.enablePinning) {
+                        for (BrewingAnimatedResultButton resultButton : this.recipesArea.resultButtons) {
+                            if (resultButton.isHovered()) {
+                                BetterRecipeBook.pinnedRecipeManager.addOrRemoveFavouritePotion(resultButton.getRecipe().recipe);
+                                this.refreshResults(false);
+                                return true;
+                            }
                         }
                     }
                     return false;

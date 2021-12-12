@@ -8,6 +8,8 @@ import me.shedaniel.autoconfig.annotation.ConfigEntry;
 public class Config implements ConfigData {
     public boolean enableBook = true;
 
+    public boolean enablePinning = true;
+
     @ConfigEntry.Gui.Tooltip()
     public boolean settingsButton = true;
 

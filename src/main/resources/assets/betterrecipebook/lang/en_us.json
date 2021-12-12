@@ -6,6 +6,7 @@
   "text.autoconfig.betterrecipebook.option.darkMode": "Enable dark mode variants of ui. Requires a full resourcepack",
   "text.autoconfig.betterrecipebook.option.darkMode.@Tooltip": "Only enable this if you use a darkmode resourcepack like vanilla tweaks.",
   "text.autoconfig.betterrecipebook.option.keepCentered": "Keep crafting screens centered",
+  "text.autoconfig.betterrecipebook.option.enablePinning": "Enable recipe pinning",
   "text.autoconfig.betterrecipebook.option.settingsButton": "Show settings button",
   "text.autoconfig.betterrecipebook.option.settingsButton.@Tooltip": "You'll have to go through modmenu to get here from now on.",
 
