@@ -74,7 +74,7 @@ public class BrewingAnimatedResultButton extends ClickableWidget {
         int k = 4;
 
         matrixStack.push();
-        matrixStack.method_34425(matrices.peek().getModel().copy()); // No idea what this does
+        matrixStack.multiplyPositionMatrix(matrices.peek().getPositionMatrix().copy()); // No idea what this does
         minecraftClient.getItemRenderer().renderInGuiWithOverrides(potionRecipe.ingredient, this.x + k, this.y + k); // Why do we do this twice?
         minecraftClient.getItemRenderer().renderGuiItemOverlay(MinecraftClient.getInstance().textRenderer, potionRecipe.ingredient, this.x + k, this.y + k); // ^
         RenderSystem.enableDepthTest();

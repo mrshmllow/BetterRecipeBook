@@ -58,7 +58,7 @@ public abstract class AlternativeRecipes extends ClickableWidget implements Reci
             MatrixStack matrixStack = RenderSystem.getModelViewStack();
 
             matrixStack.push();
-            matrixStack.method_34425(matrices.peek().getModel().copy());
+            matrixStack.multiplyPositionMatrix(matrices.peek().getPositionMatrix().copy()); // No idea what this does
             MinecraftClient.getInstance().getItemRenderer().renderInGuiWithOverrides(this.slots.get(0).stacks[0], this.x + 4, this.y + 4);
             RenderSystem.enableDepthTest();
             matrixStack.pop();
@@ -76,7 +76,7 @@ public abstract class AlternativeRecipes extends ClickableWidget implements Reci
             MatrixStack matrixStack = RenderSystem.getModelViewStack();
 
             matrixStack.push();
-            matrixStack.method_34425(matrices.peek().getModel().copy());
+            matrixStack.multiplyPositionMatrix(matrices.peek().getPositionMatrix().copy()); // No idea what this does
             itemRenderer.renderInGuiWithOverrides(recipeOutput, this.x + 4, this.y + 4);
             RenderSystem.enableDepthTest();
             matrixStack.pop();
