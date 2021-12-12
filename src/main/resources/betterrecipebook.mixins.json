@@ -4,9 +4,10 @@
   "package": "net.marshmallow.BetterRecipeBook.Mixins",
   "compatibilityLevel": "JAVA_16",
   "mixins": [
-    "UnlockRecipes",
+    "UnlockRecipes"
   ],
   "client": [
+    "UnfocusSearchfield",
     "AlternativeRecipes",
     "BrewingStand",
     "DisableBook",
@@ -16,11 +17,11 @@
     "RemoveToasts",
     "ScrollablePages",
     "SettingsButton",
+    "Accessors.AlternativeButtonWidgetAccessor",
     "Accessors.BrewingRecipeRegistryAccessor",
     "Accessors.BrewingRecipeRegistryRecipeAccessor",
     "Accessors.PlayerInventoryAccessor",
     "Accessors.RecipeAlternativesWidgetAccessor",
-    "Accessors.AlternativeButtonWidgetAccessor",
     "Accessors.RecipeBookResultsAccessor",
     "Accessors.TexturedButtonWidgetAccessor",
     "Centered.RemoveRecipeBookOffset",

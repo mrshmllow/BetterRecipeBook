@@ -62,8 +62,6 @@ public abstract class Pins {
                     }
                 }
             }
-        } else {
-            alternatesWidget.setVisible(false);
         }
     }
 
