@@ -38,8 +38,9 @@ public abstract class Pins {
         if (this.searchField == null) return;
         if (!BetterRecipeBook.config.enablePinning) return;
 
+        RecipeAlternativesWidget alternatesWidget = ((RecipeBookResultsAccessor) this.recipesArea).getAlternatesWidget();
+
         if (keyCode == GLFW.GLFW_KEY_F) {
-            RecipeAlternativesWidget alternatesWidget = ((RecipeBookResultsAccessor) this.recipesArea).getAlternatesWidget();
             List<RecipeAlternativesWidget.AlternativeButtonWidget> alternativeButtons = ((RecipeAlternativesWidgetAccessor) alternatesWidget).getAlternativeButtons();
             for (RecipeAlternativesWidget.AlternativeButtonWidget alternativeButton : alternativeButtons) {
                 if (alternativeButton.isHovered()) {
@@ -61,6 +62,8 @@ public abstract class Pins {
                     }
                 }
             }
+        } else {
+            alternatesWidget.setVisible(false);
         }
     }
 

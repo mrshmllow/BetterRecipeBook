@@ -51,6 +51,5 @@ Every feature is optional (Even the book itself!)
 
 ## Current known bugs
 - ### [Known vanilla bugs](https://github.com/mrshmllow/BetterRecipeBook/labels/Vanilla%20bug)
-    - [With a alterative recipes menu open, typing into the search bar won't close the menu.](https://github.com/mrshmllow/BetterRecipeBook/raw/main/.github/images/demo_bug_1.png)
     - Submit your own to be fixed [on github](https://github.com/mrshmllow/BetterRecipeBook/labels/Vanilla%20bug), make sure to include a [offical bug report](https://bugs.mojang.com/projects/MC/summary)
 - ### [Known mod bugs](https://github.com/mrshmllow/BetterRecipeBook/labels/bug)
