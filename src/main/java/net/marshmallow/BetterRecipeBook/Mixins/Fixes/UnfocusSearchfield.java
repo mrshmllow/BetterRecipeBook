@@ -1,4 +1,4 @@
-package net.marshmallow.BetterRecipeBook.Mixins;
+package net.marshmallow.BetterRecipeBook.Mixins.Fixes;
 
 import net.marshmallow.BetterRecipeBook.Mixins.Accessors.RecipeBookResultsAccessor;
 import net.minecraft.client.gui.screen.recipebook.RecipeBookResults;

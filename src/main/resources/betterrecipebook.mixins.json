@@ -7,7 +7,7 @@
     "UnlockRecipes"
   ],
   "client": [
-    "UnfocusSearchfield",
+    "Fixes.UnfocusSearchfield",
     "AlternativeRecipes",
     "BrewingStand",
     "DisableBook",
