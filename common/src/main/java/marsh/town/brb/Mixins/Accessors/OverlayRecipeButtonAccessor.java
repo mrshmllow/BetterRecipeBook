@@ -6,7 +6,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
 @Mixin(OverlayRecipeComponent.OverlayRecipeButton.class)
-public interface AlternativeButtonWidgetAccessor {
+public interface OverlayRecipeButtonAccessor {
     @Accessor()
     Recipe<?> getRecipe();
 }

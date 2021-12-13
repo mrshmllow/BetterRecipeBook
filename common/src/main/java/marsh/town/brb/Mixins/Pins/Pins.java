@@ -2,9 +2,9 @@ package marsh.town.brb.Mixins.Pins;
 
 import com.google.common.collect.Lists;
 import marsh.town.brb.BetterRecipeBook;
-import marsh.town.brb.Mixins.Accessors.AlternativeButtonWidgetAccessor;
-import marsh.town.brb.Mixins.Accessors.RecipeAlternativesWidgetAccessor;
-import marsh.town.brb.Mixins.Accessors.RecipeBookResultsAccessor;
+import marsh.town.brb.Mixins.Accessors.OverlayRecipeButtonAccessor;
+import marsh.town.brb.Mixins.Accessors.OverlayRecipeComponentAccessor;
+import marsh.town.brb.Mixins.Accessors.RecipeBookPageAccessor;
 import net.minecraft.client.ClientRecipeBook;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.EditBox;
@@ -38,13 +38,13 @@ public abstract class Pins {
         if (this.searchBox == null) return;
         if (!BetterRecipeBook.config.enablePinning) return;
 
-        OverlayRecipeComponent alternatesWidget = ((RecipeBookResultsAccessor) this.recipeBookPage).getOverlay();
+        OverlayRecipeComponent alternatesWidget = ((RecipeBookPageAccessor) this.recipeBookPage).getOverlay();
 
         if (keyCode == GLFW.GLFW_KEY_F) {
-            List<OverlayRecipeComponent.OverlayRecipeButton> alternativeButtons = ((RecipeAlternativesWidgetAccessor) alternatesWidget).getRecipeButtons();
+            List<OverlayRecipeComponent.OverlayRecipeButton> alternativeButtons = ((OverlayRecipeComponentAccessor) alternatesWidget).getRecipeButtons();
             for (OverlayRecipeComponent.OverlayRecipeButton alternativeButton : alternativeButtons) {
                 if (alternativeButton.isHoveredOrFocused()) {
-                    RecipeCollection recipeResultCollection = new RecipeCollection(Collections.singletonList(((AlternativeButtonWidgetAccessor) alternativeButton).getRecipe()));
+                    RecipeCollection recipeResultCollection = new RecipeCollection(Collections.singletonList(((OverlayRecipeButtonAccessor) alternativeButton).getRecipe()));
                     recipeResultCollection.updateKnownRecipes(this.book);
                     BetterRecipeBook.pinnedRecipeManager.addOrRemoveFavourite(recipeResultCollection);
                     this.updateCollections(false);
@@ -54,7 +54,7 @@ public abstract class Pins {
             }
 
             if (!this.searchBox.keyPressed(keyCode, scanCode, modifiers)) {
-                for (RecipeButton resultButton : ((RecipeBookResultsAccessor) this.recipeBookPage).getButtons()) {
+                for (RecipeButton resultButton : ((RecipeBookPageAccessor) this.recipeBookPage).getButtons()) {
                     if (resultButton.isHoveredOrFocused()) {
                         BetterRecipeBook.pinnedRecipeManager.addOrRemoveFavourite(resultButton.getCollection());
                         this.updateCollections(false);

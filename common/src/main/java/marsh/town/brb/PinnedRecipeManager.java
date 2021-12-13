@@ -3,7 +3,7 @@ package marsh.town.brb;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
-import marsh.town.brb.Mixins.Accessors.BrewingRecipeRegistryMixAccessor;
+import marsh.town.brb.Mixins.Accessors.PotionBrewingMixAccessor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.recipebook.RecipeCollection;
 import net.minecraft.core.Registry;
@@ -78,7 +78,7 @@ public class PinnedRecipeManager {
     }
 
     public void addOrRemoveFavouritePotion(PotionBrewing.Mix<?> target) {
-        ResourceLocation targetIdentifier = Registry.POTION.getKey((Potion) ((BrewingRecipeRegistryMixAccessor<?>) target).getTo());
+        ResourceLocation targetIdentifier = Registry.POTION.getKey((Potion) ((PotionBrewingMixAccessor<?>) target).getTo());
 
         for (ResourceLocation identifier : this.pinned) {
             if (identifier.equals(targetIdentifier)) {
@@ -104,7 +104,7 @@ public class PinnedRecipeManager {
     }
 
     public boolean hasPotion(PotionBrewing.Mix<?> target) {
-        ResourceLocation targetIdentifier = Registry.POTION.getKey((Potion) ((BrewingRecipeRegistryMixAccessor<?>) target).getTo());
+        ResourceLocation targetIdentifier = Registry.POTION.getKey((Potion) ((PotionBrewingMixAccessor<?>) target).getTo());
 
         for (ResourceLocation identifier : this.pinned) {
             if (targetIdentifier.equals(identifier)) {

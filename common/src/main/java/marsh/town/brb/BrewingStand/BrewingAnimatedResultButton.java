@@ -4,7 +4,7 @@ import com.google.common.collect.Lists;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import marsh.town.brb.BetterRecipeBook;
-import marsh.town.brb.Mixins.Accessors.BrewingRecipeRegistryMixAccessor;
+import marsh.town.brb.Mixins.Accessors.PotionBrewingMixAccessor;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.ChatFormatting;
@@ -109,7 +109,7 @@ public class BrewingAnimatedResultButton extends AbstractWidget {
             colour = ChatFormatting.WHITE;
         }
 
-        list.add(new TextComponent(((BrewingRecipeRegistryMixAccessor<?>) potionRecipe.recipe).getIngredient().getItems()[0].getHoverName().getString()).withStyle(colour));
+        list.add(new TextComponent(((PotionBrewingMixAccessor<?>) potionRecipe.recipe).getIngredient().getItems()[0].getHoverName().getString()).withStyle(colour));
 
         list.add(new TextComponent("↓").withStyle(ChatFormatting.DARK_GRAY));
 

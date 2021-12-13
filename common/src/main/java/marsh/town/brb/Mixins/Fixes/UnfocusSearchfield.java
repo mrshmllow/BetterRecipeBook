@@ -1,6 +1,6 @@
 package marsh.town.brb.Mixins.Fixes;
 
-import marsh.town.brb.Mixins.Accessors.RecipeBookResultsAccessor;
+import marsh.town.brb.Mixins.Accessors.RecipeBookPageAccessor;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.recipebook.RecipeBookComponent;
 import net.minecraft.client.gui.screens.recipebook.RecipeBookPage;
@@ -22,7 +22,7 @@ public class UnfocusSearchfield {
     public void closeOnInput(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir) {
         if (this.searchBox != null) {
             if (this.searchBox.mouseClicked(mouseX, mouseY, button)) {
-                ((RecipeBookResultsAccessor) this.recipeBookPage).getOverlay().setVisible(false);
+                ((RecipeBookPageAccessor) this.recipeBookPage).getOverlay().setVisible(false);
             }
         }
     }

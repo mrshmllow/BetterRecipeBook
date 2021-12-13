@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 import java.util.List;
 
 @Mixin(RecipeBookPage.class)
-public interface RecipeBookResultsAccessor {
+public interface RecipeBookPageAccessor {
     @Accessor()
     List<RecipeButton> getButtons();
     @Accessor()

@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 import java.util.List;
 
 @Mixin(Inventory.class)
-public interface PlayerInventoryAccessor {
+public interface InventoryAccessor {
     @Accessor("compartments")
     List<NonNullList<ItemStack>> getCompartments();
 }

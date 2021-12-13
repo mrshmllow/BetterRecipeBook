@@ -1,6 +1,6 @@
 package marsh.town.brb.Mixins.Pins;
 
-import marsh.town.brb.Mixins.Accessors.TexturedButtonWidgetAccessor;
+import marsh.town.brb.Mixins.Accessors.ImageButtonAccessor;
 import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.components.events.ContainerEventHandler;
 import net.minecraft.client.gui.components.events.GuiEventListener;
@@ -37,7 +37,7 @@ public interface RemoveButtonFocus {
         } while(!element.mouseClicked(mouseX, mouseY, button));
 
         if (element instanceof ImageButton) {
-            if (((TexturedButtonWidgetAccessor) element).getResourceLocation().equals(new ResourceLocation("textures/gui/recipe_button.png"))) {
+            if (((ImageButtonAccessor) element).getResourceLocation().equals(new ResourceLocation("textures/gui/recipe_button.png"))) {
                 return true;
             }
         }

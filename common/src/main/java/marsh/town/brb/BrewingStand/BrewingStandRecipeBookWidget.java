@@ -5,7 +5,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import marsh.town.brb.BetterRecipeBook;
 import marsh.town.brb.Config.Config;
-import marsh.town.brb.Mixins.Accessors.BrewingRecipeRegistryMixAccessor;
+import marsh.town.brb.Mixins.Accessors.PotionBrewingMixAccessor;
 import me.shedaniel.autoconfig.AutoConfig;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -164,8 +164,8 @@ public class BrewingStandRecipeBookWidget extends GuiComponent implements Widget
                         return false;
                     }
 
-                    Potion inputPotion = (Potion) ((BrewingRecipeRegistryMixAccessor<?>) result.recipe).getFrom();
-                    Ingredient ingredient = ((BrewingRecipeRegistryMixAccessor<?>) result.recipe).getIngredient();
+                    Potion inputPotion = (Potion) ((PotionBrewingMixAccessor<?>) result.recipe).getFrom();
+                    Ingredient ingredient = ((PotionBrewingMixAccessor<?>) result.recipe).getIngredient();
                     ResourceLocation identifier = Registry.POTION.getKey(inputPotion);
                     ItemStack inputStack;
                     if (this.currentTab.getGroup() == BrewingRecipeBookGroup.BREWING_SPLASH_POTION) {
@@ -249,7 +249,7 @@ public class BrewingStandRecipeBookWidget extends GuiComponent implements Widget
     }
 
     public void showGhostRecipe(BrewingResult result, List<Slot> slots) {
-        this.ghostSlots.addSlot(((BrewingRecipeRegistryMixAccessor<?>) result.recipe).getIngredient().getItems()[0], slots.get(3).x, slots.get(3).y);
+        this.ghostSlots.addSlot(((PotionBrewingMixAccessor<?>) result.recipe).getIngredient().getItems()[0], slots.get(3).x, slots.get(3).y);
 
         assert currentTab != null;
         ItemStack inputStack = result.inputAsItemStack(currentTab.getGroup());

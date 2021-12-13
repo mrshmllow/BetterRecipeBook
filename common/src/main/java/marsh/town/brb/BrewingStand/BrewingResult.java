@@ -1,6 +1,6 @@
 package marsh.town.brb.BrewingStand;
 
-import marsh.town.brb.Mixins.Accessors.BrewingRecipeRegistryMixAccessor;
+import marsh.town.brb.Mixins.Accessors.PotionBrewingMixAccessor;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.BrewingStandMenu;
@@ -18,11 +18,11 @@ public class BrewingResult {
     public BrewingResult (ItemStack ingredient, PotionBrewing.Mix<?> recipe) {
         this.ingredient = ingredient;
         this.recipe = recipe;
-        this.input = Registry.POTION.getKey((Potion) ((BrewingRecipeRegistryMixAccessor<?>) recipe).getFrom());
+        this.input = Registry.POTION.getKey((Potion) ((PotionBrewingMixAccessor<?>) recipe).getFrom());
     }
 
     public boolean hasIngredient(BrewingStandMenu handledScreen) {
-        for (ItemStack itemStack : ((BrewingRecipeRegistryMixAccessor<?>) this.recipe).getIngredient().getItems()) {
+        for (ItemStack itemStack : ((PotionBrewingMixAccessor<?>) this.recipe).getIngredient().getItems()) {
             for (Slot slot : handledScreen.slots) {
                 if (itemStack.getItem().equals(slot.getItem().getItem())) return true;
             }
@@ -31,7 +31,7 @@ public class BrewingResult {
     }
 
     public ItemStack inputAsItemStack(BrewingRecipeBookGroup group) {
-        Potion inputPotion = (Potion) ((BrewingRecipeRegistryMixAccessor<?>) this.recipe).getFrom();
+        Potion inputPotion = (Potion) ((PotionBrewingMixAccessor<?>) this.recipe).getFrom();
 
         ResourceLocation identifier = Registry.POTION.getKey(inputPotion);
         ItemStack inputStack;
@@ -48,7 +48,7 @@ public class BrewingResult {
     }
 
     public boolean hasInput(BrewingRecipeBookGroup group, BrewingStandMenu handledScreen) {
-        Potion inputPotion = (Potion) ((BrewingRecipeRegistryMixAccessor<?>) this.recipe).getFrom();
+        Potion inputPotion = (Potion) ((PotionBrewingMixAccessor<?>) this.recipe).getFrom();
 
         ItemStack inputStack = inputAsItemStack(group);
 
