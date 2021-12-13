@@ -19,10 +19,10 @@
   "environment": "*",
   "entrypoints": {
     "client": [
-      "net.marshmallow.BetterRecipeBook.BetterRecipeBook"
+      "marsh.town.BetterRecipeBook.BetterRecipeBook"
     ],
     "modmenu": [
-      "net.marshmallow.BetterRecipeBook.ModMenuIntegration"
+      "marsh.town.BetterRecipeBook.ModMenuIntegration"
     ]
   },
   "mixins": [
