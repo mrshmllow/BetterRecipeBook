@@ -18,7 +18,7 @@ public class Icon {
     @ModifyArg(method = "renderButton", index = 1, at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderSystem;setShaderTexture(ILnet/minecraft/resources/ResourceLocation;)V"))
     public ResourceLocation setIcon(ResourceLocation identifier) {
         if (!BetterRecipeBook.config.enablePinning) return identifier;
-        return BetterRecipeBook.pinnedRecipeManager.has(this.collection) ? new ResourceLocation("betterrecipebook:textures/gui/pinned.png") : identifier;
+        return BetterRecipeBook.pinnedRecipeManager.has(this.collection) ? new ResourceLocation("brb:textures/gui/pinned.png") : identifier;
     }
 
     @ModifyArg(method = "renderButton", index = 3, at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/recipebook/RecipeButton;blit(Lcom/mojang/blaze3d/vertex/PoseStack;IIIIII)V"))

@@ -17,7 +17,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(RecipeBookComponent.class)
 public abstract class Toggle {
-    private static final ResourceLocation BUTTON_TEXTURE = new ResourceLocation("betterrecipebook:textures/gui/buttons.png");
+    private static final ResourceLocation BUTTON_TEXTURE = new ResourceLocation("brb:textures/gui/buttons.png");
     @Shadow protected Minecraft minecraft;
 
     @Shadow public abstract boolean isVisible();
@@ -88,7 +88,7 @@ public abstract class Toggle {
     }
 
     static {
-        TOGGLE_INSTANT_CRAFT_ON_TEXT = new TranslatableComponent("betterrecipebook.gui.instantCraft.on");
-        TOGGLE_INSTANT_CRAFT_OFF_TEXT = new TranslatableComponent("betterrecipebook.gui.instantCraft.off");
+        TOGGLE_INSTANT_CRAFT_ON_TEXT = new TranslatableComponent("brb.gui.instantCraft.on");
+        TOGGLE_INSTANT_CRAFT_OFF_TEXT = new TranslatableComponent("brb.gui.instantCraft.off");
     }
 }

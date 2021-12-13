@@ -53,7 +53,7 @@ public class BrewingAnimatedResultButton extends AbstractWidget {
         int j;
 
         if (BetterRecipeBook.config.enablePinning && BetterRecipeBook.pinnedRecipeManager.hasPotion(potionRecipe.recipe)) {
-            RenderSystem.setShaderTexture(0, new ResourceLocation("betterrecipebook:textures/gui/pinned.png"));
+            RenderSystem.setShaderTexture(0, new ResourceLocation("brb:textures/gui/pinned.png"));
             i = 25;
             j = 0;
         } else {
@@ -122,9 +122,9 @@ public class BrewingAnimatedResultButton extends AbstractWidget {
 
         if (BetterRecipeBook.config.enablePinning) {
             if (BetterRecipeBook.pinnedRecipeManager.hasPotion(this.potionRecipe.recipe)) {
-                list.add(new TranslatableComponent("betterrecipebook.gui.pin.remove"));
+                list.add(new TranslatableComponent("brb.gui.pin.remove"));
             } else {
-                list.add(new TranslatableComponent("betterrecipebook.gui.pin.add"));
+                list.add(new TranslatableComponent("brb.gui.pin.add"));
             }
         }
 

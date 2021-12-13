@@ -25,7 +25,7 @@ import java.util.List;
 
 @Mixin(OverlayRecipeComponent.OverlayRecipeButton.class)
 public abstract class AlternativeRecipes extends AbstractWidget implements PlaceRecipe<Ingredient> {
-    private static final ResourceLocation BACKGROUND_TEXTURE = new ResourceLocation("betterrecipebook:textures/gui/alt_button_blank.png");
+    private static final ResourceLocation BACKGROUND_TEXTURE = new ResourceLocation("brb:textures/gui/alt_button_blank.png");
 
     @Final @Shadow
     private boolean isCraftable;

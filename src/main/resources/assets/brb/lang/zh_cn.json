@@ -1,0 +1,37 @@
+{
+  "text.autoconfig.brb.title": "更好的食谱书配置",
+
+  "text.autoconfig.brb.category.default": "常规设置",
+  "text.autoconfig.brb.option.enableBook": "启用食谱书",
+  "text.autoconfig.brb.option.darkMode": "启用 ui 的暗模式变体。需要完整的资源包",
+  "text.autoconfig.brb.option.darkMode.@Tooltip": "只有在你使用像 vanilla 调整这样的暗模式资源包时才启用它。",
+  "text.autoconfig.brb.option.keepCentered": "保持制作屏幕居中",
+  "text.autoconfig.brb.option.settingsButton": "显示设置按钮",
+  "text.autoconfig.brb.option.settingsButton.@Tooltip": "从现在开始你必须通过 modmenu 才能到达这里。",
+
+  "text.autoconfig.brb.category.instantCraft": "即时制作设置",
+  "text.autoconfig.brb.option.instantCraft.instantCraft": "默认立即制作",
+  "text.autoconfig.brb.option.instantCraft.showButton": "显示即时工艺按钮",
+
+  "text.autoconfig.brb.category.scrolling": "滚动设置",
+  "text.autoconfig.brb.option.scrolling.scrollAround": "滚动圆圈",
+  "text.autoconfig.brb.option.scrolling.scrollAround.@Tooltip": "当你读到书的结尾时，折回并从头开始滚动（像 JEI）",
+  "text.autoconfig.brb.option.scrolling.enableScrolling": "在食谱书中启用滚动",
+
+  "text.autoconfig.brb.category.alternativeRecipes": "替代食谱设置",
+  "text.autoconfig.brb.option.alternativeRecipes.onHover": "只在悬停时显示替代配方",
+  "text.autoconfig.brb.option.alternativeRecipes.onHover.@Tooltip": "在备选列表中显示项目而不是他们的食谱，以便于查看",
+  "text.autoconfig.brb.option.alternativeRecipes.noGrouped": "取消分组替代食谱",
+
+  "text.autoconfig.brb.category.newRecipes": "新食谱设置",
+  "text.autoconfig.brb.option.newRecipes.unlockAll": "自动解锁所有食谱",
+  "text.autoconfig.brb.option.newRecipes.enableBounce": "启用解锁弹跳动画",
+  "text.autoconfig.brb.option.newRecipes.enableBounce.@Tooltip": "解锁新物品时启用小弹跳动画",
+
+  "brb.gui.pin.add": "按 F 固定此食谱",
+  "brb.gui.pin.remove": "按 F 取消固定此食谱",
+  "brb.gui.togglePotions.brewable": "显示可酿造",
+  "brb.gui.instantCraft.on": "即时制作已开启",
+  "brb.gui.instantCraft.off": "即时制作已关闭",
+  "brb.gui.settings.open": "打开设置"
+}

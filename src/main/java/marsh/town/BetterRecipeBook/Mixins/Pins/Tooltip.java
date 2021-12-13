@@ -25,9 +25,9 @@ public abstract class Tooltip {
         if (!BetterRecipeBook.config.enablePinning) return;
 
         if (BetterRecipeBook.pinnedRecipeManager.has(this.getCollection())) {
-            list.add(new TranslatableComponent("betterrecipebook.gui.pin.remove"));
+            list.add(new TranslatableComponent("brb.gui.pin.remove"));
         } else {
-            list.add(new TranslatableComponent("betterrecipebook.gui.pin.add"));
+            list.add(new TranslatableComponent("brb.gui.pin.add"));
         }
     }
 }

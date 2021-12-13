@@ -19,7 +19,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(RecipeBookComponent.class)
 public abstract class SettingsButton {
-    private static final ResourceLocation BUTTON_TEXTURE = new ResourceLocation("betterrecipebook:textures/gui/buttons.png");
+    private static final ResourceLocation BUTTON_TEXTURE = new ResourceLocation("brb:textures/gui/buttons.png");
     @Shadow
     protected Minecraft minecraft;
 
@@ -81,6 +81,6 @@ public abstract class SettingsButton {
     }
 
     static {
-        OPEN_SETTINGS_TEXT = new TranslatableComponent("betterrecipebook.gui.settings.open");
+        OPEN_SETTINGS_TEXT = new TranslatableComponent("brb.gui.settings.open");
     }
 }

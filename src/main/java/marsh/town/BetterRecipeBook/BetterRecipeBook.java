@@ -20,7 +20,7 @@ public class BetterRecipeBook implements ClientModInitializer {
     public static boolean rememberedBrewingOpen = true;
     public static boolean rememberedBrewingToggle = false;
 
-    public static final Logger LOGGER = LogManager.getLogger("betterrecipebook");
+    public static final Logger LOGGER = LogManager.getLogger("brb");
 
     @Override
     public void onInitializeClient() {

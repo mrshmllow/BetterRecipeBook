@@ -41,7 +41,7 @@ import java.util.*;
 @Environment(EnvType.CLIENT)
 public class BrewingStandRecipeBookWidget extends GuiComponent implements Widget, GuiEventListener, NarratableEntry {
     public static final ResourceLocation TEXTURE = new ResourceLocation("textures/gui/recipe_book.png");
-    private static final ResourceLocation BUTTON_TEXTURE = new ResourceLocation("betterrecipebook:textures/gui/buttons.png");
+    private static final ResourceLocation BUTTON_TEXTURE = new ResourceLocation("brb:textures/gui/buttons.png");
     protected BrewingStandMenu brewingStandScreenHandler;
     Minecraft client;
     private int parentWidth;
@@ -505,8 +505,8 @@ public class BrewingStandRecipeBookWidget extends GuiComponent implements Widget
 
     static {
         SEARCH_HINT_TEXT = (new TranslatableComponent("gui.recipebook.search_hint")).withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY);
-        TOGGLE_CRAFTABLE_RECIPES_TEXT = new TranslatableComponent("betterrecipebook.gui.togglePotions.brewable");
+        TOGGLE_CRAFTABLE_RECIPES_TEXT = new TranslatableComponent("brb.gui.togglePotions.brewable");
         TOGGLE_ALL_RECIPES_TEXT = new TranslatableComponent("gui.recipebook.toggleRecipes.all");
-        OPEN_SETTINGS_TEXT = new TranslatableComponent("betterrecipebook.gui.settings.open");
+        OPEN_SETTINGS_TEXT = new TranslatableComponent("brb.gui.settings.open");
     }
 }

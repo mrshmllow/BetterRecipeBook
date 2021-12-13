@@ -3,7 +3,7 @@ package marsh.town.BetterRecipeBook.Config;
 import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
 
-@me.shedaniel.autoconfig.annotation.Config(name = "betterrecipebook")
+@me.shedaniel.autoconfig.annotation.Config(name = "brb")
 @me.shedaniel.autoconfig.annotation.Config.Gui.Background("minecraft:textures/block/blue_concrete_powder.png")
 public class Config implements ConfigData {
     public boolean enableBook = true;
