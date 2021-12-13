@@ -1,15 +1,15 @@
 modLoader = "javafml"
 loaderVersion = "[38,)"
-#issueTrackerURL = ""
-license = "Insert License Here"
+issueTrackerURL = "https://github.com/mrshmllow/BetterRecipeBook/issues"
+license = "MIT"
 
 [[mods]]
 modId = "brb"
 version = "${version}"
-displayName = "Example Mod"
-authors = "Me!"
+displayName = "Better Recipe Book"
+authors = "marshmallow, ruvaldak, Felix14-v2, buiawpkgew1"
 description = '''
-This is an example description! Tell everyone what your mod is about!
+Adds some quality of life changes to the recipe book
 '''
 #logoFile = ""
 

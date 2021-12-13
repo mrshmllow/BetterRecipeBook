@@ -1,7 +1,7 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "marsh.town.BetterRecipeBook.Mixins",
+  "package": "marsh.town.brb.Mixins",
   "compatibilityLevel": "JAVA_16",
   "mixins": [
     "UnlockRecipes"

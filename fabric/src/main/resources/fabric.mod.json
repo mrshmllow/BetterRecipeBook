@@ -19,10 +19,10 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "marsh.town.BetterRecipeBook.fabric.BetterRecipeBookFabric"
+      "marsh.town.brb.fabric.BetterRecipeBookFabric"
     ],
     "modmenu": [
-      "marsh.town.BetterRecipeBook.fabric.ModMenuFabric"
+      "marsh.town.brb.fabric.ModMenuFabric"
     ]
   },
   "mixins": [
