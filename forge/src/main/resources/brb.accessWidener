@@ -1,4 +1,0 @@
-accessWidener	v1  named
-accessible  class   net/minecraft/client/gui/screens/recipebook/OverlayRecipeComponent$OverlayRecipeButton
-accessible  class   net/minecraft/world/item/alchemy/PotionBrewing$Mix
-accessible    class    net/minecraft/client/gui/screens/recipebook/OverlayRecipeComponent$OverlayRecipeButton$Pos
