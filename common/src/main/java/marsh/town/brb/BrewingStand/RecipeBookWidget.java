@@ -274,10 +274,11 @@ public class RecipeBookWidget extends GuiComponent implements Widget, GuiEventLi
     }
 
     private void refreshResults(boolean resetCurrentPage) {
-        assert currentTab != null;
+        if (this.currentTab == null) return;
+        if (this.searchField == null) return;
+
         List<Result> results = recipeBook.getResultsForCategory(currentTab.getGroup());
 
-        assert this.searchField != null;
         String string = this.searchField.getValue();
         if (!string.isEmpty()) {
             results.removeIf(itemStack -> !itemStack.ingredient.getHoverName().getString().toLowerCase(Locale.ROOT).contains(string.toLowerCase(Locale.ROOT)));
@@ -321,6 +322,8 @@ public class RecipeBookWidget extends GuiComponent implements Widget, GuiEventLi
 
     @Override
     public void render(PoseStack matrices, int mouseX, int mouseY, float delta) {
+        if (this.searchField == null) return;
+
         if (doubleRefresh) {
             // Minecraft doesn't populate the inventory on initialization so this is the only solution I have
             refreshResults(true);
@@ -335,7 +338,7 @@ public class RecipeBookWidget extends GuiComponent implements Widget, GuiEventLi
             int i = (this.parentWidth - 147) / 2 - this.leftOffset;
             int j = (this.parentHeight - 166) / 2;
             this.blit(matrices, i, j, 1, 1, 147, 166);
-            assert this.searchField != null;
+
             if (!this.searchField.isFocused() && this.searchField.getValue().isEmpty()) {
                 drawString(matrices, this.client.font, SEARCH_HINT_TEXT, i + 25, j + 14, -1);
             } else {
