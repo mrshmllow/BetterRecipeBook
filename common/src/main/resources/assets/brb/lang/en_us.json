@@ -8,7 +8,7 @@
   "text.autoconfig.brb.option.keepCentered": "Keep crafting screens centered",
   "text.autoconfig.brb.option.enablePinning": "Enable recipe pinning",
   "text.autoconfig.brb.option.settingsButton": "Enable settings button",
-  "text.autoconfig.brb.option.settingsButton.@PrefixText": "§d--- Advanced ---\n§eForge Warning: §7If you enable either of these two options, You will have to edit this line in the brb.toml file to access this menu again!\nOn fabric, you may use §bMod Menu§r to get here.",
+  "text.autoconfig.brb.option.settingsButton.@PrefixText": "§d--- Advanced ---\n§eForge Warning: §7If you disable either of these two options, you will have to edit them in the brb.toml file to access this menu again!\nOn fabric, you may use §bMod Menu§r to get here.",
 
   "text.autoconfig.brb.category.instantCraft": "Instant Crafting Settings",
   "text.autoconfig.brb.option.instantCraft.showButton": "Show instant craft button",
