@@ -3,12 +3,10 @@ package marsh.town.brb;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
-import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.recipebook.RecipeCollection;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionBrewing;
 import net.minecraft.world.item.crafting.Recipe;
 import org.apache.commons.io.IOUtils;
@@ -22,14 +20,10 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
+import static marsh.town.brb.BrewingStand.PlatformPotionUtil.getTo;
+
 public class PinnedRecipeManager {
     public List<ResourceLocation> pinned;
-
-    @ExpectPlatform
-    public static Potion getTo(PotionBrewing.Mix<?> recipe) {
-        throw new AssertionError();
-    }
-
 
     public void read() {
         Gson gson = new Gson();

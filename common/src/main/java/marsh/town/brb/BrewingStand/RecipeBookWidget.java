@@ -3,7 +3,6 @@ package marsh.town.brb.BrewingStand;
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import dev.architectury.injectables.annotations.ExpectPlatform;
 import marsh.town.brb.BetterRecipeBook;
 import marsh.town.brb.Config.Config;
 import me.shedaniel.autoconfig.AutoConfig;
@@ -171,7 +170,6 @@ public class RecipeBookWidget extends GuiComponent implements Widget, GuiEventLi
         this.refreshTabButtons();
     }
 
-    @ExpectPlatform
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (this.open && !Objects.requireNonNull(this.client.player).isSpectator()) {
             if (this.recipesArea.mouseClicked(mouseX, mouseY, button)) {

@@ -23,7 +23,7 @@ public class ClientRecipeBook extends RecipeBook {
         return filteringCraftable;
     }
 
-    public static List<Result> getResultsForCategory(RecipeBookGroup group) {
+    public List<Result> getResultsForCategory(RecipeBookGroup group) {
         List<PotionBrewing.Mix<Potion>> recipeCollection = new ArrayList<>(getPotionMixes());
 
         // Remove duplicates, or so they say
