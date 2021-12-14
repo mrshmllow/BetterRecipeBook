@@ -19,7 +19,7 @@ architectury {
 }
 
 loom {
-    accessWidenerPath = file("src/main/resources/brb.accessWidener")
+    accessWidenerPath = file("src/main/resources/brb.common.accesswidener")
 }
 
 publishing {
