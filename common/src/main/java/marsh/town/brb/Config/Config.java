@@ -11,9 +11,6 @@ public class Config implements ConfigData {
     public boolean enablePinning = true;
 
     @ConfigEntry.Gui.Tooltip()
-    public boolean settingsButton = true;
-
-    @ConfigEntry.Gui.Tooltip()
     public boolean darkMode = false;
 
     public boolean keepCentered = true;
@@ -33,4 +30,7 @@ public class Config implements ConfigData {
     @ConfigEntry.Category("scrolling")
     @ConfigEntry.Gui.TransitiveObject()
     public Scrolling scrolling = new Scrolling();
+
+    @ConfigEntry.Gui.PrefixText()
+    public boolean settingsButton = true;
 }
