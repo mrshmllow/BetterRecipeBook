@@ -1,41 +1,10 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "marsh.town.brb.Mixins",
+  "package": "marsh.town.brb.fabric.Mixins",
   "compatibilityLevel": "JAVA_16",
-  "mixins": [
-    "UnlockRecipes"
-  ],
   "client": [
-    "Fixes.UnfocusSearchfield",
-    "AlternativeRecipes",
-    "BrewingStand",
-    "DisableBook",
-    "DisableBounce",
-    "MouseScrollHandler",
-    "RemoveBookButton",
-    "RemoveToasts",
-    "ScrollablePages",
-    "SettingsButton",
-    "Accessors.OverlayRecipeButtonAccessor",
-    "Accessors.PotionBrewingAccessor",
-    "Accessors.PotionBrewingMixAccessor",
-    "Accessors.InventoryAccessor",
-    "Accessors.OverlayRecipeComponentAccessor",
-    "Accessors.RecipeBookPageAccessor",
-    "Accessors.ImageButtonAccessor",
-    "Centered.RemoveRecipeBookOffset",
-    "InstantCraft.ClientPlayerInteractionManagerMixin",
-    "InstantCraft.ClientPlayNetworkHandlerMixin",
-    "InstantCraft.Toggle",
-    "Pins.Icon",
-    "Pins.Pins",
-    "Pins.RemoveButtonFocus",
-    "Pins.Tooltip",
-    "UnGroup.Search",
-    "UnGroup.SplitGrouped"
-  ],
-  "injectors": {
-    "defaultRequire": 1
-  }
+    "Accessors.FabricPotionBrewingMixAccessor",
+    "Accessors.FabricPotionBrewingAccessor"
+  ]
 }

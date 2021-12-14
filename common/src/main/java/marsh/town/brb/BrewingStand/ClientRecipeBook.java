@@ -1,7 +1,6 @@
 package marsh.town.brb.BrewingStand;
 
-import marsh.town.brb.Mixins.Accessors.PotionBrewingAccessor;
-import marsh.town.brb.Mixins.Accessors.PotionBrewingMixAccessor;
+import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.stats.RecipeBook;
 import net.minecraft.world.inventory.RecipeBookType;
 import net.minecraft.world.item.ItemStack;
@@ -22,8 +21,18 @@ public class ClientRecipeBook extends RecipeBook {
         return filteringCraftable;
     }
 
-    public List<Result> getResultsForCategory(RecipeBookGroup group) {
-        List<PotionBrewing.Mix<Potion>> recipeCollection = new ArrayList<>(PotionBrewingAccessor.getPotionMixes());
+    @ExpectPlatform
+    public static List<PotionBrewing.Mix<Potion>> getPotionMixes() {
+        throw new AssertionError();
+    }
+
+    @ExpectPlatform
+    public static Potion getTo(PotionBrewing.Mix<?> recipe) {
+        throw new AssertionError();
+    }
+
+    public static List<Result> getResultsForCategory(RecipeBookGroup group) {
+        List<PotionBrewing.Mix<Potion>> recipeCollection = new ArrayList<>(getPotionMixes());
 
         // Remove duplicates, or so they say
         Set<PotionBrewing.Mix<Potion>> set = new LinkedHashSet<>(recipeCollection);
@@ -34,11 +43,11 @@ public class ClientRecipeBook extends RecipeBook {
 
         for (PotionBrewing.Mix<Potion> potionRecipe : recipeCollection) {
             if (group == RecipeBookGroup.BREWING_POTION) {
-                results.add(new Result(PotionUtils.setPotion(new ItemStack(Items.POTION), (Potion) ((PotionBrewingMixAccessor<?>)potionRecipe).getTo()), potionRecipe));
+                results.add(new Result(PotionUtils.setPotion(new ItemStack(Items.POTION), getTo(potionRecipe)), potionRecipe));
             } else if (group == RecipeBookGroup.BREWING_SPLASH_POTION) {
-                results.add(new Result(PotionUtils.setPotion(new ItemStack(Items.SPLASH_POTION), (Potion) ((PotionBrewingMixAccessor<?>)potionRecipe).getTo()), potionRecipe));
+                results.add(new Result(PotionUtils.setPotion(new ItemStack(Items.SPLASH_POTION), getTo(potionRecipe)), potionRecipe));
             } else if (group == RecipeBookGroup.BREWING_LINGERING_POTION) {
-                results.add(new Result(PotionUtils.setPotion(new ItemStack(Items.LINGERING_POTION), (Potion) ((PotionBrewingMixAccessor<?>)potionRecipe).getTo()), potionRecipe));
+                results.add(new Result(PotionUtils.setPotion(new ItemStack(Items.LINGERING_POTION), getTo(potionRecipe)), potionRecipe));
             }
         }
 

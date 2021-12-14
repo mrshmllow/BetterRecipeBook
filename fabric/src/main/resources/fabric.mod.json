@@ -26,11 +26,14 @@
     ]
   },
   "mixins": [
-    "brb.mixins.json"
+    "brb.mixins.json",
+    "mixins.brb-common.json"
   ],
+  "accessWidener" : "brb.accessWidener",
   "depends": {
     "fabric": "*",
     "minecraft": ">=1.18",
-    "cloth-config2": ">=5.0.38"
+    "cloth-config2": ">=5.0.38",
+    "architectury": ">=3.2.47"
   }
 }

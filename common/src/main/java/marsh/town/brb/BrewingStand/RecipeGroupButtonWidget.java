@@ -19,7 +19,7 @@ public class RecipeGroupButtonWidget extends StateSwitchingButton {
     public RecipeGroupButtonWidget(RecipeBookGroup category) {
         super(0, 0, 35, 27, false);
         this.group = category;
-        this.initTextureValues(153, 2, 35, 0, StandRecipeBookWidget.TEXTURE);
+        this.initTextureValues(153, 2, 35, 0, RecipeBookWidget.TEXTURE);
     }
 
     public void renderButton(PoseStack matrices, int mouseX, int mouseY, float delta) {

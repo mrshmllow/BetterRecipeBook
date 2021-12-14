@@ -1,6 +1,6 @@
 package marsh.town.brb.BrewingStand;
 
-import marsh.town.brb.Mixins.Accessors.PotionBrewingMixAccessor;
+import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.BrewingStandMenu;
@@ -9,20 +9,31 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionBrewing;
+import net.minecraft.world.item.crafting.Ingredient;
 
 public class Result {
     public ItemStack ingredient;
     public PotionBrewing.Mix<?> recipe;
     public ResourceLocation input;
-    
+
+    @ExpectPlatform
+    private static Potion getFrom(PotionBrewing.Mix<?> recipe) {
+        throw new AssertionError();
+    }
+
+    @ExpectPlatform
+    private static Ingredient getIngredient(PotionBrewing.Mix<?> recipe) {
+        throw new AssertionError();
+    }
+
     public Result(ItemStack ingredient, PotionBrewing.Mix<?> recipe) {
         this.ingredient = ingredient;
         this.recipe = recipe;
-        this.input = Registry.POTION.getKey((Potion) ((PotionBrewingMixAccessor<?>) recipe).getFrom());
+        this.input = Registry.POTION.getKey(getFrom(recipe));
     }
 
     public boolean hasIngredient(BrewingStandMenu handledScreen) {
-        for (ItemStack itemStack : ((PotionBrewingMixAccessor<?>) this.recipe).getIngredient().getItems()) {
+        for (ItemStack itemStack : getIngredient(recipe).getItems()) {
             for (Slot slot : handledScreen.slots) {
                 if (itemStack.getItem().equals(slot.getItem().getItem())) return true;
             }
@@ -31,7 +42,7 @@ public class Result {
     }
 
     public ItemStack inputAsItemStack(RecipeBookGroup group) {
-        Potion inputPotion = (Potion) ((PotionBrewingMixAccessor<?>) this.recipe).getFrom();
+        Potion inputPotion = getFrom(recipe);
 
         ResourceLocation identifier = Registry.POTION.getKey(inputPotion);
         ItemStack inputStack;
@@ -48,8 +59,6 @@ public class Result {
     }
 
     public boolean hasInput(RecipeBookGroup group, BrewingStandMenu handledScreen) {
-        Potion inputPotion = (Potion) ((PotionBrewingMixAccessor<?>) this.recipe).getFrom();
-
         ItemStack inputStack = inputAsItemStack(group);
 
         for (Slot slot : handledScreen.slots) {

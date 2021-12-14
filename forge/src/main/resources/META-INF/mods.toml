@@ -26,3 +26,10 @@ mandatory = true
 versionRange = "[1.18,)"
 ordering = "NONE"
 side = "BOTH"
+
+[[dependencies.brb]]
+modId = "architectury"
+mandatory = true
+versionRange = "[3.2.47,)"
+ordering = "AFTER"
+side = "BOTH"

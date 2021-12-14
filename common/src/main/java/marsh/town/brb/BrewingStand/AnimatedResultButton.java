@@ -3,8 +3,8 @@ package marsh.town.brb.BrewingStand;
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import dev.architectury.injectables.annotations.ExpectPlatform;
 import marsh.town.brb.BetterRecipeBook;
-import marsh.town.brb.Mixins.Accessors.PotionBrewingMixAccessor;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.ChatFormatting;
@@ -18,9 +18,12 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.BrewingStandMenu;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.alchemy.PotionBrewing;
 import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.crafting.Ingredient;
 
 import java.util.List;
 
@@ -97,6 +100,11 @@ public class AnimatedResultButton extends AbstractWidget {
         builder.add(NarratedElementType.USAGE, new TranslatableComponent("narration.button.usage.hovered"));
     }
 
+    @ExpectPlatform
+    private static Ingredient getIngredient(PotionBrewing.Mix<?> recipe) {
+        throw new AssertionError();
+    }
+
     public List<Component> getTooltip() {
         List<Component> list = Lists.newArrayList();
 
@@ -105,17 +113,17 @@ public class AnimatedResultButton extends AbstractWidget {
         list.add(new TextComponent(""));
 
         ChatFormatting colour = ChatFormatting.DARK_GRAY;
-        if (getRecipe().hasIngredient(brewingStandScreenHandler)) {
+        if (potionRecipe.hasIngredient(brewingStandScreenHandler)) {
             colour = ChatFormatting.WHITE;
         }
 
-        list.add(new TextComponent(((PotionBrewingMixAccessor<?>) potionRecipe.recipe).getIngredient().getItems()[0].getHoverName().getString()).withStyle(colour));
+        list.add(new TextComponent(getIngredient(potionRecipe.recipe).getItems()[0].getHoverName().getString()).withStyle(colour));
 
         list.add(new TextComponent("↓").withStyle(ChatFormatting.DARK_GRAY));
 
         ItemStack inputStack = this.potionRecipe.inputAsItemStack(group);
 
-        if (!getRecipe().hasInput(group, brewingStandScreenHandler)) {
+        if (!potionRecipe.hasInput(group, brewingStandScreenHandler)) {
             colour = ChatFormatting.DARK_GRAY;
         }
 

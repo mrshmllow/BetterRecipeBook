@@ -43,9 +43,9 @@ public class StandRecipeBookResults {
         }
 
         this.nextPageButton = new StateSwitchingButton(parentLeft + 93, parentTop + 137, 12, 17, false);
-        this.nextPageButton.initTextureValues(1, 208, 13, 18, StandRecipeBookWidget.TEXTURE);
+        this.nextPageButton.initTextureValues(1, 208, 13, 18, RecipeBookWidget.TEXTURE);
         this.prevPageButton = new StateSwitchingButton(parentLeft + 38, parentTop + 137, 12, 17, true);
-        this.prevPageButton.initTextureValues(1, 208, 13, 18, StandRecipeBookWidget.TEXTURE);
+        this.prevPageButton.initTextureValues(1, 208, 13, 18, RecipeBookWidget.TEXTURE);
     }
 
     public void setResults(List<Result> recipeCollection, boolean resetCurrentPage, RecipeBookGroup group) {

@@ -3,9 +3,9 @@ package marsh.town.brb.BrewingStand;
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import dev.architectury.injectables.annotations.ExpectPlatform;
 import marsh.town.brb.BetterRecipeBook;
 import marsh.town.brb.Config.Config;
-import marsh.town.brb.Mixins.Accessors.PotionBrewingMixAccessor;
 import me.shedaniel.autoconfig.AutoConfig;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -32,6 +32,7 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potion;
+import net.minecraft.world.item.alchemy.PotionBrewing;
 import net.minecraft.world.item.crafting.Ingredient;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
@@ -42,7 +43,7 @@ import java.util.Locale;
 import java.util.Objects;
 
 @Environment(EnvType.CLIENT)
-public class StandRecipeBookWidget extends GuiComponent implements Widget, GuiEventListener, NarratableEntry {
+public class RecipeBookWidget extends GuiComponent implements Widget, GuiEventListener, NarratableEntry {
     public static final ResourceLocation TEXTURE = new ResourceLocation("textures/gui/recipe_book.png");
     private static final ResourceLocation BUTTON_TEXTURE = new ResourceLocation("brb:textures/gui/buttons.png");
     protected BrewingStandMenu brewingStandScreenHandler;
@@ -92,6 +93,34 @@ public class StandRecipeBookWidget extends GuiComponent implements Widget, GuiEv
         }
 
         client.keyboardHandler.setSendRepeatsToGui(true);
+    }
+
+    @ExpectPlatform
+    public ItemStack getInputStack(Result result) {
+        Potion inputPotion = getFrom(result.recipe);
+        Ingredient ingredient = getIngredient(result.recipe);
+        ResourceLocation identifier = Registry.POTION.getKey(inputPotion);
+        ItemStack inputStack;
+        if (this.currentTab.getGroup() == RecipeBookGroup.BREWING_SPLASH_POTION) {
+            inputStack = new ItemStack(Items.SPLASH_POTION);
+        } else if (this.currentTab.getGroup() == RecipeBookGroup.BREWING_LINGERING_POTION) {
+            inputStack = new ItemStack(Items.LINGERING_POTION);
+        } else {
+            inputStack = new ItemStack(Items.POTION);
+        }
+
+        inputStack.getOrCreateTag().putString("Potion", identifier.toString());
+        return inputStack;
+    }
+
+    @ExpectPlatform
+    private static Potion getFrom(PotionBrewing.Mix<?> recipe) {
+        throw new AssertionError();
+    }
+
+    @ExpectPlatform
+    private static Ingredient getIngredient(PotionBrewing.Mix<?> recipe) {
+        throw new AssertionError();
     }
 
     public void reset() {
@@ -151,8 +180,9 @@ public class StandRecipeBookWidget extends GuiComponent implements Widget, GuiEv
         this.refreshTabButtons();
     }
 
+    @ExpectPlatform
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (this.isOpen() && !Objects.requireNonNull(this.client.player).isSpectator()) {
+        if (this.open && !Objects.requireNonNull(this.client.player).isSpectator()) {
             if (this.recipesArea.mouseClicked(mouseX, mouseY, button)) {
                 Result result = this.recipesArea.getLastClickedRecipe();
                 if (result != null) {
@@ -164,19 +194,8 @@ public class StandRecipeBookWidget extends GuiComponent implements Widget, GuiEv
                         return false;
                     }
 
-                    Potion inputPotion = (Potion) ((PotionBrewingMixAccessor<?>) result.recipe).getFrom();
-                    Ingredient ingredient = ((PotionBrewingMixAccessor<?>) result.recipe).getIngredient();
-                    ResourceLocation identifier = Registry.POTION.getKey(inputPotion);
-                    ItemStack inputStack;
-                    if (this.currentTab.getGroup() == RecipeBookGroup.BREWING_SPLASH_POTION) {
-                        inputStack = new ItemStack(Items.SPLASH_POTION);
-                    } else if (this.currentTab.getGroup() == RecipeBookGroup.BREWING_LINGERING_POTION) {
-                        inputStack = new ItemStack(Items.LINGERING_POTION);
-                    } else {
-                        inputStack = new ItemStack(Items.POTION);
-                    }
-
-                    inputStack.getOrCreateTag().putString("Potion", identifier.toString());
+                    ItemStack inputStack = getInputStack(result);
+                    Ingredient ingredient = getIngredient(result.recipe);
 
                     int slotIndex = 0;
                     int usedInputSlots = 0;
@@ -249,7 +268,7 @@ public class StandRecipeBookWidget extends GuiComponent implements Widget, GuiEv
     }
 
     public void showGhostRecipe(Result result, List<Slot> slots) {
-        this.ghostSlots.addSlot(((PotionBrewingMixAccessor<?>) result.recipe).getIngredient().getItems()[0], slots.get(3).x, slots.get(3).y);
+        this.ghostSlots.addSlot(getIngredient(result.recipe).getItems()[0], slots.get(3).x, slots.get(3).y);
 
         assert currentTab != null;
         ItemStack inputStack = result.inputAsItemStack(currentTab.getGroup());
@@ -257,7 +276,6 @@ public class StandRecipeBookWidget extends GuiComponent implements Widget, GuiEv
         this.ghostSlots.addSlot(inputStack, slots.get(1).x, slots.get(1).y);
         this.ghostSlots.addSlot(inputStack, slots.get(2).x, slots.get(2).y);
     }
-
 
     private boolean toggleFilteringBrewable() {
         boolean bl = !this.recipeBook.isFilteringCraftable();

@@ -18,8 +18,6 @@
     "ScrollablePages",
     "SettingsButton",
     "Accessors.OverlayRecipeButtonAccessor",
-    "Accessors.PotionBrewingAccessor",
-    "Accessors.PotionBrewingMixAccessor",
     "Accessors.InventoryAccessor",
     "Accessors.OverlayRecipeComponentAccessor",
     "Accessors.RecipeBookPageAccessor",

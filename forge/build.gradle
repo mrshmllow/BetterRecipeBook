@@ -26,6 +26,8 @@ dependencies {
     shadowCommon(project(path: ":common", configuration: "transformProductionForge")) { transitive = false }
 
     modApi "me.shedaniel.cloth:cloth-config-forge:6.1.48"
+
+    modApi "dev.architectury:architectury-forge:${rootProject.architectury_version}"
 }
 
 loom {

@@ -2,7 +2,7 @@ package marsh.town.brb.Mixins;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import marsh.town.brb.BetterRecipeBook;
-import marsh.town.brb.BrewingStand.StandRecipeBookWidget;
+import marsh.town.brb.BrewingStand.RecipeBookWidget;
 import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.BrewingStandScreen;
@@ -19,7 +19,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(BrewingStandScreen.class)
 public abstract class BrewingStand extends AbstractContainerScreen<BrewingStandMenu> {
-    private final StandRecipeBookWidget recipeBook = new StandRecipeBookWidget();
+    private final RecipeBookWidget recipeBook = new RecipeBookWidget();
     private static final ResourceLocation RECIPE_BUTTON_TEXTURE = new ResourceLocation("textures/gui/recipe_button.png");
     private boolean narrow;
 

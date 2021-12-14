@@ -3,7 +3,7 @@ package marsh.town.brb;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
-import marsh.town.brb.Mixins.Accessors.PotionBrewingMixAccessor;
+import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.recipebook.RecipeCollection;
 import net.minecraft.core.Registry;
@@ -24,6 +24,12 @@ import java.util.List;
 
 public class PinnedRecipeManager {
     public List<ResourceLocation> pinned;
+
+    @ExpectPlatform
+    public static Potion getTo(PotionBrewing.Mix<?> recipe) {
+        throw new AssertionError();
+    }
+
 
     public void read() {
         Gson gson = new Gson();
@@ -78,7 +84,7 @@ public class PinnedRecipeManager {
     }
 
     public void addOrRemoveFavouritePotion(PotionBrewing.Mix<?> target) {
-        ResourceLocation targetIdentifier = Registry.POTION.getKey((Potion) ((PotionBrewingMixAccessor<?>) target).getTo());
+        ResourceLocation targetIdentifier = Registry.POTION.getKey(getTo(target));
 
         for (ResourceLocation identifier : this.pinned) {
             if (identifier.equals(targetIdentifier)) {
@@ -104,7 +110,7 @@ public class PinnedRecipeManager {
     }
 
     public boolean hasPotion(PotionBrewing.Mix<?> target) {
-        ResourceLocation targetIdentifier = Registry.POTION.getKey((Potion) ((PotionBrewingMixAccessor<?>) target).getTo());
+        ResourceLocation targetIdentifier = Registry.POTION.getKey(getTo(target));
 
         for (ResourceLocation identifier : this.pinned) {
             if (targetIdentifier.equals(identifier)) {

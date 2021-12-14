@@ -1,4 +1,4 @@
-package marsh.town.brb.Mixins.Accessors;
+package marsh.town.brb.fabric.Mixins.Accessors;
 
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionBrewing;
@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 import java.util.List;
 
 @Mixin(PotionBrewing.class)
-public interface PotionBrewingAccessor {
+public interface FabricPotionBrewingAccessor {
     @Accessor("POTION_MIXES")
     static List<PotionBrewing.Mix<Potion>> getPotionMixes() {
         throw new AssertionError();
