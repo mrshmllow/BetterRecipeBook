@@ -57,7 +57,7 @@ public class RecipeBookWidget extends GuiComponent implements Widget, GuiEventLi
     private int leftOffset;
     protected final RecipeBookGhostSlots ghostSlots = new RecipeBookGhostSlots();
     private boolean open;
-    private final StandRecipeBookResults recipesArea = new StandRecipeBookResults();
+    private final RecipeBookResults recipesArea = new RecipeBookResults();
     @Nullable
     private EditBox searchField;
     private final StackedContents recipeFinder = new StackedContents();

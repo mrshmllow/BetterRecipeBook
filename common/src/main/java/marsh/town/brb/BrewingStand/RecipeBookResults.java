@@ -13,7 +13,7 @@ import java.util.Iterator;
 import java.util.List;
 
 @Environment(EnvType.CLIENT)
-public class StandRecipeBookResults {
+public class RecipeBookResults {
     private List<Result> recipeCollection;
     public final List<AnimatedResultButton> resultButtons = Lists.newArrayListWithCapacity(20);
     private int pageCount;
@@ -26,7 +26,7 @@ public class StandRecipeBookResults {
     RecipeBookGroup group;
     private BrewingStandMenu brewingStandScreenHandler;
 
-    public StandRecipeBookResults() {
+    public RecipeBookResults() {
         for(int i = 0; i < 20; ++i) {
             this.resultButtons.add(new AnimatedResultButton());
         }
