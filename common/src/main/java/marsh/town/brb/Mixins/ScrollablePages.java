@@ -79,7 +79,7 @@ public abstract class ScrollablePages {
      */
     @Overwrite
     void updateArrowButtons() {
-        if (BetterRecipeBook.config.scrolling.scrollAround && !(totalPages < 1)) {
+        if (BetterRecipeBook.config.scrolling.scrollAround && BetterRecipeBook.config.scrolling.enableScrolling && !(totalPages < 1)) {
             forwardButton.visible = true;
             backButton.visible = true;
         } else {

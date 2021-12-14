@@ -135,7 +135,7 @@ public class RecipeBookResults {
     }
 
     private void hideShowPageButtons() {
-        if (BetterRecipeBook.config.scrolling.scrollAround && !(pageCount < 1)) {
+        if (BetterRecipeBook.config.scrolling.scrollAround && BetterRecipeBook.config.scrolling.enableScrolling && !(pageCount < 1)) {
             nextPageButton.visible = true;
             prevPageButton.visible = true;
         } else {
