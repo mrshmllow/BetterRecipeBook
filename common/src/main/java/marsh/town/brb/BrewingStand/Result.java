@@ -1,6 +1,5 @@
 package marsh.town.brb.BrewingStand;
 
-import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.BrewingStandMenu;
@@ -9,22 +8,14 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionBrewing;
-import net.minecraft.world.item.crafting.Ingredient;
+
+import static marsh.town.brb.BrewingStand.PlatformPotionUtil.getFrom;
+import static marsh.town.brb.BrewingStand.PlatformPotionUtil.getIngredient;
 
 public class Result {
     public ItemStack ingredient;
     public PotionBrewing.Mix<?> recipe;
     public ResourceLocation input;
-
-    @ExpectPlatform
-    private static Potion getFrom(PotionBrewing.Mix<?> recipe) {
-        throw new AssertionError();
-    }
-
-    @ExpectPlatform
-    private static Ingredient getIngredient(PotionBrewing.Mix<?> recipe) {
-        throw new AssertionError();
-    }
 
     public Result(ItemStack ingredient, PotionBrewing.Mix<?> recipe) {
         this.ingredient = ingredient;

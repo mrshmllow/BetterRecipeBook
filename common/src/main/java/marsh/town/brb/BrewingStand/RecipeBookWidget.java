@@ -32,7 +32,6 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potion;
-import net.minecraft.world.item.alchemy.PotionBrewing;
 import net.minecraft.world.item.crafting.Ingredient;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
@@ -41,6 +40,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
+
+import static marsh.town.brb.BrewingStand.PlatformPotionUtil.getFrom;
+import static marsh.town.brb.BrewingStand.PlatformPotionUtil.getIngredient;
 
 @Environment(EnvType.CLIENT)
 public class RecipeBookWidget extends GuiComponent implements Widget, GuiEventListener, NarratableEntry {
@@ -95,7 +97,6 @@ public class RecipeBookWidget extends GuiComponent implements Widget, GuiEventLi
         client.keyboardHandler.setSendRepeatsToGui(true);
     }
 
-    @ExpectPlatform
     public ItemStack getInputStack(Result result) {
         Potion inputPotion = getFrom(result.recipe);
         Ingredient ingredient = getIngredient(result.recipe);
@@ -111,16 +112,6 @@ public class RecipeBookWidget extends GuiComponent implements Widget, GuiEventLi
 
         inputStack.getOrCreateTag().putString("Potion", identifier.toString());
         return inputStack;
-    }
-
-    @ExpectPlatform
-    private static Potion getFrom(PotionBrewing.Mix<?> recipe) {
-        throw new AssertionError();
-    }
-
-    @ExpectPlatform
-    private static Ingredient getIngredient(PotionBrewing.Mix<?> recipe) {
-        throw new AssertionError();
     }
 
     public void reset() {

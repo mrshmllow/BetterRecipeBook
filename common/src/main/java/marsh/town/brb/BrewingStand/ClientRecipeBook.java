@@ -1,6 +1,5 @@
 package marsh.town.brb.BrewingStand;
 
-import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.stats.RecipeBook;
 import net.minecraft.world.inventory.RecipeBookType;
 import net.minecraft.world.item.ItemStack;
@@ -14,21 +13,14 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import static marsh.town.brb.BrewingStand.PlatformPotionUtil.getPotionMixes;
+import static marsh.town.brb.BrewingStand.PlatformPotionUtil.getTo;
+
 public class ClientRecipeBook extends RecipeBook {
     private boolean filteringCraftable;
 
     public boolean isFilteringCraftable() {
         return filteringCraftable;
-    }
-
-    @ExpectPlatform
-    public static List<PotionBrewing.Mix<Potion>> getPotionMixes() {
-        throw new AssertionError();
-    }
-
-    @ExpectPlatform
-    public static Potion getTo(PotionBrewing.Mix<?> recipe) {
-        throw new AssertionError();
     }
 
     public static List<Result> getResultsForCategory(RecipeBookGroup group) {

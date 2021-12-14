@@ -3,7 +3,6 @@ package marsh.town.brb.BrewingStand;
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import dev.architectury.injectables.annotations.ExpectPlatform;
 import marsh.town.brb.BetterRecipeBook;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -18,14 +17,13 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.BrewingStandMenu;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.alchemy.PotionBrewing;
 import net.minecraft.world.item.alchemy.PotionUtils;
-import net.minecraft.world.item.crafting.Ingredient;
 
 import java.util.List;
+
+import static marsh.town.brb.BrewingStand.PlatformPotionUtil.getIngredient;
 
 @Environment(EnvType.CLIENT)
 public class AnimatedResultButton extends AbstractWidget {
@@ -98,11 +96,6 @@ public class AnimatedResultButton extends AbstractWidget {
 
         builder.add(NarratedElementType.TITLE, new TranslatableComponent("narration.recipe", inputStack.getHoverName()));
         builder.add(NarratedElementType.USAGE, new TranslatableComponent("narration.button.usage.hovered"));
-    }
-
-    @ExpectPlatform
-    private static Ingredient getIngredient(PotionBrewing.Mix<?> recipe) {
-        throw new AssertionError();
     }
 
     public List<Component> getTooltip() {
