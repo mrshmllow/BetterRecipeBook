@@ -13,22 +13,22 @@ import java.util.Iterator;
 import java.util.List;
 
 @Environment(EnvType.CLIENT)
-public class BrewingStandRecipeBookResults {
-    private List<BrewingResult> recipeCollection;
-    public final List<BrewingAnimatedResultButton> resultButtons = Lists.newArrayListWithCapacity(20);
+public class StandRecipeBookResults {
+    private List<Result> recipeCollection;
+    public final List<AnimatedResultButton> resultButtons = Lists.newArrayListWithCapacity(20);
     private int pageCount;
     private int currentPage;
     private StateSwitchingButton nextPageButton;
     private StateSwitchingButton prevPageButton;
     private Minecraft client;
-    private BrewingAnimatedResultButton hoveredResultButton;
-    private BrewingResult lastClickedRecipe;
-    BrewingRecipeBookGroup group;
+    private AnimatedResultButton hoveredResultButton;
+    private Result lastClickedRecipe;
+    RecipeBookGroup group;
     private BrewingStandMenu brewingStandScreenHandler;
 
-    public BrewingStandRecipeBookResults() {
+    public StandRecipeBookResults() {
         for(int i = 0; i < 20; ++i) {
-            this.resultButtons.add(new BrewingAnimatedResultButton());
+            this.resultButtons.add(new AnimatedResultButton());
         }
 
     }
@@ -43,12 +43,12 @@ public class BrewingStandRecipeBookResults {
         }
 
         this.nextPageButton = new StateSwitchingButton(parentLeft + 93, parentTop + 137, 12, 17, false);
-        this.nextPageButton.initTextureValues(1, 208, 13, 18, BrewingStandRecipeBookWidget.TEXTURE);
+        this.nextPageButton.initTextureValues(1, 208, 13, 18, StandRecipeBookWidget.TEXTURE);
         this.prevPageButton = new StateSwitchingButton(parentLeft + 38, parentTop + 137, 12, 17, true);
-        this.prevPageButton.initTextureValues(1, 208, 13, 18, BrewingStandRecipeBookWidget.TEXTURE);
+        this.prevPageButton.initTextureValues(1, 208, 13, 18, StandRecipeBookWidget.TEXTURE);
     }
 
-    public void setResults(List<BrewingResult> recipeCollection, boolean resetCurrentPage, BrewingRecipeBookGroup group) {
+    public void setResults(List<Result> recipeCollection, boolean resetCurrentPage, RecipeBookGroup group) {
         this.recipeCollection = recipeCollection;
         this.group = group;
 
@@ -69,9 +69,9 @@ public class BrewingStandRecipeBookResults {
         int i = 20 * this.currentPage;
 
         for(int j = 0; j < this.resultButtons.size(); ++j) {
-            BrewingAnimatedResultButton animatedResultButton = this.resultButtons.get(j);
+            AnimatedResultButton animatedResultButton = this.resultButtons.get(j);
             if (i + j < this.recipeCollection.size()) {
-                BrewingResult output = this.recipeCollection.get(i + j);
+                Result output = this.recipeCollection.get(i + j);
                 animatedResultButton.showPotionRecipe(output, group, brewingStandScreenHandler);
                 animatedResultButton.visible = true;
             } else {
@@ -105,9 +105,9 @@ public class BrewingStandRecipeBookResults {
             this.refreshResultButtons();
             return true;
         } else {
-            Iterator<BrewingAnimatedResultButton> var10 = this.resultButtons.iterator();
+            Iterator<AnimatedResultButton> var10 = this.resultButtons.iterator();
 
-            BrewingAnimatedResultButton animatedResultButton;
+            AnimatedResultButton animatedResultButton;
             do {
                 if (!var10.hasNext()) {
                     return false;
@@ -130,7 +130,7 @@ public class BrewingStandRecipeBookResults {
         }
     }
 
-    public BrewingResult getLastClickedRecipe() {
+    public Result getLastClickedRecipe() {
         return this.lastClickedRecipe;
     }
 
@@ -172,7 +172,7 @@ public class BrewingStandRecipeBookResults {
 
         this.hoveredResultButton = null;
 
-        for (BrewingAnimatedResultButton animatedResultButton : this.resultButtons) {
+        for (AnimatedResultButton animatedResultButton : this.resultButtons) {
             animatedResultButton.render(matrices, mouseX, mouseY, delta);
             if (animatedResultButton.visible && animatedResultButton.isHoveredOrFocused()) {
                 this.hoveredResultButton = animatedResultButton;

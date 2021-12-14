@@ -15,14 +15,14 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-public class ClientBrewingStandRecipeBook extends RecipeBook {
+public class ClientRecipeBook extends RecipeBook {
     private boolean filteringCraftable;
 
     public boolean isFilteringCraftable() {
         return filteringCraftable;
     }
 
-    public List<BrewingResult> getResultsForCategory(BrewingRecipeBookGroup group) {
+    public List<Result> getResultsForCategory(RecipeBookGroup group) {
         List<PotionBrewing.Mix<Potion>> recipeCollection = new ArrayList<>(PotionBrewingAccessor.getPotionMixes());
 
         // Remove duplicates, or so they say
@@ -30,19 +30,19 @@ public class ClientBrewingStandRecipeBook extends RecipeBook {
         recipeCollection.clear();
         recipeCollection.addAll(set);
 
-        List<BrewingResult> brewingResults = new ArrayList<>();
+        List<Result> results = new ArrayList<>();
 
         for (PotionBrewing.Mix<Potion> potionRecipe : recipeCollection) {
-            if (group == BrewingRecipeBookGroup.BREWING_POTION) {
-                brewingResults.add(new BrewingResult(PotionUtils.setPotion(new ItemStack(Items.POTION), (Potion) ((PotionBrewingMixAccessor<?>)potionRecipe).getTo()), potionRecipe));
-            } else if (group == BrewingRecipeBookGroup.BREWING_SPLASH_POTION) {
-                brewingResults.add(new BrewingResult(PotionUtils.setPotion(new ItemStack(Items.SPLASH_POTION), (Potion) ((PotionBrewingMixAccessor<?>)potionRecipe).getTo()), potionRecipe));
-            } else if (group == BrewingRecipeBookGroup.BREWING_LINGERING_POTION) {
-                brewingResults.add(new BrewingResult(PotionUtils.setPotion(new ItemStack(Items.LINGERING_POTION), (Potion) ((PotionBrewingMixAccessor<?>)potionRecipe).getTo()), potionRecipe));
+            if (group == RecipeBookGroup.BREWING_POTION) {
+                results.add(new Result(PotionUtils.setPotion(new ItemStack(Items.POTION), (Potion) ((PotionBrewingMixAccessor<?>)potionRecipe).getTo()), potionRecipe));
+            } else if (group == RecipeBookGroup.BREWING_SPLASH_POTION) {
+                results.add(new Result(PotionUtils.setPotion(new ItemStack(Items.SPLASH_POTION), (Potion) ((PotionBrewingMixAccessor<?>)potionRecipe).getTo()), potionRecipe));
+            } else if (group == RecipeBookGroup.BREWING_LINGERING_POTION) {
+                results.add(new Result(PotionUtils.setPotion(new ItemStack(Items.LINGERING_POTION), (Potion) ((PotionBrewingMixAccessor<?>)potionRecipe).getTo()), potionRecipe));
             }
         }
 
-        return brewingResults;
+        return results;
     }
 
     public boolean isFiltering(RecipeBookType category) {

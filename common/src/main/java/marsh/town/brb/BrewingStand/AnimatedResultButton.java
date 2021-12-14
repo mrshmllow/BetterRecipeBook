@@ -25,18 +25,18 @@ import net.minecraft.world.item.alchemy.PotionUtils;
 import java.util.List;
 
 @Environment(EnvType.CLIENT)
-public class BrewingAnimatedResultButton extends AbstractWidget {
+public class AnimatedResultButton extends AbstractWidget {
     private float time;
     private static final ResourceLocation BACKGROUND_TEXTURE = new ResourceLocation("textures/gui/recipe_book.png");
-    private BrewingResult potionRecipe;
-    private BrewingRecipeBookGroup group;
+    private Result potionRecipe;
+    private RecipeBookGroup group;
     private BrewingStandMenu brewingStandScreenHandler;
 
-    public BrewingAnimatedResultButton() {
+    public AnimatedResultButton() {
         super(0, 0, 25, 25, TextComponent.EMPTY);
     }
 
-    public void showPotionRecipe(BrewingResult potionRecipe, BrewingRecipeBookGroup group, BrewingStandMenu brewingStandScreenHandler) {
+    public void showPotionRecipe(Result potionRecipe, RecipeBookGroup group, BrewingStandMenu brewingStandScreenHandler) {
         this.potionRecipe = potionRecipe;
         this.group = group;
         this.brewingStandScreenHandler = brewingStandScreenHandler;
@@ -81,7 +81,7 @@ public class BrewingAnimatedResultButton extends AbstractWidget {
         RenderSystem.disableDepthTest();
     }
 
-    public BrewingResult getRecipe() {
+    public Result getRecipe() {
         return potionRecipe;
     }
 

@@ -13,13 +13,13 @@ import net.minecraft.world.item.ItemStack;
 import java.util.List;
 
 @Environment(EnvType.CLIENT)
-public class BrewingRecipeGroupButtonWidget extends StateSwitchingButton {
-    private final BrewingRecipeBookGroup group;
+public class RecipeGroupButtonWidget extends StateSwitchingButton {
+    private final RecipeBookGroup group;
 
-    public BrewingRecipeGroupButtonWidget(BrewingRecipeBookGroup category) {
+    public RecipeGroupButtonWidget(RecipeBookGroup category) {
         super(0, 0, 35, 27, false);
         this.group = category;
-        this.initTextureValues(153, 2, 35, 0, BrewingStandRecipeBookWidget.TEXTURE);
+        this.initTextureValues(153, 2, 35, 0, StandRecipeBookWidget.TEXTURE);
     }
 
     public void renderButton(PoseStack matrices, int mouseX, int mouseY, float delta) {
@@ -60,7 +60,7 @@ public class BrewingRecipeGroupButtonWidget extends StateSwitchingButton {
 
     }
 
-    public BrewingRecipeBookGroup getGroup() {
+    public RecipeBookGroup getGroup() {
         return this.group;
     }
 }

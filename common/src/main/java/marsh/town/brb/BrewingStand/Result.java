@@ -10,12 +10,12 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionBrewing;
 
-public class BrewingResult {
+public class Result {
     public ItemStack ingredient;
     public PotionBrewing.Mix<?> recipe;
     public ResourceLocation input;
     
-    public BrewingResult (ItemStack ingredient, PotionBrewing.Mix<?> recipe) {
+    public Result(ItemStack ingredient, PotionBrewing.Mix<?> recipe) {
         this.ingredient = ingredient;
         this.recipe = recipe;
         this.input = Registry.POTION.getKey((Potion) ((PotionBrewingMixAccessor<?>) recipe).getFrom());
@@ -30,14 +30,14 @@ public class BrewingResult {
         return false;
     }
 
-    public ItemStack inputAsItemStack(BrewingRecipeBookGroup group) {
+    public ItemStack inputAsItemStack(RecipeBookGroup group) {
         Potion inputPotion = (Potion) ((PotionBrewingMixAccessor<?>) this.recipe).getFrom();
 
         ResourceLocation identifier = Registry.POTION.getKey(inputPotion);
         ItemStack inputStack;
-        if (group == BrewingRecipeBookGroup.BREWING_SPLASH_POTION) {
+        if (group == RecipeBookGroup.BREWING_SPLASH_POTION) {
             inputStack = new ItemStack(Items.SPLASH_POTION);
-        } else if (group == BrewingRecipeBookGroup.BREWING_LINGERING_POTION) {
+        } else if (group == RecipeBookGroup.BREWING_LINGERING_POTION) {
             inputStack = new ItemStack(Items.LINGERING_POTION);
         } else {
             inputStack = new ItemStack(Items.POTION);
@@ -47,7 +47,7 @@ public class BrewingResult {
         return inputStack;
     }
 
-    public boolean hasInput(BrewingRecipeBookGroup group, BrewingStandMenu handledScreen) {
+    public boolean hasInput(RecipeBookGroup group, BrewingStandMenu handledScreen) {
         Potion inputPotion = (Potion) ((PotionBrewingMixAccessor<?>) this.recipe).getFrom();
 
         ItemStack inputStack = inputAsItemStack(group);
@@ -62,7 +62,7 @@ public class BrewingResult {
         return false;
     }
 
-    public boolean hasMaterials(BrewingRecipeBookGroup group, BrewingStandMenu handledScreen) {
+    public boolean hasMaterials(RecipeBookGroup group, BrewingStandMenu handledScreen) {
         boolean hasIngredient = hasIngredient(handledScreen);
         boolean hasInput = hasInput(group, handledScreen);
 
