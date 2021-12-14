@@ -34,6 +34,6 @@ public class BetterRecipeBook {
 
         pinnedRecipeManager = new PinnedRecipeManager();
         pinnedRecipeManager.read();
-        instantCraftingManager = new InstantCraftingManager(config.instantCraft.instantCraft);
+        instantCraftingManager = new InstantCraftingManager();
     }
 }

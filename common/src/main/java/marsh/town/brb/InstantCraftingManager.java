@@ -12,8 +12,8 @@ public class InstantCraftingManager {
     private boolean startedDropCrafting;
     public boolean on;
 
-    public InstantCraftingManager(boolean on) {
-        this.on = on;
+    public InstantCraftingManager() {
+        this.on = false;
     }
 
     public void recipeClicked(Recipe<?> recipe) {
