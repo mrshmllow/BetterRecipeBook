@@ -7,11 +7,12 @@ license = "MIT"
 modId = "brb"
 version = "${version}"
 displayName = "Better Recipe Book"
-authors = "marshmallow, ruvaldak, Felix14-v2, buiawpkgew1"
+authors = "marshmallow"
+credits = "ruvaldak, Felix14-v2, buiawpkgew1"
 description = '''
 Adds some quality of life changes to the recipe book
 '''
-#logoFile = ""
+logoFile = "icon.png"
 
 [[dependencies.brb]]
 modId = "forge"
