@@ -7,7 +7,7 @@ Every feature is optional (Even the book itself!)
 ## Depends on
 
 | Fabric | Forge |
-| -------| ------|
+| ------ | ------|
 | [Architectury API Fabric](https://www.curseforge.com/minecraft/mc-mods/architectury-fabric) | [Architectury API Forge](https://www.curseforge.com/minecraft/mc-mods/architectury-forge) |
 | [Cloth Config API Fabric](https://www.curseforge.com/minecraft/mc-mods/cloth-config) | [Cloth Config API Forge](https://www.curseforge.com/minecraft/mc-mods/cloth-config-forge) |
 | [Fabric API](https://www.curseforge.com/minecraft/mc-mods/fabric-api) | |
@@ -37,13 +37,9 @@ Every feature is optional (Even the book itself!)
 
 - Show furnace recipes so you can actually see them
 
-**Now**
-
-![now](https://raw.githubusercontent.com/mrshmllow/BetterRecipeBook/1.17/.github/images/furnace/now.png)
-
-**Then**
-
-![then](https://raw.githubusercontent.com/mrshmllow/BetterRecipeBook/1.17/.github/images/furnace/then.png)
+| **Now** | **Then** |
+| ------- | -------- |
+| ![now](https://raw.githubusercontent.com/mrshmllow/BetterRecipeBook/1.17/.github/images/furnace/now.png) | ![then](https://raw.githubusercontent.com/mrshmllow/BetterRecipeBook/1.17/.github/images/furnace/then.png) |
 
 - Optionally completely disable the recipe book
 
@@ -56,8 +52,3 @@ Every feature is optional (Even the book itself!)
 - Optionally unlock all recipes when you log in to a server/world.
   - This also suppresses the "Recipe Unlocked" toast when enabled
 - Remove the "Bounce" animation when you unlock a new recipe.
-
-## Current known bugs
-- ### [Known vanilla bugs](https://github.com/mrshmllow/BetterRecipeBook/labels/Vanilla%20bug)
-    - Submit your own to be fixed [on github](https://github.com/mrshmllow/BetterRecipeBook/labels/Vanilla%20bug), make sure to include a [offical bug report](https://bugs.mojang.com/projects/MC/summary)
-- ### [Known mod bugs](https://github.com/mrshmllow/BetterRecipeBook/labels/bug)
