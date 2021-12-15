@@ -4,6 +4,14 @@ Adds a 'few' quality of life changes to the recipe book.
 
 Every feature is optional (Even the book itself!)
 
+## Depends on
+
+| Fabric | Forge |
+| -------| ------|
+| [Architectury API Fabric](https://www.curseforge.com/minecraft/mc-mods/architectury-fabric) | [Architectury API Forge](https://www.curseforge.com/minecraft/mc-mods/architectury-forge) |
+| [Cloth Config API Fabric](https://www.curseforge.com/minecraft/mc-mods/cloth-config) | [Cloth Config API Forge](https://www.curseforge.com/minecraft/mc-mods/cloth-config-forge) |
+| [Fabric API](https://www.curseforge.com/minecraft/mc-mods/fabric-api) | |
+
 ## Features
 
 - Brewing Stand recipe book
