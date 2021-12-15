@@ -39,12 +39,12 @@ Every feature is optional (Even the book itself!)
 
 - Optionally completely disable the recipe book
 
-![enabled/disabled](https://github.com/mrshmllow/BetterRecipeBook/raw/main/.github/images/demo_disabled.png)
+![enabled/disabled](https://raw.githubusercontent.com/mrshmllow/BetterRecipeBook/1.18/.github/images/demo_disabled.png)
 
 - Adds scrolling to the recipe book
     - Option for 'scrolling in circles' (I couldn't think of any other term). Like JEI, it will wrap back to the start when you reach the end. (And vice versa)
    
-    ![scroll in circles](https://github.com/mrshmllow/BetterRecipeBook/raw/main/.github/images/demo_circles.png)
+    ![scroll in circles](https://github.com/mrshmllow/BetterRecipeBook/raw/1.18/.github/images/demo_circles.png)
 - Optionally unlock all recipes when you log in to a server/world.
   - This also suppresses the "Recipe Unlocked" toast when enabled
 - Remove the "Bounce" animation when you unlock a new recipe.
