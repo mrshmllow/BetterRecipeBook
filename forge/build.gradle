@@ -33,6 +33,7 @@ dependencies {
 loom {
     forge {
         mixinConfig "mixins.brb.json"
+        mixinConfig "mixins.brb-common.json"
     }
 }
 
