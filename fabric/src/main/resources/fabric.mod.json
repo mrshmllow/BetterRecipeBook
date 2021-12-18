@@ -16,7 +16,7 @@
   },
   "license": "MIT",
   "icon": "assets/brb/icon.png",
-  "environment": "*",
+  "environment": "client",
   "entrypoints": {
     "main": [
       "marsh.town.brb.fabric.BetterRecipeBookFabric"
