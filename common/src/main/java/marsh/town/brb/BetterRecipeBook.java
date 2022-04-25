@@ -1,6 +1,7 @@
 package marsh.town.brb;
 
 import marsh.town.brb.Config.Config;
+import marsh.town.brb.Loaders.PotionLoader;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.Toml4jConfigSerializer;
 import org.apache.logging.log4j.LogManager;
@@ -24,6 +25,8 @@ public class BetterRecipeBook {
     public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
 
     public static void init() {
+        PotionLoader.init();
+
         queuedScroll = 0;
         hasWarnedNoPermission = false;
         isFilteringNone = true;
