@@ -8,7 +8,7 @@
   "text.autoconfig.brb.option.keepCentered": "Zachowaj ekrany craftingu na środku ekranu",
   "text.autoconfig.brb.option.enablePinning": "Włącz przypinanie receptur",
   "text.autoconfig.brb.option.settingsButton": "Włącz przycisk ustawień",
-  "text.autoconfig.brb.option.settingsButton.@PrefixText": "§d--- Zaawansowane ---\n§eForge Warning: §7Jeśli wyłączysz którąś z tych dwóch opcji, będziesz musiał zedytować je w pliku brb.toml aby ponownie uzyskać dostęp do tego menu!\nNa Fabric'u, możesz użyć §bMod Menu§r aby się tu dostać.",
+  "text.autoconfig.brb.option.settingsButton.@PrefixText": "§d--- Zaawansowane ---\n§eOstrzeżenie Forge: §7Jeśli wyłączysz którąś z tych dwóch opcji, będziesz musiał zedytować je w pliku brb.toml aby ponownie uzyskać dostęp do tego menu!\nNa Fabric'u, możesz użyć §bMod Menu§r aby się tu dostać.",
 
   "text.autoconfig.brb.category.instantCraft": "Ustawienia natychmiastowego wytwarzania",
   "text.autoconfig.brb.option.instantCraft.showButton": "Pokaż przycisk natychmiastowego wytwarzania",
@@ -20,7 +20,7 @@
 
   "text.autoconfig.brb.category.alternativeRecipes": "Ustawienia alternatywnych receptur",
   "text.autoconfig.brb.option.alternativeRecipes.onHover": "Pokaż jedynie alternatywne receptury przy najechaniu myszą",
-  "text.autoconfig.brb.option.alternativeRecipes.onHover.@Tooltip": "Show the item in the alternatives list instead of their recipe so its easy to see",
+  "text.autoconfig.brb.option.alternativeRecipes.onHover.@Tooltip": "Na liście alternatywnych receptur, pokaż przedmiot zamiast receptury aby łatwiej go znaleźć",
   "text.autoconfig.brb.option.alternativeRecipes.noGrouped": "Rozgrupuj alternatywne receptury",
 
   "text.autoconfig.brb.category.newRecipes": "Ustawienia nowych receptur",
