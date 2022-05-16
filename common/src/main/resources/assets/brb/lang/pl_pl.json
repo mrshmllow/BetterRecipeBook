@@ -28,8 +28,8 @@
   "text.autoconfig.brb.option.newRecipes.enableBounce": "Włącz animację odbicia",
   "text.autoconfig.brb.option.newRecipes.enableBounce.@Tooltip": "Włącz animację odbicia kiedy odblokujesz nową recepturę",
 
-  "brb.gui.pin.add": "Kliknij F aby przypiąć tę recepturę",
-  "brb.gui.pin.remove": "Kliknij F aby odpiąć tę recepturę",
+  "brb.gui.pin.add": "Kliknij F aby przypiąć tą recepturę",
+  "brb.gui.pin.remove": "Kliknij F aby odpiąć tą recepturę",
   "brb.gui.togglePotions.brewable": "Showing Brewable",
   "brb.gui.instantCraft.on": "Natychmiastowe wytwarzanie jest włączone",
   "brb.gui.instantCraft.off": "Natychmiastowe wytwarzanie jest wyłączone",
