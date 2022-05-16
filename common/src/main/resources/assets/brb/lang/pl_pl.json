@@ -1,0 +1,37 @@
+{
+  "text.autoconfig.brb.title": "Konfiguracja Better Recipe Book",
+
+  "text.autoconfig.brb.category.default": "Ustawienie ogólne",
+  "text.autoconfig.brb.option.enableBook": "Włącz książkę receptur",
+  "text.autoconfig.brb.option.darkMode": "Włącz tryb ciemny interfejsu. §oWymaga pełnej paczki zasobów",
+  "text.autoconfig.brb.option.darkMode.@Tooltip": "Włącz to tylko jeśli masz paczkę zasobów z trybem ciemnym taką jak §avanilla tweaks§r.",
+  "text.autoconfig.brb.option.keepCentered": "Zachowaj ekrany craftingu na środku ekranu",
+  "text.autoconfig.brb.option.enablePinning": "Włącz przypinanie receptur",
+  "text.autoconfig.brb.option.settingsButton": "Włącz przycisk ustawień",
+  "text.autoconfig.brb.option.settingsButton.@PrefixText": "§d--- Zaawansowane ---\n§eForge Warning: §7Jeśli wyłączysz którąś z tych dwóch opcji, będziesz musiał zedytować je w pliku brb.toml aby ponownie uzyskać dostęp do tego menu!\nNa Fabric'u, możesz użyć §bMod Menu§r aby się tu dostać.",
+
+  "text.autoconfig.brb.category.instantCraft": "Ustawienia natychmiastowego wytwarzania",
+  "text.autoconfig.brb.option.instantCraft.showButton": "Pokaż przycisk natychmiastowego wytwarzania",
+
+  "text.autoconfig.brb.category.scrolling": "Ustawienia przewijania",
+  "text.autoconfig.brb.option.scrolling.scrollAround": "Przewijaj w nieskończoność",
+  "text.autoconfig.brb.option.scrolling.scrollAround.@Tooltip": "Kiedy dotrzesz do końca książki, książka zacznie przewijać się od początku (Tak jak JEI)",
+  "text.autoconfig.brb.option.scrolling.enableScrolling": "Włącz przewijanie w książce receptur",
+
+  "text.autoconfig.brb.category.alternativeRecipes": "Ustawienia alternatywnych receptur",
+  "text.autoconfig.brb.option.alternativeRecipes.onHover": "Pokaż jedynie alternatywne receptury przy najechaniu myszą",
+  "text.autoconfig.brb.option.alternativeRecipes.onHover.@Tooltip": "Show the item in the alternatives list instead of their recipe so its easy to see",
+  "text.autoconfig.brb.option.alternativeRecipes.noGrouped": "Rozgrupuj alternatywne receptury",
+
+  "text.autoconfig.brb.category.newRecipes": "Ustawienia nowych receptur",
+  "text.autoconfig.brb.option.newRecipes.unlockAll": "Automatycznie odblokuj wszyskie receptury",
+  "text.autoconfig.brb.option.newRecipes.enableBounce": "Włącz animację odbicia",
+  "text.autoconfig.brb.option.newRecipes.enableBounce.@Tooltip": "Włącz animację odbicia kiedy odblokujesz nową recepturę",
+
+  "brb.gui.pin.add": "Kliknij F aby przypiąć tę recepturę",
+  "brb.gui.pin.remove": "Kliknij F aby odpiąć tę recepturę",
+  "brb.gui.togglePotions.brewable": "Showing Brewable",
+  "brb.gui.instantCraft.on": "Natychmiastowe wytwarzanie jest włączone",
+  "brb.gui.instantCraft.off": "Natychmiastowe wytwarzanie jest wyłączone",
+  "brb.gui.settings.open": "Otwórz ustawienia"
+}
