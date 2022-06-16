@@ -14,9 +14,9 @@
     "text.autoconfig.brb.option.instantCraft.showButton": "Anında üretim butonu göster",
   
     "text.autoconfig.brb.category.scrolling": "Kaydırma Ayarları",
-    "text.autoconfig.brb.option.scrolling.scrollAround": "Scroll in circles",
+    "text.autoconfig.brb.option.scrolling.scrollAround": "Daireler içinde kaydır",
     "text.autoconfig.brb.option.scrolling.scrollAround.@Tooltip": "Kitabın sonuna ulaştığında ileri gitmeye çalışırsan en başa ulaş. (JEI gibi)",
-    "text.autoconfig.brb.option.scrolling.enableScrolling": "Enable Scrolling in the Recipe Book",
+    "text.autoconfig.brb.option.scrolling.enableScrolling": "Tarif Kitabında Kaydırmayı Aktifleştir",
   
     "text.autoconfig.brb.category.alternativeRecipes": "Alternatif Tarif Ayarları",
     "text.autoconfig.brb.option.alternativeRecipes.onHover": "İmleci üzerinden geçirirken alternatif tarifleri göster",
