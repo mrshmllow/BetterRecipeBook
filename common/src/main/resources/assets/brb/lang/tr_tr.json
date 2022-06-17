@@ -1,0 +1,37 @@
+{
+    "text.autoconfig.brb.title": "Better Recipe Book Config",
+  
+    "text.autoconfig.brb.category.default": "Genel Ayarlar",
+    "text.autoconfig.brb.option.enableBook": "Tarif kitabını aktifleştir",
+    "text.autoconfig.brb.option.darkMode": "Koyu mod varyantlarını aktifleştir. §oTam bir Kaynakpaketi gerektirir",
+    "text.autoconfig.brb.option.darkMode.@Tooltip": "Bunu sadece bir koyu mod Kaynakpaketi kullanıyorsan aktifleştir §avanilla tweaks§r gibi.",
+    "text.autoconfig.brb.option.keepCentered": "Üretim ekranını ortada tut",
+    "text.autoconfig.brb.option.enablePinning": "Tarif sabitlemeyi aktifleştir",
+    "text.autoconfig.brb.option.settingsButton": "Ayarlar butonunu aktifleştir",
+    "text.autoconfig.brb.option.settingsButton.@PrefixText": "§d--- Gelişmiş ---\n§eForge Uyarısı: §7Bu iki ayardan herhangi ikisini kapatırsanız, Buraya geri gelmek için onları brb.toml dosyasında düzenlemeniz gerekecek!\nFabric'te, §bMod Menu§r kullanarak buraya gelebilirsiniz.",
+  
+    "text.autoconfig.brb.category.instantCraft": "Anında Üretim Ayarları",
+    "text.autoconfig.brb.option.instantCraft.showButton": "Anında üretim butonu göster",
+  
+    "text.autoconfig.brb.category.scrolling": "Kaydırma Ayarları",
+    "text.autoconfig.brb.option.scrolling.scrollAround": "Daireler içinde kaydır",
+    "text.autoconfig.brb.option.scrolling.scrollAround.@Tooltip": "Kitabın sonuna ulaştığında ileri gitmeye çalışırsan en başa ulaş. (JEI gibi)",
+    "text.autoconfig.brb.option.scrolling.enableScrolling": "Tarif Kitabında Kaydırmayı Aktifleştir",
+  
+    "text.autoconfig.brb.category.alternativeRecipes": "Alternatif Tarif Ayarları",
+    "text.autoconfig.brb.option.alternativeRecipes.onHover": "İmleci üzerinden geçirirken alternatif tarifleri göster",
+    "text.autoconfig.brb.option.alternativeRecipes.onHover.@Tooltip": "Eşyayı tarifi yerine alternatif listesinde gösterki kolayca görülebilsin",
+    "text.autoconfig.brb.option.alternativeRecipes.noGrouped": "Alternatif tarifleri gruplarından ayır",
+  
+    "text.autoconfig.brb.category.newRecipes": "Yeni Tarif Ayarları",
+    "text.autoconfig.brb.option.newRecipes.unlockAll": "Bütün tarifleri otomatik olarak aç",
+    "text.autoconfig.brb.option.newRecipes.enableBounce": "Açılma sekme animasyonunu aktif et",
+    "text.autoconfig.brb.option.newRecipes.enableBounce.@Tooltip": "Yeni bir eşya tarifi açtığındaki küçük sekme animasyonunu göster",
+  
+    "brb.gui.pin.add": "Bu tarifi sabitlemek için F tuşuna bas",
+    "brb.gui.pin.remove": "Bu tarifin sabitlemesini kaldırmak için için F tuşuna bas",
+    "brb.gui.togglePotions.brewable": "Üretilebilir İksirler Gösteriliyor",
+    "brb.gui.instantCraft.on": "Anında üretim açık",
+    "brb.gui.instantCraft.off": "Anında üretim kapalı",
+    "brb.gui.settings.open": "Ayarları aç"
+  }
