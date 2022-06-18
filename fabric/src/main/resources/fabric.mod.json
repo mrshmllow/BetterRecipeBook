@@ -32,8 +32,8 @@
   "accessWidener" : "brb.fabric.accesswidener",
   "depends": {
     "fabric": "*",
-    "minecraft": ">=1.18",
-    "cloth-config2": ">=5.0.38",
-    "architectury": ">=3.2.47"
+    "minecraft": ">=1.19",
+    "cloth-config2": ">=7.0.72",
+    "architectury": ">=5.6.22"
   }
 }
