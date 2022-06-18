@@ -22,7 +22,6 @@ import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.StackedContents;
 import net.minecraft.world.inventory.BrewingStandMenu;
@@ -130,7 +129,7 @@ public class RecipeBookWidget extends GuiComponent implements Widget, GuiEventLi
         int var10004 = i + 25;
         int var10005 = j + 14;
         Objects.requireNonNull(this.client.font);
-        this.searchField = new EditBox(var10003, var10004, var10005, 80, 9 + 5, new TranslatableComponent("itemGroup.search"));
+        this.searchField = new EditBox(var10003, var10004, var10005, 80, 9 + 5, Component.translatable("itemGroup.search"));
         this.searchField.setMaxLength(50);
         this.searchField.setBordered(false);
         this.searchField.setVisible(true);
@@ -517,9 +516,9 @@ public class RecipeBookWidget extends GuiComponent implements Widget, GuiEventLi
     }
 
     static {
-        SEARCH_HINT_TEXT = (new TranslatableComponent("gui.recipebook.search_hint")).withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY);
-        TOGGLE_CRAFTABLE_RECIPES_TEXT = new TranslatableComponent("brb.gui.togglePotions.brewable");
-        TOGGLE_ALL_RECIPES_TEXT = new TranslatableComponent("gui.recipebook.toggleRecipes.all");
-        OPEN_SETTINGS_TEXT = new TranslatableComponent("brb.gui.settings.open");
+        SEARCH_HINT_TEXT = (Component.translatable("gui.recipebook.search_hint")).withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY);
+        TOGGLE_CRAFTABLE_RECIPES_TEXT = Component.translatable("brb.gui.togglePotions.brewable");
+        TOGGLE_ALL_RECIPES_TEXT = Component.translatable("gui.recipebook.toggleRecipes.all");
+        OPEN_SETTINGS_TEXT = Component.translatable("brb.gui.settings.open");
     }
 }

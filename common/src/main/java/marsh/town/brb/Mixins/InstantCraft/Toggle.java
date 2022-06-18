@@ -6,7 +6,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.StateSwitchingButton;
 import net.minecraft.client.gui.screens.recipebook.RecipeBookComponent;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -88,7 +87,7 @@ public abstract class Toggle {
     }
 
     static {
-        TOGGLE_INSTANT_CRAFT_ON_TEXT = new TranslatableComponent("brb.gui.instantCraft.on");
-        TOGGLE_INSTANT_CRAFT_OFF_TEXT = new TranslatableComponent("brb.gui.instantCraft.off");
+        TOGGLE_INSTANT_CRAFT_ON_TEXT = Component.translatable("brb.gui.instantCraft.on");
+        TOGGLE_INSTANT_CRAFT_OFF_TEXT = Component.translatable("brb.gui.instantCraft.off");
     }
 }

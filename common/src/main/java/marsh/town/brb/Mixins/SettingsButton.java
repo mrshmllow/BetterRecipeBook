@@ -8,7 +8,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.screens.recipebook.RecipeBookComponent;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -81,6 +80,6 @@ public abstract class SettingsButton {
     }
 
     static {
-        OPEN_SETTINGS_TEXT = new TranslatableComponent("brb.gui.settings.open");
+        OPEN_SETTINGS_TEXT = Component.translatable("brb.gui.settings.open");
     }
 }

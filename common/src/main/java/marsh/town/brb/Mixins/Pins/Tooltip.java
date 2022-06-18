@@ -5,7 +5,6 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.recipebook.RecipeButton;
 import net.minecraft.client.gui.screens.recipebook.RecipeCollection;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -25,9 +24,9 @@ public abstract class Tooltip {
         if (!BetterRecipeBook.config.enablePinning) return;
 
         if (BetterRecipeBook.pinnedRecipeManager.has(this.getCollection())) {
-            list.add(new TranslatableComponent("brb.gui.pin.remove"));
+            list.add(Component.translatable("brb.gui.pin.remove"));
         } else {
-            list.add(new TranslatableComponent("brb.gui.pin.add"));
+            list.add(Component.translatable("brb.gui.pin.add"));
         }
     }
 }

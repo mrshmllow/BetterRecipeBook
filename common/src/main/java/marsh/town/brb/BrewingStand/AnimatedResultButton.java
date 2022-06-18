@@ -13,14 +13,15 @@ import net.minecraft.client.gui.narration.NarratedElementType;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.contents.LiteralContents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.BrewingStandMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.alchemy.PotionUtils;
 
+import java.awt.*;
 import java.util.List;
 
 import static marsh.town.brb.BrewingStand.PlatformPotionUtil.getIngredient;
@@ -34,7 +35,7 @@ public class AnimatedResultButton extends AbstractWidget {
     private BrewingStandMenu brewingStandScreenHandler;
 
     public AnimatedResultButton() {
-        super(0, 0, 25, 25, TextComponent.EMPTY);
+        super(0, 0, 25, 25, CommonComponents.EMPTY);
     }
 
     public void showPotionRecipe(Result potionRecipe, RecipeBookGroup group, BrewingStandMenu brewingStandScreenHandler) {
@@ -94,8 +95,8 @@ public class AnimatedResultButton extends AbstractWidget {
     public void updateNarration(NarrationElementOutput builder) {
         ItemStack inputStack = this.potionRecipe.inputAsItemStack(group);
 
-        builder.add(NarratedElementType.TITLE, new TranslatableComponent("narration.recipe", inputStack.getHoverName()));
-        builder.add(NarratedElementType.USAGE, new TranslatableComponent("narration.button.usage.hovered"));
+        builder.add(NarratedElementType.TITLE, Component.translatable("narration.recipe", inputStack.getHoverName()));
+        builder.add(NarratedElementType.USAGE, Component.translatable("narration.button.usage.hovered"));
     }
 
     public List<Component> getTooltip() {
@@ -103,16 +104,16 @@ public class AnimatedResultButton extends AbstractWidget {
 
         list.add(potionRecipe.ingredient.getHoverName());
         PotionUtils.addPotionTooltip(potionRecipe.ingredient, list, 1);
-        list.add(new TextComponent(""));
+        list.add(Component.literal(""));
 
         ChatFormatting colour = ChatFormatting.DARK_GRAY;
         if (potionRecipe.hasIngredient(brewingStandScreenHandler)) {
             colour = ChatFormatting.WHITE;
         }
 
-        list.add(new TextComponent(getIngredient(potionRecipe.recipe).getItems()[0].getHoverName().getString()).withStyle(colour));
+        list.add(Component.literal(getIngredient(potionRecipe.recipe).getItems()[0].getHoverName().getString()).withStyle(colour));
 
-        list.add(new TextComponent("↓").withStyle(ChatFormatting.DARK_GRAY));
+        list.add(Component.literal("↓").withStyle(ChatFormatting.DARK_GRAY));
 
         ItemStack inputStack = this.potionRecipe.inputAsItemStack(group);
 
@@ -120,13 +121,13 @@ public class AnimatedResultButton extends AbstractWidget {
             colour = ChatFormatting.DARK_GRAY;
         }
 
-        list.add(new TextComponent(inputStack.getHoverName().getString()).withStyle(colour));
+        list.add(Component.literal(inputStack.getHoverName().getString()).withStyle(colour));
 
         if (BetterRecipeBook.config.enablePinning) {
             if (BetterRecipeBook.pinnedRecipeManager.hasPotion(this.potionRecipe.recipe)) {
-                list.add(new TranslatableComponent("brb.gui.pin.remove"));
+                list.add(Component.translatable("brb.gui.pin.remove"));
             } else {
-                list.add(new TranslatableComponent("brb.gui.pin.add"));
+                list.add(Component.translatable("brb.gui.pin.add"));
             }
         }
 

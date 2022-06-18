@@ -23,7 +23,7 @@ public class MouseScrollHandler {
         if (BetterRecipeBook.queuedScroll == 0 && BetterRecipeBook.config.scrolling.enableScrolling) {
             assert minecraft.player != null;
 
-            double d = (this.minecraft.options.discreteMouseScroll ? Math.signum(vertical) : vertical) * this.minecraft.options.mouseWheelSensitivity;
+            double d = (this.minecraft.options.discreteMouseScroll().get() ? Math.signum(vertical) : vertical) * this.minecraft.options.mouseWheelSensitivity().get();
 
             BetterRecipeBook.queuedScroll = (int) -((int) this.accumulatedScroll + d);
         }

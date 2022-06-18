@@ -13,7 +13,7 @@ public class PlatformPotionUtilImpl {
         return ((ForgePotionBrewingMixAccessor<?>) recipe).getIngredient();
     }
 
-    public static Potion getTo(PotionBrewing.Mix<?> recipe) {
+    public static Potion getTo(PotionBrewing.Mix<Potion> recipe) {
         return (Potion) ((ForgePotionBrewingMixAccessor<?>) recipe).getTo().get();
     }
 
