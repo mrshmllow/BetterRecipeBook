@@ -34,10 +34,7 @@ import net.minecraft.world.item.crafting.Ingredient;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-import java.util.Objects;
+import java.util.*;
 
 import static marsh.town.brb.BrewingStand.PlatformPotionUtil.getFrom;
 import static marsh.town.brb.BrewingStand.PlatformPotionUtil.getIngredient;
@@ -276,7 +273,8 @@ public class RecipeBookWidget extends GuiComponent implements Widget, GuiEventLi
         if (this.currentTab == null) return;
         if (this.searchField == null) return;
 
-        List<Result> results = recipeBook.getResultsForCategory(currentTab.getGroup());
+        // Create a copy to not mess with the original list
+        List<Result> results = new ArrayList<>(recipeBook.getResultsForCategory(currentTab.getGroup()));
 
         String string = this.searchField.getValue();
         if (!string.isEmpty()) {
@@ -298,7 +296,7 @@ public class RecipeBookWidget extends GuiComponent implements Widget, GuiEventLi
             }
         }
 
-        this.recipesArea.setResults(results, resetCurrentPage, currentTab.getGroup());
+         this.recipesArea.setResults(results, resetCurrentPage, currentTab.getGroup());
     }
 
     private void refreshTabButtons() {
