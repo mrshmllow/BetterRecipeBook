@@ -31,7 +31,7 @@ public class InstantCraftingManager {
             }
             return;
         }
-        if (!itemStack.sameItemStackIgnoreDurability(lastCraft)) {
+        if (!ItemStack.isSameItemSameTags(itemStack, lastCraft)) {
             return;
         }
         Minecraft client = Minecraft.getInstance();

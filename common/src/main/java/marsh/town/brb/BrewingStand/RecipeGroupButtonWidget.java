@@ -37,13 +37,13 @@ public class RecipeGroupButtonWidget extends StateSwitchingButton {
             j += this.yDiffTex;
         }
 
-        int k = this.x;
+        int k = getX();
         if (this.isStateTriggered) {
             k -= 2;
         }
 
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        this.blit(matrices, k, this.y, i, j, this.width, this.height);
+        this.blit(matrices, k, getY(), i, j, this.width, this.height);
         RenderSystem.enableDepthTest();
         this.renderIcons(minecraftClient.getItemRenderer());
     }
@@ -52,10 +52,10 @@ public class RecipeGroupButtonWidget extends StateSwitchingButton {
         List<ItemStack> list = this.group.getIcons();
         int i = this.isStateTriggered ? -2 : 0;
         if (list.size() == 1) {
-            itemRenderer.renderAndDecorateFakeItem(list.get(0), this.x + 9 + i, this.y + 5);
+            itemRenderer.renderAndDecorateFakeItem(list.get(0), getX() + 9 + i, getY() + 5);
         } else if (list.size() == 2) {
-            itemRenderer.renderAndDecorateFakeItem(list.get(0), this.x + 3 + i, this.y + 5);
-            itemRenderer.renderAndDecorateFakeItem(list.get(1), this.x + 14 + i, this.y + 5);
+            itemRenderer.renderAndDecorateFakeItem(list.get(0), getX() + 3 + i, getY() + 5);
+            itemRenderer.renderAndDecorateFakeItem(list.get(1), getX() + 14 + i, getY() + 5);
         }
 
     }

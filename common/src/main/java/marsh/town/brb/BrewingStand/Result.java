@@ -1,6 +1,6 @@
 package marsh.town.brb.BrewingStand;
 
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.BrewingStandMenu;
 import net.minecraft.world.inventory.Slot;
@@ -20,7 +20,7 @@ public class Result {
     public Result(ItemStack ingredient, PotionBrewing.Mix<?> recipe) {
         this.ingredient = ingredient;
         this.recipe = recipe;
-        this.input = Registry.POTION.getKey(getFrom(recipe));
+        this.input = BuiltInRegistries.POTION.getKey(getFrom(recipe));
     }
 
     public boolean hasIngredient(BrewingStandMenu handledScreen) {
@@ -35,7 +35,7 @@ public class Result {
     public ItemStack inputAsItemStack(RecipeBookGroup group) {
         Potion inputPotion = getFrom(recipe);
 
-        ResourceLocation identifier = Registry.POTION.getKey(inputPotion);
+        ResourceLocation identifier = BuiltInRegistries.POTION.getKey(inputPotion);
         ItemStack inputStack;
         if (group == RecipeBookGroup.BREWING_SPLASH_POTION) {
             inputStack = new ItemStack(Items.SPLASH_POTION);
