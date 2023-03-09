@@ -5,7 +5,9 @@
   "name": "Better Recipe Book",
   "description": "Adds some quality of life changes to the recipe book",
   "authors": [
-    "marshmallow",
+    "marshmallow"
+  ],
+  "contributors": [
     "ruvaldak",
     "Felix14-v2",
     "buiawpkgew1",
