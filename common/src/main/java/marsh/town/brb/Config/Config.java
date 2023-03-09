@@ -11,7 +11,7 @@ public class Config implements ConfigData {
     @ConfigEntry.Gui.Tooltip()
     public boolean darkMode = false;
 
-    public boolean keepCentered = true;
+    public boolean keepCentered = false;
 
     @ConfigEntry.Category("newRecipes")
     @ConfigEntry.Gui.TransitiveObject()
