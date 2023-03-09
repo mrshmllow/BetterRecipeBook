@@ -8,7 +8,8 @@
     "marshmallow",
     "ruvaldak",
     "Felix14-v2",
-    "buiawpkgew1"
+    "buiawpkgew1",
+    "TauCubed"
   ],
   "contact": {
     "issues": "https://github.com/marshamallow/BetterRecipeBook",
@@ -33,7 +34,7 @@
   "depends": {
     "fabric": "*",
     "minecraft": ">=1.19",
-    "cloth-config2": ">=7.0.72",
-    "architectury": ">=5.6.22"
+    "cloth-config2": ">=9",
+    "architectury": ">=7"
   }
 }

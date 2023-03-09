@@ -11,16 +11,13 @@ import net.fabricmc.api.Environment;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiComponent;
-import net.minecraft.client.gui.components.EditBox;
-import net.minecraft.client.gui.components.ImageButton;
-import net.minecraft.client.gui.components.StateSwitchingButton;
-import net.minecraft.client.gui.components.Widget;
+import net.minecraft.client.gui.components.*;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.StackedContents;
@@ -40,7 +37,7 @@ import static marsh.town.brb.BrewingStand.PlatformPotionUtil.getFrom;
 import static marsh.town.brb.BrewingStand.PlatformPotionUtil.getIngredient;
 
 @Environment(EnvType.CLIENT)
-public class RecipeBookWidget extends GuiComponent implements Widget, GuiEventListener, NarratableEntry {
+public class RecipeBookWidget extends AbstractWidget implements GuiEventListener, NarratableEntry {
     public static final ResourceLocation TEXTURE = new ResourceLocation("textures/gui/recipe_book.png");
     private static final ResourceLocation BUTTON_TEXTURE = new ResourceLocation("brb:textures/gui/buttons.png");
     protected BrewingStandMenu brewingStandScreenHandler;
@@ -69,6 +66,9 @@ public class RecipeBookWidget extends GuiComponent implements Widget, GuiEventLi
     private static final Component OPEN_SETTINGS_TEXT;
     boolean doubleRefresh = true;
 
+    public RecipeBookWidget() {
+        super(0, 0, 25, 25, CommonComponents.EMPTY);
+    }
 
     public void initialize(int parentWidth, int parentHeight, Minecraft client, boolean narrow, BrewingStandMenu brewingStandScreenHandler) {
         this.client = client;
@@ -89,13 +89,14 @@ public class RecipeBookWidget extends GuiComponent implements Widget, GuiEventLi
             this.leftOffset = this.narrow ? 0 : 86;
         }
 
-        client.keyboardHandler.setSendRepeatsToGui(true);
+        // still required?
+        //client.keyboardHandler.setSendRepeatsToGui(true);
     }
 
     public ItemStack getInputStack(Result result) {
         Potion inputPotion = getFrom(result.recipe);
         Ingredient ingredient = getIngredient(result.recipe);
-        ResourceLocation identifier = Registry.POTION.getKey(inputPotion);
+        ResourceLocation identifier = BuiltInRegistries.POTION.getKey(inputPotion);
         ItemStack inputStack;
         if (this.currentTab.getGroup() == RecipeBookGroup.BREWING_SPLASH_POTION) {
             inputStack = new ItemStack(Items.SPLASH_POTION);
@@ -479,7 +480,7 @@ public class RecipeBookWidget extends GuiComponent implements Widget, GuiEventLi
 
     public boolean keyReleased(int keyCode, int scanCode, int modifiers) {
         this.searching = false;
-        return GuiEventListener.super.keyReleased(keyCode, scanCode, modifiers);
+        return super.keyReleased(keyCode, scanCode, modifiers);
     }
 
     public boolean charTyped(char chr, int modifiers) {
@@ -491,7 +492,7 @@ public class RecipeBookWidget extends GuiComponent implements Widget, GuiEventLi
                 this.refreshSearchResults();
                 return true;
             } else {
-                return GuiEventListener.super.charTyped(chr, modifiers);
+                return super.charTyped(chr, modifiers);
             }
         } else {
             return false;
@@ -509,7 +510,7 @@ public class RecipeBookWidget extends GuiComponent implements Widget, GuiEventLi
     }
 
     @Override
-    public void updateNarration(NarrationElementOutput builder) {
+    protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {
 
     }
 
@@ -519,4 +520,5 @@ public class RecipeBookWidget extends GuiComponent implements Widget, GuiEventLi
         TOGGLE_ALL_RECIPES_TEXT = Component.translatable("gui.recipebook.toggleRecipes.all");
         OPEN_SETTINGS_TEXT = Component.translatable("brb.gui.settings.open");
     }
+
 }

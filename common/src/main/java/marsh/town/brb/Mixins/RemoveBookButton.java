@@ -20,7 +20,7 @@ public class RemoveBookButton extends Button {
     private ResourceLocation resourceLocation;
 
     public RemoveBookButton(int x, int y, int width, int height, Component message, OnPress onPress) {
-        super(x, y, width, height, message, onPress);
+        super(x, y, width, height, message, onPress, DEFAULT_NARRATION);
     }
 
     @Inject(at = @At("HEAD"), method = "renderButton", cancellable = true)

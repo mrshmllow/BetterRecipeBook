@@ -54,12 +54,12 @@ public abstract class AlternativeRecipes extends AbstractWidget implements Place
 
         if (this.ingredientPos.size() == 1 && this.isHoveredOrFocused()) {
             matrices.pushPose();
-            this.blit(matrices, this.x, this.y, i, j, this.width, this.height);
+            this.blit(matrices, getX(), getY(), i, j, this.width, this.height);
             PoseStack matrixStack = RenderSystem.getModelViewStack();
 
             matrixStack.pushPose();
-            matrixStack.mulPoseMatrix(matrices.last().pose().copy()); // No idea what this does
-            Minecraft.getInstance().getItemRenderer().renderAndDecorateItem(this.ingredientPos.get(0).ingredients[0], this.x + 4, this.y + 4);
+            matrixStack.mulPoseMatrix(matrices.last().pose()); // No idea what this does
+            Minecraft.getInstance().getItemRenderer().renderAndDecorateItem(this.ingredientPos.get(0).ingredients[0], getX() + 4, getY() + 4);
             RenderSystem.enableDepthTest();
             matrixStack.popPose();
             RenderSystem.applyModelViewMatrix();
@@ -68,7 +68,7 @@ public abstract class AlternativeRecipes extends AbstractWidget implements Place
             ci.cancel();
         } else if (!this.isHoveredOrFocused() && BetterRecipeBook.config.alternativeRecipes.onHover) {
             matrices.pushPose();
-            this.blit(matrices, this.x, this.y, i, j, this.width, this.height);
+            this.blit(matrices, getX(), getY(), i, j, this.width, this.height);
 
             ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
             ItemStack recipeOutput = this.recipe.getResultItem();
@@ -76,8 +76,8 @@ public abstract class AlternativeRecipes extends AbstractWidget implements Place
             PoseStack matrixStack = RenderSystem.getModelViewStack();
 
             matrixStack.pushPose();
-            matrixStack.mulPoseMatrix(matrices.last().pose().copy()); // No idea what this does
-            itemRenderer.renderAndDecorateItem(recipeOutput, this.x + 4, this.y + 4);
+            matrixStack.mulPoseMatrix(matrices.last().pose()); // No idea what this does
+            itemRenderer.renderAndDecorateItem(recipeOutput, getX() + 4, getY() + 4);
             RenderSystem.enableDepthTest();
             matrixStack.popPose();
             RenderSystem.applyModelViewMatrix();

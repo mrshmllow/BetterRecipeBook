@@ -31,6 +31,13 @@ side = "BOTH"
 [[dependencies.brb]]
 modId = "architectury"
 mandatory = true
-versionRange = "[5.6.22,)"
+versionRange = "[7,)"
+ordering = "AFTER"
+side = "BOTH"
+
+[[dependencies.brb]]
+modId = "cloth_config"
+mandatory = true
+versionRange = "[9,)"
 ordering = "AFTER"
 side = "BOTH"

@@ -5,7 +5,7 @@ import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.recipebook.RecipeCollection;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.alchemy.PotionBrewing;
 import net.minecraft.world.item.crafting.Recipe;
@@ -78,7 +78,7 @@ public class PinnedRecipeManager {
     }
 
     public void addOrRemoveFavouritePotion(PotionBrewing.Mix<?> target) {
-        ResourceLocation targetIdentifier = Registry.POTION.getKey(getTo(target));
+        ResourceLocation targetIdentifier = BuiltInRegistries.POTION.getKey(getTo(target));
 
         for (ResourceLocation identifier : this.pinned) {
             if (identifier.equals(targetIdentifier)) {
@@ -104,7 +104,7 @@ public class PinnedRecipeManager {
     }
 
     public boolean hasPotion(PotionBrewing.Mix<?> target) {
-        ResourceLocation targetIdentifier = Registry.POTION.getKey(getTo(target));
+        ResourceLocation targetIdentifier = BuiltInRegistries.POTION.getKey(getTo(target));
 
         for (ResourceLocation identifier : this.pinned) {
             if (targetIdentifier.equals(identifier)) {

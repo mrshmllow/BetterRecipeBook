@@ -70,13 +70,13 @@ public class AnimatedResultButton extends AbstractWidget {
         }
 
         PoseStack matrixStack = RenderSystem.getModelViewStack();
-        this.blit(matrices, this.x, this.y, i, j, this.width, this.height);
+        this.blit(matrices, getX(), getY(), i, j, this.width, this.height);
         int k = 4;
 
         matrixStack.pushPose();
-        matrixStack.mulPoseMatrix(matrices.last().pose().copy()); // No idea what this does
-        minecraftClient.getItemRenderer().renderAndDecorateItem(potionRecipe.ingredient, this.x + k, this.y + k); // Why do we do this twice?
-        minecraftClient.getItemRenderer().renderGuiItemDecorations(Minecraft.getInstance().font, potionRecipe.ingredient, this.x + k, this.y + k); // ^
+        matrixStack.mulPoseMatrix(matrices.last().pose()); // No idea what this does
+        minecraftClient.getItemRenderer().renderAndDecorateItem(potionRecipe.ingredient, getX() + k, getY() + k); // Why do we do this twice?
+        minecraftClient.getItemRenderer().renderGuiItemDecorations(Minecraft.getInstance().font, potionRecipe.ingredient, getX() + k, getY() + k); // ^
         RenderSystem.enableDepthTest();
         matrixStack.popPose();
         RenderSystem.applyModelViewMatrix();
@@ -88,11 +88,11 @@ public class AnimatedResultButton extends AbstractWidget {
     }
 
     public void setPos(int x, int y) {
-        this.x = x;
-        this.y = y;
+        setX(x);
+        setY(y);
     }
 
-    public void updateNarration(NarrationElementOutput builder) {
+    public void updateWidgetNarration(NarrationElementOutput builder) {
         ItemStack inputStack = this.potionRecipe.inputAsItemStack(group);
 
         builder.add(NarratedElementType.TITLE, Component.translatable("narration.recipe", inputStack.getHoverName()));
