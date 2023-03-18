@@ -44,7 +44,7 @@ public class AnimatedResultButton extends AbstractWidget {
         this.brewingStandScreenHandler = brewingStandScreenHandler;
     }
 
-    public void renderButton(PoseStack matrices, int mouseX, int mouseY, float delta) {
+    public void renderWidget(PoseStack matrices, int mouseX, int mouseY, float delta) {
         if (!Screen.hasControlDown()) {
             this.time += delta;
         }
@@ -75,8 +75,8 @@ public class AnimatedResultButton extends AbstractWidget {
 
         matrixStack.pushPose();
         matrixStack.mulPoseMatrix(matrices.last().pose()); // No idea what this does
-        minecraftClient.getItemRenderer().renderAndDecorateItem(potionRecipe.ingredient, getX() + k, getY() + k); // Why do we do this twice?
-        minecraftClient.getItemRenderer().renderGuiItemDecorations(Minecraft.getInstance().font, potionRecipe.ingredient, getX() + k, getY() + k); // ^
+        minecraftClient.getItemRenderer().renderAndDecorateItem(matrices, potionRecipe.ingredient, getX() + k, getY() + k); // Why do we do this twice?
+        minecraftClient.getItemRenderer().renderGuiItemDecorations(matrices, Minecraft.getInstance().font, potionRecipe.ingredient, getX() + k, getY() + k); // ^
         RenderSystem.enableDepthTest();
         matrixStack.popPose();
         RenderSystem.applyModelViewMatrix();

@@ -31,15 +31,16 @@ public abstract class AlternativeRecipes extends AbstractWidget implements Place
     private boolean isCraftable;
     @Final @Shadow
     Recipe<?> recipe;
-    @Shadow public abstract void renderButton(PoseStack matrices, int mouseX, int mouseY, float delta);
+    @Shadow public abstract void renderWidget(PoseStack matrices, int mouseX, int mouseY, float delta);
     @Shadow @Final protected List<OverlayRecipeComponent.OverlayRecipeButton.Pos> ingredientPos;
+    @Shadow @Final OverlayRecipeComponent field_3113;
 
     public AlternativeRecipes(int x, int y, int width, int height, Component message) {
         super(x, y, width, height, message);
     }
 
-    @Inject(at = @At("HEAD"), method = "renderButton", cancellable = true)
-    public void renderButton(PoseStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci) {
+    @Inject(at = @At("HEAD"), method = "renderWidget", cancellable = true)
+    public void renderWidget(PoseStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci) {
         RenderSystem.setShaderTexture(0, BACKGROUND_TEXTURE);
         int i = 0;
         int j = 0;
@@ -59,7 +60,7 @@ public abstract class AlternativeRecipes extends AbstractWidget implements Place
 
             matrixStack.pushPose();
             matrixStack.mulPoseMatrix(matrices.last().pose()); // No idea what this does
-            Minecraft.getInstance().getItemRenderer().renderAndDecorateItem(this.ingredientPos.get(0).ingredients[0], getX() + 4, getY() + 4);
+            Minecraft.getInstance().getItemRenderer().renderAndDecorateItem(matrices, this.ingredientPos.get(0).ingredients[0], getX() + 4, getY() + 4);
             RenderSystem.enableDepthTest();
             matrixStack.popPose();
             RenderSystem.applyModelViewMatrix();
@@ -71,13 +72,13 @@ public abstract class AlternativeRecipes extends AbstractWidget implements Place
             this.blit(matrices, getX(), getY(), i, j, this.width, this.height);
 
             ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
-            ItemStack recipeOutput = this.recipe.getResultItem();
+            ItemStack recipeOutput = this.recipe.getResultItem(field_3113.getRecipeCollection().registryAccess());
 
             PoseStack matrixStack = RenderSystem.getModelViewStack();
 
             matrixStack.pushPose();
             matrixStack.mulPoseMatrix(matrices.last().pose()); // No idea what this does
-            itemRenderer.renderAndDecorateItem(recipeOutput, getX() + 4, getY() + 4);
+            itemRenderer.renderAndDecorateItem(matrices, recipeOutput, getX() + 4, getY() + 4);
             RenderSystem.enableDepthTest();
             matrixStack.popPose();
             RenderSystem.applyModelViewMatrix();

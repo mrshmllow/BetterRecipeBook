@@ -23,8 +23,8 @@ public class RemoveBookButton extends Button {
         super(x, y, width, height, message, onPress, DEFAULT_NARRATION);
     }
 
-    @Inject(at = @At("HEAD"), method = "renderButton", cancellable = true)
-    public void renderButton(PoseStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci) {
+    @Inject(at = @At("HEAD"), method = "renderWidget", cancellable = true)
+    public void renderWidget(PoseStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci) {
         if (resourceLocation.equals(new ResourceLocation("minecraft:textures/gui/recipe_button.png")) && !BetterRecipeBook.config.enableBook) {
             this.visible = false;
             ci.cancel();

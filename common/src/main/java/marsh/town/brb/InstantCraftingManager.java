@@ -2,6 +2,7 @@ package marsh.town.brb;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -16,9 +17,9 @@ public class InstantCraftingManager {
         this.on = false;
     }
 
-    public void recipeClicked(Recipe<?> recipe) {
+    public void recipeClicked(Recipe<?> recipe, RegistryAccess registryAccess) {
         if (BetterRecipeBook.instantCraftingManager.on) {
-            lastCraft = recipe.getResultItem();
+            lastCraft = recipe.getResultItem(registryAccess);
         }
     }
 

@@ -319,7 +319,7 @@ public class RecipeBookWidget extends AbstractWidget implements GuiEventListener
     }
 
     @Override
-    public void render(PoseStack matrices, int mouseX, int mouseY, float delta) {
+    public void renderWidget(PoseStack matrices, int mouseX, int mouseY, float delta) {
         if (this.searchField == null) return;
 
         if (doubleRefresh) {
@@ -467,7 +467,7 @@ public class RecipeBookWidget extends AbstractWidget implements GuiEventListener
                     return false;
                 } else if (this.client.options.keyChat.matches(keyCode, scanCode) && !this.searchField.isFocused()) {
                     this.searching = true;
-                    this.searchField.setFocus(true);
+                    this.searchField.setFocused(true);
                     return true;
                 } else {
                     return false;

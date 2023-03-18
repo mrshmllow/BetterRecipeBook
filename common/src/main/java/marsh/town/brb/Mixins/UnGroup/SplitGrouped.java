@@ -34,7 +34,7 @@ public class SplitGrouped extends RecipeBook {
                     list2.remove(recipeResultCollection);
 
                     for (Recipe<?> recipe : recipes) {
-                        RecipeCollection recipeResultCollection1 = new RecipeCollection(Collections.singletonList(recipe));
+                        RecipeCollection recipeResultCollection1 = new RecipeCollection(recipeResultCollection.registryAccess(), Collections.singletonList(recipe));
                         recipeResultCollection1.updateKnownRecipes(this);
 
                         list2.add(recipeResultCollection1);

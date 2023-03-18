@@ -22,7 +22,7 @@ public class RecipeGroupButtonWidget extends StateSwitchingButton {
         this.initTextureValues(153, 2, 35, 0, RecipeBookWidget.TEXTURE);
     }
 
-    public void renderButton(PoseStack matrices, int mouseX, int mouseY, float delta) {
+    public void renderWidget(PoseStack matrices, int mouseX, int mouseY, float delta) {
         Minecraft minecraftClient = Minecraft.getInstance();
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderTexture(0, this.resourceLocation);
@@ -45,17 +45,17 @@ public class RecipeGroupButtonWidget extends StateSwitchingButton {
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         this.blit(matrices, k, getY(), i, j, this.width, this.height);
         RenderSystem.enableDepthTest();
-        this.renderIcons(minecraftClient.getItemRenderer());
+        this.renderIcons(matrices, minecraftClient.getItemRenderer());
     }
 
-    private void renderIcons(ItemRenderer itemRenderer) {
+    private void renderIcons(PoseStack matrices, ItemRenderer itemRenderer) {
         List<ItemStack> list = this.group.getIcons();
         int i = this.isStateTriggered ? -2 : 0;
         if (list.size() == 1) {
-            itemRenderer.renderAndDecorateFakeItem(list.get(0), getX() + 9 + i, getY() + 5);
+            itemRenderer.renderAndDecorateFakeItem(matrices, list.get(0), getX() + 9 + i, getY() + 5);
         } else if (list.size() == 2) {
-            itemRenderer.renderAndDecorateFakeItem(list.get(0), getX() + 3 + i, getY() + 5);
-            itemRenderer.renderAndDecorateFakeItem(list.get(1), getX() + 14 + i, getY() + 5);
+            itemRenderer.renderAndDecorateFakeItem(matrices, list.get(0), getX() + 3 + i, getY() + 5);
+            itemRenderer.renderAndDecorateFakeItem(matrices, list.get(1), getX() + 14 + i, getY() + 5);
         }
 
     }

@@ -30,7 +30,7 @@ public class Search {
         if (BetterRecipeBook.config.alternativeRecipes.noGrouped) {
             list2.removeIf((recipeResultCollection) -> {
                 for (Recipe<?> recipe : recipeResultCollection.getRecipes()) {
-                    return !recipe.getResultItem().getHoverName().getString().toLowerCase(Locale.ROOT).contains(this.lastSearch.toLowerCase(Locale.ROOT));
+                    return !recipe.getResultItem(recipeResultCollection.registryAccess()).getHoverName().getString().toLowerCase(Locale.ROOT).contains(this.lastSearch.toLowerCase(Locale.ROOT));
                 }
                 return false;
             });
