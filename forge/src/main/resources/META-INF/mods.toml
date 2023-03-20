@@ -8,7 +8,7 @@ modId = "brb"
 version = "${version}"
 displayName = "Better Recipe Book"
 authors = "marshmallow"
-credits = "ruvaldak, Felix14-v2, buiawpkgew1, TauCubed"
+credits = "ruvaldak, Felix14-v2, buiawpkgew1, TauCubed, MehradN"
 description = '''
 Adds some quality of life changes to the recipe book
 '''
