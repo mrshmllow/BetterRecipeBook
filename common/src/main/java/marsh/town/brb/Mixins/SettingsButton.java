@@ -50,14 +50,9 @@ public abstract class SettingsButton {
 
     @Inject(method = "mouseClicked", at = @At("HEAD"), cancellable = true)
     public void mouseClicked(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir) {
-        if (this.settingsButton != null) {
-            if (this.settingsButton.mouseClicked(mouseX, mouseY, button) && this.isVisible() && BetterRecipeBook.config.settingsButton) {
-                assert this.minecraft.player != null;
-                if (!this.minecraft.player.isSpectator()) {
-                    if (!this.minecraft.player.isSpectator()) {
-                        cir.setReturnValue(true);
-                    }
-                }
+        if (this.settingsButton != null && BetterRecipeBook.config.settingsButton && this.isVisible()) {
+            if (this.settingsButton.mouseClicked(mouseX, mouseY, button)) {
+                cir.setReturnValue(true);
             }
         }
     }

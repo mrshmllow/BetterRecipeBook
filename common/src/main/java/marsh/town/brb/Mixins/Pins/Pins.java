@@ -44,7 +44,8 @@ public abstract class Pins {
             List<OverlayRecipeComponent.OverlayRecipeButton> alternativeButtons = ((OverlayRecipeComponentAccessor) alternatesWidget).getRecipeButtons();
             for (OverlayRecipeComponent.OverlayRecipeButton alternativeButton : alternativeButtons) {
                 if (alternativeButton.isHoveredOrFocused()) {
-                    RecipeCollection recipeResultCollection = new RecipeCollection(Collections.singletonList(((OverlayRecipeButtonAccessor) alternativeButton).getRecipe()));
+                    assert minecraft.level != null;
+                    RecipeCollection recipeResultCollection = new RecipeCollection(minecraft.level.registryAccess(), Collections.singletonList(((OverlayRecipeButtonAccessor) alternativeButton).getRecipe()));
                     recipeResultCollection.updateKnownRecipes(this.book);
                     BetterRecipeBook.pinnedRecipeManager.addOrRemoveFavourite(recipeResultCollection);
                     this.updateCollections(false);
