@@ -11,14 +11,17 @@ import net.fabricmc.api.Environment;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.components.*;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.gui.screens.recipebook.RecipeShownListener;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
+import net.minecraft.recipebook.PlaceRecipe;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.StackedContents;
 import net.minecraft.world.inventory.BrewingStandMenu;
@@ -28,6 +31,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.Recipe;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
@@ -37,9 +41,9 @@ import static marsh.town.brb.BrewingStand.PlatformPotionUtil.getFrom;
 import static marsh.town.brb.BrewingStand.PlatformPotionUtil.getIngredient;
 
 @Environment(EnvType.CLIENT)
-public class BrewingRecipeBookWidget extends AbstractWidget implements GuiEventListener, NarratableEntry {
-    public static final ResourceLocation TEXTURE = new ResourceLocation("textures/gui/recipe_book.png");
-    private static final ResourceLocation BUTTON_TEXTURE = new ResourceLocation("brb:textures/gui/buttons.png");
+public class BrewingRecipeBookComponent extends GuiComponent implements Renderable, GuiEventListener, NarratableEntry, RecipeShownListener {
+    public static final ResourceLocation RECIPE_BOOK_LOCATION = new ResourceLocation("textures/gui/recipe_book.png");
+    private static final ResourceLocation BUTTON_LOCATION = new ResourceLocation("brb:textures/gui/buttons.png");
     protected BrewingStandMenu brewingStandScreenHandler;
     Minecraft client;
     private int parentWidth;
@@ -51,23 +55,23 @@ public class BrewingRecipeBookWidget extends AbstractWidget implements GuiEventL
     private boolean open;
     private final BrewingRecipeBookResults recipesArea = new BrewingRecipeBookResults();
     @Nullable
-    private EditBox searchField;
+    private EditBox searchBox;
     private final StackedContents recipeFinder = new StackedContents();
     protected StateSwitchingButton toggleBrewableButton;
-    private static final Component SEARCH_HINT_TEXT;
+    private static final Component SEARCH_HINT;
     private final List<BrewableRecipeGroupButtonWidget> tabButtons = Lists.newArrayList();
     @Nullable
     private BrewableRecipeGroupButtonWidget currentTab;
     private boolean searching;
     protected ImageButton settingsButton;
     private String searchText;
-    private static final Component TOGGLE_CRAFTABLE_RECIPES_TEXT;
-    private static final Component TOGGLE_ALL_RECIPES_TEXT;
-    private static final Component OPEN_SETTINGS_TEXT;
+    private static final Component ONLY_CRAFTABLES_TOOLTIP;
+    private static final Component ALL_RECIPES_TOOLTIP;
+    private static final Component OPEN_SETTINGS_TOOLTIP;
     boolean doubleRefresh = true;
 
-    public BrewingRecipeBookWidget() {
-        super(0, 0, 25, 25, CommonComponents.EMPTY);
+    public BrewingRecipeBookComponent() {
+        super();
     }
 
     public void initialize(int parentWidth, int parentHeight, Minecraft client, boolean narrow, BrewingStandMenu brewingStandScreenHandler) {
@@ -122,17 +126,19 @@ public class BrewingRecipeBookWidget extends AbstractWidget implements GuiEventL
         this.recipeFinder.clear();
         assert this.client.player != null;
         this.client.player.getInventory().fillStackedContents(this.recipeFinder);
-        String string = this.searchField != null ? this.searchField.getValue() : "";
+        String string = this.searchBox != null ? this.searchBox.getValue() : "";
         Font var10003 = this.client.font;
-        int var10004 = i + 25;
+        int var10004 = i + 26;
         int var10005 = j + 14;
         Objects.requireNonNull(this.client.font);
-        this.searchField = new EditBox(var10003, var10004, var10005, 80, 9 + 5, Component.translatable("itemGroup.search"));
-        this.searchField.setMaxLength(50);
-        this.searchField.setBordered(false);
-        this.searchField.setVisible(true);
-        this.searchField.setTextColor(16777215);
-        this.searchField.setValue(string);
+        this.searchBox = new EditBox(var10003, var10004, var10005, 79, 9 + 3, Component.translatable("itemGroup.search"));
+        this.searchBox.setMaxLength(50);
+        this.searchBox.setBordered(true);
+        this.searchBox.setVisible(true);
+        this.searchBox.setTextColor(16777215);
+        this.searchBox.setValue(string);
+        this.searchBox.setHint(SEARCH_HINT);
+
         this.recipesArea.initialize(this.client, i, j, brewingStandScreenHandler);
         this.tabButtons.clear();
         this.recipeBook.setFilteringCraftable(BetterRecipeBook.rememberedBrewingToggle);
@@ -157,7 +163,7 @@ public class BrewingRecipeBookWidget extends AbstractWidget implements GuiEventL
                 u = 18;
             }
 
-            this.settingsButton = new ImageButton(i + 11, j + 137, 16, 18, u, 77, 19, BUTTON_TEXTURE, button -> {
+            this.settingsButton = new ImageButton(i + 11, j + 137, 16, 18, u, 77, 19, BUTTON_LOCATION, button -> {
                 Minecraft.getInstance().setScreen(AutoConfig.getConfigScreen(Config.class, Minecraft.getInstance().screen).get());
             });
         }
@@ -211,8 +217,8 @@ public class BrewingRecipeBookWidget extends AbstractWidget implements GuiEventL
 
                 return true;
             } else {
-                assert this.searchField != null;
-                if (this.searchField.mouseClicked(mouseX, mouseY, button)) {
+                assert this.searchBox != null;
+                if (this.searchBox.mouseClicked(mouseX, mouseY, button)) {
                     return true;
                 } else if (this.toggleBrewableButton.mouseClicked(mouseX, mouseY, button)) {
                     boolean bl = this.toggleFilteringBrewable();
@@ -272,12 +278,12 @@ public class BrewingRecipeBookWidget extends AbstractWidget implements GuiEventL
 
     private void refreshResults(boolean resetCurrentPage) {
         if (this.currentTab == null) return;
-        if (this.searchField == null) return;
+        if (this.searchBox == null) return;
 
         // Create a copy to not mess with the original list
         List<BrewableResult> results = new ArrayList<>(recipeBook.getResultsForCategory(currentTab.getGroup()));
 
-        String string = this.searchField.getValue();
+        String string = this.searchBox.getValue();
         if (!string.isEmpty()) {
             results.removeIf(itemStack -> !itemStack.ingredient.getHoverName().getString().toLowerCase(Locale.ROOT).contains(string.toLowerCase(Locale.ROOT)));
         }
@@ -319,8 +325,8 @@ public class BrewingRecipeBookWidget extends AbstractWidget implements GuiEventL
     }
 
     @Override
-    public void renderWidget(PoseStack matrices, int mouseX, int mouseY, float delta) {
-        if (this.searchField == null) return;
+    public void render(PoseStack matrices, int mouseX, int mouseY, float delta) {
+        if (this.searchBox == null) return;
 
         if (doubleRefresh) {
             // Minecraft doesn't populate the inventory on initialization so this is the only solution I have
@@ -331,17 +337,13 @@ public class BrewingRecipeBookWidget extends AbstractWidget implements GuiEventL
             matrices.pushPose();
             matrices.translate(0.0D, 0.0D, 100.0D);
             RenderSystem.setShader(GameRenderer::getPositionTexShader);
-            RenderSystem.setShaderTexture(0, TEXTURE);
+            RenderSystem.setShaderTexture(0, RECIPE_BOOK_LOCATION);
             RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
             int i = (this.parentWidth - 147) / 2 - this.leftOffset;
             int j = (this.parentHeight - 166) / 2;
             this.blit(matrices, i, j, 1, 1, 147, 166);
+            this.searchBox.render(matrices, mouseX, mouseY, delta);
 
-            if (!this.searchField.isFocused() && this.searchField.getValue().isEmpty()) {
-                drawString(matrices, this.client.font, SEARCH_HINT_TEXT, i + 25, j + 14, -1);
-            } else {
-                this.searchField.render(matrices, mouseX, mouseY, delta);
-            }
 
             for (BrewableRecipeGroupButtonWidget brewableRecipeGroupButtonWidget : this.tabButtons) {
                 brewableRecipeGroupButtonWidget.render(matrices, mouseX, mouseY, delta);
@@ -385,7 +387,7 @@ public class BrewingRecipeBookWidget extends AbstractWidget implements GuiEventL
     }
 
     protected void setBookButtonTexture() {
-        this.toggleBrewableButton.initTextureValues(152, 41, 28, 18, TEXTURE);
+        this.toggleBrewableButton.initTextureValues(152, 41, 28, 18, RECIPE_BOOK_LOCATION);
     }
 
     @Override
@@ -406,7 +408,7 @@ public class BrewingRecipeBookWidget extends AbstractWidget implements GuiEventL
             if (this.settingsButton != null) {
                 if (this.settingsButton.isHoveredOrFocused() && BetterRecipeBook.config.settingsButton) {
                     if (this.client.screen != null) {
-                        this.client.screen.renderTooltip(matrices, OPEN_SETTINGS_TEXT, mouseX, mouseY);
+                        this.client.screen.renderTooltip(matrices, OPEN_SETTINGS_TOOLTIP, mouseX, mouseY);
                     }
                 }
             }
@@ -416,11 +418,11 @@ public class BrewingRecipeBookWidget extends AbstractWidget implements GuiEventL
     }
 
     private Component getCraftableButtonText() {
-        return this.toggleBrewableButton.isStateTriggered() ? this.getToggleCraftableButtonText() : TOGGLE_ALL_RECIPES_TEXT;
+        return this.toggleBrewableButton.isStateTriggered() ? this.getToggleCraftableButtonText() : ALL_RECIPES_TOOLTIP;
     }
 
     protected Component getToggleCraftableButtonText() {
-        return TOGGLE_CRAFTABLE_RECIPES_TEXT;
+        return ONLY_CRAFTABLES_TOOLTIP;
     }
 
     private void drawGhostSlotTooltip(PoseStack matrices, int x, int y, int mouseX, int mouseY) {
@@ -448,11 +450,11 @@ public class BrewingRecipeBookWidget extends AbstractWidget implements GuiEventL
                 this.setOpen(false);
                 return true;
             } else {
-                assert this.searchField != null;
-                if (this.searchField.keyPressed(keyCode, scanCode, modifiers)) {
+                assert this.searchBox != null;
+                if (this.searchBox.keyPressed(keyCode, scanCode, modifiers)) {
                     this.refreshSearchResults();
                     return true;
-                } else if (this.searchField.isFocused() && this.searchField.isVisible()) {
+                } else if (this.searchBox.isFocused() && this.searchBox.isVisible()) {
                     return true;
                 } else if (keyCode == GLFW.GLFW_KEY_F) {
                     if (BetterRecipeBook.config.enablePinning) {
@@ -465,9 +467,9 @@ public class BrewingRecipeBookWidget extends AbstractWidget implements GuiEventL
                         }
                     }
                     return false;
-                } else if (this.client.options.keyChat.matches(keyCode, scanCode) && !this.searchField.isFocused()) {
+                } else if (this.client.options.keyChat.matches(keyCode, scanCode) && !this.searchBox.isFocused()) {
                     this.searching = true;
-                    this.searchField.setFocused(true);
+                    this.searchBox.setFocused(true);
                     return true;
                 } else {
                     return false;
@@ -480,28 +482,38 @@ public class BrewingRecipeBookWidget extends AbstractWidget implements GuiEventL
 
     public boolean keyReleased(int keyCode, int scanCode, int modifiers) {
         this.searching = false;
-        return super.keyReleased(keyCode, scanCode, modifiers);
+        return GuiEventListener.super.keyReleased(keyCode, scanCode, modifiers);
     }
 
     public boolean charTyped(char chr, int modifiers) {
         if (this.searching) {
             return false;
         } else if (this.isOpen() && !Objects.requireNonNull(this.client.player).isSpectator()) {
-            assert this.searchField != null;
-            if (this.searchField.charTyped(chr, modifiers)) {
+            assert this.searchBox != null;
+            if (this.searchBox.charTyped(chr, modifiers)) {
                 this.refreshSearchResults();
                 return true;
             } else {
-                return super.charTyped(chr, modifiers);
+                return GuiEventListener.super.charTyped(chr, modifiers);
             }
         } else {
             return false;
         }
     }
 
+    @Override
+    public void setFocused(boolean bl) {
+
+    }
+
+    @Override
+    public boolean isFocused() {
+        return false;
+    }
+
     private void refreshSearchResults() {
-        assert this.searchField != null;
-        String string = this.searchField.getValue().toLowerCase(Locale.ROOT);
+        assert this.searchBox != null;
+        String string = this.searchBox.getValue().toLowerCase(Locale.ROOT);
         if (!string.equals(this.searchText)) {
             this.refreshResults(false);
             this.searchText = string;
@@ -509,16 +521,20 @@ public class BrewingRecipeBookWidget extends AbstractWidget implements GuiEventL
 
     }
 
-    @Override
-    protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {
-
-    }
-
     static {
-        SEARCH_HINT_TEXT = (Component.translatable("gui.recipebook.search_hint")).withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY);
-        TOGGLE_CRAFTABLE_RECIPES_TEXT = Component.translatable("brb.gui.togglePotions.brewable");
-        TOGGLE_ALL_RECIPES_TEXT = Component.translatable("gui.recipebook.toggleRecipes.all");
-        OPEN_SETTINGS_TEXT = Component.translatable("brb.gui.settings.open");
+        SEARCH_HINT = (Component.translatable("gui.recipebook.search_hint")).withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY);
+        ONLY_CRAFTABLES_TOOLTIP = Component.translatable("brb.gui.togglePotions.brewable");
+        ALL_RECIPES_TOOLTIP = Component.translatable("gui.recipebook.toggleRecipes.all");
+        OPEN_SETTINGS_TOOLTIP = Component.translatable("brb.gui.settings.open");
     }
 
+    @Override
+    public void updateNarration(NarrationElementOutput narrationElementOutput) {
+
+    }
+
+    @Override
+    public void recipesShown(List<Recipe<?>> list) {
+
+    }
 }

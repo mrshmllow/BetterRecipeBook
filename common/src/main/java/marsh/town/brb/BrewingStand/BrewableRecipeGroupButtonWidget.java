@@ -19,7 +19,7 @@ public class BrewableRecipeGroupButtonWidget extends StateSwitchingButton {
     public BrewableRecipeGroupButtonWidget(BrewingRecipeBookGroup category) {
         super(0, 0, 35, 27, false);
         this.group = category;
-        this.initTextureValues(153, 2, 35, 0, BrewingRecipeBookWidget.TEXTURE);
+        this.initTextureValues(153, 2, 35, 0, BrewingRecipeBookComponent.RECIPE_BOOK_LOCATION);
     }
 
     public void renderWidget(PoseStack matrices, int mouseX, int mouseY, float delta) {

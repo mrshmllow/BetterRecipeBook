@@ -43,9 +43,9 @@ public class BrewingRecipeBookResults {
         }
 
         this.nextPageButton = new StateSwitchingButton(parentLeft + 93, parentTop + 137, 12, 17, false);
-        this.nextPageButton.initTextureValues(1, 208, 13, 18, BrewingRecipeBookWidget.TEXTURE);
+        this.nextPageButton.initTextureValues(1, 208, 13, 18, BrewingRecipeBookComponent.RECIPE_BOOK_LOCATION);
         this.prevPageButton = new StateSwitchingButton(parentLeft + 38, parentTop + 137, 12, 17, true);
-        this.prevPageButton.initTextureValues(1, 208, 13, 18, BrewingRecipeBookWidget.TEXTURE);
+        this.prevPageButton.initTextureValues(1, 208, 13, 18, BrewingRecipeBookComponent.RECIPE_BOOK_LOCATION);
     }
 
     public void setResults(List<BrewableResult> recipeCollection, boolean resetCurrentPage, BrewingRecipeBookGroup group) {
