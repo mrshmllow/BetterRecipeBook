@@ -13,7 +13,7 @@ import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
 
-public class RecipeBookGhostSlots {
+public class BrewingRecipeBookGhostSlots {
     private final List<GhostSlot> slots = Lists.newArrayList();
     float time;
 

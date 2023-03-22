@@ -15,30 +15,28 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.contents.LiteralContents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.BrewingStandMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.alchemy.PotionUtils;
 
-import java.awt.*;
 import java.util.List;
 
 import static marsh.town.brb.BrewingStand.PlatformPotionUtil.getIngredient;
 
 @Environment(EnvType.CLIENT)
-public class AnimatedResultButton extends AbstractWidget {
+public class BrewableAnimatedResultButton extends AbstractWidget {
     private float time;
     private static final ResourceLocation BACKGROUND_TEXTURE = new ResourceLocation("textures/gui/recipe_book.png");
-    private Result potionRecipe;
-    private RecipeBookGroup group;
+    private BrewableResult potionRecipe;
+    private BrewingRecipeBookGroup group;
     private BrewingStandMenu brewingStandScreenHandler;
 
-    public AnimatedResultButton() {
+    public BrewableAnimatedResultButton() {
         super(0, 0, 25, 25, CommonComponents.EMPTY);
     }
 
-    public void showPotionRecipe(Result potionRecipe, RecipeBookGroup group, BrewingStandMenu brewingStandScreenHandler) {
+    public void showPotionRecipe(BrewableResult potionRecipe, BrewingRecipeBookGroup group, BrewingStandMenu brewingStandScreenHandler) {
         this.potionRecipe = potionRecipe;
         this.group = group;
         this.brewingStandScreenHandler = brewingStandScreenHandler;
@@ -83,7 +81,7 @@ public class AnimatedResultButton extends AbstractWidget {
         RenderSystem.disableDepthTest();
     }
 
-    public Result getRecipe() {
+    public BrewableResult getRecipe() {
         return potionRecipe;
     }
 

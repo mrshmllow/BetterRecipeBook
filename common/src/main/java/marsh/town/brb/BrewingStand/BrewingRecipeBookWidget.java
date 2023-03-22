@@ -37,7 +37,7 @@ import static marsh.town.brb.BrewingStand.PlatformPotionUtil.getFrom;
 import static marsh.town.brb.BrewingStand.PlatformPotionUtil.getIngredient;
 
 @Environment(EnvType.CLIENT)
-public class RecipeBookWidget extends AbstractWidget implements GuiEventListener, NarratableEntry {
+public class BrewingRecipeBookWidget extends AbstractWidget implements GuiEventListener, NarratableEntry {
     public static final ResourceLocation TEXTURE = new ResourceLocation("textures/gui/recipe_book.png");
     private static final ResourceLocation BUTTON_TEXTURE = new ResourceLocation("brb:textures/gui/buttons.png");
     protected BrewingStandMenu brewingStandScreenHandler;
@@ -45,19 +45,19 @@ public class RecipeBookWidget extends AbstractWidget implements GuiEventListener
     private int parentWidth;
     private int parentHeight;
     private boolean narrow;
-    ClientRecipeBook recipeBook;
+    BrewingClientRecipeBook recipeBook;
     private int leftOffset;
-    protected final RecipeBookGhostSlots ghostSlots = new RecipeBookGhostSlots();
+    protected final BrewingRecipeBookGhostSlots ghostSlots = new BrewingRecipeBookGhostSlots();
     private boolean open;
-    private final RecipeBookResults recipesArea = new RecipeBookResults();
+    private final BrewingRecipeBookResults recipesArea = new BrewingRecipeBookResults();
     @Nullable
     private EditBox searchField;
     private final StackedContents recipeFinder = new StackedContents();
     protected StateSwitchingButton toggleBrewableButton;
     private static final Component SEARCH_HINT_TEXT;
-    private final List<RecipeGroupButtonWidget> tabButtons = Lists.newArrayList();
+    private final List<BrewableRecipeGroupButtonWidget> tabButtons = Lists.newArrayList();
     @Nullable
-    private RecipeGroupButtonWidget currentTab;
+    private BrewableRecipeGroupButtonWidget currentTab;
     private boolean searching;
     protected ImageButton settingsButton;
     private String searchText;
@@ -66,7 +66,7 @@ public class RecipeBookWidget extends AbstractWidget implements GuiEventListener
     private static final Component OPEN_SETTINGS_TEXT;
     boolean doubleRefresh = true;
 
-    public RecipeBookWidget() {
+    public BrewingRecipeBookWidget() {
         super(0, 0, 25, 25, CommonComponents.EMPTY);
     }
 
@@ -78,7 +78,7 @@ public class RecipeBookWidget extends AbstractWidget implements GuiEventListener
         this.narrow = narrow;
         assert client.player != null;
         client.player.containerMenu = brewingStandScreenHandler;
-        this.recipeBook = new ClientRecipeBook();
+        this.recipeBook = new BrewingClientRecipeBook();
         this.open = BetterRecipeBook.rememberedBrewingOpen;
         // this.cachedInvChangeCount = client.player.getInventory().getChangeCount();
         this.reset();
@@ -93,14 +93,14 @@ public class RecipeBookWidget extends AbstractWidget implements GuiEventListener
         //client.keyboardHandler.setSendRepeatsToGui(true);
     }
 
-    public ItemStack getInputStack(Result result) {
+    public ItemStack getInputStack(BrewableResult result) {
         Potion inputPotion = getFrom(result.recipe);
         Ingredient ingredient = getIngredient(result.recipe);
         ResourceLocation identifier = BuiltInRegistries.POTION.getKey(inputPotion);
         ItemStack inputStack;
-        if (this.currentTab.getGroup() == RecipeBookGroup.BREWING_SPLASH_POTION) {
+        if (this.currentTab.getGroup() == BrewingRecipeBookGroup.BREWING_SPLASH_POTION) {
             inputStack = new ItemStack(Items.SPLASH_POTION);
-        } else if (this.currentTab.getGroup() == RecipeBookGroup.BREWING_LINGERING_POTION) {
+        } else if (this.currentTab.getGroup() == BrewingRecipeBookGroup.BREWING_LINGERING_POTION) {
             inputStack = new ItemStack(Items.LINGERING_POTION);
         } else {
             inputStack = new ItemStack(Items.POTION);
@@ -139,8 +139,8 @@ public class RecipeBookWidget extends AbstractWidget implements GuiEventListener
         this.toggleBrewableButton = new StateSwitchingButton(i + 110, j + 12, 26, 16, this.recipeBook.isFilteringCraftable());
         this.setBookButtonTexture();
 
-        for (RecipeBookGroup recipeBookGroup : RecipeBookGroup.getGroups()) {
-            this.tabButtons.add(new RecipeGroupButtonWidget(recipeBookGroup));
+        for (BrewingRecipeBookGroup brewingRecipeBookGroup : BrewingRecipeBookGroup.getGroups()) {
+            this.tabButtons.add(new BrewableRecipeGroupButtonWidget(brewingRecipeBookGroup));
         }
 
         if (this.currentTab != null) {
@@ -170,7 +170,7 @@ public class RecipeBookWidget extends AbstractWidget implements GuiEventListener
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (this.open && !Objects.requireNonNull(this.client.player).isSpectator()) {
             if (this.recipesArea.mouseClicked(mouseX, mouseY, button)) {
-                Result result = this.recipesArea.getLastClickedRecipe();
+                BrewableResult result = this.recipesArea.getLastClickedRecipe();
                 if (result != null) {
                     if (this.currentTab == null) return false;
                     this.ghostSlots.reset();
@@ -226,23 +226,23 @@ public class RecipeBookWidget extends AbstractWidget implements GuiEventListener
                     }
                 }
 
-                Iterator<RecipeGroupButtonWidget> var6 = this.tabButtons.iterator();
+                Iterator<BrewableRecipeGroupButtonWidget> var6 = this.tabButtons.iterator();
 
-                RecipeGroupButtonWidget recipeGroupButtonWidget;
+                BrewableRecipeGroupButtonWidget brewableRecipeGroupButtonWidget;
                 do {
                     if (!var6.hasNext()) {
                         return false;
                     }
 
-                    recipeGroupButtonWidget = var6.next();
-                } while (!recipeGroupButtonWidget.mouseClicked(mouseX, mouseY, button));
+                    brewableRecipeGroupButtonWidget = var6.next();
+                } while (!brewableRecipeGroupButtonWidget.mouseClicked(mouseX, mouseY, button));
 
-                if (this.currentTab != recipeGroupButtonWidget) {
+                if (this.currentTab != brewableRecipeGroupButtonWidget) {
                     if (this.currentTab != null) {
                         this.currentTab.setStateTriggered(false);
                     }
 
-                    this.currentTab = recipeGroupButtonWidget;
+                    this.currentTab = brewableRecipeGroupButtonWidget;
                     this.currentTab.setStateTriggered(true);
                     this.refreshResults(true);
                 }
@@ -253,7 +253,7 @@ public class RecipeBookWidget extends AbstractWidget implements GuiEventListener
         }
     }
 
-    public void showGhostRecipe(Result result, List<Slot> slots) {
+    public void showGhostRecipe(BrewableResult result, List<Slot> slots) {
         this.ghostSlots.addSlot(getIngredient(result.recipe).getItems()[0], slots.get(3).x, slots.get(3).y);
 
         assert currentTab != null;
@@ -275,7 +275,7 @@ public class RecipeBookWidget extends AbstractWidget implements GuiEventListener
         if (this.searchField == null) return;
 
         // Create a copy to not mess with the original list
-        List<Result> results = new ArrayList<>(recipeBook.getResultsForCategory(currentTab.getGroup()));
+        List<BrewableResult> results = new ArrayList<>(recipeBook.getResultsForCategory(currentTab.getGroup()));
 
         String string = this.searchField.getValue();
         if (!string.isEmpty()) {
@@ -287,9 +287,9 @@ public class RecipeBookWidget extends AbstractWidget implements GuiEventListener
         }
 
         if (BetterRecipeBook.config.enablePinning) {
-            List<Result> tempResults = Lists.newArrayList(results);
+            List<BrewableResult> tempResults = Lists.newArrayList(results);
 
-            for (Result result : tempResults) {
+            for (BrewableResult result : tempResults) {
                 if (BetterRecipeBook.pinnedRecipeManager.hasPotion(result.recipe)) {
                     results.remove(result);
                     results.add(0, result);
@@ -305,12 +305,12 @@ public class RecipeBookWidget extends AbstractWidget implements GuiEventListener
         int j = (this.parentHeight - 166) / 2 + 3;
         int l = 0;
 
-        for (RecipeGroupButtonWidget recipeGroupButtonWidget : this.tabButtons) {
-            RecipeBookGroup recipeBookGroup = recipeGroupButtonWidget.getGroup();
-            if (recipeBookGroup == RecipeBookGroup.BREWING_SEARCH) {
-                recipeGroupButtonWidget.visible = true;
+        for (BrewableRecipeGroupButtonWidget brewableRecipeGroupButtonWidget : this.tabButtons) {
+            BrewingRecipeBookGroup brewingRecipeBookGroup = brewableRecipeGroupButtonWidget.getGroup();
+            if (brewingRecipeBookGroup == BrewingRecipeBookGroup.BREWING_SEARCH) {
+                brewableRecipeGroupButtonWidget.visible = true;
             }
-            recipeGroupButtonWidget.setPosition(i, j + 27 * l++);
+            brewableRecipeGroupButtonWidget.setPosition(i, j + 27 * l++);
         }
     }
 
@@ -343,8 +343,8 @@ public class RecipeBookWidget extends AbstractWidget implements GuiEventListener
                 this.searchField.render(matrices, mouseX, mouseY, delta);
             }
 
-            for (RecipeGroupButtonWidget recipeGroupButtonWidget : this.tabButtons) {
-                recipeGroupButtonWidget.render(matrices, mouseX, mouseY, delta);
+            for (BrewableRecipeGroupButtonWidget brewableRecipeGroupButtonWidget : this.tabButtons) {
+                brewableRecipeGroupButtonWidget.render(matrices, mouseX, mouseY, delta);
             }
 
             this.toggleBrewableButton.render(matrices, mouseX, mouseY, delta);
@@ -427,7 +427,7 @@ public class RecipeBookWidget extends AbstractWidget implements GuiEventListener
         ItemStack itemStack = null;
 
         for(int i = 0; i < this.ghostSlots.getSlotCount(); ++i) {
-            RecipeBookGhostSlots.GhostSlot ghostInputSlot = this.ghostSlots.getSlot(i);
+            BrewingRecipeBookGhostSlots.GhostSlot ghostInputSlot = this.ghostSlots.getSlot(i);
             int j = ghostInputSlot.getX() + x;
             int k = ghostInputSlot.getY() + y;
             if (mouseX >= j && mouseY >= k && mouseX < j + 16 && mouseY < k + 16) {
@@ -456,7 +456,7 @@ public class RecipeBookWidget extends AbstractWidget implements GuiEventListener
                     return true;
                 } else if (keyCode == GLFW.GLFW_KEY_F) {
                     if (BetterRecipeBook.config.enablePinning) {
-                        for (AnimatedResultButton resultButton : this.recipesArea.resultButtons) {
+                        for (BrewableAnimatedResultButton resultButton : this.recipesArea.resultButtons) {
                             if (resultButton.isHoveredOrFocused()) {
                                 BetterRecipeBook.pinnedRecipeManager.addOrRemoveFavouritePotion(resultButton.getRecipe().recipe);
                                 this.refreshResults(false);

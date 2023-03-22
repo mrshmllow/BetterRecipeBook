@@ -6,19 +6,19 @@ import net.minecraft.world.inventory.RecipeBookType;
 
 import java.util.List;
 
-public class ClientRecipeBook extends RecipeBook {
+public class BrewingClientRecipeBook extends RecipeBook {
     private boolean filteringCraftable;
 
     public boolean isFilteringCraftable() {
         return filteringCraftable;
     }
 
-    public List<Result> getResultsForCategory(RecipeBookGroup group) {
-        List<Result> results = PotionLoader.POTIONS;
+    public List<BrewableResult> getResultsForCategory(BrewingRecipeBookGroup group) {
+        List<BrewableResult> results = PotionLoader.POTIONS;
 
-        if (group == RecipeBookGroup.BREWING_SPLASH_POTION) {
+        if (group == BrewingRecipeBookGroup.BREWING_SPLASH_POTION) {
             results = PotionLoader.SPLASHES;
-        } else if (group == RecipeBookGroup.BREWING_LINGERING_POTION) {
+        } else if (group == BrewingRecipeBookGroup.BREWING_LINGERING_POTION) {
             results = PotionLoader.LINGERINGS;
         }
 

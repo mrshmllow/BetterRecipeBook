@@ -13,22 +13,22 @@ import java.util.Iterator;
 import java.util.List;
 
 @Environment(EnvType.CLIENT)
-public class RecipeBookResults {
-    private List<Result> recipeCollection;
-    public final List<AnimatedResultButton> resultButtons = Lists.newArrayListWithCapacity(20);
+public class BrewingRecipeBookResults {
+    private List<BrewableResult> recipeCollection;
+    public final List<BrewableAnimatedResultButton> resultButtons = Lists.newArrayListWithCapacity(20);
     private int pageCount;
     private int currentPage;
     private StateSwitchingButton nextPageButton;
     private StateSwitchingButton prevPageButton;
     private Minecraft client;
-    private AnimatedResultButton hoveredResultButton;
-    private Result lastClickedRecipe;
-    RecipeBookGroup group;
+    private BrewableAnimatedResultButton hoveredResultButton;
+    private BrewableResult lastClickedRecipe;
+    BrewingRecipeBookGroup group;
     private BrewingStandMenu brewingStandScreenHandler;
 
-    public RecipeBookResults() {
+    public BrewingRecipeBookResults() {
         for(int i = 0; i < 20; ++i) {
-            this.resultButtons.add(new AnimatedResultButton());
+            this.resultButtons.add(new BrewableAnimatedResultButton());
         }
 
     }
@@ -43,12 +43,12 @@ public class RecipeBookResults {
         }
 
         this.nextPageButton = new StateSwitchingButton(parentLeft + 93, parentTop + 137, 12, 17, false);
-        this.nextPageButton.initTextureValues(1, 208, 13, 18, RecipeBookWidget.TEXTURE);
+        this.nextPageButton.initTextureValues(1, 208, 13, 18, BrewingRecipeBookWidget.TEXTURE);
         this.prevPageButton = new StateSwitchingButton(parentLeft + 38, parentTop + 137, 12, 17, true);
-        this.prevPageButton.initTextureValues(1, 208, 13, 18, RecipeBookWidget.TEXTURE);
+        this.prevPageButton.initTextureValues(1, 208, 13, 18, BrewingRecipeBookWidget.TEXTURE);
     }
 
-    public void setResults(List<Result> recipeCollection, boolean resetCurrentPage, RecipeBookGroup group) {
+    public void setResults(List<BrewableResult> recipeCollection, boolean resetCurrentPage, BrewingRecipeBookGroup group) {
         this.recipeCollection = recipeCollection;
         this.group = group;
 
@@ -69,13 +69,13 @@ public class RecipeBookResults {
         int i = 20 * this.currentPage;
 
         for(int j = 0; j < this.resultButtons.size(); ++j) {
-            AnimatedResultButton animatedResultButton = this.resultButtons.get(j);
+            BrewableAnimatedResultButton brewableAnimatedResultButton = this.resultButtons.get(j);
             if (i + j < this.recipeCollection.size()) {
-                Result output = this.recipeCollection.get(i + j);
-                animatedResultButton.showPotionRecipe(output, group, brewingStandScreenHandler);
-                animatedResultButton.visible = true;
+                BrewableResult output = this.recipeCollection.get(i + j);
+                brewableAnimatedResultButton.showPotionRecipe(output, group, brewingStandScreenHandler);
+                brewableAnimatedResultButton.visible = true;
             } else {
-                animatedResultButton.visible = false;
+                brewableAnimatedResultButton.visible = false;
             }
         }
 
@@ -105,19 +105,19 @@ public class RecipeBookResults {
             this.refreshResultButtons();
             return true;
         } else {
-            Iterator<AnimatedResultButton> var10 = this.resultButtons.iterator();
+            Iterator<BrewableAnimatedResultButton> var10 = this.resultButtons.iterator();
 
-            AnimatedResultButton animatedResultButton;
+            BrewableAnimatedResultButton brewableAnimatedResultButton;
             do {
                 if (!var10.hasNext()) {
                     return false;
                 }
 
-                animatedResultButton = var10.next();
-            } while(!animatedResultButton.mouseClicked(mouseX, mouseY, button));
+                brewableAnimatedResultButton = var10.next();
+            } while(!brewableAnimatedResultButton.mouseClicked(mouseX, mouseY, button));
 
             if (button == 0) {
-                this.lastClickedRecipe = animatedResultButton.getRecipe();
+                this.lastClickedRecipe = brewableAnimatedResultButton.getRecipe();
             }
 
             return true;
@@ -130,7 +130,7 @@ public class RecipeBookResults {
         }
     }
 
-    public Result getLastClickedRecipe() {
+    public BrewableResult getLastClickedRecipe() {
         return this.lastClickedRecipe;
     }
 
@@ -172,10 +172,10 @@ public class RecipeBookResults {
 
         this.hoveredResultButton = null;
 
-        for (AnimatedResultButton animatedResultButton : this.resultButtons) {
-            animatedResultButton.render(matrices, mouseX, mouseY, delta);
-            if (animatedResultButton.visible && animatedResultButton.isHoveredOrFocused()) {
-                this.hoveredResultButton = animatedResultButton;
+        for (BrewableAnimatedResultButton brewableAnimatedResultButton : this.resultButtons) {
+            brewableAnimatedResultButton.render(matrices, mouseX, mouseY, delta);
+            if (brewableAnimatedResultButton.visible && brewableAnimatedResultButton.isHoveredOrFocused()) {
+                this.hoveredResultButton = brewableAnimatedResultButton;
             }
         }
 
