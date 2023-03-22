@@ -17,9 +17,9 @@ public class ClientRecipeBook extends RecipeBook {
         List<Result> results = PotionLoader.POTIONS;
 
         if (group == RecipeBookGroup.BREWING_SPLASH_POTION) {
-            results = PotionLoader.LINGERINGS;
-        } else if (group == RecipeBookGroup.BREWING_LINGERING_POTION) {
             results = PotionLoader.SPLASHES;
+        } else if (group == RecipeBookGroup.BREWING_LINGERING_POTION) {
+            results = PotionLoader.LINGERINGS;
         }
 
         return results;
