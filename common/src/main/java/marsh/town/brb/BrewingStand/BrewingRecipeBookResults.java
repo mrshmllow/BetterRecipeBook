@@ -1,11 +1,11 @@
 package marsh.town.brb.BrewingStand;
 
 import com.google.common.collect.Lists;
-import com.mojang.blaze3d.vertex.PoseStack;
 import marsh.town.brb.BetterRecipeBook;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.StateSwitchingButton;
 import net.minecraft.world.inventory.BrewingStandMenu;
 
@@ -124,9 +124,9 @@ public class BrewingRecipeBookResults {
         }
     }
 
-    public void drawTooltip(PoseStack matrices, int x, int y) {
+    public void drawTooltip(GuiGraphics gui, int x, int y) {
         if (this.client.screen != null && hoveredResultButton != null) {
-            this.client.screen.renderComponentTooltip(matrices, this.hoveredResultButton.getTooltip(), x, y);
+            gui.renderComponentTooltip(Minecraft.getInstance().font, this.hoveredResultButton.getTooltipText(), x, y);
         }
     }
 
@@ -144,7 +144,7 @@ public class BrewingRecipeBookResults {
         }
     }
 
-    public void draw(PoseStack matrices, int x, int y, int mouseX, int mouseY, float delta) {
+    public void draw(GuiGraphics gui, int x, int y, int mouseX, int mouseY, float delta) {
         if (BetterRecipeBook.queuedScroll != 0 && BetterRecipeBook.config.scrolling.enableScrolling) {
             int queuedPage = BetterRecipeBook.queuedScroll + currentPage;
 
@@ -167,20 +167,20 @@ public class BrewingRecipeBookResults {
             int var10000 = this.currentPage + 1;
             String string = var10000 + "/" + this.pageCount;
             int i = this.client.font.width(string);
-            this.client.font.draw(matrices, string, (float)(x - i / 2 + 73), (float)(y + 141), -1);
+            gui.drawString(this.client.font, string, (x - i / 2 + 73), (y + 141), -1);
         }
 
         this.hoveredResultButton = null;
 
         for (BrewableAnimatedResultButton brewableAnimatedResultButton : this.resultButtons) {
-            brewableAnimatedResultButton.render(matrices, mouseX, mouseY, delta);
+            brewableAnimatedResultButton.render(gui, mouseX, mouseY, delta);
             if (brewableAnimatedResultButton.visible && brewableAnimatedResultButton.isHoveredOrFocused()) {
                 this.hoveredResultButton = brewableAnimatedResultButton;
             }
         }
 
-        this.prevPageButton.render(matrices, mouseX, mouseY, delta);
-        this.nextPageButton.render(matrices, mouseX, mouseY, delta);
+        this.prevPageButton.render(gui, mouseX, mouseY, delta);
+        this.nextPageButton.render(gui, mouseX, mouseY, delta);
         // this.alternatesWidget.render(matrices, mouseX, mouseY, delta);
     }
 }

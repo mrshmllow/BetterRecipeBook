@@ -1,8 +1,8 @@
 package marsh.town.brb.Mixins;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import marsh.town.brb.BetterRecipeBook;
 import marsh.town.brb.BrewingStand.BrewingRecipeBookComponent;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.BrewingStandScreen;
@@ -56,21 +56,21 @@ public abstract class BrewingStand extends AbstractContainerScreen<BrewingStandM
      * @author marshmallow
      */
     @Overwrite
-    public void render(PoseStack matrices, int mouseX, int mouseY, float delta) {
+    public void render(GuiGraphics gui, int mouseX, int mouseY, float delta) {
         // this.drawStatusEffects = !this.recipeBook.isOpen();
-        this.renderBackground(matrices);
+        this.renderBackground(gui);
         if (this.recipeBookComponent.isOpen() && this.widthNarrow) {
-            this.renderBg(matrices, delta, mouseX, mouseY);
-            super.render(matrices, mouseX, mouseY, delta);
-            this.renderTooltip(matrices, mouseX, mouseY);
+            this.renderBg(gui, delta, mouseX, mouseY);
+            super.render(gui, mouseX, mouseY, delta);
+            this.renderTooltip(gui, mouseX, mouseY);
         } else {
-            this.recipeBookComponent.render(matrices, mouseX, mouseY, delta);
-            super.render(matrices, mouseX, mouseY, delta);
-            this.recipeBookComponent.drawGhostSlots(matrices, this.leftPos, this.topPos, false, delta);
+            this.recipeBookComponent.render(gui, mouseX, mouseY, delta);
+            super.render(gui, mouseX, mouseY, delta);
+            this.recipeBookComponent.drawGhostSlots(gui, this.leftPos, this.topPos, false, delta);
         }
 
-        this.renderTooltip(matrices, mouseX, mouseY);
-        this.recipeBookComponent.drawTooltip(matrices, this.leftPos, this.topPos, mouseX, mouseY);
+        this.renderTooltip(gui, mouseX, mouseY);
+        this.recipeBookComponent.drawTooltip(gui, this.leftPos, this.topPos, mouseX, mouseY);
     }
 
     @ModifyArg(
@@ -78,7 +78,7 @@ public abstract class BrewingStand extends AbstractContainerScreen<BrewingStandM
             index = 1,
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/client/gui/screens/inventory/BrewingStandScreen;blit(Lcom/mojang/blaze3d/vertex/PoseStack;IIIIII)V"
+                    target = "Lnet/minecraft/client/gui/GuiGraphics;blit(Lnet/minecraft/resources/ResourceLocation;IIIIII)V"
             )
     )
     public int drawBackground(int i) {

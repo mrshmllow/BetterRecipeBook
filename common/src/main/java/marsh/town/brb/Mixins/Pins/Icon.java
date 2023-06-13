@@ -15,19 +15,19 @@ public class Icon {
 
     @Shadow private float animationTime;
 
-    @ModifyArg(method = "renderWidget", index = 1, at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderSystem;setShaderTexture(ILnet/minecraft/resources/ResourceLocation;)V"))
+    @ModifyArg(method = "renderWidget", index = 0, at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;blit(Lnet/minecraft/resources/ResourceLocation;IIIIII)V"))
     public ResourceLocation setIcon(ResourceLocation identifier) {
         if (!BetterRecipeBook.config.enablePinning) return identifier;
         return BetterRecipeBook.pinnedRecipeManager.has(this.collection) ? new ResourceLocation("brb:textures/gui/pinned.png") : identifier;
     }
 
-    @ModifyArg(method = "renderWidget", index = 3, at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/recipebook/RecipeButton;blit(Lcom/mojang/blaze3d/vertex/PoseStack;IIIIII)V"))
+    @ModifyArg(method = "renderWidget", index = 3, at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;blit(Lnet/minecraft/resources/ResourceLocation;IIIIII)V"))
     public int fixX(int i) {
         if (!BetterRecipeBook.config.enablePinning) return i;
         return BetterRecipeBook.pinnedRecipeManager.has(this.collection) ? i - 29 : i;
     }
 
-    @ModifyArg(method = "renderWidget", index = 4, at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/recipebook/RecipeButton;blit(Lcom/mojang/blaze3d/vertex/PoseStack;IIIIII)V"))
+    @ModifyArg(method = "renderWidget", index = 4, at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;blit(Lnet/minecraft/resources/ResourceLocation;IIIIII)V"))
     public int fixY(int j) {
         if (!BetterRecipeBook.config.enablePinning) return j;
 

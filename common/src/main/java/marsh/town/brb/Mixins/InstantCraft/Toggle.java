@@ -1,8 +1,8 @@
 package marsh.town.brb.Mixins.InstantCraft;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import marsh.town.brb.BetterRecipeBook;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.StateSwitchingButton;
 import net.minecraft.client.gui.screens.recipebook.RecipeBookComponent;
 import net.minecraft.network.chat.Component;
@@ -13,6 +13,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+import java.util.List;
 
 @Mixin(RecipeBookComponent.class)
 public abstract class Toggle {
@@ -45,13 +47,13 @@ public abstract class Toggle {
         }
     }
 
-    @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/recipebook/RecipeBookPage;render(Lcom/mojang/blaze3d/vertex/PoseStack;IIIIF)V"))
-    public void render(PoseStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci) {
+    @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/recipebook/RecipeBookPage;render(Lnet/minecraft/client/gui/GuiGraphics;IIIIF)V"))
+    public void render(GuiGraphics gui, int mouseX, int mouseY, float delta, CallbackInfo ci) {
         if (!BetterRecipeBook.config.instantCraft.showButton) {
             return;
         }
 
-        this.instantCraftButton.render(matrices, mouseX, mouseY, delta);
+        this.instantCraftButton.render(gui, mouseX, mouseY, delta);
     }
 
     @Inject(method = "mouseClicked", at = @At("HEAD"), cancellable = true)
@@ -68,8 +70,8 @@ public abstract class Toggle {
         }
     }
 
-    @Inject(method = "renderTooltip", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/recipebook/RecipeBookComponent;renderGhostRecipeTooltip(Lcom/mojang/blaze3d/vertex/PoseStack;IIII)V"))
-    public void drawTooltip(PoseStack matrices, int x, int y, int mouseX, int mouseY, CallbackInfo ci) {
+    @Inject(method = "renderTooltip", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/recipebook/RecipeBookComponent;renderGhostRecipeTooltip(Lnet/minecraft/client/gui/GuiGraphics;IIII)V"))
+    public void drawTooltip(GuiGraphics gui, int x, int y, int mouseX, int mouseY, CallbackInfo ci) {
         if (!BetterRecipeBook.config.instantCraft.showButton) {
             return;
         }
@@ -77,7 +79,7 @@ public abstract class Toggle {
         if (this.instantCraftButton.isHoveredOrFocused()) {
             Component text = this.getInstantCraftButtonText();
             if (this.minecraft.screen != null) {
-                this.minecraft.screen.renderTooltip(matrices, text, mouseX, mouseY);
+                gui.renderComponentTooltip(minecraft.font, List.of(text), mouseX, mouseY);
             }
         }
     }

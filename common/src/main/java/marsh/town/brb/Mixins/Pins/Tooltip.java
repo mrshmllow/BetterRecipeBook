@@ -1,7 +1,6 @@
 package marsh.town.brb.Mixins.Pins;
 
 import marsh.town.brb.BetterRecipeBook;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.recipebook.RecipeButton;
 import net.minecraft.client.gui.screens.recipebook.RecipeCollection;
 import net.minecraft.network.chat.Component;
@@ -20,7 +19,7 @@ public abstract class Tooltip {
     @Shadow public abstract RecipeCollection getCollection();
 
     @Inject(method = "getTooltipText", locals = LocalCapture.CAPTURE_FAILHARD, at = @At("RETURN"))
-    public void getTooltip(Screen screen, CallbackInfoReturnable<List<Component>> cir, ItemStack itemStack, List<Component> list) {
+    public void getTooltip(CallbackInfoReturnable<List<Component>> cir, ItemStack itemStack, List<Component> list) {
         if (!BetterRecipeBook.config.enablePinning) return;
 
         if (BetterRecipeBook.pinnedRecipeManager.has(this.getCollection())) {

@@ -8,6 +8,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarratedElementType;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -42,7 +43,7 @@ public class BrewableAnimatedResultButton extends AbstractWidget {
         this.brewingStandScreenHandler = brewingStandScreenHandler;
     }
 
-    public void renderWidget(PoseStack matrices, int mouseX, int mouseY, float delta) {
+    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float delta) {
         if (!Screen.hasControlDown()) {
             this.time += delta;
         }
@@ -68,13 +69,13 @@ public class BrewableAnimatedResultButton extends AbstractWidget {
         }
 
         PoseStack matrixStack = RenderSystem.getModelViewStack();
-        this.blit(matrices, getX(), getY(), i, j, this.width, this.height);
+        guiGraphics.blit(BACKGROUND_TEXTURE, getX(), getY(), i, j, this.width, this.height);
         int k = 4;
 
         matrixStack.pushPose();
-        matrixStack.mulPoseMatrix(matrices.last().pose()); // No idea what this does
-        minecraftClient.getItemRenderer().renderAndDecorateItem(matrices, potionRecipe.ingredient, getX() + k, getY() + k); // Why do we do this twice?
-        minecraftClient.getItemRenderer().renderGuiItemDecorations(matrices, Minecraft.getInstance().font, potionRecipe.ingredient, getX() + k, getY() + k); // ^
+        matrixStack.mulPoseMatrix(guiGraphics.pose().last().pose()); // No idea what this does
+        guiGraphics.renderItem(potionRecipe.ingredient, getX() + k, getY() + k); // Why do we do this twice?
+        guiGraphics.renderItemDecorations(Minecraft.getInstance().font, potionRecipe.ingredient, getX() + k, getY() + k);
         RenderSystem.enableDepthTest();
         matrixStack.popPose();
         RenderSystem.applyModelViewMatrix();
@@ -97,7 +98,7 @@ public class BrewableAnimatedResultButton extends AbstractWidget {
         builder.add(NarratedElementType.USAGE, Component.translatable("narration.button.usage.hovered"));
     }
 
-    public List<Component> getTooltip() {
+    public List<Component> getTooltipText() {
         List<Component> list = Lists.newArrayList();
 
         list.add(potionRecipe.ingredient.getHoverName());

@@ -1,10 +1,10 @@
 package marsh.town.brb.Mixins;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import marsh.town.brb.BetterRecipeBook;
 import marsh.town.brb.Config.Config;
 import me.shedaniel.autoconfig.AutoConfig;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.screens.recipebook.RecipeBookComponent;
 import net.minecraft.network.chat.Component;
@@ -15,6 +15,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+import java.util.List;
 
 @Mixin(RecipeBookComponent.class)
 public abstract class SettingsButton {
@@ -57,19 +59,19 @@ public abstract class SettingsButton {
         }
     }
 
-    @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/recipebook/RecipeBookPage;render(Lcom/mojang/blaze3d/vertex/PoseStack;IIIIF)V"))
-    public void render(PoseStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci) {
+    @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/recipebook/RecipeBookPage;render(Lnet/minecraft/client/gui/GuiGraphics;IIIIF)V"))
+    public void render(GuiGraphics gui, int mouseX, int mouseY, float delta, CallbackInfo ci) {
         if (BetterRecipeBook.config.settingsButton) {
-            this.settingsButton.render(matrices, mouseX, mouseY, delta);
+            this.settingsButton.render(gui, mouseX, mouseY, delta);
         }
     }
 
-    @Inject(method = "renderTooltip", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/recipebook/RecipeBookComponent;renderGhostRecipeTooltip(Lcom/mojang/blaze3d/vertex/PoseStack;IIII)V"))
-    public void drawTooltip(PoseStack matrices, int x, int y, int mouseX, int mouseY, CallbackInfo ci) {
+    @Inject(method = "renderTooltip", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/recipebook/RecipeBookComponent;renderGhostRecipeTooltip(Lnet/minecraft/client/gui/GuiGraphics;IIII)V"))
+    public void drawTooltip(GuiGraphics gui, int x, int y, int mouseX, int mouseY, CallbackInfo ci) {
         if (this.settingsButton == null) return;
         if (this.settingsButton.isHoveredOrFocused() && BetterRecipeBook.config.settingsButton) {
             if (this.minecraft.screen != null) {
-                this.minecraft.screen.renderTooltip(matrices, OPEN_SETTINGS_TEXT, mouseX, mouseY);
+                gui.renderComponentTooltip(minecraft.font, List.of(OPEN_SETTINGS_TEXT), mouseX, mouseY);
             }
         }
     }
