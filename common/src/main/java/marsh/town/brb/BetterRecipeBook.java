@@ -11,7 +11,6 @@ public class BetterRecipeBook {
     public static final String MOD_ID = "brb";
 
     public static int queuedScroll;
-    public static boolean hasWarnedNoPermission;
     public static boolean isFilteringNone;
 
     public static Config config;
@@ -28,7 +27,6 @@ public class BetterRecipeBook {
         PotionLoader.init();
 
         queuedScroll = 0;
-        hasWarnedNoPermission = false;
         isFilteringNone = true;
 
         AutoConfig.register(Config.class, Toml4jConfigSerializer::new);
