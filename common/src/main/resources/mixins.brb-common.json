@@ -4,7 +4,9 @@
   "package": "marsh.town.brb.Mixins",
   "compatibilityLevel": "JAVA_16",
   "mixins": [
-    "UnlockRecipes"
+    "unlockrecipes.ClientPacketListenerMixin",
+    "unlockrecipes.MultiPlayerGameModeMixin",
+    "unlockrecipes.RecipeBookComponentAccessor"
   ],
   "client": [
     "Fixes.UnfocusSearchfield",
