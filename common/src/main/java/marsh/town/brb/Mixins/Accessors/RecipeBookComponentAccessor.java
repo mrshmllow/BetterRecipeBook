@@ -1,4 +1,4 @@
-package marsh.town.brb.Mixins.unlockrecipes;
+package marsh.town.brb.Mixins.Accessors;
 
 import net.minecraft.client.gui.screens.recipebook.GhostRecipe;
 import net.minecraft.client.gui.screens.recipebook.RecipeBookComponent;

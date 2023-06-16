@@ -3,11 +3,6 @@
   "minVersion": "0.8",
   "package": "marsh.town.brb.Mixins",
   "compatibilityLevel": "JAVA_16",
-  "mixins": [
-    "unlockrecipes.ClientPacketListenerMixin",
-    "unlockrecipes.MultiPlayerGameModeMixin",
-    "unlockrecipes.RecipeBookComponentAccessor"
-  ],
   "client": [
     "Fixes.UnfocusSearchfield",
     "AlternativeRecipes",
@@ -24,10 +19,14 @@
     "Accessors.OverlayRecipeComponentAccessor",
     "Accessors.RecipeBookPageAccessor",
     "Accessors.ImageButtonAccessor",
+    "Accessors.RecipeBookComponentAccessor",
+    "Accessors.CraftingMenuAccessor",
     "Centered.RemoveRecipeBookOffset",
     "InstantCraft.ClientPlayerInteractionManagerMixin",
     "InstantCraft.ClientPlayNetworkHandlerMixin",
     "InstantCraft.Toggle",
+    "unlockrecipes.ClientPacketListenerMixin",
+    "unlockrecipes.MultiPlayerGameModeMixin",
     "Pins.Icon",
     "Pins.Pins",
     "Pins.RemoveButtonFocus",

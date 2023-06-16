@@ -1,6 +1,7 @@
 package marsh.town.brb.Mixins.unlockrecipes;
 
 import marsh.town.brb.BetterRecipeBook;
+import marsh.town.brb.Mixins.Accessors.RecipeBookComponentAccessor;
 import net.minecraft.client.ClientRecipeBook;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.recipebook.RecipeUpdateListener;
