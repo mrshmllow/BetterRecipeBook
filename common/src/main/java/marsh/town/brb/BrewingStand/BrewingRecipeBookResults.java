@@ -15,31 +15,32 @@ import java.util.List;
 @Environment(EnvType.CLIENT)
 public class BrewingRecipeBookResults {
     private List<BrewableResult> recipeCollection;
-    public final List<BrewableAnimatedResultButton> resultButtons = Lists.newArrayListWithCapacity(20);
+    public final List<BrewableAnimatedResultButton> buttons = Lists.newArrayListWithCapacity(20);
     private int pageCount;
     private int currentPage;
     private StateSwitchingButton nextPageButton;
     private StateSwitchingButton prevPageButton;
-    private Minecraft client;
-    private BrewableAnimatedResultButton hoveredResultButton;
+    private Minecraft minecraft;
+    private BrewableAnimatedResultButton hoveredButton;
+    private BrewableResult currentClickedRecipe;
     private BrewableResult lastClickedRecipe;
     BrewingRecipeBookGroup group;
     private BrewingStandMenu brewingStandScreenHandler;
 
     public BrewingRecipeBookResults() {
         for(int i = 0; i < 20; ++i) {
-            this.resultButtons.add(new BrewableAnimatedResultButton());
+            this.buttons.add(new BrewableAnimatedResultButton());
         }
 
     }
 
     public void initialize(Minecraft client, int parentLeft, int parentTop, BrewingStandMenu brewingStandScreenHandler) {
-        this.client = client;
+        this.minecraft = client;
         this.brewingStandScreenHandler = brewingStandScreenHandler;
         // this.recipeBook = client.player.getRecipeBook();
 
-        for(int i = 0; i < this.resultButtons.size(); ++i) {
-            this.resultButtons.get(i).setPos(parentLeft + 11 + 25 * (i % 5), parentTop + 31 + 25 * (i / 5));
+        for (int k = 0; k < this.buttons.size(); ++k) {
+            this.buttons.get(k).setPosition(parentLeft + 11 + 25 * (k % 5), parentTop + 31 + 25 * (k / 5));
         }
 
         this.nextPageButton = new StateSwitchingButton(parentLeft + 93, parentTop + 137, 12, 17, false);
@@ -68,8 +69,8 @@ public class BrewingRecipeBookResults {
 
         int i = 20 * this.currentPage;
 
-        for(int j = 0; j < this.resultButtons.size(); ++j) {
-            BrewableAnimatedResultButton brewableAnimatedResultButton = this.resultButtons.get(j);
+        for(int j = 0; j < this.buttons.size(); ++j) {
+            BrewableAnimatedResultButton brewableAnimatedResultButton = this.buttons.get(j);
             if (i + j < this.recipeCollection.size()) {
                 BrewableResult output = this.recipeCollection.get(i + j);
                 brewableAnimatedResultButton.showPotionRecipe(output, group, brewingStandScreenHandler);
@@ -95,7 +96,7 @@ public class BrewingRecipeBookResults {
             }
         }
 
-        this.lastClickedRecipe = null;
+        this.currentClickedRecipe = null;
         if (this.nextPageButton.mouseClicked(mouseX, mouseY, button)) {
             ++this.currentPage;
             this.refreshResultButtons();
@@ -105,7 +106,7 @@ public class BrewingRecipeBookResults {
             this.refreshResultButtons();
             return true;
         } else {
-            Iterator<BrewableAnimatedResultButton> var10 = this.resultButtons.iterator();
+            Iterator<BrewableAnimatedResultButton> var10 = this.buttons.iterator();
 
             BrewableAnimatedResultButton brewableAnimatedResultButton;
             do {
@@ -117,7 +118,7 @@ public class BrewingRecipeBookResults {
             } while(!brewableAnimatedResultButton.mouseClicked(mouseX, mouseY, button));
 
             if (button == 0) {
-                this.lastClickedRecipe = brewableAnimatedResultButton.getRecipe();
+                this.lastClickedRecipe = this.currentClickedRecipe = brewableAnimatedResultButton.getRecipe();
             }
 
             return true;
@@ -125,9 +126,13 @@ public class BrewingRecipeBookResults {
     }
 
     public void drawTooltip(GuiGraphics gui, int x, int y) {
-        if (this.client.screen != null && hoveredResultButton != null) {
-            gui.renderComponentTooltip(Minecraft.getInstance().font, this.hoveredResultButton.getTooltipText(), x, y);
+        if (this.minecraft.screen != null && hoveredButton != null) {
+            gui.renderComponentTooltip(Minecraft.getInstance().font, this.hoveredButton.getTooltipText(), x, y);
         }
+    }
+
+    public BrewableResult getCurrentClickedRecipe() {
+        return this.currentClickedRecipe;
     }
 
     public BrewableResult getLastClickedRecipe() {
@@ -144,7 +149,7 @@ public class BrewingRecipeBookResults {
         }
     }
 
-    public void draw(GuiGraphics gui, int x, int y, int mouseX, int mouseY, float delta) {
+    public void render(GuiGraphics gui, int x, int y, int mouseX, int mouseY, float delta) {
         if (BetterRecipeBook.queuedScroll != 0 && BetterRecipeBook.config.scrolling.enableScrolling) {
             int queuedPage = BetterRecipeBook.queuedScroll + currentPage;
 
@@ -164,18 +169,17 @@ public class BrewingRecipeBookResults {
 
 
         if (this.pageCount > 1) {
-            int var10000 = this.currentPage + 1;
-            String string = var10000 + "/" + this.pageCount;
-            int i = this.client.font.width(string);
-            gui.drawString(this.client.font, string, (x - i / 2 + 73), (y + 141), -1);
+            String string = this.currentPage + 1 + "/" + this.pageCount;
+            int width = this.minecraft.font.width(string);
+            gui.drawString(this.minecraft.font, string, x - width / 2 + 73, y + 141, -1, false);
         }
 
-        this.hoveredResultButton = null;
+        this.hoveredButton = null;
 
-        for (BrewableAnimatedResultButton brewableAnimatedResultButton : this.resultButtons) {
+        for (BrewableAnimatedResultButton brewableAnimatedResultButton : this.buttons) {
             brewableAnimatedResultButton.render(gui, mouseX, mouseY, delta);
             if (brewableAnimatedResultButton.visible && brewableAnimatedResultButton.isHoveredOrFocused()) {
-                this.hoveredResultButton = brewableAnimatedResultButton;
+                this.hoveredButton = brewableAnimatedResultButton;
             }
         }
 
