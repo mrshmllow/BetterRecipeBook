@@ -65,9 +65,6 @@ public class BrewingRecipeBookComponent extends RecipeBookComponent {
                         Potion realPotion = PotionUtils.getPotion(real);
                         Potion fakePotion = PotionUtils.getPotion(fake);
 
-                        System.out.println(realPotion);
-                        System.out.println(fakePotion);
-
                         return !realPotion.getEffects().equals(fakePotion.getEffects());
                     } else {
                         return false;
