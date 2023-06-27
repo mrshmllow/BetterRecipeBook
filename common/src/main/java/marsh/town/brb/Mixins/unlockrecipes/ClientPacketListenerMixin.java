@@ -2,6 +2,7 @@ package marsh.town.brb.Mixins.unlockrecipes;
 
 import marsh.town.brb.BetterRecipeBook;
 import marsh.town.brb.Mixins.Accessors.RecipeBookComponentAccessor;
+import marsh.town.brb.util.RecipeMenuUtil;
 import net.minecraft.client.ClientRecipeBook;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.recipebook.RecipeUpdateListener;
@@ -10,6 +11,7 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
 import net.minecraft.network.protocol.game.ClientboundRecipePacket;
 import net.minecraft.network.protocol.game.ClientboundUpdateRecipesPacket;
+import net.minecraft.world.inventory.RecipeBookMenu;
 import net.minecraft.world.item.crafting.RecipeManager;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -38,11 +40,14 @@ public abstract class ClientPacketListenerMixin {
 
     @Inject(method = "handleContainerSetSlot", at = @At(value = "HEAD"))
     public void onContainerSetSlot(ClientboundContainerSetSlotPacket packet, CallbackInfo ci) {
-        // clear ghost recipes if container contents are changed by server
-        if (BetterRecipeBook.config.newRecipes.unlockAll && minecraft.player != null && minecraft.player.containerMenu != null
-                && minecraft.player.containerMenu.containerId == packet.getContainerId() && !packet.getItem().isEmpty()
-                && minecraft.screen instanceof RecipeUpdateListener rul && rul.getRecipeBookComponent() instanceof RecipeBookComponentAccessor rbca) {
-            rbca.getGhostRecipe().clear();
+        // clear ghost recipes if crafting grid contents are changed by server
+        if (BetterRecipeBook.config.newRecipes.unlockAll && minecraft.player != null
+                && minecraft.player.containerMenu instanceof RecipeBookMenu<?> menu
+                && minecraft.player.containerMenu.containerId == packet.getContainerId()
+                && minecraft.screen instanceof RecipeUpdateListener rul) {
+            if (!packet.getItem().isEmpty() && RecipeMenuUtil.isCraftingGridSlot(menu, packet.getSlot())) {
+                ((RecipeBookComponentAccessor) rul.getRecipeBookComponent()).getGhostRecipe().clear();
+            }
         }
     }
 
@@ -53,7 +58,7 @@ public abstract class ClientPacketListenerMixin {
     }
 
     /**
-     * Unlocks all recipes that the RecipeManager knows of then updates any screen implementing RecipeUpdateListener
+     * Unlocks all recipes that the RecipeManager knows of, then updates any screen implementing RecipeUpdateListener
      */
     private void unlockRecipes() {
         LocalPlayer player = minecraft.player;

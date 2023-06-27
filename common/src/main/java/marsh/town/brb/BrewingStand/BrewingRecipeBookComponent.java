@@ -3,7 +3,9 @@ package marsh.town.brb.BrewingStand;
 import com.google.common.collect.Lists;
 import marsh.town.brb.BetterRecipeBook;
 import marsh.town.brb.Config.Config;
+import marsh.town.brb.Mixins.Accessors.RecipeBookComponentAccessor;
 import marsh.town.brb.MyGhostRecipe;
+import marsh.town.brb.util.ClientInventoryUtil;
 import me.shedaniel.autoconfig.AutoConfig;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -49,34 +51,7 @@ public class BrewingRecipeBookComponent extends RecipeBookComponent {
     private boolean narrow;
     BrewingClientRecipeBook recipeBook;
     private int leftOffset;
-    public final MyGhostRecipe ghostRecipe = new MyGhostRecipe().setRenderingPredicate((type, ingredient) -> {
-        ItemStack real = brewingStandScreenHandler.slots.get(ingredient.getContainerSlot()).getItem();
-        switch (type) {
-            case ITEM:
-            case BACKGROUND:
-                ItemStack fake = ingredient.getItem();
-                if (real.is(fake.getItem())) {
-                    if (real.getItem() instanceof PotionItem) {
-                        // slot 0 is the preview so handle it here
-                        if (ingredient.getContainerSlot() == 0) {
-                            fake = ingredient.getOwner().getBySlot(1).getItem();
-                        }
-
-                        Potion realPotion = PotionUtils.getPotion(real);
-                        Potion fakePotion = PotionUtils.getPotion(fake);
-
-                        return !realPotion.getEffects().equals(fakePotion.getEffects());
-                    } else {
-                        return false;
-                    }
-                }
-                return true;
-            case TOOLTIP:
-                return real.isEmpty();
-            default:
-                return true;
-        }
-    });
+    public final MyGhostRecipe ghostRecipe = new MyGhostRecipe();
 
     private boolean open;
     public final BrewingRecipeBookResults recipesArea = new BrewingRecipeBookResults();
@@ -120,6 +95,35 @@ public class BrewingRecipeBookComponent extends RecipeBookComponent {
             this.leftOffset = this.narrow ? 0 : 86;
         }
 
+        // this code is responsible for selectively rendering ghost slots
+        ghostRecipe.setRenderingPredicate((type, ingredient) -> {
+            ItemStack real = brewingStandScreenHandler.slots.get(ingredient.getContainerSlot()).getItem();
+            switch (type) {
+                case ITEM:
+                case BACKGROUND:
+                    // slot 0 is the preview so map it to 1
+                    ItemStack fake = ingredient.getContainerSlot() == 0 ? ingredient.getOwner().getBySlot(1).getItem() : ingredient.getItem();
+
+                    // if the ingredient is in one of the output slots
+                    if (ingredient.getContainerSlot() < 3) {
+                        if (real.getItem() instanceof PotionItem) {
+                            Potion realPotion = PotionUtils.getPotion(real);
+                            Potion fakePotion = PotionUtils.getPotion(fake);
+
+                            return !realPotion.equals(fakePotion);
+                        } else { // else it's not valid
+                            return true;
+                        }
+                    } else { // else it's the consumable item
+                        return !real.is(fake.getItem());
+                    }
+                case TOOLTIP:
+                    return real.isEmpty();
+                default:
+                    return true;
+            }
+        });
+
         // still required?
         //client.keyboardHandler.setSendRepeatsToGui(true);
     }
@@ -159,6 +163,7 @@ public class BrewingRecipeBookComponent extends RecipeBookComponent {
         int var10005 = j + 14;
         Objects.requireNonNull(this.client.font);
         this.searchBox = new EditBox(var10003, var10004, var10005, 79, 9 + 3, Component.translatable("itemGroup.search"));
+        ((RecipeBookComponentAccessor) this).setSearchBox(searchBox); // fix crash due to super.charTyped
         this.searchBox.setMaxLength(50);
         this.searchBox.setBordered(true);
         this.searchBox.setVisible(true);
@@ -209,7 +214,7 @@ public class BrewingRecipeBookComponent extends RecipeBookComponent {
 
                     if (!result.hasMaterials(this.currentTab.getGroup(), brewingStandScreenHandler.slots)) {
                         showGhostRecipe(result, brewingStandScreenHandler.slots);
-                        return false;
+                        return true;
                     }
 
                     ItemStack inputStack = getInputStack(result);
@@ -224,14 +229,18 @@ public class BrewingRecipeBookComponent extends RecipeBookComponent {
                         if (inputStack.getTag().equals(itemStack.getTag()) && inputStack.getItem().equals(itemStack.getItem())) {
                             if (usedInputSlots <= 2) {
                                 assert Minecraft.getInstance().gameMode != null;
+                                ClientInventoryUtil.storeItem(-1, i -> i > 4);
                                 Minecraft.getInstance().gameMode.handleInventoryMouseClick(brewingStandScreenHandler.containerId, brewingStandScreenHandler.getSlot(slotIndex).index, 0, ClickType.PICKUP, Minecraft.getInstance().player);
                                 Minecraft.getInstance().gameMode.handleInventoryMouseClick(brewingStandScreenHandler.containerId, brewingStandScreenHandler.getSlot(usedInputSlots).index, 0, ClickType.PICKUP, Minecraft.getInstance().player);
+                                ClientInventoryUtil.storeItem(-1, i -> i > 4);
                                 ++usedInputSlots;
                             }
                         } else if (ingredient.getItems()[0].getItem().equals(slot.getItem().getItem())) {
                             assert Minecraft.getInstance().gameMode != null;
+                            ClientInventoryUtil.storeItem(-1, i -> i > 4);
                             Minecraft.getInstance().gameMode.handleInventoryMouseClick(brewingStandScreenHandler.containerId, brewingStandScreenHandler.getSlot(slotIndex).index, 0, ClickType.PICKUP, Minecraft.getInstance().player);
                             Minecraft.getInstance().gameMode.handleInventoryMouseClick(brewingStandScreenHandler.containerId, brewingStandScreenHandler.getSlot(3).index, 0, ClickType.PICKUP, Minecraft.getInstance().player);
+                            ClientInventoryUtil.storeItem(-1, i -> i > 4);
                         }
 
                         ++slotIndex;
@@ -527,6 +536,21 @@ public class BrewingRecipeBookComponent extends RecipeBookComponent {
     @Override
     public boolean isFocused() {
         return false;
+    }
+
+    @Override
+    public boolean isVisible() {
+        return isOpen();
+    }
+
+    @Override
+    public boolean hasClickedOutside(double d, double e, int i, int j, int k, int l, int m) {
+        if (!this.isVisible()) {
+            return true;
+        }
+        boolean bl = d < (double)i || e < (double)j || d >= (double)(i + k) || e >= (double)(j + l);
+        boolean bl2 = (double)(i - 147) < d && d < (double)i && (double)j < e && e < (double)(j + l);
+        return bl && !bl2 && !this.currentTab.isHoveredOrFocused();
     }
 
     private void refreshSearchResults() {

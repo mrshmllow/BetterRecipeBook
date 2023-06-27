@@ -51,7 +51,7 @@ public abstract class BrewingStand extends AbstractContainerScreen<BrewingStandM
             }));
 
             this.addWidget(this.recipeBookComponent);
-            this.setInitialFocus(this.recipeBookComponent);
+            this.setFocused(this.recipeBookComponent);
         }
     }
 
@@ -69,6 +69,12 @@ public abstract class BrewingStand extends AbstractContainerScreen<BrewingStandM
         if (slot != null && slot.index < 4 && result != null && recipeBookComponent.currentTab != null && result.hasMaterials(recipeBookComponent.currentTab.getGroup(), menu.slots.subList(0, 4))) {
             recipeBookComponent.ghostRecipe.clear();
         }
+    }
+
+    @Override
+    protected boolean hasClickedOutside(double d, double e, int i, int j, int k) {
+        boolean bl = d < (double)i || e < (double)j || d >= (double)(i + this.imageWidth) || e >= (double)(j + this.imageHeight);
+        return this.recipeBookComponent.hasClickedOutside(d, e, this.leftPos, this.topPos, this.imageWidth, this.imageHeight, k) && bl;
     }
 
     /**

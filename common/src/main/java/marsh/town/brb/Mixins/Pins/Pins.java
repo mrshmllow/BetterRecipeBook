@@ -9,6 +9,7 @@ import net.minecraft.client.ClientRecipeBook;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.recipebook.*;
+import net.minecraft.world.inventory.RecipeBookMenu;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 import org.spongepowered.asm.mixin.Final;
@@ -32,6 +33,11 @@ public abstract class Pins {
     @Shadow protected abstract void updateCollections(boolean resetCurrentPage);
 
     @Shadow private ClientRecipeBook book;
+
+    @Inject(method = "init", at = @At("RETURN"))
+    public void onInit(int i, int j, Minecraft minecraft, boolean bl, RecipeBookMenu<?> recipeBookMenu, CallbackInfo ci) {
+        minecraft.screen.setFocused((RecipeBookComponent) (Object) this);
+    }
 
     @Inject(method = "keyPressed", at = @At(value = "HEAD"), cancellable = true)
     public void add(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {

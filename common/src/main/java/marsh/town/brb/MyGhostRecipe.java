@@ -36,12 +36,12 @@ public class MyGhostRecipe extends GhostRecipe{
         this.ingredients.clear();
     }
 
-    public void addIngredient(Ingredient ingredient, int i, int j) {
-        this.ingredients.add(new MyGhostIngredient(this, ingredients.size(), ingredient, i, j));
+    public void addIngredient(Ingredient ingredient, int x, int y) {
+        this.ingredients.add(new MyGhostIngredient(this, ingredients.size(), ingredient, x, y));
     }
 
-    public void addIngredient(int containerSlot, Ingredient ingredient, int i, int j) {
-        this.ingredients.add(new MyGhostIngredient(this, containerSlot, ingredient, i, j));
+    public void addIngredient(int containerSlot, Ingredient ingredient, int x, int y) {
+        this.ingredients.add(new MyGhostIngredient(this, containerSlot, ingredient, x, y));
     }
 
     public MyGhostIngredient get(int i) {
@@ -136,8 +136,17 @@ public class MyGhostRecipe extends GhostRecipe{
     }
 
     public enum GhostRender {
+        /**
+         * When rendering the fake item model
+         */
         ITEM,
+        /**
+         * When rendering the background color
+         */
         BACKGROUND,
+        /**
+         * When rendering the fake item tooltip
+         */
         TOOLTIP
     }
 

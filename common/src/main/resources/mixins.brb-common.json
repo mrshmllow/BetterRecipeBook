@@ -21,7 +21,6 @@
     "Accessors.RecipeBookComponentAccessor",
     "Accessors.RecipeBookPageAccessor",
     "Centered.RemoveRecipeBookOffset",
-    "Fixes.UnfocusSearchfield",
     "InstantCraft.ClientPlayerInteractionManagerMixin",
     "InstantCraft.ClientPlayNetworkHandlerMixin",
     "InstantCraft.Toggle",
