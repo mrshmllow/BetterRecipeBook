@@ -579,4 +579,10 @@ public class BrewingRecipeBookComponent extends RecipeBookComponent {
     public void recipesShown(List<Recipe<?>> list) {
 
     }
+
+    @Override
+    public void recipesUpdated() {
+        refreshResults(false);
+    }
+
 }
