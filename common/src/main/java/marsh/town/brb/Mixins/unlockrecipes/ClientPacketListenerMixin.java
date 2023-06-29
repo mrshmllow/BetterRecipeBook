@@ -9,6 +9,7 @@ import net.minecraft.client.gui.screens.recipebook.RecipeUpdateListener;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
+import net.minecraft.network.protocol.game.ClientboundPlaceGhostRecipePacket;
 import net.minecraft.network.protocol.game.ClientboundRecipePacket;
 import net.minecraft.network.protocol.game.ClientboundUpdateRecipesPacket;
 import net.minecraft.world.inventory.RecipeBookMenu;
@@ -50,6 +51,14 @@ public abstract class ClientPacketListenerMixin {
             }
         }
     }
+
+    @Inject(method = "handlePlaceRecipe", at = @At(value = "HEAD", target = "Lnet/minecraft/client/gui/screens/recipebook/RecipeBookComponent;setupGhostRecipe(Lnet/minecraft/world/item/crafting/Recipe;Ljava/util/List;)V"))
+    public void onHandlePlaceRecipe_setupGhostRecipe(ClientboundPlaceGhostRecipePacket packet, CallbackInfo ci) {
+        if (minecraft.screen instanceof RecipeUpdateListener rul) {
+            ((RecipeBookComponentAccessor) rul.getRecipeBookComponent()).getGhostRecipe().clear();
+        }
+    }
+
 
     private void unlockRecipesIfRequired() {
         if (BetterRecipeBook.config.newRecipes.unlockAll) {
