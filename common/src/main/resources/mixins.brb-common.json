@@ -3,11 +3,7 @@
   "minVersion": "0.8",
   "package": "marsh.town.brb.Mixins",
   "compatibilityLevel": "JAVA_16",
-  "mixins": [
-    "UnlockRecipes"
-  ],
   "client": [
-    "Fixes.UnfocusSearchfield",
     "AlternativeRecipes",
     "BrewingStand",
     "DisableBook",
@@ -17,21 +13,26 @@
     "RemoveToasts",
     "ScrollablePages",
     "SettingsButton",
-    "Accessors.OverlayRecipeButtonAccessor",
-    "Accessors.InventoryAccessor",
-    "Accessors.OverlayRecipeComponentAccessor",
-    "Accessors.RecipeBookPageAccessor",
+    "Accessors.CraftingMenuAccessor",
     "Accessors.ImageButtonAccessor",
+    "Accessors.InventoryAccessor",
+    "Accessors.OverlayRecipeButtonAccessor",
+    "Accessors.OverlayRecipeComponentAccessor",
+    "Accessors.RecipeBookComponentAccessor",
+    "Accessors.RecipeBookPageAccessor",
     "Centered.RemoveRecipeBookOffset",
     "InstantCraft.ClientPlayerInteractionManagerMixin",
     "InstantCraft.ClientPlayNetworkHandlerMixin",
     "InstantCraft.Toggle",
+    "Pins.AbstractContainerScreenMixin",
     "Pins.Icon",
-    "Pins.Pins",
+    "Pins.RecipeBookComponentMixin",
     "Pins.RemoveButtonFocus",
     "Pins.Tooltip",
     "UnGroup.Search",
-    "UnGroup.SplitGrouped"
+    "UnGroup.SplitGrouped",
+    "unlockrecipes.ClientPacketListenerMixin",
+    "unlockrecipes.MultiPlayerGameModeMixin"
   ],
   "injectors": {
     "defaultRequire": 1

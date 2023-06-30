@@ -1,7 +1,6 @@
 package marsh.town.brb.Mixins.Centered;
 
 import marsh.town.brb.BetterRecipeBook;
-import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.screens.recipebook.RecipeBookComponent;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -12,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(RecipeBookComponent.class)
-public class RemoveRecipeBookOffset extends GuiComponent {
+public class RemoveRecipeBookOffset {
     @Shadow private int xOffset;
     @Shadow private boolean widthTooNarrow;
 

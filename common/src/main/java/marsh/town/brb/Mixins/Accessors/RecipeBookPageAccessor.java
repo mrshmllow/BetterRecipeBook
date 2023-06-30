@@ -10,8 +10,11 @@ import java.util.List;
 
 @Mixin(RecipeBookPage.class)
 public interface RecipeBookPageAccessor {
-    @Accessor()
+
+    @Accessor("buttons")
     List<RecipeButton> getButtons();
-    @Accessor()
+
+    @Accessor("overlay")
     OverlayRecipeComponent getOverlay();
+
 }

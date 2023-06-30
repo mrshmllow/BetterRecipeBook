@@ -1,15 +1,19 @@
 package marsh.town.brb.Mixins;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import marsh.town.brb.BetterRecipeBook;
+import marsh.town.brb.BrewingStand.BrewableResult;
 import marsh.town.brb.BrewingStand.BrewingRecipeBookComponent;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.BrewingStandScreen;
+import net.minecraft.client.gui.screens.recipebook.RecipeUpdateListener;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.BrewingStandMenu;
+import net.minecraft.world.inventory.ClickType;
+import net.minecraft.world.inventory.Slot;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.injection.At;
@@ -18,8 +22,8 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(BrewingStandScreen.class)
-public abstract class BrewingStand extends AbstractContainerScreen<BrewingStandMenu> {
-    private final BrewingRecipeBookComponent recipeBookComponent = new BrewingRecipeBookComponent();
+public abstract class BrewingStand extends AbstractContainerScreen<BrewingStandMenu> implements RecipeUpdateListener {
+    public final BrewingRecipeBookComponent recipeBookComponent = new BrewingRecipeBookComponent();
     private static final ResourceLocation RECIPE_BUTTON_LOCATION = new ResourceLocation("textures/gui/recipe_button.png");
     private boolean widthNarrow;
 
@@ -48,29 +52,56 @@ public abstract class BrewingStand extends AbstractContainerScreen<BrewingStandM
             }));
 
             this.addWidget(this.recipeBookComponent);
-            this.setInitialFocus(this.recipeBookComponent);
         }
+    }
+
+    @Override
+    protected void slotClicked(Slot slot, int x, int y, ClickType clickType) {
+        // clear ghost recipe if an empty ingredient slot is clicked with no items
+        if (slot != null && slot.index < 4 && menu.getCarried().isEmpty() && menu.slots.get(slot.index).getItem().isEmpty()) {
+            recipeBookComponent.ghostRecipe.clear();
+        }
+
+        super.slotClicked(slot, x, y, clickType);
+
+        // clear ghostRecipe if ingredients match
+        BrewableResult result = recipeBookComponent.recipesArea.getLastClickedRecipe();
+        if (slot != null && slot.index < 4 && result != null && recipeBookComponent.currentTab != null && result.hasMaterials(recipeBookComponent.currentTab.getGroup(), menu.slots.subList(0, 4))) {
+            recipeBookComponent.ghostRecipe.clear();
+        }
+    }
+
+    @Override
+    protected boolean hasClickedOutside(double d, double e, int i, int j, int k) {
+        boolean bl = d < (double)i || e < (double)j || d >= (double)(i + this.imageWidth) || e >= (double)(j + this.imageHeight);
+        return this.recipeBookComponent.hasClickedOutside(d, e, this.leftPos, this.topPos, this.imageWidth, this.imageHeight, k) && bl;
     }
 
     /**
      * @author marshmallow
      */
     @Overwrite
-    public void render(PoseStack matrices, int mouseX, int mouseY, float delta) {
+    public void render(GuiGraphics gui, int mouseX, int mouseY, float delta) {
         // this.drawStatusEffects = !this.recipeBook.isOpen();
-        this.renderBackground(matrices);
-        if (this.recipeBookComponent.isOpen() && this.widthNarrow) {
-            this.renderBg(matrices, delta, mouseX, mouseY);
-            super.render(matrices, mouseX, mouseY, delta);
-            this.renderTooltip(matrices, mouseX, mouseY);
-        } else {
-            this.recipeBookComponent.render(matrices, mouseX, mouseY, delta);
-            super.render(matrices, mouseX, mouseY, delta);
-            this.recipeBookComponent.drawGhostSlots(matrices, this.leftPos, this.topPos, false, delta);
+        this.renderBackground(gui);
+
+        // clear ghost recipe if book is closed
+        if (!recipeBookComponent.isOpen() && recipeBookComponent.ghostRecipe.size() > 0) {
+            recipeBookComponent.ghostRecipe.clear();
         }
 
-        this.renderTooltip(matrices, mouseX, mouseY);
-        this.recipeBookComponent.drawTooltip(matrices, this.leftPos, this.topPos, mouseX, mouseY);
+        if (this.recipeBookComponent.isOpen() && this.widthNarrow) {
+            this.renderBg(gui, delta, mouseX, mouseY);
+            super.render(gui, mouseX, mouseY, delta);
+            this.renderTooltip(gui, mouseX, mouseY);
+        } else {
+            this.recipeBookComponent.render(gui, mouseX, mouseY, delta);
+            super.render(gui, mouseX, mouseY, delta);
+            this.recipeBookComponent.drawGhostSlots(gui, this.leftPos, this.topPos, false, delta);
+        }
+
+        this.renderTooltip(gui, mouseX, mouseY);
+        this.recipeBookComponent.drawTooltip(gui, this.leftPos, this.topPos, mouseX, mouseY);
     }
 
     @ModifyArg(
@@ -78,7 +109,7 @@ public abstract class BrewingStand extends AbstractContainerScreen<BrewingStandM
             index = 1,
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/client/gui/screens/inventory/BrewingStandScreen;blit(Lcom/mojang/blaze3d/vertex/PoseStack;IIIIII)V"
+                    target = "Lnet/minecraft/client/gui/GuiGraphics;blit(Lnet/minecraft/resources/ResourceLocation;IIIIII)V"
             )
     )
     public int drawBackground(int i) {
@@ -88,4 +119,15 @@ public abstract class BrewingStand extends AbstractContainerScreen<BrewingStandM
             return i;
         }
     }
+
+    @Override
+    public BrewingRecipeBookComponent getRecipeBookComponent() {
+        return recipeBookComponent;
+    }
+
+    @Override
+    public void recipesUpdated() {
+        recipeBookComponent.recipesUpdated();
+    }
+
 }

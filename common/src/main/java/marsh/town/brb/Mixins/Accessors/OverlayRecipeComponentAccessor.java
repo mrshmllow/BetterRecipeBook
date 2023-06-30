@@ -8,6 +8,7 @@ import java.util.List;
 
 @Mixin(OverlayRecipeComponent.class)
 public interface OverlayRecipeComponentAccessor {
-    @Accessor()
+
+    @Accessor("recipeButtons")
     List<OverlayRecipeComponent.OverlayRecipeButton> getRecipeButtons();
 }

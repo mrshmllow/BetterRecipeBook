@@ -1,27 +1,25 @@
 package marsh.town.brb.BrewingStand;
 
 import com.google.common.collect.Lists;
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import marsh.town.brb.BetterRecipeBook;
 import marsh.town.brb.Config.Config;
+import marsh.town.brb.Mixins.Accessors.RecipeBookComponentAccessor;
+import marsh.town.brb.MyGhostRecipe;
+import marsh.town.brb.util.ClientInventoryUtil;
 import me.shedaniel.autoconfig.AutoConfig;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiComponent;
-import net.minecraft.client.gui.components.*;
-import net.minecraft.client.gui.components.events.GuiEventListener;
-import net.minecraft.client.gui.narration.NarratableEntry;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.gui.components.ImageButton;
+import net.minecraft.client.gui.components.StateSwitchingButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.client.gui.screens.recipebook.RecipeShownListener;
-import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.gui.screens.recipebook.RecipeBookComponent;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
-import net.minecraft.recipebook.PlaceRecipe;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.StackedContents;
 import net.minecraft.world.inventory.BrewingStandMenu;
@@ -29,7 +27,9 @@ import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.PotionItem;
 import net.minecraft.world.item.alchemy.Potion;
+import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import org.jetbrains.annotations.Nullable;
@@ -41,7 +41,7 @@ import static marsh.town.brb.BrewingStand.PlatformPotionUtil.getFrom;
 import static marsh.town.brb.BrewingStand.PlatformPotionUtil.getIngredient;
 
 @Environment(EnvType.CLIENT)
-public class BrewingRecipeBookComponent extends GuiComponent implements Renderable, GuiEventListener, NarratableEntry, RecipeShownListener {
+public class BrewingRecipeBookComponent extends RecipeBookComponent {
     public static final ResourceLocation RECIPE_BOOK_LOCATION = new ResourceLocation("textures/gui/recipe_book.png");
     private static final ResourceLocation BUTTON_LOCATION = new ResourceLocation("brb:textures/gui/buttons.png");
     protected BrewingStandMenu brewingStandScreenHandler;
@@ -51,9 +51,10 @@ public class BrewingRecipeBookComponent extends GuiComponent implements Renderab
     private boolean narrow;
     BrewingClientRecipeBook recipeBook;
     private int leftOffset;
-    protected final BrewingRecipeBookGhostSlots ghostSlots = new BrewingRecipeBookGhostSlots();
+    public final MyGhostRecipe ghostRecipe = new MyGhostRecipe();
+
     private boolean open;
-    private final BrewingRecipeBookResults recipesArea = new BrewingRecipeBookResults();
+    public final BrewingRecipeBookResults recipesArea = new BrewingRecipeBookResults();
     @Nullable
     private EditBox searchBox;
     private final StackedContents recipeFinder = new StackedContents();
@@ -61,7 +62,7 @@ public class BrewingRecipeBookComponent extends GuiComponent implements Renderab
     private static final Component SEARCH_HINT;
     private final List<BrewableRecipeGroupButtonWidget> tabButtons = Lists.newArrayList();
     @Nullable
-    private BrewableRecipeGroupButtonWidget currentTab;
+    public BrewableRecipeGroupButtonWidget currentTab;
     private boolean searching;
     protected ImageButton settingsButton;
     private String searchText;
@@ -76,6 +77,7 @@ public class BrewingRecipeBookComponent extends GuiComponent implements Renderab
 
     public void initialize(int parentWidth, int parentHeight, Minecraft client, boolean narrow, BrewingStandMenu brewingStandScreenHandler) {
         this.client = client;
+        this.minecraft = client;
         this.parentWidth = parentWidth;
         this.parentHeight = parentHeight;
         this.brewingStandScreenHandler = brewingStandScreenHandler;
@@ -92,6 +94,35 @@ public class BrewingRecipeBookComponent extends GuiComponent implements Renderab
         } else {
             this.leftOffset = this.narrow ? 0 : 86;
         }
+
+        // this code is responsible for selectively rendering ghost slots
+        ghostRecipe.setRenderingPredicate((type, ingredient) -> {
+            ItemStack real = brewingStandScreenHandler.slots.get(ingredient.getContainerSlot()).getItem();
+            switch (type) {
+                case ITEM:
+                case BACKGROUND:
+                    // slot 0 is the preview so map it to 1
+                    ItemStack fake = ingredient.getContainerSlot() == 0 ? ingredient.getOwner().getBySlot(1).getItem() : ingredient.getItem();
+
+                    // if the ingredient is in one of the output slots
+                    if (ingredient.getContainerSlot() < 3) {
+                        if (real.getItem() instanceof PotionItem) {
+                            Potion realPotion = PotionUtils.getPotion(real);
+                            Potion fakePotion = PotionUtils.getPotion(fake);
+
+                            return !realPotion.equals(fakePotion);
+                        } else { // else it's not valid
+                            return true;
+                        }
+                    } else { // else it's the consumable item
+                        return !real.is(fake.getItem());
+                    }
+                case TOOLTIP:
+                    return real.isEmpty();
+                default:
+                    return true;
+            }
+        });
 
         // still required?
         //client.keyboardHandler.setSendRepeatsToGui(true);
@@ -132,6 +163,7 @@ public class BrewingRecipeBookComponent extends GuiComponent implements Renderab
         int var10005 = j + 14;
         Objects.requireNonNull(this.client.font);
         this.searchBox = new EditBox(var10003, var10004, var10005, 79, 9 + 3, Component.translatable("itemGroup.search"));
+        ((RecipeBookComponentAccessor) this).setSearchBox(searchBox); // fix crash due to super.charTyped
         this.searchBox.setMaxLength(50);
         this.searchBox.setBordered(true);
         this.searchBox.setVisible(true);
@@ -174,16 +206,15 @@ public class BrewingRecipeBookComponent extends GuiComponent implements Renderab
     }
 
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (this.open && !Objects.requireNonNull(this.client.player).isSpectator()) {
+        if (this.open) {
             if (this.recipesArea.mouseClicked(mouseX, mouseY, button)) {
-                BrewableResult result = this.recipesArea.getLastClickedRecipe();
+                BrewableResult result = this.recipesArea.getCurrentClickedRecipe();
                 if (result != null) {
-                    if (this.currentTab == null) return false;
-                    this.ghostSlots.reset();
+                    this.ghostRecipe.clear();
 
-                    if (!result.hasMaterials(this.currentTab.getGroup(), brewingStandScreenHandler)) {
+                    if (!result.hasMaterials(this.currentTab.getGroup(), brewingStandScreenHandler.slots)) {
                         showGhostRecipe(result, brewingStandScreenHandler.slots);
-                        return false;
+                        return true;
                     }
 
                     ItemStack inputStack = getInputStack(result);
@@ -197,16 +228,19 @@ public class BrewingRecipeBookComponent extends GuiComponent implements Renderab
                         assert inputStack.getTag() != null;
                         if (inputStack.getTag().equals(itemStack.getTag()) && inputStack.getItem().equals(itemStack.getItem())) {
                             if (usedInputSlots <= 2) {
-                                System.out.println(usedInputSlots);
                                 assert Minecraft.getInstance().gameMode != null;
+                                ClientInventoryUtil.storeItem(-1, i -> i > 4);
                                 Minecraft.getInstance().gameMode.handleInventoryMouseClick(brewingStandScreenHandler.containerId, brewingStandScreenHandler.getSlot(slotIndex).index, 0, ClickType.PICKUP, Minecraft.getInstance().player);
                                 Minecraft.getInstance().gameMode.handleInventoryMouseClick(brewingStandScreenHandler.containerId, brewingStandScreenHandler.getSlot(usedInputSlots).index, 0, ClickType.PICKUP, Minecraft.getInstance().player);
+                                ClientInventoryUtil.storeItem(-1, i -> i > 4);
                                 ++usedInputSlots;
                             }
                         } else if (ingredient.getItems()[0].getItem().equals(slot.getItem().getItem())) {
                             assert Minecraft.getInstance().gameMode != null;
+                            ClientInventoryUtil.storeItem(-1, i -> i > 4);
                             Minecraft.getInstance().gameMode.handleInventoryMouseClick(brewingStandScreenHandler.containerId, brewingStandScreenHandler.getSlot(slotIndex).index, 0, ClickType.PICKUP, Minecraft.getInstance().player);
                             Minecraft.getInstance().gameMode.handleInventoryMouseClick(brewingStandScreenHandler.containerId, brewingStandScreenHandler.getSlot(3).index, 0, ClickType.PICKUP, Minecraft.getInstance().player);
+                            ClientInventoryUtil.storeItem(-1, i -> i > 4);
                         }
 
                         ++slotIndex;
@@ -219,8 +253,14 @@ public class BrewingRecipeBookComponent extends GuiComponent implements Renderab
             } else {
                 assert this.searchBox != null;
                 if (this.searchBox.mouseClicked(mouseX, mouseY, button)) {
+                    searchBox.setFocused(true);
+                    searching = true;
                     return true;
-                } else if (this.toggleBrewableButton.mouseClicked(mouseX, mouseY, button)) {
+                }
+                searchBox.setFocused(false);
+                searching = false;
+
+                if (this.toggleBrewableButton.mouseClicked(mouseX, mouseY, button)) {
                     boolean bl = this.toggleFilteringBrewable();
                     this.toggleBrewableButton.setStateTriggered(bl);
                     BetterRecipeBook.rememberedBrewingToggle = bl;
@@ -260,13 +300,13 @@ public class BrewingRecipeBookComponent extends GuiComponent implements Renderab
     }
 
     public void showGhostRecipe(BrewableResult result, List<Slot> slots) {
-        this.ghostSlots.addSlot(getIngredient(result.recipe).getItems()[0], slots.get(3).x, slots.get(3).y);
+        this.ghostRecipe.addIngredient(3, Ingredient.of(getIngredient(result.recipe).getItems()[0]), slots.get(3).x, slots.get(3).y);
 
         assert currentTab != null;
         ItemStack inputStack = result.inputAsItemStack(currentTab.getGroup());
-        this.ghostSlots.addSlot(result.ingredient, slots.get(0).x, slots.get(0).y);
-        this.ghostSlots.addSlot(inputStack, slots.get(1).x, slots.get(1).y);
-        this.ghostSlots.addSlot(inputStack, slots.get(2).x, slots.get(2).y);
+        this.ghostRecipe.addIngredient(0, Ingredient.of(result.ingredient), slots.get(0).x, slots.get(0).y);
+        this.ghostRecipe.addIngredient(1, Ingredient.of(inputStack), slots.get(1).x, slots.get(1).y);
+        this.ghostRecipe.addIngredient(2, Ingredient.of(inputStack), slots.get(2).x, slots.get(2).y);
     }
 
     private boolean toggleFilteringBrewable() {
@@ -289,7 +329,7 @@ public class BrewingRecipeBookComponent extends GuiComponent implements Renderab
         }
 
         if (this.recipeBook.isFilteringCraftable()) {
-            results.removeIf((result) -> !result.hasMaterials(currentTab.getGroup(), brewingStandScreenHandler));
+            results.removeIf((result) -> !result.hasMaterials(currentTab.getGroup(), brewingStandScreenHandler.slots));
         }
 
         if (BetterRecipeBook.config.enablePinning) {
@@ -325,39 +365,43 @@ public class BrewingRecipeBookComponent extends GuiComponent implements Renderab
     }
 
     @Override
-    public void render(PoseStack matrices, int mouseX, int mouseY, float delta) {
-        if (this.searchBox == null) return;
+    public void render(GuiGraphics gui, int mouseX, int mouseY, float delta) {
+        if (!this.isOpen()) return;
 
         if (doubleRefresh) {
             // Minecraft doesn't populate the inventory on initialization so this is the only solution I have
             refreshResults(true);
             doubleRefresh = false;
         }
-        if (this.isOpen()) {
-            matrices.pushPose();
-            matrices.translate(0.0D, 0.0D, 100.0D);
-            RenderSystem.setShader(GameRenderer::getPositionTexShader);
-            RenderSystem.setShaderTexture(0, RECIPE_BOOK_LOCATION);
-            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-            int i = (this.parentWidth - 147) / 2 - this.leftOffset;
-            int j = (this.parentHeight - 166) / 2;
-            this.blit(matrices, i, j, 1, 1, 147, 166);
-            this.searchBox.render(matrices, mouseX, mouseY, delta);
 
+        gui.pose().pushPose();
+        gui.pose().translate(0.0f, 0.0f, 100.0f);
 
-            for (BrewableRecipeGroupButtonWidget brewableRecipeGroupButtonWidget : this.tabButtons) {
-                brewableRecipeGroupButtonWidget.render(matrices, mouseX, mouseY, delta);
-            }
+        // blit recipe book background texture
+        int blitX = (this.parentWidth - 147) / 2 - this.leftOffset;
+        int blitY = (this.parentHeight - 166) / 2;
+        gui.blit(RECIPE_BOOK_LOCATION, blitX, blitY, 1, 1, 147, 166);
 
-            this.toggleBrewableButton.render(matrices, mouseX, mouseY, delta);
+        // render search box
+        this.searchBox.render(gui, mouseX, mouseY, delta);
 
-            if (BetterRecipeBook.config.settingsButton) {
-                this.settingsButton.render(matrices, mouseX, mouseY, delta);
-            }
-
-            this.recipesArea.draw(matrices, i, j, mouseX, mouseY, delta);
-            matrices.popPose();
+        // render tab buttons
+        for (BrewableRecipeGroupButtonWidget brewableRecipeGroupButtonWidget : this.tabButtons) {
+            brewableRecipeGroupButtonWidget.render(gui, mouseX, mouseY, delta);
         }
+
+        // render the toggle brewable filter button
+        this.toggleBrewableButton.render(gui, mouseX, mouseY, delta);
+
+        // render the BRB settings button
+        if (BetterRecipeBook.config.settingsButton) {
+            this.settingsButton.render(gui, mouseX, mouseY, delta);
+        }
+
+        // render the recipe book page contents
+        this.recipesArea.render(gui, blitX, blitY, mouseX, mouseY, delta);
+
+        gui.pose().popPose();
     }
 
     public int findLeftEdge(int width, int backgroundWidth) {
@@ -371,8 +415,8 @@ public class BrewingRecipeBookComponent extends GuiComponent implements Renderab
         return j;
     }
 
-    public void drawGhostSlots(PoseStack matrices, int x, int y, boolean bl, float delta) {
-        this.ghostSlots.draw(matrices, this.client, x, y, bl, delta);
+    public void drawGhostSlots(GuiGraphics guiGraphics, int x, int y, boolean bl, float delta) {
+        this.ghostRecipe.render(guiGraphics, this.client, x, y, bl, delta);
     }
 
     private void setOpen(boolean opened) {
@@ -395,25 +439,26 @@ public class BrewingRecipeBookComponent extends GuiComponent implements Renderab
         return this.open ? NarrationPriority.HOVERED : NarrationPriority.NONE;
     }
 
-    public void drawTooltip(PoseStack matrices, int x, int y, int mouseX, int mouseY) {
+    public void drawTooltip(GuiGraphics gui, int x, int y, int mouseX, int mouseY) {
         if (this.isOpen()) {
-            this.recipesArea.drawTooltip(matrices, mouseX, mouseY);
+            this.recipesArea.drawTooltip(gui, mouseX, mouseY);
             if (this.toggleBrewableButton.isHoveredOrFocused()) {
                 Component text = this.getCraftableButtonText();
                 if (this.client.screen != null) {
-                    this.client.screen.renderTooltip(matrices, text, mouseX, mouseY);
+                    gui.renderTooltip(Minecraft.getInstance().font, text, mouseX, mouseY);
+
                 }
             }
 
             if (this.settingsButton != null) {
                 if (this.settingsButton.isHoveredOrFocused() && BetterRecipeBook.config.settingsButton) {
                     if (this.client.screen != null) {
-                        this.client.screen.renderTooltip(matrices, OPEN_SETTINGS_TOOLTIP, mouseX, mouseY);
+                        gui.renderTooltip(Minecraft.getInstance().font, OPEN_SETTINGS_TOOLTIP, mouseX, mouseY);
                     }
                 }
             }
 
-            this.drawGhostSlotTooltip(matrices, x, y, mouseX, mouseY);
+            ghostRecipe.renderTooltip(gui, x, y, mouseX, mouseY);
         }
     }
 
@@ -423,24 +468,6 @@ public class BrewingRecipeBookComponent extends GuiComponent implements Renderab
 
     protected Component getToggleCraftableButtonText() {
         return ONLY_CRAFTABLES_TOOLTIP;
-    }
-
-    private void drawGhostSlotTooltip(PoseStack matrices, int x, int y, int mouseX, int mouseY) {
-        ItemStack itemStack = null;
-
-        for(int i = 0; i < this.ghostSlots.getSlotCount(); ++i) {
-            BrewingRecipeBookGhostSlots.GhostSlot ghostInputSlot = this.ghostSlots.getSlot(i);
-            int j = ghostInputSlot.getX() + x;
-            int k = ghostInputSlot.getY() + y;
-            if (mouseX >= j && mouseY >= k && mouseX < j + 16 && mouseY < k + 16) {
-                itemStack = ghostInputSlot.getCurrentItemStack();
-            }
-        }
-
-        if (itemStack != null && this.client.screen != null) {
-            this.client.screen.renderComponentTooltip(matrices, this.client.screen.getTooltipFromItem(itemStack), mouseX, mouseY);
-        }
-
     }
 
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
@@ -458,7 +485,7 @@ public class BrewingRecipeBookComponent extends GuiComponent implements Renderab
                     return true;
                 } else if (keyCode == GLFW.GLFW_KEY_F) {
                     if (BetterRecipeBook.config.enablePinning) {
-                        for (BrewableAnimatedResultButton resultButton : this.recipesArea.resultButtons) {
+                        for (BrewableAnimatedResultButton resultButton : this.recipesArea.buttons) {
                             if (resultButton.isHoveredOrFocused()) {
                                 BetterRecipeBook.pinnedRecipeManager.addOrRemoveFavouritePotion(resultButton.getRecipe().recipe);
                                 this.refreshResults(false);
@@ -482,7 +509,7 @@ public class BrewingRecipeBookComponent extends GuiComponent implements Renderab
 
     public boolean keyReleased(int keyCode, int scanCode, int modifiers) {
         this.searching = false;
-        return GuiEventListener.super.keyReleased(keyCode, scanCode, modifiers);
+        return super.keyReleased(keyCode, scanCode, modifiers);
     }
 
     public boolean charTyped(char chr, int modifiers) {
@@ -494,7 +521,7 @@ public class BrewingRecipeBookComponent extends GuiComponent implements Renderab
                 this.refreshSearchResults();
                 return true;
             } else {
-                return GuiEventListener.super.charTyped(chr, modifiers);
+                return super.charTyped(chr, modifiers);
             }
         } else {
             return false;
@@ -509,6 +536,21 @@ public class BrewingRecipeBookComponent extends GuiComponent implements Renderab
     @Override
     public boolean isFocused() {
         return false;
+    }
+
+    @Override
+    public boolean isVisible() {
+        return isOpen();
+    }
+
+    @Override
+    public boolean hasClickedOutside(double d, double e, int i, int j, int k, int l, int m) {
+        if (!this.isVisible()) {
+            return true;
+        }
+        boolean bl = d < (double)i || e < (double)j || d >= (double)(i + k) || e >= (double)(j + l);
+        boolean bl2 = (double)(i - 147) < d && d < (double)i && (double)j < e && e < (double)(j + l);
+        return bl && !bl2 && !this.currentTab.isHoveredOrFocused();
     }
 
     private void refreshSearchResults() {
@@ -537,4 +579,10 @@ public class BrewingRecipeBookComponent extends GuiComponent implements Renderab
     public void recipesShown(List<Recipe<?>> list) {
 
     }
+
+    @Override
+    public void recipesUpdated() {
+        refreshResults(false);
+    }
+
 }
