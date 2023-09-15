@@ -3,7 +3,10 @@ package marsh.town.brb;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
+import marsh.town.brb.mixins.accessors.RecipeBookComponentAccessor;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.recipebook.RecipeBookComponent;
+import net.minecraft.client.gui.screens.recipebook.RecipeBookPage;
 import net.minecraft.client.gui.screens.recipebook.RecipeCollection;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
@@ -17,13 +20,13 @@ import java.io.FileReader;
 import java.io.OutputStreamWriter;
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
-import static marsh.town.brb.BrewingStand.PlatformPotionUtil.getTo;
+import static marsh.town.brb.brewingstand.PlatformPotionUtil.getTo;
 
 public class PinnedRecipeManager {
-    public List<ResourceLocation> pinned;
+    public HashSet<ResourceLocation> pinned;
 
     public void read() {
         Gson gson = new Gson();
@@ -34,14 +37,14 @@ public class PinnedRecipeManager {
 
             if (pinsFile.exists()) {
                 reader = new JsonReader(new FileReader(pinsFile.getAbsolutePath()));
-                Type type = new TypeToken<List<ResourceLocation>>() {}.getType();
+                Type type = new TypeToken<HashSet<ResourceLocation>>() {}.getType();
                 pinned = gson.fromJson(reader, type);
             }
         } catch (Throwable var8) {
             BetterRecipeBook.LOGGER.error(BetterRecipeBook.MOD_ID + ".pins could not be read.");
         } finally {
             if (pinned == null) {
-                pinned = new ArrayList<>();
+                pinned = new HashSet<>();
             }
             IOUtils.closeQuietly(reader);
         }
@@ -73,7 +76,7 @@ public class PinnedRecipeManager {
             }
         }
 
-        this.pinned.add(target.getRecipes().get(0).getId());
+        this.pinned.addAll(target.getRecipes().stream().map(Recipe::getId).toList());
         this.store();
     }
 
@@ -113,4 +116,12 @@ public class PinnedRecipeManager {
         }
         return false;
     }
+
+    public static void handlePinRecipe(RecipeBookComponent book, RecipeBookPage page, Recipe<?> recipe) {
+        RecipeCollection collection = new RecipeCollection(Minecraft.getInstance().level.registryAccess(), List.of(recipe));
+        collection.updateKnownRecipes(page.getRecipeBook());
+        BetterRecipeBook.pinnedRecipeManager.addOrRemoveFavourite(collection);
+        ((RecipeBookComponentAccessor) book).updateCollectionsInvoker(false);
+    }
+
 }
