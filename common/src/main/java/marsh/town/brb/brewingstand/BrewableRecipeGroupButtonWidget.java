@@ -6,8 +6,9 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.StateSwitchingButton;
-import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
@@ -16,36 +17,35 @@ import java.util.List;
 public class BrewableRecipeGroupButtonWidget extends StateSwitchingButton {
     private final BrewingRecipeBookGroup group;
 
+    public static final WidgetSprites DEFAULT_SPRITES = new WidgetSprites(
+            new ResourceLocation("recipe_book/tab"),
+            new ResourceLocation("recipe_book/tab_selected")
+    );
+
     public BrewableRecipeGroupButtonWidget(BrewingRecipeBookGroup category) {
         super(0, 0, 35, 27, false);
+        this.initTextureValues(DEFAULT_SPRITES);
         this.group = category;
-        this.initTextureValues(153, 2, 35, 0, BrewingRecipeBookComponent.RECIPE_BOOK_LOCATION);
     }
 
-    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float delta) {
+    //TODO verify
+    public void renderWidget(GuiGraphics gui, int mouseX, int mouseY, float delta) {
         Minecraft minecraftClient = Minecraft.getInstance();
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderTexture(0, this.resourceLocation);
+        //RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        //RenderSystem.setShaderTexture(0, );
+
         RenderSystem.disableDepthTest();
-        int i = this.xTexStart;
-        int j = this.yTexStart;
+        ResourceLocation sprite = this.sprites.get(true, this.isStateTriggered);
+        int x = getX();
         if (this.isStateTriggered) {
-            i += this.xDiffTex;
-        }
-
-        if (this.isHoveredOrFocused()) {
-            j += this.yDiffTex;
-        }
-
-        int k = getX();
-        if (this.isStateTriggered) {
-            k -= 2;
+            x -= 2;
         }
 
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        guiGraphics.blit(resourceLocation, k, getY(), i, j, this.width, this.height);
+        gui.blitSprite(sprite, x, this.getY(), this.width, this.height);
         RenderSystem.enableDepthTest();
-        this.renderIcons(guiGraphics, minecraftClient.getItemRenderer());
+
+        this.renderIcons(gui, minecraftClient.getItemRenderer());
     }
 
     private void renderIcons(GuiGraphics guiGraphics, ItemRenderer itemRenderer) {

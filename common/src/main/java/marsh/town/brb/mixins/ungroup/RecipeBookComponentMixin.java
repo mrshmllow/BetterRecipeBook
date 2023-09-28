@@ -6,7 +6,7 @@ import net.minecraft.client.gui.screens.recipebook.RecipeBookComponent;
 import net.minecraft.client.gui.screens.recipebook.RecipeBookPage;
 import net.minecraft.client.gui.screens.recipebook.RecipeCollection;
 import net.minecraft.world.inventory.RecipeBookMenu;
-import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -29,8 +29,8 @@ public class RecipeBookComponentMixin {
     private void refreshSearchResults(boolean bl, CallbackInfo ci, List<RecipeCollection> list, List<RecipeCollection> list2, String string) {
         if (BetterRecipeBook.config.alternativeRecipes.noGrouped) {
             list2.removeIf((recipeResultCollection) -> {
-                for (Recipe<?> recipe : recipeResultCollection.getRecipes()) {
-                    return !recipe.getResultItem(recipeResultCollection.registryAccess()).getHoverName().getString().toLowerCase(Locale.ROOT).contains(this.lastSearch.toLowerCase(Locale.ROOT));
+                for (RecipeHolder<?> recipe : recipeResultCollection.getRecipes()) {
+                    return !recipe.value().getResultItem(recipeResultCollection.registryAccess()).getHoverName().getString().toLowerCase(Locale.ROOT).contains(this.lastSearch.toLowerCase(Locale.ROOT));
                 }
                 return false;
             });

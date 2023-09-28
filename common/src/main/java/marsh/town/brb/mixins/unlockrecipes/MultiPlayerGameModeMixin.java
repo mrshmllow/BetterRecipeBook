@@ -12,7 +12,7 @@ import net.minecraft.client.multiplayer.MultiPlayerGameMode;
 import net.minecraft.world.entity.player.StackedContents;
 import net.minecraft.world.inventory.RecipeBookMenu;
 import net.minecraft.world.inventory.Slot;
-import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -26,7 +26,7 @@ public abstract class MultiPlayerGameModeMixin {
     @Shadow @Final private Minecraft minecraft;
 
     @Inject(method = "handlePlaceRecipe", at = @At(value = "HEAD"))
-    public void onPlaceRecipe(int z, Recipe<?> recipe, boolean bl, CallbackInfo ci) {
+    public void onPlaceRecipe(int z, RecipeHolder<?> recipe, boolean bl, CallbackInfo ci) {
         if (BetterRecipeBook.config.newRecipes.unlockAll && minecraft.player != null &&
                 minecraft.screen instanceof RecipeUpdateListener rul && minecraft.player.containerMenu instanceof RecipeBookMenu<?> menu) {
             RecipeBookComponent comp = rul.getRecipeBookComponent();

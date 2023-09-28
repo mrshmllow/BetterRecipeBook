@@ -8,16 +8,12 @@ import net.minecraft.client.gui.screens.recipebook.GhostRecipe;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.Recipe;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.function.BiPredicate;
 
-public class MyGhostRecipe extends GhostRecipe{
+public class MyGhostRecipe extends GhostRecipe {
 
-    @Nullable
-    private Recipe<?> recipe;
     private final List<MyGhostIngredient> ingredients = Lists.newArrayList();
 
     private BiPredicate<GhostRender, MyGhostIngredient> renderingPredicate = (a, b) -> true;
@@ -29,11 +25,6 @@ public class MyGhostRecipe extends GhostRecipe{
     public MyGhostRecipe setRenderingPredicate(BiPredicate<GhostRender, MyGhostIngredient> renderingPredicate) {
         this.renderingPredicate = renderingPredicate;
         return this;
-    }
-
-    public void clear() {
-        this.recipe = null;
-        this.ingredients.clear();
     }
 
     public void addIngredient(Ingredient ingredient, int x, int y) {
@@ -57,15 +48,6 @@ public class MyGhostRecipe extends GhostRecipe{
 
     public int size() {
         return this.ingredients.size();
-    }
-
-    @Nullable
-    public Recipe<?> getRecipe() {
-        return this.recipe;
-    }
-
-    public void setRecipe(Recipe<?> recipe) {
-        this.recipe = recipe;
     }
 
     public void render(GuiGraphics guiGraphics, Minecraft minecraft, int x, int y, boolean bl, float f) {

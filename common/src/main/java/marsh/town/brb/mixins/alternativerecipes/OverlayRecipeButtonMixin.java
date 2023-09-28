@@ -2,14 +2,14 @@ package marsh.town.brb.mixins.alternativerecipes;
 
 import marsh.town.brb.BetterRecipeBook;
 import marsh.town.brb.mixins.accessors.OverlayRecipeComponentAccessor;
+import marsh.town.brb.util.BRBTextures;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.screens.recipebook.OverlayRecipeComponent;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -22,12 +22,11 @@ import java.util.List;
 
 @Mixin(OverlayRecipeComponent.OverlayRecipeButton.class)
 public abstract class OverlayRecipeButtonMixin extends AbstractWidget {
-    private static final ResourceLocation BACKGROUND_TEXTURE = new ResourceLocation("brb:textures/gui/alt_button_blank.png");
 
     @Final @Shadow
     private boolean isCraftable;
     @Final @Shadow
-    Recipe<?> recipe;
+    RecipeHolder<?> recipe;
     @Shadow public abstract void renderWidget(GuiGraphics gui, int mouseX, int mouseY, float delta);
     @Shadow @Final protected List<OverlayRecipeComponent.OverlayRecipeButton.Pos> ingredientPos;
     @Shadow @Final OverlayRecipeComponent field_3113;
@@ -49,10 +48,10 @@ public abstract class OverlayRecipeButtonMixin extends AbstractWidget {
             tx += 26;
         }
 
-        gui.blit(BACKGROUND_TEXTURE, this.getX(), this.getY(), tx, tz, this.width, this.height);
+        gui.blit(BRBTextures.RECIPE_BUTTON_ALT_BLANK_TEXTURE, this.getX(), this.getY(), tx, tz, this.width, this.height);
         gui.pose().pushPose();
         if (BetterRecipeBook.config.alternativeRecipes.onHover && !this.isHoveredOrFocused()) { // if show alternatives recipe is enabled and recipe is not hovered, show the result item
-            ItemStack recipeOutput = this.recipe.getResultItem(field_3113.getRecipeCollection().registryAccess());
+            ItemStack recipeOutput = this.recipe.value().getResultItem(field_3113.getRecipeCollection().registryAccess());
             gui.renderItem(recipeOutput, getX() + 4, getY() + 4);
         } else { // otherwise display the crafting recipe
             gui.pose().translate(this.getX() + 2, this.getY() + 2, 150.0);
@@ -70,11 +69,11 @@ public abstract class OverlayRecipeButtonMixin extends AbstractWidget {
         gui.pose().popPose();
 
         // blit pin for pinned recipes
-        if (BetterRecipeBook.config.enablePinning && BetterRecipeBook.pinnedRecipeManager.pinned.contains(recipe.getId())) {
+        if (BetterRecipeBook.config.enablePinning && BetterRecipeBook.pinnedRecipeManager.pinned.contains(recipe.id())) {
             gui.pose().pushPose();
             // make sure pin is drawn over the crafting items
             gui.pose().mulPoseMatrix(gui.pose().last().pose());
-            gui.blit(BetterRecipeBook.PIN_TEXTURE, getX() - 3, getY() - 3, 0, 0, height + 3, width + 3, 31, 31);
+            gui.blit(BRBTextures.RECIPE_BOOK_PIN_TEXTURE, getX() - 3, getY() - 3, 0, 0, height + 3, width + 3, 31, 31);
             gui.pose().popPose();
         }
 

@@ -1,6 +1,7 @@
 package marsh.town.brb.mixins.pins;
 
 import marsh.town.brb.BetterRecipeBook;
+import marsh.town.brb.util.BRBTextures;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.screens.recipebook.RecipeButton;
@@ -41,7 +42,7 @@ public abstract class RecipeButtonMixin extends AbstractWidget {
     public void renderWidget_renderFakeItem(GuiGraphics gui, int x, int y, float delta, CallbackInfo ci) {
         // if pins are enabled, and the recipe is pinned, blit the pin texture after the recipe collection is rendered
         if (BetterRecipeBook.config.enablePinning && BetterRecipeBook.pinnedRecipeManager.has(getCollection())) {
-            gui.blit(BetterRecipeBook.PIN_TEXTURE, getX() - 3, getY() - 3, 0, 0, this.width + 3, this.height + 3, 31, 31);
+            gui.blit(BRBTextures.RECIPE_BOOK_PIN_TEXTURE, getX() - 3, getY() - 3, 0, 0, this.width + 3, this.height + 3, 31, 31);
         }
     }
 

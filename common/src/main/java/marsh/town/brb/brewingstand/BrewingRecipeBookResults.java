@@ -2,6 +2,7 @@ package marsh.town.brb.brewingstand;
 
 import com.google.common.collect.Lists;
 import marsh.town.brb.BetterRecipeBook;
+import marsh.town.brb.util.BRBTextures;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
@@ -44,9 +45,9 @@ public class BrewingRecipeBookResults {
         }
 
         this.nextPageButton = new StateSwitchingButton(parentLeft + 93, parentTop + 137, 12, 17, false);
-        this.nextPageButton.initTextureValues(1, 208, 13, 18, BrewingRecipeBookComponent.RECIPE_BOOK_LOCATION);
+        this.nextPageButton.initTextureValues(BRBTextures.RECIPE_BOOK_PAGE_FORWARD_SPRITES);
         this.prevPageButton = new StateSwitchingButton(parentLeft + 38, parentTop + 137, 12, 17, true);
-        this.prevPageButton.initTextureValues(1, 208, 13, 18, BrewingRecipeBookComponent.RECIPE_BOOK_LOCATION);
+        this.prevPageButton.initTextureValues(BRBTextures.RECIPE_BOOK_PAGE_BACKWARD_SPRITES);
     }
 
     public void setResults(List<BrewableResult> recipeCollection, boolean resetCurrentPage, BrewingRecipeBookGroup group) {

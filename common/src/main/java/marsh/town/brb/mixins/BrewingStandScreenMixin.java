@@ -3,19 +3,20 @@ package marsh.town.brb.mixins;
 import marsh.town.brb.BetterRecipeBook;
 import marsh.town.brb.brewingstand.BrewableResult;
 import marsh.town.brb.brewingstand.BrewingRecipeBookComponent;
+import marsh.town.brb.util.BRBTextures;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.BrewingStandScreen;
 import net.minecraft.client.gui.screens.recipebook.RecipeUpdateListener;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.BrewingStandMenu;
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
@@ -23,9 +24,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(BrewingStandScreen.class)
 public abstract class BrewingStandScreenMixin extends AbstractContainerScreen<BrewingStandMenu> implements RecipeUpdateListener {
-    public final BrewingRecipeBookComponent recipeBookComponent = new BrewingRecipeBookComponent();
-    private static final ResourceLocation RECIPE_BUTTON_LOCATION = new ResourceLocation("textures/gui/recipe_button.png");
-    private boolean widthNarrow;
+
+    @Unique public final BrewingRecipeBookComponent _$recipeBookComponent = new BrewingRecipeBookComponent();
+    @Unique private boolean _$widthNarrow;
 
     public BrewingStandScreenMixin(BrewingStandMenu handler, Inventory inventory, Component title) {
         super(handler, inventory, title);
@@ -34,24 +35,24 @@ public abstract class BrewingStandScreenMixin extends AbstractContainerScreen<Br
     @Inject(method = "init", at = @At("RETURN"))
     protected void init(CallbackInfo ci) {
         if (BetterRecipeBook.config.enableBook) {
-            this.widthNarrow = this.width < 379;
+            this._$widthNarrow = this.width < 379;
             assert this.minecraft != null;
-            this.recipeBookComponent.initialize(this.width, this.height, this.minecraft, widthNarrow, this.menu);
+            this._$recipeBookComponent.initialize(this.width, this.height, this.minecraft, _$widthNarrow, this.menu);
 
             if (!BetterRecipeBook.config.keepCentered) {
-                this.leftPos = this.recipeBookComponent.findLeftEdge(this.width, this.imageWidth);
+                this.leftPos = this._$recipeBookComponent.findLeftEdge(this.width, this.imageWidth);
             }
 
-            this.addRenderableWidget(new ImageButton(this.leftPos + 135, this.height / 2 - 50, 20, 18, 0, 0, 19, RECIPE_BUTTON_LOCATION, (button) -> {
-                this.recipeBookComponent.toggleOpen();
-                BetterRecipeBook.rememberedBrewingOpen = this.recipeBookComponent.isOpen();
+            this.addRenderableWidget(new ImageButton(this.leftPos + 135, this.height / 2 - 50, 20, 18, BRBTextures.RECIPE_BOOK_BUTTON_SPRITES, (button) -> {
+                this._$recipeBookComponent.toggleOpen();
+                BetterRecipeBook.rememberedBrewingOpen = this._$recipeBookComponent.isOpen();
                 if (!BetterRecipeBook.config.keepCentered) {
-                    this.leftPos = this.recipeBookComponent.findLeftEdge(this.width, this.imageWidth);
+                    this.leftPos = this._$recipeBookComponent.findLeftEdge(this.width, this.imageWidth);
                 }
                 button.setPosition(this.leftPos + 135, this.height / 2 - 50);
             }));
 
-            this.addWidget(this.recipeBookComponent);
+            this.addWidget(this._$recipeBookComponent);
         }
     }
 
@@ -59,22 +60,22 @@ public abstract class BrewingStandScreenMixin extends AbstractContainerScreen<Br
     protected void slotClicked(Slot slot, int x, int y, ClickType clickType) {
         // clear ghost recipe if an empty ingredient slot is clicked with no items
         if (slot != null && slot.index < 4 && menu.getCarried().isEmpty() && menu.slots.get(slot.index).getItem().isEmpty()) {
-            recipeBookComponent.ghostRecipe.clear();
+            _$recipeBookComponent.ghostRecipe.clear();
         }
 
         super.slotClicked(slot, x, y, clickType);
 
         // clear ghostRecipe if ingredients match
-        BrewableResult result = recipeBookComponent.recipesArea.getLastClickedRecipe();
-        if (slot != null && slot.index < 4 && result != null && recipeBookComponent.currentTab != null && result.hasMaterials(recipeBookComponent.currentTab.getGroup(), menu.slots.subList(0, 4))) {
-            recipeBookComponent.ghostRecipe.clear();
+        BrewableResult result = _$recipeBookComponent.recipesArea.getLastClickedRecipe();
+        if (slot != null && slot.index < 4 && result != null && _$recipeBookComponent.currentTab != null && result.hasMaterials(_$recipeBookComponent.currentTab.getGroup(), menu.slots.subList(0, 4))) {
+            _$recipeBookComponent.ghostRecipe.clear();
         }
     }
 
     @Override
     protected boolean hasClickedOutside(double d, double e, int i, int j, int k) {
         boolean bl = d < (double)i || e < (double)j || d >= (double)(i + this.imageWidth) || e >= (double)(j + this.imageHeight);
-        return this.recipeBookComponent.hasClickedOutside(d, e, this.leftPos, this.topPos, this.imageWidth, this.imageHeight, k) && bl;
+        return this._$recipeBookComponent.hasClickedOutside(d, e, this.leftPos, this.topPos, this.imageWidth, this.imageHeight, k) && bl;
     }
 
     /**
@@ -82,26 +83,25 @@ public abstract class BrewingStandScreenMixin extends AbstractContainerScreen<Br
      */
     @Overwrite
     public void render(GuiGraphics gui, int mouseX, int mouseY, float delta) {
-        // this.drawStatusEffects = !this.recipeBook.isOpen();
-        this.renderBackground(gui);
+        this.renderBackground(gui, mouseX, mouseY, delta);
 
         // clear ghost recipe if book is closed
-        if (!recipeBookComponent.isOpen() && recipeBookComponent.ghostRecipe.size() > 0) {
-            recipeBookComponent.ghostRecipe.clear();
+        if (!_$recipeBookComponent.isOpen() && _$recipeBookComponent.ghostRecipe.size() > 0) {
+            _$recipeBookComponent.ghostRecipe.clear();
         }
 
-        if (this.recipeBookComponent.isOpen() && this.widthNarrow) {
+        if (this._$recipeBookComponent.isOpen() && this._$widthNarrow) {
             this.renderBg(gui, delta, mouseX, mouseY);
             super.render(gui, mouseX, mouseY, delta);
             this.renderTooltip(gui, mouseX, mouseY);
         } else {
-            this.recipeBookComponent.render(gui, mouseX, mouseY, delta);
+            this._$recipeBookComponent.render(gui, mouseX, mouseY, delta);
             super.render(gui, mouseX, mouseY, delta);
-            this.recipeBookComponent.drawGhostSlots(gui, this.leftPos, this.topPos, false, delta);
+            this._$recipeBookComponent.drawGhostSlots(gui, this.leftPos, this.topPos, false, delta);
         }
 
         this.renderTooltip(gui, mouseX, mouseY);
-        this.recipeBookComponent.drawTooltip(gui, this.leftPos, this.topPos, mouseX, mouseY);
+        this._$recipeBookComponent.drawTooltip(gui, this.leftPos, this.topPos, mouseX, mouseY);
     }
 
     @ModifyArg(
@@ -113,7 +113,7 @@ public abstract class BrewingStandScreenMixin extends AbstractContainerScreen<Br
             )
     )
     public int drawBackground(int i) {
-        if (this.recipeBookComponent.isOpen() && !BetterRecipeBook.config.keepCentered) {
+        if (this._$recipeBookComponent.isOpen() && !BetterRecipeBook.config.keepCentered) {
             return i + 77;
         } else {
             return i;
@@ -122,12 +122,12 @@ public abstract class BrewingStandScreenMixin extends AbstractContainerScreen<Br
 
     @Override
     public BrewingRecipeBookComponent getRecipeBookComponent() {
-        return recipeBookComponent;
+        return _$recipeBookComponent;
     }
 
     @Override
     public void recipesUpdated() {
-        recipeBookComponent.recipesUpdated();
+        _$recipeBookComponent.recipesUpdated();
     }
 
 }

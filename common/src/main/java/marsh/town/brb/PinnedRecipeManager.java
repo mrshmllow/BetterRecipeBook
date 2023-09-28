@@ -11,7 +11,7 @@ import net.minecraft.client.gui.screens.recipebook.RecipeCollection;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.alchemy.PotionBrewing;
-import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import org.apache.commons.io.IOUtils;
 
 import java.io.File;
@@ -67,8 +67,8 @@ public class PinnedRecipeManager {
 
     public void addOrRemoveFavourite(RecipeCollection target) {
         for (ResourceLocation identifier : this.pinned) {
-            for (Recipe<?> recipe : target.getRecipes()) {
-                if (recipe.getId().equals(identifier)) {
+            for (RecipeHolder<?> recipe : target.getRecipes()) {
+                if (recipe.id().equals(identifier)) {
                     this.pinned.remove(identifier);
                     this.store();
                     return;
@@ -76,7 +76,7 @@ public class PinnedRecipeManager {
             }
         }
 
-        this.pinned.addAll(target.getRecipes().stream().map(Recipe::getId).toList());
+        this.pinned.addAll(target.getRecipes().stream().map(RecipeHolder::id).toList());
         this.store();
     }
 
@@ -97,8 +97,8 @@ public class PinnedRecipeManager {
 
     public boolean has(Object target) {
         for (ResourceLocation identifier : this.pinned) {
-            for (Recipe<?> recipe : ((RecipeCollection) target).getRecipes()) {
-                if (recipe.getId().equals(identifier)) {
+            for (RecipeHolder<?> recipe : ((RecipeCollection) target).getRecipes()) {
+                if (recipe.id().equals(identifier)) {
                     return true;
                 }
             }
@@ -117,7 +117,7 @@ public class PinnedRecipeManager {
         return false;
     }
 
-    public static void handlePinRecipe(RecipeBookComponent book, RecipeBookPage page, Recipe<?> recipe) {
+    public static void handlePinRecipe(RecipeBookComponent book, RecipeBookPage page, RecipeHolder<?> recipe) {
         RecipeCollection collection = new RecipeCollection(Minecraft.getInstance().level.registryAccess(), List.of(recipe));
         collection.updateKnownRecipes(page.getRecipeBook());
         BetterRecipeBook.pinnedRecipeManager.addOrRemoveFavourite(collection);

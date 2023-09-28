@@ -4,8 +4,9 @@ import com.google.common.collect.Lists;
 import marsh.town.brb.BetterRecipeBook;
 import marsh.town.brb.config.Config;
 import marsh.town.brb.mixins.accessors.RecipeBookComponentAccessor;
-import marsh.town.brb.util.MyGhostRecipe;
+import marsh.town.brb.util.BRBTextures;
 import marsh.town.brb.util.ClientInventoryUtil;
+import marsh.town.brb.util.MyGhostRecipe;
 import me.shedaniel.autoconfig.AutoConfig;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -31,7 +32,7 @@ import net.minecraft.world.item.PotionItem;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
@@ -42,8 +43,6 @@ import static marsh.town.brb.brewingstand.PlatformPotionUtil.getIngredient;
 
 @Environment(EnvType.CLIENT)
 public class BrewingRecipeBookComponent extends RecipeBookComponent {
-    public static final ResourceLocation RECIPE_BOOK_LOCATION = new ResourceLocation("textures/gui/recipe_book.png");
-    private static final ResourceLocation BUTTON_LOCATION = new ResourceLocation("brb:textures/gui/buttons.png");
     protected BrewingStandMenu brewingStandScreenHandler;
     Minecraft client;
     private int parentWidth;
@@ -190,12 +189,8 @@ public class BrewingRecipeBookComponent extends RecipeBookComponent {
         }
 
         if (BetterRecipeBook.config.settingsButton) {
-            int u = 0;
-            if (BetterRecipeBook.config.darkMode) {
-                u = 18;
-            }
-
-            this.settingsButton = new ImageButton(i + 11, j + 137, 16, 18, u, 77, 19, BUTTON_LOCATION, button -> {
+            // TODO verify
+            this.settingsButton = new ImageButton(i + 11, j + 137, 77, 19, BRBTextures.SETTINGS_BUTTON_SPRITES, button -> {
                 Minecraft.getInstance().setScreen(AutoConfig.getConfigScreen(Config.class, Minecraft.getInstance().screen).get());
             });
         }
@@ -380,7 +375,7 @@ public class BrewingRecipeBookComponent extends RecipeBookComponent {
         // blit recipe book background texture
         int blitX = (this.parentWidth - 147) / 2 - this.leftOffset;
         int blitY = (this.parentHeight - 166) / 2;
-        gui.blit(RECIPE_BOOK_LOCATION, blitX, blitY, 1, 1, 147, 166);
+        gui.blit(BRBTextures.RECIPE_BOOK_BACKGROUND_TEXTURE, blitX, blitY, 1, 1, 147, 166);
 
         // render search box
         this.searchBox.render(gui, mouseX, mouseY, delta);
@@ -431,7 +426,7 @@ public class BrewingRecipeBookComponent extends RecipeBookComponent {
     }
 
     protected void setBookButtonTexture() {
-        this.toggleBrewableButton.initTextureValues(152, 41, 28, 18, RECIPE_BOOK_LOCATION);
+        this.toggleBrewableButton.initTextureValues(BRBTextures.RECIPE_BOOK_FILTER_BUTTON_SPRITES);
     }
 
     @Override
@@ -576,7 +571,7 @@ public class BrewingRecipeBookComponent extends RecipeBookComponent {
     }
 
     @Override
-    public void recipesShown(List<Recipe<?>> list) {
+    public void recipesShown(List<RecipeHolder<?>> list) {
 
     }
 

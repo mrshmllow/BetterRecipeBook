@@ -5,7 +5,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.stats.RecipeBook;
-import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
@@ -23,11 +23,11 @@ public class DisableBounce {
      */
     @Overwrite
     @Environment(EnvType.CLIENT)
-    public boolean willHighlight(Recipe<?> recipe) {
+    public boolean willHighlight(RecipeHolder<?> recipe) {
         if (!BetterRecipeBook.config.newRecipes.enableBounce) {
             return false;
         } else {
-            return highlight.contains(recipe.getId());
+            return highlight.contains(recipe.id());
         }
     }
 }

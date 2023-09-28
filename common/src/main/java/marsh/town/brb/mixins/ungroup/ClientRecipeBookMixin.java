@@ -6,7 +6,7 @@ import net.minecraft.client.ClientRecipeBook;
 import net.minecraft.client.RecipeBookCategories;
 import net.minecraft.client.gui.screens.recipebook.RecipeCollection;
 import net.minecraft.stats.RecipeBook;
-import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -30,10 +30,10 @@ public class ClientRecipeBookMixin extends RecipeBook {
 
             for (RecipeCollection recipeResultCollection : list) {
                 if (recipeResultCollection.getRecipes().size() > 1) {
-                    List<Recipe<?>> recipes = recipeResultCollection.getRecipes();
+                    List<RecipeHolder<?>> recipes = recipeResultCollection.getRecipes();
                     list2.remove(recipeResultCollection);
 
-                    for (Recipe<?> recipe : recipes) {
+                    for (RecipeHolder<?> recipe : recipes) {
                         RecipeCollection recipeResultCollection1 = new RecipeCollection(recipeResultCollection.registryAccess(), Collections.singletonList(recipe));
                         recipeResultCollection1.updateKnownRecipes(this);
 

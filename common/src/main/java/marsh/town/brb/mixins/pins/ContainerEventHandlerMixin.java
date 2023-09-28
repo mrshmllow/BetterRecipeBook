@@ -1,16 +1,11 @@
 package marsh.town.brb.mixins.pins;
 
-import marsh.town.brb.mixins.accessors.ImageButtonAccessor;
-import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.components.events.ContainerEventHandler;
 import net.minecraft.client.gui.components.events.GuiEventListener;
-import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 
-import java.util.Iterator;
 import java.util.List;
 
 @Mixin(ContainerEventHandler.class)
@@ -19,10 +14,11 @@ public interface ContainerEventHandlerMixin {
     @Shadow void setFocused(@Nullable GuiEventListener focused);
     @Shadow void setDragging(boolean dragging);
 
+    //TODO Is this sin needed? Because If it is I have no idea.
     /**
      * @author marshmallow
      * I have sinned.
-     */
+     *
     @Overwrite
     default boolean mouseClicked(double mouseX, double mouseY, int button) {
         Iterator<? extends GuiEventListener> var6 = this.children().iterator();
@@ -37,7 +33,7 @@ public interface ContainerEventHandlerMixin {
         } while(!element.mouseClicked(mouseX, mouseY, button));
 
         if (element instanceof ImageButton) {
-            if (((ImageButtonAccessor) element).getResourceLocation().equals(new ResourceLocation("textures/gui/recipe_button.png"))) {
+            if (((ImageButtonAccessor) element).getSprites().enabled().equals(new ResourceLocation("textures/gui/recipe_button.png"))) {
                 return true;
             }
         }
@@ -49,5 +45,5 @@ public interface ContainerEventHandlerMixin {
         }
 
         return true;
-    }
+    }*/
 }
