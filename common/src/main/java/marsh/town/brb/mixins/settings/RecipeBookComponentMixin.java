@@ -1,4 +1,4 @@
-package marsh.town.brb.mixins;
+package marsh.town.brb.mixins.settings;
 
 import marsh.town.brb.BetterRecipeBook;
 import marsh.town.brb.config.Config;
@@ -20,7 +20,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.List;
 
 @Mixin(RecipeBookComponent.class)
-public abstract class SettingsButton {
+public abstract class RecipeBookComponentMixin {
 
     @Shadow
     protected Minecraft minecraft;
@@ -40,7 +40,7 @@ public abstract class SettingsButton {
             int i = (this.width - 147) / 2 - this.xOffset;
             int j = (this.height - 166) / 2;
 
-            this._$settingsButton = new ImageButton(i + 11, j + 137, 16, 18, BRBTextures.SETTINGS_BUTTON_SPRITES, button -> {
+            this._$settingsButton = new ImageButton(i + 11, j + 137, 16, 16, BRBTextures.SETTINGS_BUTTON_SPRITES, button -> {
                 Minecraft.getInstance().setScreen(AutoConfig.getConfigScreen(Config.class, Minecraft.getInstance().screen).get());
             });
         }

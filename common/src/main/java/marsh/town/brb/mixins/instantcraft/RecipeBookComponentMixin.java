@@ -66,13 +66,10 @@ public abstract class RecipeBookComponentMixin {
     @Inject(method = "mouseClicked", at = @At("HEAD"), cancellable = true)
     public void mouseClicked(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir) {
         if (this.isVisible() && BetterRecipeBook.config.instantCraft.showButton) {
-            assert this.minecraft.player != null;
-            if (!this.minecraft.player.isSpectator()) {
-                if (this._$instantCraftButton.mouseClicked(mouseX, mouseY, button)) {
-                    boolean bl = BetterRecipeBook.instantCraftingManager.toggleOn();
-                    this._$instantCraftButton.setStateTriggered(bl);
-                    cir.setReturnValue(true);
-                }
+            if (this._$instantCraftButton.mouseClicked(mouseX, mouseY, button)) {
+                boolean bl = BetterRecipeBook.instantCraftingManager.toggleOn();
+                this._$instantCraftButton.setStateTriggered(bl);
+                cir.setReturnValue(true);
             }
         }
     }

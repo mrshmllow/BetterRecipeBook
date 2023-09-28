@@ -10,7 +10,7 @@
     "MouseScrollHandler",
     "RemoveBookButton",
     "RemoveToasts",
-    "SettingsButton",
+    "settings.RecipeBookComponentMixin",
     "accessors.CraftingMenuAccessor",
     "accessors.ImageButtonAccessor",
     "accessors.InventoryAccessor",
