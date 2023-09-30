@@ -25,7 +25,6 @@ public class MouseScrollHandler {
 
             double d = (this.minecraft.options.discreteMouseScroll().get() ? Math.signum(vertical) : vertical) * this.minecraft.options.mouseWheelSensitivity().get();
 
-            //TODO To be X or to be Y, that is the question.
             BetterRecipeBook.queuedScroll = (int) -((int) this.accumulatedScrollY + d);
         }
     }

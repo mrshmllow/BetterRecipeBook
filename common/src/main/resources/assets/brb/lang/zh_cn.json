@@ -3,8 +3,6 @@
 
   "text.autoconfig.brb.category.default": "常规设置",
   "text.autoconfig.brb.option.enableBook": "启用配方书",
-  "text.autoconfig.brb.option.darkMode": "启用 UI 的黑暗模式。§o需要完整的资源包",
-  "text.autoconfig.brb.option.darkMode.@Tooltip": "只能在使用类似 §aVanilla Tweaks §r这样的黑暗模式资源包时启用。",
   "text.autoconfig.brb.option.keepCentered": "保持制作屏幕居中",
   "text.autoconfig.brb.option.enablePinning": "启用配方固定",
   "text.autoconfig.brb.option.settingsButton": "显示设置按钮",

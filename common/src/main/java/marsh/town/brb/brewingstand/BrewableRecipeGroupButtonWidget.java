@@ -1,12 +1,12 @@
 package marsh.town.brb.brewingstand;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import marsh.town.brb.util.BRBTextures;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.StateSwitchingButton;
-import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -17,24 +17,15 @@ import java.util.List;
 public class BrewableRecipeGroupButtonWidget extends StateSwitchingButton {
     private final BrewingRecipeBookGroup group;
 
-    public static final WidgetSprites DEFAULT_SPRITES = new WidgetSprites(
-            new ResourceLocation("recipe_book/tab"),
-            new ResourceLocation("recipe_book/tab_selected")
-    );
-
     public BrewableRecipeGroupButtonWidget(BrewingRecipeBookGroup category) {
         super(0, 0, 35, 27, false);
-        this.initTextureValues(DEFAULT_SPRITES);
+        this.initTextureValues(BRBTextures.RECIPE_BOOK_TAB_SPRITES);
         this.group = category;
     }
 
-    //TODO verify
     public void renderWidget(GuiGraphics gui, int mouseX, int mouseY, float delta) {
         Minecraft minecraftClient = Minecraft.getInstance();
-        //RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        //RenderSystem.setShaderTexture(0, );
 
-        RenderSystem.disableDepthTest();
         ResourceLocation sprite = this.sprites.get(true, this.isStateTriggered);
         int x = getX();
         if (this.isStateTriggered) {

@@ -7,6 +7,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.screens.recipebook.OverlayRecipeComponent;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
@@ -37,18 +38,15 @@ public abstract class OverlayRecipeButtonMixin extends AbstractWidget {
 
     @Inject(at = @At("HEAD"), method = "renderWidget", cancellable = true)
     public void renderWidget(GuiGraphics gui, int mouseX, int mouseY, float delta, CallbackInfo ci) {
-        int tx = 0;
-        int tz = 0;
+        ResourceLocation resourceLocation;
 
-        if (BetterRecipeBook.config.darkMode) {
-            tz = 52;
+        if (((OverlayRecipeComponentAccessor) field_3113).isFurnaceMenu()) {
+            resourceLocation = BRBTextures.RECIPE_BOOK_FURNACE_OVERLAY_SPRITE.get(this.isCraftable, isHoveredOrFocused());
+        } else {
+            resourceLocation = BRBTextures.RECIPE_BOOK_CRAFTING_OVERLAY_SPRITE.get(this.isCraftable, isHoveredOrFocused());
         }
 
-        if (!this.isCraftable) {
-            tx += 26;
-        }
-
-        gui.blit(BRBTextures.RECIPE_BUTTON_ALT_BLANK_TEXTURE, this.getX(), this.getY(), tx, tz, this.width, this.height);
+        gui.blitSprite(resourceLocation, getX(), getY(), this.width, this.height);
         gui.pose().pushPose();
         if (BetterRecipeBook.config.alternativeRecipes.onHover && !this.isHoveredOrFocused()) { // if show alternatives recipe is enabled and recipe is not hovered, show the result item
             ItemStack recipeOutput = this.recipe.value().getResultItem(field_3113.getRecipeCollection().registryAccess());
@@ -58,7 +56,10 @@ public abstract class OverlayRecipeButtonMixin extends AbstractWidget {
             for (OverlayRecipeComponent.OverlayRecipeButton.Pos pos : this.ingredientPos) {
                 gui.pose().pushPose();
                 gui.pose().translate(pos.x, pos.y, 0.0);
-                gui.pose().scale(0.375f, 0.375f, 1.0f);
+                // if furnace menu, keep items at default scale, so it isn't tiny
+                if (!((OverlayRecipeComponentAccessor) field_3113).isFurnaceMenu()) {
+                    gui.pose().scale(0.375f, 0.375f, 1.0f);
+                }
                 gui.pose().translate(-8.0, -8.0, 0.0);
                 if (pos.ingredients.length > 0) {
                     gui.renderItem(pos.ingredients[Mth.floor(((OverlayRecipeComponentAccessor) field_3113).getTime() / 30.0f) % pos.ingredients.length], 0, 0);

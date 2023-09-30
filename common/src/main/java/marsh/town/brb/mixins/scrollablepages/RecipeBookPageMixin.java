@@ -79,7 +79,7 @@ public abstract class RecipeBookPageMixin {
      */
     @Overwrite
     private void updateArrowButtons() {
-        if (BetterRecipeBook.config.scrolling.scrollAround && BetterRecipeBook.config.scrolling.enableScrolling && !(totalPages < 1)) {
+        if (BetterRecipeBook.config.scrolling.scrollAround && BetterRecipeBook.config.scrolling.enableScrolling && totalPages > 1) {
             forwardButton.visible = true;
             backButton.visible = true;
         } else {

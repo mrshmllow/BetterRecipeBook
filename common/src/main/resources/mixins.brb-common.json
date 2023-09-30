@@ -25,7 +25,6 @@
     "instantcraft.RecipeBookComponentMixin",
     "instantcraft.RecipeButtonMixin",
     "pins.AbstractContainerScreenMixin",
-    "pins.ContainerEventHandlerMixin",
     "pins.RecipeBookComponentMixin",
     "pins.RecipeButtonMixin",
     "pins.RecipeBookPageMixin",

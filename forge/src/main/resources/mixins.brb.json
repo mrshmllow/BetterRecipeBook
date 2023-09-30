@@ -4,7 +4,7 @@
   "package": "marsh.town.brb.forge.Mixins",
   "compatibilityLevel": "JAVA_16",
   "client": [
-    "Accessors.ForgePotionBrewingMixAccessor",
-    "Accessors.ForgePotionBrewingAccessor"
+    "Accessors.ForgePotionBrewingAccessor",
+    "Accessors.ForgePotionBrewingMixAccessor"
   ]
 }

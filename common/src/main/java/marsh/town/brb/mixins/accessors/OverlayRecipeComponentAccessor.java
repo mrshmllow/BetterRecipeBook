@@ -15,4 +15,7 @@ public interface OverlayRecipeComponentAccessor {
     @Accessor("time")
     float getTime();
 
+    @Accessor("isFurnaceMenu")
+    boolean isFurnaceMenu();
+
 }

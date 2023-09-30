@@ -19,7 +19,7 @@ import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyArg;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(BrewingStandScreen.class)
@@ -104,15 +104,13 @@ public abstract class BrewingStandScreenMixin extends AbstractContainerScreen<Br
         this._$recipeBookComponent.drawTooltip(gui, this.leftPos, this.topPos, mouseX, mouseY);
     }
 
-    @ModifyArg(
+    // fix brewing progress indicator offset when recipe book is open by modifying the width offset
+    @ModifyVariable(
             method = "renderBg",
-            index = 1,
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/client/gui/GuiGraphics;blit(Lnet/minecraft/resources/ResourceLocation;IIIIII)V"
-            )
+            index = 5,
+            at = @At("STORE")
     )
-    public int drawBackground(int i) {
+    public int renderBg_width(int i) {
         if (this._$recipeBookComponent.isOpen() && !BetterRecipeBook.config.keepCentered) {
             return i + 77;
         } else {

@@ -3,8 +3,6 @@
 
   "text.autoconfig.brb.category.default": "Ustawienie ogólne",
   "text.autoconfig.brb.option.enableBook": "Włącz książkę receptur",
-  "text.autoconfig.brb.option.darkMode": "Włącz tryb ciemny interfejsu. §oWymaga pełnej paczki zasobów",
-  "text.autoconfig.brb.option.darkMode.@Tooltip": "Włącz to tylko jeśli masz paczkę zasobów z trybem ciemnym taką jak §avanilla tweaks§r.",
   "text.autoconfig.brb.option.keepCentered": "Zachowaj ekrany craftingu na środku ekranu",
   "text.autoconfig.brb.option.enablePinning": "Włącz przypinanie receptur",
   "text.autoconfig.brb.option.settingsButton": "Włącz przycisk ustawień",

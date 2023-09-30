@@ -189,7 +189,6 @@ public class BrewingRecipeBookComponent extends RecipeBookComponent {
         }
 
         if (BetterRecipeBook.config.settingsButton) {
-            // TODO verify
             this.settingsButton = new ImageButton(i + 11, j + 137, 16, 16, BRBTextures.SETTINGS_BUTTON_SPRITES, button -> {
                 Minecraft.getInstance().setScreen(AutoConfig.getConfigScreen(Config.class, Minecraft.getInstance().screen).get());
             });
@@ -467,7 +466,7 @@ public class BrewingRecipeBookComponent extends RecipeBookComponent {
 
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         this.searching = false;
-        if (this.isOpen() && !Objects.requireNonNull(this.client.player).isSpectator()) {
+        if (this.isOpen()) {
             if (keyCode == GLFW.GLFW_KEY_ESCAPE) {
                 this.setOpen(false);
                 return true;
@@ -510,7 +509,7 @@ public class BrewingRecipeBookComponent extends RecipeBookComponent {
     public boolean charTyped(char chr, int modifiers) {
         if (this.searching) {
             return false;
-        } else if (this.isOpen() && !Objects.requireNonNull(this.client.player).isSpectator()) {
+        } else if (this.isOpen()) {
             assert this.searchBox != null;
             if (this.searchBox.charTyped(chr, modifiers)) {
                 this.refreshSearchResults();

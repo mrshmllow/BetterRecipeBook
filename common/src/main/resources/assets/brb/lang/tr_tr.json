@@ -3,8 +3,6 @@
   
     "text.autoconfig.brb.category.default": "Genel Ayarlar",
     "text.autoconfig.brb.option.enableBook": "Tarif kitabını aktifleştir",
-    "text.autoconfig.brb.option.darkMode": "Koyu mod varyantlarını aktifleştir. §oTam bir Kaynakpaketi gerektirir",
-    "text.autoconfig.brb.option.darkMode.@Tooltip": "Bunu sadece bir koyu mod Kaynakpaketi kullanıyorsan aktifleştir §avanilla tweaks§r gibi.",
     "text.autoconfig.brb.option.keepCentered": "Üretim ekranını ortada tut",
     "text.autoconfig.brb.option.enablePinning": "Tarif sabitlemeyi aktifleştir",
     "text.autoconfig.brb.option.settingsButton": "Ayarlar butonunu aktifleştir",
