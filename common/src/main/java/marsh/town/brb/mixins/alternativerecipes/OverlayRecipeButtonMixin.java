@@ -73,7 +73,7 @@ public abstract class OverlayRecipeButtonMixin extends AbstractWidget {
             gui.pose().pushPose();
             // make sure pin is drawn over the crafting items
             gui.pose().mulPoseMatrix(gui.pose().last().pose());
-            gui.blit(BRBTextures.RECIPE_BOOK_PIN_TEXTURE, getX() - 3, getY() - 3, 0, 0, height + 3, width + 3, 31, 31);
+            gui.blitSprite(BRBTextures.RECIPE_BOOK_OVERLAY_PIN_SPRITE, getX() - 4, getY() - 4, this.width + 8, this.height + 8);
             gui.pose().popPose();
         }
 

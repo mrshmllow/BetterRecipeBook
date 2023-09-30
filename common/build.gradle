@@ -22,6 +22,12 @@ loom {
     accessWidenerPath = file("src/main/resources/brb.common.accesswidener")
 }
 
+jar {
+    processResources {
+        exclude("**/*.ase", "**/*.kra")
+    }
+}
+
 publishing {
     publications {
         mavenCommon(MavenPublication) {

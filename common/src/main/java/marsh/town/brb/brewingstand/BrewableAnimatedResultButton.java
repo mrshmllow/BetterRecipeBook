@@ -13,6 +13,7 @@ import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.BrewingStandMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.alchemy.PotionUtils;
@@ -44,12 +45,9 @@ public class BrewableAnimatedResultButton extends AbstractWidget {
         }
 
         // blit outline texture
-        int bgX = 29;
-        int bgZ = 206;
-        if (!potionRecipe.hasMaterials(group, brewingStandScreenHandler.slots)) {
-            bgX += 25;
-        }
-        gui.blit(BRBTextures.RECIPE_BOOK_BACKGROUND_TEXTURE, getX(), getY(), bgX, bgZ, this.width, this.height);
+        ResourceLocation outlineTexture = potionRecipe.hasMaterials(group, brewingStandScreenHandler.slots) ?
+                BRBTextures.RECIPE_BOOK_BUTTON_SLOT_CRAFTABLE_SPRITE : BRBTextures.RECIPE_BOOK_BUTTON_SLOT_UNCRAFTABLE_SPRITE;
+        gui.blitSprite(outlineTexture, getX(), getY(), this.width, this.height);
 
         // render ingredient item
         int offset = 4;
@@ -57,7 +55,7 @@ public class BrewableAnimatedResultButton extends AbstractWidget {
 
         // if pinned recipe, blit the pin texture over it
         if (BetterRecipeBook.config.enablePinning && BetterRecipeBook.pinnedRecipeManager.hasPotion(potionRecipe.recipe)) {
-            gui.blit(BRBTextures.RECIPE_BOOK_PIN_TEXTURE, getX() - 3, getY() - 3, 0, 0, this.width + 3, this.height + 3, 31, 31);
+            gui.blitSprite(BRBTextures.RECIPE_BOOK_PIN_SPRITE, getX() - 4, getY() - 4, 32, 32);
         }
     }
 

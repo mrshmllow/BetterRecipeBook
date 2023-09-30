@@ -78,7 +78,7 @@ public abstract class RecipeBookPageMixin {
      * @author marshmallow
      */
     @Overwrite
-    void updateArrowButtons() {
+    private void updateArrowButtons() {
         if (BetterRecipeBook.config.scrolling.scrollAround && BetterRecipeBook.config.scrolling.enableScrolling && !(totalPages < 1)) {
             forwardButton.visible = true;
             backButton.visible = true;
