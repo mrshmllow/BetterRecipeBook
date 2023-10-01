@@ -189,7 +189,7 @@ public class BrewingRecipeBookComponent extends RecipeBookComponent {
         }
 
         if (BetterRecipeBook.config.settingsButton) {
-            this.settingsButton = new ImageButton(i + 11, j + 137, 16, 16, BRBTextures.SETTINGS_BUTTON_SPRITES, button -> {
+            this.settingsButton = new ImageButton(i + 11, j + 137, 18, 18, BRBTextures.SETTINGS_BUTTON_SPRITES, button -> {
                 Minecraft.getInstance().setScreen(AutoConfig.getConfigScreen(Config.class, Minecraft.getInstance().screen).get());
             });
         }

@@ -17,10 +17,10 @@ import java.util.List;
 public class BrewingRecipeBookResults {
     private List<BrewableResult> recipeCollection;
     public final List<BrewableAnimatedResultButton> buttons = Lists.newArrayListWithCapacity(20);
-    private int pageCount;
+    private int totalPages;
     private int currentPage;
-    private StateSwitchingButton nextPageButton;
-    private StateSwitchingButton prevPageButton;
+    private StateSwitchingButton forwardButton;
+    private StateSwitchingButton backButton;
     private Minecraft minecraft;
     private BrewableAnimatedResultButton hoveredButton;
     private BrewableResult currentClickedRecipe;
@@ -44,30 +44,25 @@ public class BrewingRecipeBookResults {
             this.buttons.get(k).setPosition(parentLeft + 11 + 25 * (k % 5), parentTop + 31 + 25 * (k / 5));
         }
 
-        this.nextPageButton = new StateSwitchingButton(parentLeft + 93, parentTop + 137, 12, 17, false);
-        this.nextPageButton.initTextureValues(BRBTextures.RECIPE_BOOK_PAGE_FORWARD_SPRITES);
-        this.prevPageButton = new StateSwitchingButton(parentLeft + 38, parentTop + 137, 12, 17, true);
-        this.prevPageButton.initTextureValues(BRBTextures.RECIPE_BOOK_PAGE_BACKWARD_SPRITES);
+        this.forwardButton = new StateSwitchingButton(parentLeft + 93, parentTop + 137, 12, 17, false);
+        this.forwardButton.initTextureValues(BRBTextures.RECIPE_BOOK_PAGE_FORWARD_SPRITES);
+        this.backButton = new StateSwitchingButton(parentLeft + 38, parentTop + 137, 12, 17, true);
+        this.backButton.initTextureValues(BRBTextures.RECIPE_BOOK_PAGE_BACKWARD_SPRITES);
     }
 
     public void setResults(List<BrewableResult> recipeCollection, boolean resetCurrentPage, BrewingRecipeBookGroup group) {
         this.recipeCollection = recipeCollection;
         this.group = group;
 
-        this.pageCount = (int)Math.ceil((double)recipeCollection.size() / 20.0D);
-        if (this.pageCount <= this.currentPage || resetCurrentPage) {
+        this.totalPages = (int)Math.ceil((double)recipeCollection.size() / 20.0D);
+        if (this.totalPages <= this.currentPage || resetCurrentPage) {
             this.currentPage = 0;
         }
 
-        this.refreshResultButtons();
+        this.updateButtonsForPage();
     }
 
-    private void refreshResultButtons() {
-        if (pageCount == 0 && currentPage == -1) {
-            currentPage = 0;
-            return;
-        }
-
+    private void updateButtonsForPage() {
         int i = 20 * this.currentPage;
 
         for(int j = 0; j < this.buttons.size(); ++j) {
@@ -81,30 +76,22 @@ public class BrewingRecipeBookResults {
             }
         }
 
-        this.hideShowPageButtons();
+        this.updateArrowButtons();
     }
 
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (BetterRecipeBook.config.scrolling.enableScrolling) {
-            if (nextPageButton.mouseClicked(mouseX, mouseY, button)) {
-                if (currentPage >= pageCount - 1) {
-                    currentPage = -1;
-                }
-            } else if (prevPageButton.mouseClicked(mouseX, mouseY, button)) {
-                if (currentPage <= 0) {
-                    currentPage = pageCount;
-                }
-            }
-        }
-
         this.currentClickedRecipe = null;
-        if (this.nextPageButton.mouseClicked(mouseX, mouseY, button)) {
-            ++this.currentPage;
-            this.refreshResultButtons();
+        if (this.forwardButton.mouseClicked(mouseX, mouseY, button)) {
+            if (++currentPage >= totalPages) {
+                currentPage = BetterRecipeBook.config.scrolling.scrollAround ? 0 : totalPages - 1;
+            }
+            this.updateButtonsForPage();
             return true;
-        } else if (this.prevPageButton.mouseClicked(mouseX, mouseY, button)) {
-            --this.currentPage;
-            this.refreshResultButtons();
+        } else if (this.backButton.mouseClicked(mouseX, mouseY, button)) {
+            if (--currentPage < 0) {
+                currentPage = BetterRecipeBook.config.scrolling.scrollAround ? totalPages - 1 : 0;
+            }
+            this.updateButtonsForPage();
             return true;
         } else {
             Iterator<BrewableAnimatedResultButton> var10 = this.buttons.iterator();
@@ -140,37 +127,34 @@ public class BrewingRecipeBookResults {
         return this.lastClickedRecipe;
     }
 
-    private void hideShowPageButtons() {
-        if (BetterRecipeBook.config.scrolling.scrollAround && BetterRecipeBook.config.scrolling.enableScrolling && pageCount > 1) {
-            nextPageButton.visible = true;
-            prevPageButton.visible = true;
+    private void updateArrowButtons() {
+        if (BetterRecipeBook.config.scrolling.scrollAround && totalPages > 1) {
+            forwardButton.visible = true;
+            backButton.visible = true;
         } else {
-            nextPageButton.visible = pageCount > 1 && currentPage < pageCount - 1;
-            prevPageButton.visible = pageCount > 1 && currentPage > 0;
+            forwardButton.visible = totalPages > 1 && currentPage < totalPages - 1;
+            backButton.visible = totalPages > 1 && currentPage > 0;
         }
     }
 
     public void render(GuiGraphics gui, int x, int y, int mouseX, int mouseY, float delta) {
         if (BetterRecipeBook.queuedScroll != 0 && BetterRecipeBook.config.scrolling.enableScrolling) {
-            int queuedPage = BetterRecipeBook.queuedScroll + currentPage;
+            currentPage += BetterRecipeBook.queuedScroll;
+            BetterRecipeBook.queuedScroll = 0;
 
-            if (queuedPage <= pageCount - 1 && queuedPage >= 0) {
-                currentPage += BetterRecipeBook.queuedScroll;
-            } else if (BetterRecipeBook.config.scrolling.scrollAround) {
-                if (queuedPage < 0) {
-                    currentPage = pageCount - 1;
-                } else if (queuedPage > pageCount - 1) {
-                    currentPage = 0;
-                }
+            if (currentPage >= totalPages) {
+                currentPage = BetterRecipeBook.config.scrolling.scrollAround ? currentPage % totalPages : totalPages - 1;
+            } else if (currentPage < 0) {
+                // required as % is not modulus, it is remainder. we need to force output positive by((currentPage % totalPages) + totalPages)
+                currentPage = BetterRecipeBook.config.scrolling.scrollAround ? (currentPage % totalPages) + totalPages : 0;
             }
 
-            refreshResultButtons();
-            BetterRecipeBook.queuedScroll = 0;
+            updateButtonsForPage();
         }
 
 
-        if (this.pageCount > 1) {
-            String string = this.currentPage + 1 + "/" + this.pageCount;
+        if (this.totalPages > 1) {
+            String string = this.currentPage + 1 + "/" + this.totalPages;
             int width = this.minecraft.font.width(string);
             gui.drawString(this.minecraft.font, string, x - width / 2 + 73, y + 141, -1, false);
         }
@@ -184,8 +168,8 @@ public class BrewingRecipeBookResults {
             }
         }
 
-        this.prevPageButton.render(gui, mouseX, mouseY, delta);
-        this.nextPageButton.render(gui, mouseX, mouseY, delta);
+        this.backButton.render(gui, mouseX, mouseY, delta);
+        this.forwardButton.render(gui, mouseX, mouseY, delta);
         // this.alternatesWidget.render(matrices, mouseX, mouseY, delta);
     }
 }

@@ -40,7 +40,7 @@ public abstract class RecipeBookComponentMixin {
             int i = (this.width - 147) / 2 - this.xOffset;
             int j = (this.height - 166) / 2;
 
-            this._$settingsButton = new ImageButton(i + 11, j + 137, 16, 16, BRBTextures.SETTINGS_BUTTON_SPRITES, button -> {
+            this._$settingsButton = new ImageButton(i + 11, j + 137, 18, 18, BRBTextures.SETTINGS_BUTTON_SPRITES, button -> {
                 Minecraft.getInstance().setScreen(AutoConfig.getConfigScreen(Config.class, Minecraft.getInstance().screen).get());
             });
         }
