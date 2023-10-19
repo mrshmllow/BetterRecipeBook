@@ -1,7 +1,3 @@
-repositories {
-    maven { url "https://maven.shedaniel.me/" }
-}
-
 dependencies {
     // We depend on fabric loader here to use the fabric @Environment annotations and get the mixin dependencies
     // Do NOT use other classes from fabric loader
@@ -15,11 +11,17 @@ dependencies {
 }
 
 architectury {
-    common()
+    common(rootProject.enabled_platforms.split(","))
 }
 
 loom {
     accessWidenerPath = file("src/main/resources/brb.common.accesswidener")
+}
+
+jar {
+    processResources {
+        exclude("**/*.ase", "**/*.kra")
+    }
 }
 
 publishing {

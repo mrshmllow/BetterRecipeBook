@@ -3,8 +3,6 @@
 
   "text.autoconfig.brb.category.default": "Основные",
   "text.autoconfig.brb.option.enableBook": "Включить книгу рецептов",
-  "text.autoconfig.brb.option.darkMode": "Включить варианты тёмного оформления",
-  "text.autoconfig.brb.option.darkMode.@Tooltip": "Включайте это только если вы используете ресурспаки\nс тёмной темой наподобие Vanilla Tweaks.",
   "text.autoconfig.brb.option.keepCentered": "Отключить смещение окна создания",
   "text.autoconfig.brb.option.statusEffects": "Показывать эффекты при открытой книге рецептов",
   "text.autoconfig.brb.option.settingsButton": "Показывать кнопку настроек",

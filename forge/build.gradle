@@ -19,6 +19,12 @@ repositories {
     maven { url "https://maven.shedaniel.me/" }
 }
 
+jar {
+    processResources {
+        exclude("**/*.ase", "**/*.kra")
+    }
+}
+
 dependencies {
     forge "net.minecraftforge:forge:${rootProject.forge_version}"
 
