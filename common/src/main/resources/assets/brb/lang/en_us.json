@@ -3,8 +3,6 @@
 
   "text.autoconfig.brb.category.default": "General Settings",
   "text.autoconfig.brb.option.enableBook": "Enable the recipe book",
-  "text.autoconfig.brb.option.darkMode": "Enable dark mode variants of ui. §oRequires a full resourcepack",
-  "text.autoconfig.brb.option.darkMode.@Tooltip": "Only enable this if you use a darkmode resourcepack like §avanilla tweaks§r.",
   "text.autoconfig.brb.option.keepCentered": "Keep crafting screens centered",
   "text.autoconfig.brb.option.enablePinning": "Enable recipe pinning",
   "text.autoconfig.brb.option.settingsButton": "Enable settings button",

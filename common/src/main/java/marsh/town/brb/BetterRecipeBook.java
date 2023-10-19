@@ -1,10 +1,10 @@
 package marsh.town.brb;
 
-import marsh.town.brb.Config.Config;
-import marsh.town.brb.Loaders.PotionLoader;
+import marsh.town.brb.config.Config;
+import marsh.town.brb.loaders.PotionLoader;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.Toml4jConfigSerializer;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.client.gui.screens.recipebook.RecipeCollection;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -12,11 +12,9 @@ public class BetterRecipeBook {
 
     public static final String MOD_ID = "brb";
 
-    // textures
-    public static final ResourceLocation PIN_TEXTURE = new ResourceLocation("brb:textures/gui/pin.png");
-
     public static int queuedScroll;
     public static boolean isFilteringNone;
+    public static RecipeCollection currentHoveredRecipeCollection = null;
 
     public static Config config;
 
