@@ -47,7 +47,7 @@ dependencies {
 }
 
 loom {
-    accessWidenerPath = file("src/main/resources/brb.fabric.accesswidener")
+    accessWidenerPath = project(":common").loom.accessWidenerPath
 }
 
 processResources {
