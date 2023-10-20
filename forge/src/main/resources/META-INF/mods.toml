@@ -24,20 +24,20 @@ side = "BOTH"
 [[dependencies.brb]]
 modId = "minecraft"
 mandatory = true
-versionRange = "[1.19,)"
+versionRange = "[1.20,)"
 ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.brb]]
 modId = "architectury"
 mandatory = true
-versionRange = "[7,)"
+versionRange = "[10,)"
 ordering = "AFTER"
 side = "BOTH"
 
 [[dependencies.brb]]
 modId = "cloth_config"
 mandatory = true
-versionRange = "[9,)"
+versionRange = "[12,)"
 ordering = "AFTER"
 side = "BOTH"
