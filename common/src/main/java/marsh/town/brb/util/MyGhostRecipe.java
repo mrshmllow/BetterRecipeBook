@@ -22,6 +22,10 @@ public class MyGhostRecipe extends GhostRecipe {
         return renderingPredicate;
     }
 
+    public void clear() {
+        this.ingredients.clear();
+    }
+
     public MyGhostRecipe setRenderingPredicate(BiPredicate<GhostRender, MyGhostIngredient> renderingPredicate) {
         this.renderingPredicate = renderingPredicate;
         return this;
