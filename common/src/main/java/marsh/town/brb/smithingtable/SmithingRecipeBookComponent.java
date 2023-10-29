@@ -338,20 +338,20 @@ public class SmithingRecipeBookComponent extends RecipeBookComponent {
                     for (Slot slot : smithingScreenHandler.slots) {
                         ItemStack itemStack = slot.getItem();
 
-                        if (result.template.getItem().equals(itemStack.getItem())) {
+                        if (result.template.test(itemStack)) {
                             assert Minecraft.getInstance().gameMode != null;
                             ClientInventoryUtil.storeItem(-1, i -> i > 4);
                             Minecraft.getInstance().gameMode.handleInventoryMouseClick(smithingScreenHandler.containerId, smithingScreenHandler.getSlot(slotIndex).index, 0, ClickType.PICKUP, Minecraft.getInstance().player);
                             Minecraft.getInstance().gameMode.handleInventoryMouseClick(smithingScreenHandler.containerId, SmithingMenu.TEMPLATE_SLOT, 0, ClickType.PICKUP, Minecraft.getInstance().player);
                             ClientInventoryUtil.storeItem(-1, i -> i > 4);
                             ++usedInputSlots;
-                        } else if (result.base.getItem().equals(itemStack.getItem())) {
+                        } else if (result.base.test(itemStack)) {
                             assert Minecraft.getInstance().gameMode != null;
                             ClientInventoryUtil.storeItem(-1, i -> i > 4);
                             Minecraft.getInstance().gameMode.handleInventoryMouseClick(smithingScreenHandler.containerId, smithingScreenHandler.getSlot(slotIndex).index, 0, ClickType.PICKUP, Minecraft.getInstance().player);
                             Minecraft.getInstance().gameMode.handleInventoryMouseClick(smithingScreenHandler.containerId, SmithingMenu.BASE_SLOT, 0, ClickType.PICKUP, Minecraft.getInstance().player);
                             ClientInventoryUtil.storeItem(-1, i -> i > 4);
-                        } else if (result.addition.getItem().equals(itemStack.getItem())) {
+                        } else if (result.addition.test(itemStack)) {
                             assert Minecraft.getInstance().gameMode != null;
                             ClientInventoryUtil.storeItem(-1, i -> i > 4);
                             Minecraft.getInstance().gameMode.handleInventoryMouseClick(smithingScreenHandler.containerId, smithingScreenHandler.getSlot(slotIndex).index, 0, ClickType.PICKUP, Minecraft.getInstance().player);

@@ -80,11 +80,11 @@ public class SmithableAnimatedResultButton extends AbstractWidget {
             colour = ChatFormatting.WHITE;
         }
 
-        list.add(Component.literal(smithingRecipe.template.getHoverName().getString()).withStyle(colour));
+        list.add(Component.literal(smithingRecipe.template.getItems()[0].getHoverName().getString()).withStyle(colour));
 
         colour = ChatFormatting.GRAY;
 
-        list.add(Component.literal(smithingRecipe.template.getTooltipLines(Minecraft.getInstance().player, TooltipFlag.NORMAL).get(1).getString()).withStyle(colour));
+        list.add(Component.literal(smithingRecipe.template.getItems()[0].getTooltipLines(Minecraft.getInstance().player, TooltipFlag.NORMAL).get(1).getString()).withStyle(colour));
 
         list.add(Component.literal("+").withStyle(ChatFormatting.DARK_GRAY));
 
@@ -93,7 +93,7 @@ public class SmithableAnimatedResultButton extends AbstractWidget {
             colour = ChatFormatting.WHITE;
         }
 
-        list.add(Component.literal(smithingRecipe.base.getHoverName().getString()).withStyle(colour));
+        list.add(Component.literal(smithingRecipe.base.getItems()[0].getHoverName().getString()).withStyle(colour));
 
         list.add(Component.literal("+").withStyle(ChatFormatting.DARK_GRAY));
 
@@ -102,7 +102,7 @@ public class SmithableAnimatedResultButton extends AbstractWidget {
             colour = ChatFormatting.WHITE;
         }
 
-        list.add(Component.literal(smithingRecipe.addition.getHoverName().getString()).withStyle(colour));
+        list.add(Component.literal(smithingRecipe.addition.getItems()[0].getHoverName().getString()).withStyle(colour));
 
         if (BetterRecipeBook.config.enablePinning) {
 //            if (BetterRecipeBook.pinnedRecipeManager.hasPotion(this.smithingRecipe.recipe)) {
