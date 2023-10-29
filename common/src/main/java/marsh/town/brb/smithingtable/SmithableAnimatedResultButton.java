@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import marsh.town.brb.BetterRecipeBook;
 import marsh.town.brb.util.BRBTextures;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -12,6 +13,7 @@ import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.SmithingMenu;
+import net.minecraft.world.item.TooltipFlag;
 
 import java.util.List;
 
@@ -79,6 +81,10 @@ public class SmithableAnimatedResultButton extends AbstractWidget {
         }
 
         list.add(Component.literal(smithingRecipe.template.getHoverName().getString()).withStyle(colour));
+
+        colour = ChatFormatting.GRAY;
+
+        list.add(Component.literal(smithingRecipe.template.getTooltipLines(Minecraft.getInstance().player, TooltipFlag.NORMAL).get(1).getString()).withStyle(colour));
 
         list.add(Component.literal("+").withStyle(ChatFormatting.DARK_GRAY));
 
