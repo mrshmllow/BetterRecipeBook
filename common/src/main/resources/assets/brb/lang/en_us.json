@@ -33,7 +33,5 @@
   "brb.gui.instantCraft.off": "Instant crafting is off",
   "brb.gui.settings.open": "Open settings",
 
-  "brb.gui.smithable": "Showing Smithable",
-  "brb.gui.trimmable_armor": "Any Armour",
-  "brb.gui.trim_materials": "Trim Materials"
+  "brb.gui.smithable": "Showing Smithable"
 }

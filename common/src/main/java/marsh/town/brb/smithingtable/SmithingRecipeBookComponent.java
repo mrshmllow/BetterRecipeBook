@@ -345,7 +345,7 @@ public class SmithingRecipeBookComponent extends RecipeBookComponent {
                             Minecraft.getInstance().gameMode.handleInventoryMouseClick(smithingScreenHandler.containerId, SmithingMenu.TEMPLATE_SLOT, 0, ClickType.PICKUP, Minecraft.getInstance().player);
                             ClientInventoryUtil.storeItem(-1, i -> i > 4);
                             ++usedInputSlots;
-                        } else if (result.base.test(itemStack)) {
+                        } else if (result.base.getItem().equals(slot.getItem().getItem())) {
                             assert Minecraft.getInstance().gameMode != null;
                             ClientInventoryUtil.storeItem(-1, i -> i > 4);
                             Minecraft.getInstance().gameMode.handleInventoryMouseClick(smithingScreenHandler.containerId, smithingScreenHandler.getSlot(slotIndex).index, 0, ClickType.PICKUP, Minecraft.getInstance().player);

@@ -9,7 +9,7 @@ import java.util.List;
 
 public enum SmithingRecipeBookGroup {
     SMITHING_SEARCH(new ItemStack(Items.COMPASS)),
-    SMITHING_TRANSFORM(new ItemStack(Items.NETHERITE_PICKAXE)),
+    SMITHING_TRANSFORM(new ItemStack(Items.NETHERITE_UPGRADE_SMITHING_TEMPLATE)),
     SMITHING_TRIM(new ItemStack(Items.NETHERITE_CHESTPLATE));
 
     public static final SmithingRecipeBookGroup TRANSFORM = SMITHING_TRANSFORM;

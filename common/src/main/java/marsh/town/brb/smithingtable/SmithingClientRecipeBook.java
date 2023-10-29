@@ -26,14 +26,14 @@ public class SmithingClientRecipeBook extends RecipeBook {
                 if (value instanceof SmithingTransformRecipe) {
                     results.add(SmithableResult.of((SmithingTransformRecipe) value));
                 } else {
-                    results.add(SmithableResult.of((SmithingTrimRecipe) value));
+                    results.addAll(SmithableResult.of((SmithingTrimRecipe) value));
                 }
             } else if (group == SmithingRecipeBookGroup.SMITHING_TRANSFORM) {
                 if (value instanceof SmithingTransformRecipe) {
                     results.add(SmithableResult.of((SmithingTransformRecipe) value));
                 }
             } else if (value instanceof SmithingTrimRecipe) {
-                results.add(SmithableResult.of((SmithingTrimRecipe) value));
+                results.addAll(SmithableResult.of((SmithingTrimRecipe) value));
             }
         }
 
