@@ -2,6 +2,7 @@ package marsh.town.brb.smithingtable;
 
 import com.google.common.collect.Lists;
 import marsh.town.brb.BetterRecipeBook;
+import marsh.town.brb.brewingstand.BrewableAnimatedResultButton;
 import marsh.town.brb.config.Config;
 import marsh.town.brb.mixins.accessors.RecipeBookComponentAccessor;
 import marsh.town.brb.util.BRBTextures;
@@ -14,6 +15,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.components.StateSwitchingButton;
+import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.recipebook.RecipeBookComponent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -22,7 +24,9 @@ import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.inventory.SmithingMenu;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.lwjgl.glfw.GLFW;
 
 import java.util.*;
 
@@ -36,7 +40,6 @@ public class SmithingRecipeBookComponent extends RecipeBookComponent {
     private SmithingClientRecipeBook recipeBook;
     private int leftOffset;
     private final StackedContents recipeFinder = new StackedContents();
-    @Nullable
     private EditBox searchBox;
     private static final MutableComponent SEARCH_HINT;
     private static final MutableComponent ONLY_CRAFTABLES_TOOLTIP;
@@ -50,6 +53,7 @@ public class SmithingRecipeBookComponent extends RecipeBookComponent {
     private ImageButton settingsButton;
     boolean doubleRefresh = true;
     private boolean searching;
+    private String searchText;
 
     public void initialize(int parentWidth, int parentHeight, boolean narrow, SmithingMenu smithingScreenHandler) {
         this.client = Minecraft.getInstance();
@@ -238,6 +242,83 @@ public class SmithingRecipeBookComponent extends RecipeBookComponent {
         }
 
         this.recipesArea.setResults(results, resetCurrentPage, currentTab.getGroup());
+    }
+
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        this.searching = false;
+        if (this.isOpen()) {
+            if (keyCode == GLFW.GLFW_KEY_ESCAPE) {
+                this.setOpen(false);
+                return true;
+            } else {
+                assert this.searchBox != null;
+                if (this.searchBox.keyPressed(keyCode, scanCode, modifiers)) {
+                    this.refreshSearchResults();
+                    return true;
+                } else if (this.searchBox.isFocused() && this.searchBox.isVisible()) {
+                    return true;
+                } else if (keyCode == GLFW.GLFW_KEY_F) {
+                    if (BetterRecipeBook.config.enablePinning) {
+                        for (SmithableAnimatedResultButton resultButton : this.recipesArea.buttons) {
+                            if (resultButton.isHoveredOrFocused()) {
+//                                BetterRecipeBook.pinnedRecipeManager.addOrRemoveFavouritePotion(resultButton.getRecipe().recipe);
+                                this.refreshResults(false);
+                                return true;
+                            }
+                        }
+                    }
+                    return false;
+                } else if (this.client.options.keyChat.matches(keyCode, scanCode) && !this.searchBox.isFocused()) {
+                    this.searching = true;
+                    this.searchBox.setFocused(true);
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public @NotNull NarrationPriority narrationPriority() {
+        return this.open ? NarrationPriority.HOVERED : NarrationPriority.NONE;
+    }
+
+    @Override
+    public void updateNarration(NarrationElementOutput narrationElementOutput) {
+
+    }
+
+    public boolean keyReleased(int keyCode, int scanCode, int modifiers) {
+        this.searching = false;
+        return super.keyReleased(keyCode, scanCode, modifiers);
+    }
+
+    public boolean charTyped(char chr, int modifiers) {
+        if (this.searching) {
+            return false;
+        } else if (this.isOpen()) {
+            assert this.searchBox != null;
+            if (this.searchBox.charTyped(chr, modifiers)) {
+                this.refreshSearchResults();
+                return true;
+            } else {
+                return super.charTyped(chr, modifiers);
+            }
+        } else {
+            return false;
+        }
+    }
+    private void refreshSearchResults() {
+        assert this.searchBox != null;
+        String string = this.searchBox.getValue().toLowerCase(Locale.ROOT);
+        if (!string.equals(this.searchText)) {
+            this.refreshResults(false);
+            this.searchText = string;
+        }
+
     }
 
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
