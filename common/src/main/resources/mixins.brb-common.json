@@ -10,7 +10,6 @@
     "MouseScrollHandler",
     "RemoveBookButton",
     "RemoveToasts",
-    "settings.RecipeBookComponentMixin",
     "accessors.CraftingMenuAccessor",
     "accessors.ImageButtonAccessor",
     "accessors.InventoryAccessor",
@@ -26,13 +25,15 @@
     "instantcraft.RecipeButtonMixin",
     "pins.AbstractContainerScreenMixin",
     "pins.RecipeBookComponentMixin",
-    "pins.RecipeButtonMixin",
     "pins.RecipeBookPageMixin",
+    "pins.RecipeButtonMixin",
     "scrollablepages.RecipeBookPageMixin",
+    "settings.RecipeBookComponentMixin",
     "ungroup.ClientRecipeBookMixin",
     "ungroup.RecipeBookComponentMixin",
     "unlockrecipes.ClientPacketListenerMixin",
-    "unlockrecipes.MultiPlayerGameModeMixin"
+    "unlockrecipes.MultiPlayerGameModeMixin",
+    "SmithingScreenMixin"
   ],
   "injectors": {
     "defaultRequire": 1

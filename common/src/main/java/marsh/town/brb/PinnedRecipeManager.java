@@ -12,6 +12,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.alchemy.PotionBrewing;
 import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.SmithingRecipe;
 import org.apache.commons.io.IOUtils;
 
 import java.io.File;
@@ -92,6 +93,21 @@ public class PinnedRecipeManager {
         }
 
         this.pinned.add(targetIdentifier);
+        this.store();
+    }
+
+    public void addOrRemoveFavouriteSmithing(SmithingRecipe recipe) {
+//        ResourceLocation targetIdentifier = BuiltInRegistries.POTION.getKey(getTo(target));
+
+//        for (ResourceLocation identifier : this.pinned) {
+//            if (identifier.equals(targetIdentifier)) {
+//                this.pinned.remove(targetIdentifier);
+//                this.store();
+//                return;
+//            }
+//        }
+//
+//        this.pinned.add(targetIdentifier);
         this.store();
     }
 

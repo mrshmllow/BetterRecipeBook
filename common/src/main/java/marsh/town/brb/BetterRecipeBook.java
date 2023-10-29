@@ -23,8 +23,10 @@ public class BetterRecipeBook {
 
     public static boolean rememberedBrewingOpen = true;
     public static boolean rememberedBrewingToggle = false;
+    public static boolean rememberedSmithingOpen = false;
 
     public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
+    public static boolean rememberedSmithableToggle;
 
     public static void init() {
         PotionLoader.init();
