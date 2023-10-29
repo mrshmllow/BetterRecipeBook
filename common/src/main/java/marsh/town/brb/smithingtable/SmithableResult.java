@@ -8,6 +8,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.armortrim.*;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.SmithingTransformRecipe;
@@ -75,5 +76,9 @@ public class SmithableResult {
 
     public boolean hasMaterials(SmithingRecipeBookGroup group, NonNullList<Slot> slots) {
         return hasTemplate(slots) && hasBase(slots) && hasAddition(slots);
+    }
+
+    public String getTemplateType() {
+        return template.getItems()[0].getTooltipLines(Minecraft.getInstance().player, TooltipFlag.NORMAL).get(1).getString();
     }
 }

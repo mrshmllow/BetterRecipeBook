@@ -223,7 +223,7 @@ public class SmithingRecipeBookComponent extends RecipeBookComponent {
 
         String string = this.searchBox.getValue();
         if (!string.isEmpty()) {
-            results.removeIf(itemStack -> !itemStack.result.getHoverName().getString().toLowerCase(Locale.ROOT).contains(string.toLowerCase(Locale.ROOT)));
+            results.removeIf(itemStack -> !itemStack.getTemplateType().toLowerCase(Locale.ROOT).contains(string.toLowerCase(Locale.ROOT)));
         }
 
         if (this.recipeBook.isFilteringCraftable()) {
