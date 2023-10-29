@@ -29,8 +29,11 @@
   "brb.gui.pin.add": "Press F to pin this recipe",
   "brb.gui.pin.remove": "Press F to unpin this recipe",
   "brb.gui.togglePotions.brewable": "Showing Brewable",
-  "brb.gui.smithable": "Showing Smithable",
   "brb.gui.instantCraft.on": "Instant crafting is on",
   "brb.gui.instantCraft.off": "Instant crafting is off",
-  "brb.gui.settings.open": "Open settings"
+  "brb.gui.settings.open": "Open settings",
+
+  "brb.gui.smithable": "Showing Smithable",
+  "brb.gui.trimmable_armor": "Any Armour",
+  "brb.gui.trim_materials": "Trim Materials"
 }

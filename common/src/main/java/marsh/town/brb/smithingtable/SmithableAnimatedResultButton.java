@@ -4,7 +4,6 @@ import com.google.common.collect.Lists;
 import marsh.town.brb.BetterRecipeBook;
 import marsh.town.brb.util.BRBTextures;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -12,8 +11,9 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.inventory.SmithingMenu;
-import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.crafting.Ingredient;
 
 import java.util.List;
 
@@ -33,6 +33,7 @@ public class SmithableAnimatedResultButton extends AbstractWidget {
         this.smithingMenu = smithingMenu;
     }
 
+    @Override
     public void renderWidget(GuiGraphics gui, int mouseX, int mouseY, float delta) {
         if (!Screen.hasControlDown()) {
             this.time += delta;
@@ -82,9 +83,12 @@ public class SmithableAnimatedResultButton extends AbstractWidget {
 
         list.add(Component.literal(smithingRecipe.template.getItems()[0].getHoverName().getString()).withStyle(colour));
 
-        colour = ChatFormatting.GRAY;
+        colour = ChatFormatting.DARK_GRAY;
+        if (smithingRecipe.hasTemplate(smithingMenu.slots)) {
+            colour = ChatFormatting.GRAY;
+        }
 
-        list.add(Component.literal(smithingRecipe.template.getItems()[0].getTooltipLines(Minecraft.getInstance().player, TooltipFlag.NORMAL).get(1).getString()).withStyle(colour));
+        list.add(Component.literal(smithingRecipe.getTemplateType()).withStyle(colour));
 
         list.add(Component.literal("+").withStyle(ChatFormatting.DARK_GRAY));
 
@@ -93,7 +97,15 @@ public class SmithableAnimatedResultButton extends AbstractWidget {
             colour = ChatFormatting.WHITE;
         }
 
-        list.add(Component.literal(smithingRecipe.base.getItems()[0].getHoverName().getString()).withStyle(colour));
+        Ingredient.Value base = smithingRecipe.base.values[0];
+
+        if (base instanceof Ingredient.ItemValue) {
+            list.add(Component.literal(smithingRecipe.base.getItems()[0].getHoverName().getString()).withStyle(colour));
+        } else {
+            if (((Ingredient.TagValue) base).tag().location().equals(ItemTags.TRIMMABLE_ARMOR.location())) {
+                list.add(Component.translatable("brb.gui.trimmable_armor").withStyle(colour));
+            }
+        }
 
         list.add(Component.literal("+").withStyle(ChatFormatting.DARK_GRAY));
 
@@ -102,7 +114,15 @@ public class SmithableAnimatedResultButton extends AbstractWidget {
             colour = ChatFormatting.WHITE;
         }
 
-        list.add(Component.literal(smithingRecipe.addition.getItems()[0].getHoverName().getString()).withStyle(colour));
+        Ingredient.Value addition = smithingRecipe.addition.values[0];
+
+        if (addition instanceof Ingredient.ItemValue) {
+            list.add(Component.literal(smithingRecipe.addition.getItems()[0].getHoverName().getString()).withStyle(colour));
+        } else {
+            if (((Ingredient.TagValue) addition).tag().location().equals(ItemTags.TRIM_MATERIALS.location())) {
+                list.add(Component.translatable("brb.gui.trim_materials").withStyle(colour));
+            }
+        }
 
         if (BetterRecipeBook.config.enablePinning) {
 //            if (BetterRecipeBook.pinnedRecipeManager.hasPotion(this.smithingRecipe.recipe)) {
