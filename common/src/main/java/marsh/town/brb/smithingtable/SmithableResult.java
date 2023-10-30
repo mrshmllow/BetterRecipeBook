@@ -8,7 +8,6 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.armortrim.*;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -41,7 +40,7 @@ public class SmithableResult {
     public static List<SmithableResult> of(SmithingTrimRecipe recipe) {
         List<SmithableResult> results = new ArrayList<>();
 
-        for (ItemStack base: recipe.base.getItems()) {
+        for (ItemStack base : recipe.base.getItems()) {
             ItemStack result = getTrimmedItem(recipe, base, TrimMaterials.REDSTONE, Minecraft.getInstance().getConnection().registryAccess());
 
             results.add(new SmithableResult(recipe.template, base, recipe.addition, result, false));
@@ -106,7 +105,7 @@ public class SmithableResult {
         return false;
     }
 
-    public boolean hasMaterials(SmithingRecipeBookGroup group, NonNullList<Slot> slots) {
+    public boolean hasMaterials(NonNullList<Slot> slots) {
         return hasTemplate(slots) && hasBase(slots) && hasAddition(slots);
     }
 

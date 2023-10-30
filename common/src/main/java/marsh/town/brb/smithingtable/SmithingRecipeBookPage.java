@@ -1,36 +1,35 @@
 package marsh.town.brb.smithingtable;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import marsh.town.brb.BetterRecipeBook;
-import marsh.town.brb.brewingstand.BrewableAnimatedResultButton;
-import marsh.town.brb.brewingstand.BrewableResult;
-import marsh.town.brb.brewingstand.BrewingRecipeBookGroup;
 import marsh.town.brb.util.BRBTextures;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.StateSwitchingButton;
 import net.minecraft.world.inventory.SmithingMenu;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.Iterator;
 import java.util.List;
 
-public class SmithingRecipeBookResults {
-    public final List<SmithableAnimatedResultButton> buttons = Lists.newArrayListWithCapacity(20);
+public class SmithingRecipeBookPage {
+    public final List<SmithableRecipeButton> buttons = Lists.newArrayListWithCapacity(20);
     private int totalPages;
     private Minecraft minecraft;
     private SmithingMenu smithingMenuHandler;
     private StateSwitchingButton forwardButton;
     private StateSwitchingButton backButton;
-    private List<SmithableResult> recipeCollection;
+    private List<SmithingRecipeCollection> recipeCollections = ImmutableList.of();
     SmithingRecipeBookGroup group;
     private int currentPage;
-    private SmithableAnimatedResultButton hoveredButton;
-    private SmithableResult currentClickedRecipe;
+    private SmithableRecipeButton hoveredButton;
     private SmithableResult lastClickedRecipe;
+    private final SmithingOverlayRecipeComponent overlay = new SmithingOverlayRecipeComponent();
+    private SmithingRecipeCollection lastClickedRecipeCollection;
 
-    public SmithingRecipeBookResults() {
-        for(int i = 0; i < 20; ++i) {
-            this.buttons.add(new SmithableAnimatedResultButton());
+    public SmithingRecipeBookPage() {
+        for (int i = 0; i < 20; ++i) {
+            this.buttons.add(new SmithableRecipeButton());
         }
     }
 
@@ -49,11 +48,11 @@ public class SmithingRecipeBookResults {
         this.backButton.initTextureValues(BRBTextures.RECIPE_BOOK_PAGE_BACKWARD_SPRITES);
     }
 
-    public void setResults(List<SmithableResult> recipeCollection, boolean resetCurrentPage, SmithingRecipeBookGroup group) {
-        this.recipeCollection = recipeCollection;
+    public void setResults(List<SmithingRecipeCollection> recipeCollection, boolean resetCurrentPage, SmithingRecipeBookGroup group) {
+        this.recipeCollections = recipeCollection;
         this.group = group;
 
-        this.totalPages = (int)Math.ceil((double)recipeCollection.size() / 20.0D);
+        this.totalPages = (int) Math.ceil((double) recipeCollection.size() / 20.0D);
         if (this.totalPages <= this.currentPage || resetCurrentPage) {
             this.currentPage = 0;
         }
@@ -64,52 +63,53 @@ public class SmithingRecipeBookResults {
     private void updateButtonsForPage() {
         int i = 20 * this.currentPage;
 
-        for(int j = 0; j < this.buttons.size(); ++j) {
-            SmithableAnimatedResultButton smithableAnimatedResultButton = this.buttons.get(j);
-            if (i + j < this.recipeCollection.size()) {
-                SmithableResult output = this.recipeCollection.get(i + j);
-                smithableAnimatedResultButton.showSmithableRecipe(output, group, smithingMenuHandler);
-                smithableAnimatedResultButton.visible = true;
+        for (int j = 0; j < this.buttons.size(); ++j) {
+            SmithableRecipeButton smithableRecipeButton = this.buttons.get(j);
+            if (i + j < this.recipeCollections.size()) {
+                SmithingRecipeCollection output = this.recipeCollections.get(i + j);
+                smithableRecipeButton.showSmithableRecipe(output, group, smithingMenuHandler);
+                smithableRecipeButton.visible = true;
             } else {
-                smithableAnimatedResultButton.visible = false;
+                smithableRecipeButton.visible = false;
             }
         }
 
         this.updateArrowButtons();
     }
 
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        this.currentClickedRecipe = null;
-        if (this.forwardButton.mouseClicked(mouseX, mouseY, button)) {
-            if (++currentPage >= totalPages) {
-                currentPage = BetterRecipeBook.config.scrolling.scrollAround ? 0 : totalPages - 1;
+    public boolean mouseClicked(double mouseX, double mouseY, int button, int j, int k, int l, int m) {
+        this.lastClickedRecipe = null;
+        this.lastClickedRecipeCollection = null;
+        if (this.overlay.isVisible()) {
+            if (this.overlay.mouseClicked(mouseX, mouseY, button)) {
+                this.lastClickedRecipe = this.overlay.getLastRecipeClicked();
+                this.lastClickedRecipeCollection = this.overlay.getRecipeCollection();
+            } else {
+                this.overlay.setVisible(false);
             }
-            this.updateButtonsForPage();
-            return true;
-        } else if (this.backButton.mouseClicked(mouseX, mouseY, button)) {
-            if (--currentPage < 0) {
-                currentPage = BetterRecipeBook.config.scrolling.scrollAround ? totalPages - 1 : 0;
-            }
-            this.updateButtonsForPage();
-            return true;
-        } else {
-            Iterator<SmithableAnimatedResultButton> var10 = this.buttons.iterator();
-
-            SmithableAnimatedResultButton smithableAnimatedResultButton;
-            do {
-                if (!var10.hasNext()) {
-                    return false;
-                }
-
-                smithableAnimatedResultButton = var10.next();
-            } while(!smithableAnimatedResultButton.mouseClicked(mouseX, mouseY, button));
-
-            if (button == 0) {
-                this.lastClickedRecipe = this.currentClickedRecipe = smithableAnimatedResultButton.getRecipe();
-            }
-
             return true;
         }
+        if (this.forwardButton.mouseClicked(mouseX, mouseY, button)) {
+            ++this.currentPage;
+            this.updateButtonsForPage();
+            return true;
+        }
+        if (this.backButton.mouseClicked(mouseX, mouseY, button)) {
+            --this.currentPage;
+            this.updateButtonsForPage();
+            return true;
+        }
+        for (SmithableRecipeButton recipeButton : this.buttons) {
+            if (!recipeButton.mouseClicked(mouseX, mouseY, button)) continue;
+            if (button == 0) {
+                this.lastClickedRecipe = recipeButton.getCollection().getFirst();
+                this.lastClickedRecipeCollection = recipeButton.getCollection();
+            } else if (button == 1 && !this.overlay.isVisible() && !recipeButton.isOnlyOption()) {
+                this.overlay.init(recipeButton.getCollection(), recipeButton.getX(), recipeButton.getY(), j + l / 2, k + 13 + m / 2, recipeButton.getWidth());
+            }
+            return true;
+        }
+        return false;
     }
 
     public void render(GuiGraphics gui, int x, int y, int mouseX, int mouseY, float delta) {
@@ -136,16 +136,16 @@ public class SmithingRecipeBookResults {
 
         this.hoveredButton = null;
 
-        for (SmithableAnimatedResultButton smithableAnimatedResultButton : this.buttons) {
-            smithableAnimatedResultButton.render(gui, mouseX, mouseY, delta);
-            if (smithableAnimatedResultButton.visible && smithableAnimatedResultButton.isHoveredOrFocused()) {
-                this.hoveredButton = smithableAnimatedResultButton;
+        for (SmithableRecipeButton smithableRecipeButton : this.buttons) {
+            smithableRecipeButton.render(gui, mouseX, mouseY, delta);
+            if (smithableRecipeButton.visible && smithableRecipeButton.isHoveredOrFocused()) {
+                this.hoveredButton = smithableRecipeButton;
             }
         }
 
         this.backButton.render(gui, mouseX, mouseY, delta);
         this.forwardButton.render(gui, mouseX, mouseY, delta);
-        // this.alternatesWidget.render(matrices, mouseX, mouseY, delta);
+        this.overlay.render(gui, mouseX, mouseY, delta);
     }
 
     public void drawTooltip(GuiGraphics gui, int x, int y) {
@@ -164,7 +164,13 @@ public class SmithingRecipeBookResults {
         }
     }
 
+    @Nullable
     public SmithableResult getCurrentClickedRecipe() {
-        return this.currentClickedRecipe;
+        return this.lastClickedRecipe;
+    }
+
+    @Nullable
+    public SmithingRecipeCollection getLastClickedRecipeCollection() {
+        return this.lastClickedRecipeCollection;
     }
 }

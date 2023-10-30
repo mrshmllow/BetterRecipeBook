@@ -9,33 +9,30 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.core.Holder;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.ItemTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.inventory.SmithingMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.armortrim.TrimMaterial;
 import net.minecraft.world.item.crafting.Ingredient;
 
 import java.util.List;
 
-public class SmithableAnimatedResultButton extends AbstractWidget {
-    private SmithableResult smithingRecipe;
+public class SmithableRecipeButton extends AbstractWidget {
+    private SmithingRecipeCollection collection;
     private SmithingRecipeBookGroup group;
     private SmithingMenu smithingMenu;
     private float time;
     private int currentIndex;
 
-    public SmithableAnimatedResultButton() {
+    public SmithableRecipeButton() {
         super(0, 0, 25, 25, CommonComponents.EMPTY);
     }
 
-    public void showSmithableRecipe(SmithableResult potionRecipe, SmithingRecipeBookGroup group, SmithingMenu smithingMenu) {
-        this.smithingRecipe = potionRecipe;
+    public void showSmithableRecipe(SmithingRecipeCollection potionRecipe, SmithingRecipeBookGroup group, SmithingMenu smithingMenu) {
+        this.collection = potionRecipe;
         this.group = group;
         this.smithingMenu = smithingMenu;
     }
@@ -46,35 +43,49 @@ public class SmithableAnimatedResultButton extends AbstractWidget {
             this.time += delta;
         }
 
+        List<SmithableResult> list = getOrderedRecipes();
+
+        this.currentIndex = Mth.floor(this.time / 30.0F) % list.size();
+
         // blit outline texture
-        ResourceLocation outlineTexture = smithingRecipe.hasMaterials(group, smithingMenu.slots) ?
+        ResourceLocation outlineTexture = getCurrentArmour().hasMaterials(smithingMenu.slots) ?
                 BRBTextures.RECIPE_BOOK_BUTTON_SLOT_CRAFTABLE_SPRITE : BRBTextures.RECIPE_BOOK_BUTTON_SLOT_UNCRAFTABLE_SPRITE;
         gui.blitSprite(outlineTexture, getX(), getY(), this.width, this.height);
 
-        List<Holder.Reference<TrimMaterial>> list = smithingRecipe.getPossibleTrims(Minecraft.getInstance().getConnection().registryAccess());
-
-        ItemStack result = smithingRecipe.getTrimmedResult(getCurrentTrimMaterial(), Minecraft.getInstance().getConnection().registryAccess());
-
-        this.currentIndex = Mth.floor(this.time / 30.0F) % list.size();
+        ItemStack result = getCurrentArmour().result;
 
         // render ingredient item
         int offset = 4;
         gui.renderFakeItem(result, getX() + offset, getY() + offset);
 
         // if pinned recipe, blit the pin texture over it
-        if (BetterRecipeBook.config.enablePinning && BetterRecipeBook.pinnedRecipeManager.hasSmithing(smithingRecipe)) {
+        if (BetterRecipeBook.config.enablePinning && BetterRecipeBook.pinnedRecipeManager.hasSmithing(collection)) {
             gui.blitSprite(BRBTextures.RECIPE_BOOK_PIN_SPRITE, getX() - 4, getY() - 4, 32, 32);
         }
     }
 
-    private Holder.Reference<TrimMaterial> getCurrentTrimMaterial() {
-        List<Holder.Reference<TrimMaterial>> list = smithingRecipe.getPossibleTrims(Minecraft.getInstance().getConnection().registryAccess());
+    public boolean isOnlyOption() {
+        return this.getOrderedRecipes().size() == 1;
+    }
+
+    private List<SmithableResult> getOrderedRecipes() {
+        List<SmithableResult> list = this.getCollection().getDisplayRecipes(true);
+
+        if (!BetterRecipeBook.rememberedSmithableToggle) {
+            list.addAll(this.collection.getDisplayRecipes(false));
+        }
+
+        return list;
+    }
+
+    private SmithableResult getCurrentArmour() {
+        List<SmithableResult> list = getOrderedRecipes();
 
         return list.get(currentIndex);
     }
 
-    public SmithableResult getRecipe() {
-        return smithingRecipe;
+    public SmithingRecipeCollection getCollection() {
+        return collection;
     }
 
     public void updateWidgetNarration(NarrationElementOutput builder) {
@@ -87,51 +98,51 @@ public class SmithableAnimatedResultButton extends AbstractWidget {
     public List<Component> getTooltipText() {
         List<Component> list = Lists.newArrayList();
 
-        list.addAll(smithingRecipe.getTrimmedResult(getCurrentTrimMaterial(), Minecraft.getInstance().getConnection().registryAccess()).getTooltipLines(Minecraft.getInstance().player, TooltipFlag.NORMAL));
+        list.addAll(getCurrentArmour().result.getTooltipLines(Minecraft.getInstance().player, TooltipFlag.NORMAL));
         list.add(Component.literal(""));
 
         ChatFormatting colour = ChatFormatting.DARK_GRAY;
-        if (smithingRecipe.hasTemplate(smithingMenu.slots)) {
+        if (collection.getFirst().hasTemplate(smithingMenu.slots)) {
             colour = ChatFormatting.WHITE;
         }
 
-        list.add(Component.literal(smithingRecipe.template.getItems()[0].getHoverName().getString()).withStyle(colour));
+        list.add(Component.literal(collection.getFirst().template.getItems()[0].getHoverName().getString()).withStyle(colour));
 
         colour = ChatFormatting.DARK_GRAY;
-        if (smithingRecipe.hasTemplate(smithingMenu.slots)) {
+        if (collection.getFirst().hasTemplate(smithingMenu.slots)) {
             colour = ChatFormatting.GRAY;
         }
 
-        list.add(Component.literal(smithingRecipe.getTemplateType()).withStyle(colour));
+        list.add(Component.literal(collection.getFirst().getTemplateType()).withStyle(colour));
 
         list.add(Component.literal("+").withStyle(ChatFormatting.DARK_GRAY));
 
         colour = ChatFormatting.DARK_GRAY;
-        if (smithingRecipe.hasBase(smithingMenu.slots)) {
+        if (collection.getFirst().hasBase(smithingMenu.slots)) {
             colour = ChatFormatting.WHITE;
         }
 
-        list.add(Component.literal(smithingRecipe.base.getHoverName().getString()).withStyle(colour));
+        list.add(Component.literal(collection.getFirst().base.getHoverName().getString()).withStyle(colour));
 
         list.add(Component.literal("+").withStyle(ChatFormatting.DARK_GRAY));
 
         colour = ChatFormatting.DARK_GRAY;
-        if (smithingRecipe.hasAddition(smithingMenu.slots)) {
+        if (collection.getFirst().hasAddition(smithingMenu.slots)) {
             colour = ChatFormatting.WHITE;
         }
 
-        Ingredient.Value addition = smithingRecipe.addition.values[0];
+        Ingredient.Value addition = collection.getFirst().addition.values[0];
 
         if (addition instanceof Ingredient.ItemValue) {
-            list.add(Component.literal(smithingRecipe.addition.getItems()[0].getHoverName().getString()).withStyle(colour));
+            list.add(Component.literal(collection.getFirst().addition.getItems()[0].getHoverName().getString()).withStyle(colour));
         } else {
-            ItemStack result = new ItemStack(getCurrentTrimMaterial().value().ingredient().value());
+            ItemStack result = getCurrentArmour().result;
 
             list.add(result.getHoverName().copy().withStyle(colour));
         }
 
         if (BetterRecipeBook.config.enablePinning) {
-            if (BetterRecipeBook.pinnedRecipeManager.hasSmithing(smithingRecipe)) {
+            if (BetterRecipeBook.pinnedRecipeManager.hasSmithing(collection)) {
                 list.add(Component.translatable("brb.gui.pin.remove"));
             } else {
                 list.add(Component.translatable("brb.gui.pin.add"));
@@ -139,5 +150,13 @@ public class SmithableAnimatedResultButton extends AbstractWidget {
         }
 
         return list;
+    }
+
+    public int getWidth() {
+        return 25;
+    }
+
+    protected boolean isValidClickButton(int i) {
+        return i == 0 || i == 1;
     }
 }

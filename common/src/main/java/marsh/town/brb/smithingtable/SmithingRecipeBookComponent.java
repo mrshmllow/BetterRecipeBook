@@ -2,7 +2,6 @@ package marsh.town.brb.smithingtable;
 
 import com.google.common.collect.Lists;
 import marsh.town.brb.BetterRecipeBook;
-import marsh.town.brb.brewingstand.BrewableAnimatedResultButton;
 import marsh.town.brb.config.Config;
 import marsh.town.brb.mixins.accessors.RecipeBookComponentAccessor;
 import marsh.town.brb.util.BRBTextures;
@@ -32,9 +31,9 @@ import java.util.*;
 
 public class SmithingRecipeBookComponent extends RecipeBookComponent {
     private boolean open;
-    private Minecraft client;
-    private int parentWidth;
-    private int parentHeight;
+    private Minecraft minecraft;
+    private int width;
+    private int height;
     private SmithingMenu smithingScreenHandler;
     private boolean narrow;
     private SmithingClientRecipeBook recipeBook;
@@ -45,7 +44,7 @@ public class SmithingRecipeBookComponent extends RecipeBookComponent {
     private static final MutableComponent ONLY_CRAFTABLES_TOOLTIP;
     private static final MutableComponent ALL_RECIPES_TOOLTIP;
     private static final MutableComponent OPEN_SETTINGS_TOOLTIP;
-    public final SmithingRecipeBookResults recipesArea = new SmithingRecipeBookResults();
+    public final SmithingRecipeBookPage recipesPage = new SmithingRecipeBookPage();
     private final List<SmithingRecipeGroupButtonWidget> tabButtons = Lists.newArrayList();
     @Nullable
     public SmithingRecipeGroupButtonWidget currentTab;
@@ -55,13 +54,13 @@ public class SmithingRecipeBookComponent extends RecipeBookComponent {
     private boolean searching;
     private String searchText;
 
-    public void initialize(int parentWidth, int parentHeight, boolean narrow, SmithingMenu smithingScreenHandler) {
-        this.client = Minecraft.getInstance();
-        this.parentWidth = parentWidth;
-        this.parentHeight = parentHeight;
+    public void initialize(int width, int height, Minecraft minecraft, boolean narrow, SmithingMenu smithingScreenHandler) {
+        this.minecraft = minecraft;
+        this.width = width;
+        this.height = height;
         this.smithingScreenHandler = smithingScreenHandler;
         this.narrow = narrow;
-        client.player.containerMenu = smithingScreenHandler;
+        this.minecraft.player.containerMenu = smithingScreenHandler;
         this.recipeBook = new SmithingClientRecipeBook();
         this.open = BetterRecipeBook.rememberedSmithingOpen;
         // this.cachedInvChangeCount = client.player.getInventory().getChangeCount();
@@ -113,16 +112,16 @@ public class SmithingRecipeBookComponent extends RecipeBookComponent {
             this.leftOffset = this.narrow ? 0 : 86;
         }
 
-        int i = (this.parentWidth - 147) / 2 - this.leftOffset;
-        int j = (this.parentHeight - 166) / 2;
+        int i = (this.width - 147) / 2 - this.leftOffset;
+        int j = (this.height - 166) / 2;
         this.recipeFinder.clear();
-        assert this.client.player != null;
-        this.client.player.getInventory().fillStackedContents(this.recipeFinder);
+        assert this.minecraft.player != null;
+        this.minecraft.player.getInventory().fillStackedContents(this.recipeFinder);
         String string = this.searchBox != null ? this.searchBox.getValue() : "";
-        Font var10003 = this.client.font;
+        Font var10003 = this.minecraft.font;
         int var10004 = i + 26;
         int var10005 = j + 14;
-        Objects.requireNonNull(this.client.font);
+        Objects.requireNonNull(this.minecraft.font);
         this.searchBox = new EditBox(var10003, var10004, var10005, 79, 9 + 3, Component.translatable("itemGroup.search"));
         ((RecipeBookComponentAccessor) this).setSearchBox(searchBox); // fix crash due to super.charTyped
         this.searchBox.setMaxLength(50);
@@ -132,7 +131,7 @@ public class SmithingRecipeBookComponent extends RecipeBookComponent {
         this.searchBox.setValue(string);
         this.searchBox.setHint(SEARCH_HINT);
 
-        this.recipesArea.initialize(this.client, i, j, smithingScreenHandler);
+        this.recipesPage.initialize(this.minecraft, i, j, smithingScreenHandler);
         this.tabButtons.clear();
         this.recipeBook.setFilteringCraftable(BetterRecipeBook.rememberedBrewingToggle);
         this.toggleSmithableButton = new StateSwitchingButton(i + 110, j + 12, 26, 16, this.recipeBook.isFilteringCraftable());
@@ -162,8 +161,8 @@ public class SmithingRecipeBookComponent extends RecipeBookComponent {
     }
 
     private void refreshTabButtons() {
-        int i = (this.parentWidth - 147) / 2 - this.leftOffset - 30;
-        int j = (this.parentHeight - 166) / 2 + 3;
+        int i = (this.width - 147) / 2 - this.leftOffset - 30;
+        int j = (this.height - 166) / 2 + 3;
         int l = 0;
 
         for (SmithingRecipeGroupButtonWidget smithingRecipeGroupButtonWidget : this.tabButtons) {
@@ -189,8 +188,8 @@ public class SmithingRecipeBookComponent extends RecipeBookComponent {
         gui.pose().translate(0.0f, 0.0f, 100.0f);
 
         // blit recipe book background texture
-        int blitX = (this.parentWidth - 147) / 2 - this.leftOffset;
-        int blitY = (this.parentHeight - 166) / 2;
+        int blitX = (this.width - 147) / 2 - this.leftOffset;
+        int blitY = (this.height - 166) / 2;
         gui.blit(BRBTextures.RECIPE_BOOK_BACKGROUND_TEXTURE, blitX, blitY, 1, 1, 147, 166);
 
         // render search box
@@ -209,7 +208,7 @@ public class SmithingRecipeBookComponent extends RecipeBookComponent {
         }
 
         // render the recipe book page contents
-        this.recipesArea.render(gui, blitX, blitY, mouseX, mouseY, delta);
+        this.recipesPage.render(gui, blitX, blitY, mouseX, mouseY, delta);
 
         gui.pose().popPose();
     }
@@ -219,21 +218,21 @@ public class SmithingRecipeBookComponent extends RecipeBookComponent {
         if (this.searchBox == null) return;
 
         // Create a copy to not mess with the original list
-        List<SmithableResult> results = new ArrayList<>(recipeBook.getResultsForCategory(currentTab.getGroup()));
+        List<SmithingRecipeCollection> results = new ArrayList<>(recipeBook.getCollectionsForCategory(currentTab.getGroup(), smithingScreenHandler));
 
         String string = this.searchBox.getValue();
         if (!string.isEmpty()) {
-            results.removeIf(itemStack -> !itemStack.getTemplateType().toLowerCase(Locale.ROOT).contains(string.toLowerCase(Locale.ROOT)));
+            results.removeIf(collection -> !collection.getFirst().getTemplateType().toLowerCase(Locale.ROOT).contains(string.toLowerCase(Locale.ROOT)));
         }
 
         if (this.recipeBook.isFilteringCraftable()) {
-            results.removeIf((result) -> !result.hasMaterials(currentTab.getGroup(), smithingScreenHandler.slots));
+            results.removeIf((result) -> !result.getFirst().hasMaterials(smithingScreenHandler.slots));
         }
 
         if (BetterRecipeBook.config.enablePinning) {
-            List<SmithableResult> tempResults = Lists.newArrayList(results);
+            List<SmithingRecipeCollection> tempResults = Lists.newArrayList(results);
 
-            for (SmithableResult result : tempResults) {
+            for (SmithingRecipeCollection result : tempResults) {
                 if (BetterRecipeBook.pinnedRecipeManager.hasSmithing(result)) {
                     results.remove(result);
                     results.add(0, result);
@@ -241,7 +240,7 @@ public class SmithingRecipeBookComponent extends RecipeBookComponent {
             }
         }
 
-        this.recipesArea.setResults(results, resetCurrentPage, currentTab.getGroup());
+        this.recipesPage.setResults(results, resetCurrentPage, currentTab.getGroup());
     }
 
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
@@ -259,16 +258,16 @@ public class SmithingRecipeBookComponent extends RecipeBookComponent {
                     return true;
                 } else if (keyCode == GLFW.GLFW_KEY_F) {
                     if (BetterRecipeBook.config.enablePinning) {
-                        for (SmithableAnimatedResultButton resultButton : this.recipesArea.buttons) {
+                        for (SmithableRecipeButton resultButton : this.recipesPage.buttons) {
                             if (resultButton.isHoveredOrFocused()) {
-                                BetterRecipeBook.pinnedRecipeManager.addOrRemoveFavouriteSmithing(resultButton.getRecipe());
+                                BetterRecipeBook.pinnedRecipeManager.addOrRemoveFavouriteSmithing(resultButton.getCollection().getFirst());
                                 this.refreshResults(false);
                                 return true;
                             }
                         }
                     }
                     return false;
-                } else if (this.client.options.keyChat.matches(keyCode, scanCode) && !this.searchBox.isFocused()) {
+                } else if (this.minecraft.options.keyChat.matches(keyCode, scanCode) && !this.searchBox.isFocused()) {
                     this.searching = true;
                     this.searchBox.setFocused(true);
                     return true;
@@ -311,6 +310,7 @@ public class SmithingRecipeBookComponent extends RecipeBookComponent {
             return false;
         }
     }
+
     private void refreshSearchResults() {
         assert this.searchBox != null;
         String string = this.searchBox.getValue().toLowerCase(Locale.ROOT);
@@ -323,15 +323,17 @@ public class SmithingRecipeBookComponent extends RecipeBookComponent {
 
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (this.open) {
-            if (this.recipesArea.mouseClicked(mouseX, mouseY, button)) {
-                SmithableResult result = this.recipesArea.getCurrentClickedRecipe();
-                if (result != null) {
-                    this.ghostRecipe.clear();
-
-                    if (!result.hasMaterials(this.currentTab.getGroup(), smithingScreenHandler.slots)) {
-//                        showGhostRecipe(result, brewingStandScreenHandler.slots);
-                        return true;
+            if (this.recipesPage.mouseClicked(mouseX, mouseY, button, (this.width - 147) / 2 - this.xOffset, (this.height - 166) / 2, 147, 166)) {
+                SmithableResult result = this.recipesPage.getCurrentClickedRecipe();
+                SmithingRecipeCollection recipeCollection = this.recipesPage.getLastClickedRecipeCollection();
+                if (result != null && recipeCollection != null) {
+                    if (!recipeCollection.isCraftable(result)) {
+//                        if (!recipeCollection.isCraftable(result) && this.ghostRecipe.getRecipe() == result) {
+                        return false;
                     }
+
+                    this.ghostRecipe.clear();
+//                    this.minecraft.gameMode.handlePlaceRecipe(this.minecraft.player.containerMenu.containerId, recipeHolder, Screen.hasShiftDown());
 
                     int slotIndex = 0;
                     int usedInputSlots = 0;
@@ -388,15 +390,15 @@ public class SmithingRecipeBookComponent extends RecipeBookComponent {
                     }
                 }
 
-                Iterator<SmithingRecipeGroupButtonWidget> var6 = this.tabButtons.iterator();
+                Iterator<SmithingRecipeGroupButtonWidget> tabButtonsIter = this.tabButtons.iterator();
 
                 SmithingRecipeGroupButtonWidget smithingRecipeGroupButtonWidget;
                 do {
-                    if (!var6.hasNext()) {
+                    if (!tabButtonsIter.hasNext()) {
                         return false;
                     }
 
-                    smithingRecipeGroupButtonWidget = var6.next();
+                    smithingRecipeGroupButtonWidget = tabButtonsIter.next();
                 } while (!smithingRecipeGroupButtonWidget.mouseClicked(mouseX, mouseY, button));
 
                 if (this.currentTab != smithingRecipeGroupButtonWidget) {
@@ -417,10 +419,10 @@ public class SmithingRecipeBookComponent extends RecipeBookComponent {
 
     public void drawTooltip(GuiGraphics gui, int x, int y, int mouseX, int mouseY) {
         if (this.isOpen()) {
-            this.recipesArea.drawTooltip(gui, mouseX, mouseY);
+            this.recipesPage.drawTooltip(gui, mouseX, mouseY);
             if (this.toggleSmithableButton.isHoveredOrFocused()) {
                 Component text = this.getCraftableButtonText();
-                if (this.client.screen != null) {
+                if (this.minecraft.screen != null) {
                     gui.renderTooltip(Minecraft.getInstance().font, text, mouseX, mouseY);
 
                 }
@@ -428,7 +430,7 @@ public class SmithingRecipeBookComponent extends RecipeBookComponent {
 
             if (this.settingsButton != null) {
                 if (this.settingsButton.isHoveredOrFocused() && BetterRecipeBook.config.settingsButton) {
-                    if (this.client.screen != null) {
+                    if (this.minecraft.screen != null) {
                         gui.renderTooltip(Minecraft.getInstance().font, OPEN_SETTINGS_TOOLTIP, mouseX, mouseY);
                     }
                 }

@@ -5,16 +5,15 @@ import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
 import marsh.town.brb.mixins.accessors.RecipeBookComponentAccessor;
 import marsh.town.brb.smithingtable.SmithableResult;
+import marsh.town.brb.smithingtable.SmithingRecipeCollection;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.recipebook.RecipeBookComponent;
 import net.minecraft.client.gui.screens.recipebook.RecipeBookPage;
 import net.minecraft.client.gui.screens.recipebook.RecipeCollection;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.alchemy.PotionBrewing;
 import net.minecraft.world.item.crafting.RecipeHolder;
-import net.minecraft.world.item.crafting.SmithingRecipe;
 import org.apache.commons.io.IOUtils;
 
 import java.io.File;
@@ -135,8 +134,8 @@ public class PinnedRecipeManager {
         return false;
     }
 
-    public boolean hasSmithing(SmithableResult target) {
-        ResourceLocation targetIdentifier = BuiltInRegistries.ITEM.getKey(target.template.getItems()[0].getItem());
+    public boolean hasSmithing(SmithingRecipeCollection target) {
+        ResourceLocation targetIdentifier = BuiltInRegistries.ITEM.getKey(target.getFirst().template.getItems()[0].getItem());
 
         for (ResourceLocation identifier : this.pinned) {
             if (targetIdentifier.equals(identifier)) {

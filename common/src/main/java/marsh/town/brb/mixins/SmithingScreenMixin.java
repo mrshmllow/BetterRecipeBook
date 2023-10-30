@@ -14,8 +14,6 @@ import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.inventory.SmithingMenu;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -26,7 +24,8 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 public abstract class SmithingScreenMixin extends ItemCombinerScreen<SmithingMenu> {
     @Unique
     public final SmithingRecipeBookComponent _$recipeBookComponent = new SmithingRecipeBookComponent();
-    @Unique private boolean _$widthNarrow;
+    @Unique
+    private boolean _$widthNarrow;
 
     public SmithingScreenMixin(SmithingMenu itemCombinerMenu, Inventory inventory, Component component, ResourceLocation resourceLocation) {
         super(itemCombinerMenu, inventory, component, resourceLocation);
@@ -36,7 +35,7 @@ public abstract class SmithingScreenMixin extends ItemCombinerScreen<SmithingMen
     void init(CallbackInfo ci) {
         if (BetterRecipeBook.config.enableBook) {
             this._$widthNarrow = this.width < 379;
-            this._$recipeBookComponent.initialize(this.width, this.height, _$widthNarrow, this.menu);
+            this._$recipeBookComponent.initialize(this.width, this.height, this.minecraft, _$widthNarrow, this.menu);
 
             if (!BetterRecipeBook.config.keepCentered) {
                 this.leftPos = this._$recipeBookComponent.findLeftEdge(this.width, this.imageWidth);
@@ -74,7 +73,7 @@ public abstract class SmithingScreenMixin extends ItemCombinerScreen<SmithingMen
 
     @Override
     protected boolean hasClickedOutside(double d, double e, int i, int j, int k) {
-        boolean bl = d < (double)i || e < (double)j || d >= (double)(i + this.imageWidth) || e >= (double)(j + this.imageHeight);
+        boolean bl = d < (double) i || e < (double) j || d >= (double) (i + this.imageWidth) || e >= (double) (j + this.imageHeight);
         return this._$recipeBookComponent.hasClickedOutside(d, e, this.leftPos, this.topPos, this.imageWidth, this.imageHeight, k) && bl;
     }
 
