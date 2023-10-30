@@ -17,6 +17,7 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.inventory.SmithingMenu;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.armortrim.TrimMaterial;
 import net.minecraft.world.item.crafting.Ingredient;
 
@@ -86,7 +87,7 @@ public class SmithableAnimatedResultButton extends AbstractWidget {
     public List<Component> getTooltipText() {
         List<Component> list = Lists.newArrayList();
 
-        list.add(smithingRecipe.getTrimmedResult(getCurrentTrimMaterial(), Minecraft.getInstance().getConnection().registryAccess()).getHoverName());
+        list.addAll(smithingRecipe.getTrimmedResult(getCurrentTrimMaterial(), Minecraft.getInstance().getConnection().registryAccess()).getTooltipLines(Minecraft.getInstance().player, TooltipFlag.NORMAL));
         list.add(Component.literal(""));
 
         ChatFormatting colour = ChatFormatting.DARK_GRAY;
