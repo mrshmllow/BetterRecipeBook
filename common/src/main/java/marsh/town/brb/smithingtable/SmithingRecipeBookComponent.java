@@ -234,10 +234,10 @@ public class SmithingRecipeBookComponent extends RecipeBookComponent {
             List<SmithableResult> tempResults = Lists.newArrayList(results);
 
             for (SmithableResult result : tempResults) {
-//                if (BetterRecipeBook.pinnedRecipeManager.hasPotion(result.recipe)) {
-//                    results.remove(result);
-//                    results.add(0, result);
-//                }
+                if (BetterRecipeBook.pinnedRecipeManager.hasSmithing(result)) {
+                    results.remove(result);
+                    results.add(0, result);
+                }
             }
         }
 
@@ -261,7 +261,7 @@ public class SmithingRecipeBookComponent extends RecipeBookComponent {
                     if (BetterRecipeBook.config.enablePinning) {
                         for (SmithableAnimatedResultButton resultButton : this.recipesArea.buttons) {
                             if (resultButton.isHoveredOrFocused()) {
-//                                BetterRecipeBook.pinnedRecipeManager.addOrRemoveFavouritePotion(resultButton.getRecipe().recipe);
+                                BetterRecipeBook.pinnedRecipeManager.addOrRemoveFavouriteSmithing(resultButton.getRecipe());
                                 this.refreshResults(false);
                                 return true;
                             }

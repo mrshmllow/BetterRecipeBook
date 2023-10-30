@@ -24,8 +24,6 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(SmithingScreen.class)
 public abstract class SmithingScreenMixin extends ItemCombinerScreen<SmithingMenu> {
-    @Shadow protected abstract void renderOnboardingTooltips(GuiGraphics arg, int i, int j);
-
     @Unique
     public final SmithingRecipeBookComponent _$recipeBookComponent = new SmithingRecipeBookComponent();
     @Unique private boolean _$widthNarrow;

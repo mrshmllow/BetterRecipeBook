@@ -26,11 +26,7 @@ public class SmithableAnimatedResultButton extends AbstractWidget {
     private SmithableResult smithingRecipe;
     private SmithingRecipeBookGroup group;
     private SmithingMenu smithingMenu;
-    private static final float ANIMATION_TIME = 15.0F;
-    private static final int BACKGROUND_SIZE = 25;
-    public static final int TICKS_TO_SWAP = 30;
     private float time;
-    private float animationTime;
     private int currentIndex;
 
     public SmithableAnimatedResultButton() {
@@ -65,9 +61,9 @@ public class SmithableAnimatedResultButton extends AbstractWidget {
         gui.renderFakeItem(result, getX() + offset, getY() + offset);
 
         // if pinned recipe, blit the pin texture over it
-//        if (BetterRecipeBook.config.enablePinning && BetterRecipeBook.pinnedRecipeManager.hasPotion(smithingRecipe.recipe)) {
-//            gui.blitSprite(BRBTextures.RECIPE_BOOK_PIN_SPRITE, getX() - 4, getY() - 4, 32, 32);
-//        }
+        if (BetterRecipeBook.config.enablePinning && BetterRecipeBook.pinnedRecipeManager.hasSmithing(smithingRecipe)) {
+            gui.blitSprite(BRBTextures.RECIPE_BOOK_PIN_SPRITE, getX() - 4, getY() - 4, 32, 32);
+        }
     }
 
     private Holder.Reference<TrimMaterial> getCurrentTrimMaterial() {
@@ -134,11 +130,11 @@ public class SmithableAnimatedResultButton extends AbstractWidget {
         }
 
         if (BetterRecipeBook.config.enablePinning) {
-//            if (BetterRecipeBook.pinnedRecipeManager.hasPotion(this.smithingRecipe.recipe)) {
-//                list.add(Component.translatable("brb.gui.pin.remove"));
-//            } else {
-//                list.add(Component.translatable("brb.gui.pin.add"));
-//            }
+            if (BetterRecipeBook.pinnedRecipeManager.hasSmithing(smithingRecipe)) {
+                list.add(Component.translatable("brb.gui.pin.remove"));
+            } else {
+                list.add(Component.translatable("brb.gui.pin.add"));
+            }
         }
 
         return list;

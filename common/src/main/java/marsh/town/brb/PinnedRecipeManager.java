@@ -4,11 +4,13 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
 import marsh.town.brb.mixins.accessors.RecipeBookComponentAccessor;
+import marsh.town.brb.smithingtable.SmithableResult;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.recipebook.RecipeBookComponent;
 import net.minecraft.client.gui.screens.recipebook.RecipeBookPage;
 import net.minecraft.client.gui.screens.recipebook.RecipeCollection;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.alchemy.PotionBrewing;
 import net.minecraft.world.item.crafting.RecipeHolder;
@@ -96,18 +98,18 @@ public class PinnedRecipeManager {
         this.store();
     }
 
-    public void addOrRemoveFavouriteSmithing(SmithingRecipe recipe) {
-//        ResourceLocation targetIdentifier = BuiltInRegistries.POTION.getKey(getTo(target));
+    public void addOrRemoveFavouriteSmithing(SmithableResult recipe) {
+        ResourceLocation targetIdentifier = BuiltInRegistries.ITEM.getKey(recipe.template.getItems()[0].getItem());
 
-//        for (ResourceLocation identifier : this.pinned) {
-//            if (identifier.equals(targetIdentifier)) {
-//                this.pinned.remove(targetIdentifier);
-//                this.store();
-//                return;
-//            }
-//        }
-//
-//        this.pinned.add(targetIdentifier);
+        for (ResourceLocation identifier : this.pinned) {
+            if (identifier.equals(targetIdentifier)) {
+                this.pinned.remove(targetIdentifier);
+                this.store();
+                return;
+            }
+        }
+
+        this.pinned.add(targetIdentifier);
         this.store();
     }
 
@@ -124,6 +126,17 @@ public class PinnedRecipeManager {
 
     public boolean hasPotion(PotionBrewing.Mix<?> target) {
         ResourceLocation targetIdentifier = BuiltInRegistries.POTION.getKey(getTo(target));
+
+        for (ResourceLocation identifier : this.pinned) {
+            if (targetIdentifier.equals(identifier)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean hasSmithing(SmithableResult target) {
+        ResourceLocation targetIdentifier = BuiltInRegistries.ITEM.getKey(target.template.getItems()[0].getItem());
 
         for (ResourceLocation identifier : this.pinned) {
             if (targetIdentifier.equals(identifier)) {
