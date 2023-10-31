@@ -3,7 +3,6 @@ package marsh.town.brb.smithingtable;
 import com.google.common.collect.Lists;
 import marsh.town.brb.BetterRecipeBook;
 import marsh.town.brb.util.BRBTextures;
-import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -16,13 +15,11 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.inventory.SmithingMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.crafting.Ingredient;
 
 import java.util.List;
 
 public class SmithableRecipeButton extends AbstractWidget {
     private SmithingRecipeCollection collection;
-    private SmithingRecipeBookGroup group;
     private SmithingMenu smithingMenu;
     private float time;
     private int currentIndex;
@@ -31,9 +28,8 @@ public class SmithableRecipeButton extends AbstractWidget {
         super(0, 0, 25, 25, CommonComponents.EMPTY);
     }
 
-    public void showSmithableRecipe(SmithingRecipeCollection potionRecipe, SmithingRecipeBookGroup group, SmithingMenu smithingMenu) {
+    public void showSmithableRecipe(SmithingRecipeCollection potionRecipe, SmithingMenu smithingMenu) {
         this.collection = potionRecipe;
-        this.group = group;
         this.smithingMenu = smithingMenu;
     }
 
@@ -78,7 +74,7 @@ public class SmithableRecipeButton extends AbstractWidget {
         return list;
     }
 
-    private SmithableResult getCurrentArmour() {
+    public SmithableResult getCurrentArmour() {
         List<SmithableResult> list = getOrderedRecipes();
 
         return list.get(currentIndex);
@@ -100,46 +96,6 @@ public class SmithableRecipeButton extends AbstractWidget {
 
         list.addAll(getCurrentArmour().result.getTooltipLines(Minecraft.getInstance().player, TooltipFlag.NORMAL));
         list.add(Component.literal(""));
-
-        ChatFormatting colour = ChatFormatting.DARK_GRAY;
-        if (collection.getFirst().hasTemplate(smithingMenu.slots)) {
-            colour = ChatFormatting.WHITE;
-        }
-
-        list.add(Component.literal(collection.getFirst().template.getItems()[0].getHoverName().getString()).withStyle(colour));
-
-        colour = ChatFormatting.DARK_GRAY;
-        if (collection.getFirst().hasTemplate(smithingMenu.slots)) {
-            colour = ChatFormatting.GRAY;
-        }
-
-        list.add(Component.literal(collection.getFirst().getTemplateType()).withStyle(colour));
-
-        list.add(Component.literal("+").withStyle(ChatFormatting.DARK_GRAY));
-
-        colour = ChatFormatting.DARK_GRAY;
-        if (collection.getFirst().hasBase(smithingMenu.slots)) {
-            colour = ChatFormatting.WHITE;
-        }
-
-        list.add(Component.literal(collection.getFirst().base.getHoverName().getString()).withStyle(colour));
-
-        list.add(Component.literal("+").withStyle(ChatFormatting.DARK_GRAY));
-
-        colour = ChatFormatting.DARK_GRAY;
-        if (collection.getFirst().hasAddition(smithingMenu.slots)) {
-            colour = ChatFormatting.WHITE;
-        }
-
-        Ingredient.Value addition = collection.getFirst().addition.values[0];
-
-        if (addition instanceof Ingredient.ItemValue) {
-            list.add(Component.literal(collection.getFirst().addition.getItems()[0].getHoverName().getString()).withStyle(colour));
-        } else {
-            ItemStack result = getCurrentArmour().result;
-
-            list.add(result.getHoverName().copy().withStyle(colour));
-        }
 
         if (BetterRecipeBook.config.enablePinning) {
             if (BetterRecipeBook.pinnedRecipeManager.hasSmithing(collection)) {

@@ -23,18 +23,16 @@ public class SmithableResult {
     public ItemStack base;
     public Ingredient addition;
     public ItemStack result;
-    private boolean isTransform;
 
-    public SmithableResult(Ingredient template, ItemStack base, Ingredient addition, ItemStack result, boolean isTransform) {
+    public SmithableResult(Ingredient template, ItemStack base, Ingredient addition, ItemStack result) {
         this.template = template;
         this.base = base;
         this.addition = addition;
         this.result = result;
-        this.isTransform = isTransform;
     }
 
     public static SmithableResult of(SmithingTransformRecipe recipe) {
-        return new SmithableResult(recipe.template, recipe.base.getItems()[0], recipe.addition, recipe.getResultItem(null), true);
+        return new SmithableResult(recipe.template, recipe.base.getItems()[0], recipe.addition, recipe.getResultItem(null));
     }
 
     public static List<SmithableResult> of(SmithingTrimRecipe recipe) {
@@ -43,7 +41,7 @@ public class SmithableResult {
         for (ItemStack base : recipe.base.getItems()) {
             ItemStack result = getTrimmedItem(recipe, base, TrimMaterials.REDSTONE, Minecraft.getInstance().getConnection().registryAccess());
 
-            results.add(new SmithableResult(recipe.template, base, recipe.addition, result, false));
+            results.add(new SmithableResult(recipe.template, base, recipe.addition, result));
         }
 
         return results;
@@ -65,23 +63,6 @@ public class SmithableResult {
 
     public List<Holder.Reference<TrimMaterial>> getPossibleTrims(RegistryAccess registryAccess) {
         return registryAccess.registryOrThrow(Registries.TRIM_MATERIAL).holders().toList();
-    }
-
-    public ItemStack getTrimmedResult(Holder<TrimMaterial> trim_mat, RegistryAccess registryAccess) {
-        if (this.isTransform) {
-            return this.result;
-        }
-
-        Optional<Holder.Reference<TrimPattern>> trim = TrimPatterns.getFromTemplate(registryAccess, this.template.getItems()[0]);
-
-        ItemStack itemStack = this.base.copy();
-
-        if (trim.isPresent()) {
-            ArmorTrim armorTri = new ArmorTrim(trim_mat, trim.get());
-            ArmorTrim.setTrim(registryAccess, this.base, armorTri);
-        }
-
-        return itemStack;
     }
 
     public boolean hasTemplate(List<Slot> slots) {

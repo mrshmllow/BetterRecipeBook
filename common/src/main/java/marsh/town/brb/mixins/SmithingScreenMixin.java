@@ -5,20 +5,23 @@ import marsh.town.brb.smithingtable.SmithingRecipeBookComponent;
 import marsh.town.brb.util.BRBTextures;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.ImageButton;
+import net.minecraft.client.gui.screens.inventory.CyclingSlotBackground;
 import net.minecraft.client.gui.screens.inventory.ItemCombinerScreen;
 import net.minecraft.client.gui.screens.inventory.SmithingScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.inventory.SmithingMenu;
+import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(SmithingScreen.class)
 public abstract class SmithingScreenMixin extends ItemCombinerScreen<SmithingMenu> {
@@ -77,11 +80,38 @@ public abstract class SmithingScreenMixin extends ItemCombinerScreen<SmithingMen
         return this._$recipeBookComponent.hasClickedOutside(d, e, this.leftPos, this.topPos, this.imageWidth, this.imageHeight, k) && bl;
     }
 
-    @Inject(method = "render", at = @At("HEAD"), locals = LocalCapture.CAPTURE_FAILSOFT)
+    @Inject(method = "render", at = @At("RETURN"))
     public void render(GuiGraphics guiGraphics, int i, int j, float f, CallbackInfo ci) {
         if (this._$recipeBookComponent.isOpen()) {
             this._$recipeBookComponent.render(guiGraphics, i, j, f);
+            this._$recipeBookComponent.renderGhostRecipe(guiGraphics, this.leftPos, this.topPos, false, f);
             this._$recipeBookComponent.drawTooltip(guiGraphics, this.leftPos, this.topPos, i, j);
+        }
+    }
+
+//    @Inject(method = "renderBg", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/inventory/CyclingSlotBackground;render(Lnet/minecraft/world/inventory/AbstractContainerMenu;Lnet/minecraft/client/gui/GuiGraphics;FII)V"), cancellable = true)
+//    public void renderBg(GuiGraphics guiGraphics, float f, int i, int j, CallbackInfo ci) {
+//        if (_$recipeBookComponent.isShowingGhostRecipe()) {
+//            ci.cancel();
+//        }
+//    }
+
+    @Redirect(method = "renderBg", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/inventory/CyclingSlotBackground;render(Lnet/minecraft/world/inventory/AbstractContainerMenu;Lnet/minecraft/client/gui/GuiGraphics;FII)V"))
+    public void renderBg(CyclingSlotBackground instance, AbstractContainerMenu slot, GuiGraphics bl, float g, int k, int arg) {
+        // pass, cancel render of onboarding tip slots
+    }
+
+    @Inject(method = "renderOnboardingTooltips", at = @At(value = "HEAD"), cancellable = true)
+    public void renderOnboardingTooltips(GuiGraphics guiGraphics, int i, int j, CallbackInfo ci) {
+        if (_$recipeBookComponent.isShowingGhostRecipe()) {
+            ci.cancel();
+        }
+    }
+
+    @Inject(method = "slotChanged", at = @At(value = "HEAD"))
+    public void slotChanged(AbstractContainerMenu abstractContainerMenu, int i, ItemStack itemStack, CallbackInfo ci) {
+        if (i == SmithingMenu.BASE_SLOT || i == SmithingMenu.ADDITIONAL_SLOT || i == SmithingMenu.TEMPLATE_SLOT || i == SmithingMenu.RESULT_SLOT) {
+            _$recipeBookComponent.ghostRecipe.clear();
         }
     }
 

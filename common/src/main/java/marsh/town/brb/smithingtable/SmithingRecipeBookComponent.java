@@ -15,6 +15,7 @@ import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.components.StateSwitchingButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.recipebook.RecipeBookComponent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -23,6 +24,7 @@ import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.inventory.SmithingMenu;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
@@ -53,6 +55,7 @@ public class SmithingRecipeBookComponent extends RecipeBookComponent {
     boolean doubleRefresh = true;
     private boolean searching;
     private String searchText;
+    public final SmithingGhostRecipe ghostRecipe = new SmithingGhostRecipe();
 
     public void initialize(int width, int height, Minecraft minecraft, boolean narrow, SmithingMenu smithingScreenHandler) {
         this.minecraft = minecraft;
@@ -71,35 +74,6 @@ public class SmithingRecipeBookComponent extends RecipeBookComponent {
         } else {
             this.leftOffset = this.narrow ? 0 : 86;
         }
-
-        // this code is responsible for selectively rendering ghost slots
-//        ghostRecipe.setRenderingPredicate((type, ingredient) -> {
-//            ItemStack real = brewingStandScreenHandler.slots.get(ingredient.getContainerSlot()).getItem();
-//            switch (type) {
-//                case ITEM:
-//                case BACKGROUND:
-//                    // slot 0 is the preview so map it to 1
-//                    ItemStack fake = ingredient.getContainerSlot() == 0 ? ingredient.getOwner().getBySlot(1).getItem() : ingredient.getItem();
-//
-//                    // if the ingredient is in one of the output slots
-//                    if (ingredient.getContainerSlot() < 3) {
-//                        if (real.getItem() instanceof PotionItem) {
-//                            Potion realPotion = PotionUtils.getPotion(real);
-//                            Potion fakePotion = PotionUtils.getPotion(fake);
-//
-//                            return !realPotion.equals(fakePotion);
-//                        } else { // else it's not valid
-//                            return true;
-//                        }
-//                    } else { // else it's the consumable item
-//                        return !real.is(fake.getItem());
-//                    }
-//                case TOOLTIP:
-//                    return real.isEmpty();
-//                default:
-//                    return true;
-//            }
-//        });
 
         // still required?
         //client.keyboardHandler.setSendRepeatsToGui(true);
@@ -226,7 +200,7 @@ public class SmithingRecipeBookComponent extends RecipeBookComponent {
         }
 
         if (this.recipeBook.isFilteringCraftable()) {
-            results.removeIf((result) -> !result.getFirst().hasMaterials(smithingScreenHandler.slots));
+            results.removeIf((result) -> !result.atleastOneCraftable(this.smithingScreenHandler.slots));
         }
 
         if (BetterRecipeBook.config.enablePinning) {
@@ -326,14 +300,14 @@ public class SmithingRecipeBookComponent extends RecipeBookComponent {
             if (this.recipesPage.mouseClicked(mouseX, mouseY, button, (this.width - 147) / 2 - this.xOffset, (this.height - 166) / 2, 147, 166)) {
                 SmithableResult result = this.recipesPage.getCurrentClickedRecipe();
                 SmithingRecipeCollection recipeCollection = this.recipesPage.getLastClickedRecipeCollection();
-                if (result != null && recipeCollection != null) {
-                    if (!recipeCollection.isCraftable(result)) {
-//                        if (!recipeCollection.isCraftable(result) && this.ghostRecipe.getRecipe() == result) {
-                        return false;
-                    }
 
+                if (result != null && recipeCollection != null) {
                     this.ghostRecipe.clear();
-//                    this.minecraft.gameMode.handlePlaceRecipe(this.minecraft.player.containerMenu.containerId, recipeHolder, Screen.hasShiftDown());
+
+                    if (!result.hasMaterials(this.smithingScreenHandler.slots)) {
+                        this.setupGhostRecipe(result, this.smithingScreenHandler.slots);
+                        return true;
+                    }
 
                     int slotIndex = 0;
                     int usedInputSlots = 0;
@@ -417,6 +391,18 @@ public class SmithingRecipeBookComponent extends RecipeBookComponent {
         }
     }
 
+    public void setupGhostRecipe(SmithableResult result, List<Slot> list) {
+        this.ghostRecipe.setRecipe(result);
+
+        this.ghostRecipe.addIngredient(result.addition, SmithingMenu.ADDITIONAL_SLOT_X_PLACEMENT, SmithingMenu.SLOT_Y_PLACEMENT);
+        this.ghostRecipe.addIngredient(result.template, SmithingMenu.TEMPLATE_SLOT_X_PLACEMENT, SmithingMenu.SLOT_Y_PLACEMENT);
+        this.ghostRecipe.addIngredient(Ingredient.of(result.base), SmithingMenu.BASE_SLOT_X_PLACEMENT, SmithingMenu.SLOT_Y_PLACEMENT);
+    }
+
+    public void renderGhostRecipe(GuiGraphics guiGraphics, int i, int j, boolean bl, float f) {
+        this.ghostRecipe.render(guiGraphics, this.minecraft, i, j, bl, f);
+    }
+
     public void drawTooltip(GuiGraphics gui, int x, int y, int mouseX, int mouseY) {
         if (this.isOpen()) {
             this.recipesPage.drawTooltip(gui, mouseX, mouseY);
@@ -436,8 +422,29 @@ public class SmithingRecipeBookComponent extends RecipeBookComponent {
                 }
             }
 
-//            ghostRecipe.renderTooltip(gui, x, y, mouseX, mouseY);
+            renderGhostRecipeTooltip(gui, x, y, mouseX, mouseY);
         }
+    }
+
+    private void renderGhostRecipeTooltip(GuiGraphics guiGraphics, int i, int j, int k, int l) {
+        ItemStack itemStack = null;
+
+        for (int m = 0; m < this.ghostRecipe.size(); ++m) {
+            SmithingGhostRecipe.SmithingGhostIngredient ghostIngredient = this.ghostRecipe.get(m);
+            int n = ghostIngredient.getX() + i;
+            int o = ghostIngredient.getY() + j;
+            if (k >= n && l >= o && k < n + 16 && l < o + 16) {
+                itemStack = ghostIngredient.getItem();
+            }
+        }
+
+        if (itemStack != null && this.minecraft.screen != null) {
+            guiGraphics.renderComponentTooltip(this.minecraft.font, Screen.getTooltipFromItem(this.minecraft, itemStack), k, l);
+        }
+    }
+
+    public boolean isShowingGhostRecipe() {
+        return this.ghostRecipe.size() > 0;
     }
 
     private Component getCraftableButtonText() {

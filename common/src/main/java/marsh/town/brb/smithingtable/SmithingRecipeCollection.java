@@ -2,7 +2,9 @@ package marsh.town.brb.smithingtable;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
+import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.inventory.SmithingMenu;
 
 import java.util.List;
@@ -34,7 +36,13 @@ public class SmithingRecipeCollection {
         return list;
     }
 
-    public boolean isCraftable(SmithableResult result) {
-        return result.hasMaterials(smithingScreenHandler.slots);
+    public boolean atleastOneCraftable(NonNullList<Slot> slots) {
+        for (SmithableResult recipe : this.recipes) {
+            if (recipe.hasMaterials(slots)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

@@ -67,7 +67,7 @@ public class SmithingRecipeBookPage {
             SmithableRecipeButton smithableRecipeButton = this.buttons.get(j);
             if (i + j < this.recipeCollections.size()) {
                 SmithingRecipeCollection output = this.recipeCollections.get(i + j);
-                smithableRecipeButton.showSmithableRecipe(output, group, smithingMenuHandler);
+                smithableRecipeButton.showSmithableRecipe(output, smithingMenuHandler);
                 smithableRecipeButton.visible = true;
             } else {
                 smithableRecipeButton.visible = false;
@@ -102,7 +102,7 @@ public class SmithingRecipeBookPage {
         for (SmithableRecipeButton recipeButton : this.buttons) {
             if (!recipeButton.mouseClicked(mouseX, mouseY, button)) continue;
             if (button == 0) {
-                this.lastClickedRecipe = recipeButton.getCollection().getFirst();
+                this.lastClickedRecipe = recipeButton.getCurrentArmour();
                 this.lastClickedRecipeCollection = recipeButton.getCollection();
             } else if (button == 1 && !this.overlay.isVisible() && !recipeButton.isOnlyOption()) {
                 this.overlay.init(recipeButton.getCollection(), recipeButton.getX(), recipeButton.getY(), j + l / 2, k + 13 + m / 2, recipeButton.getWidth());
