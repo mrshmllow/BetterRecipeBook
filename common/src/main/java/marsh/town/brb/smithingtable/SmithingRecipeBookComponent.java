@@ -405,7 +405,6 @@ public class SmithingRecipeBookComponent extends RecipeBookComponent {
 
     public void drawTooltip(GuiGraphics gui, int x, int y, int mouseX, int mouseY) {
         if (this.isOpen()) {
-            this.recipesPage.drawTooltip(gui, mouseX, mouseY);
             if (this.toggleSmithableButton.isHoveredOrFocused()) {
                 Component text = this.getCraftableButtonText();
                 if (this.minecraft.screen != null) {
@@ -414,10 +413,14 @@ public class SmithingRecipeBookComponent extends RecipeBookComponent {
                 }
             }
 
-            if (this.settingsButton != null) {
-                if (this.settingsButton.isHoveredOrFocused() && BetterRecipeBook.config.settingsButton) {
-                    if (this.minecraft.screen != null) {
-                        gui.renderTooltip(Minecraft.getInstance().font, OPEN_SETTINGS_TOOLTIP, mouseX, mouseY);
+            if (!this.recipesPage.overlay.isVisible()) {
+                this.recipesPage.drawTooltip(gui, mouseX, mouseY);
+
+                if (this.settingsButton != null) {
+                    if (this.settingsButton.isHoveredOrFocused() && BetterRecipeBook.config.settingsButton) {
+                        if (this.minecraft.screen != null) {
+                            gui.renderTooltip(Minecraft.getInstance().font, OPEN_SETTINGS_TOOLTIP, mouseX, mouseY);
+                        }
                     }
                 }
             }

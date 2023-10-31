@@ -24,7 +24,7 @@ public class SmithingRecipeBookPage {
     private int currentPage;
     private SmithableRecipeButton hoveredButton;
     private SmithableResult lastClickedRecipe;
-    private final SmithingOverlayRecipeComponent overlay = new SmithingOverlayRecipeComponent();
+    public final SmithingOverlayRecipeComponent overlay = new SmithingOverlayRecipeComponent();
     private SmithingRecipeCollection lastClickedRecipeCollection;
 
     public SmithingRecipeBookPage() {
