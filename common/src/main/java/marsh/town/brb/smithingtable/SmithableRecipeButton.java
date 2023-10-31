@@ -44,7 +44,7 @@ public class SmithableRecipeButton extends AbstractWidget {
         this.currentIndex = Mth.floor(this.time / 30.0F) % list.size();
 
         // blit outline texture
-        ResourceLocation outlineTexture = getCurrentArmour().hasMaterials(smithingMenu.slots) ?
+        ResourceLocation outlineTexture = collection.atleastOneCraftable(smithingMenu.slots) ?
                 BRBTextures.RECIPE_BOOK_BUTTON_SLOT_CRAFTABLE_SPRITE : BRBTextures.RECIPE_BOOK_BUTTON_SLOT_UNCRAFTABLE_SPRITE;
         gui.blitSprite(outlineTexture, getX(), getY(), this.width, this.height);
 
