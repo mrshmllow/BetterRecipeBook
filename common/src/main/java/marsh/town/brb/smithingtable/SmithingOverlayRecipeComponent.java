@@ -36,26 +36,10 @@ public class SmithingOverlayRecipeComponent implements Renderable, GuiEventListe
         int lockedRecipeCount = lockedRecipes.size();
         int totalRecipeCount = lockedRecipeCount + unlockedRecipes.size();
         int columns = totalRecipeCount <= 16 ? 4 : 5;
-        int rows = (int) Math.ceil((float) totalRecipeCount / (float) columns);
-        this.x = x;
-        this.y = y;
-        float rightEdgeX = (float) (this.x + Math.min(totalRecipeCount, columns) * 25);
-        float visibleRightEdgeX = (float) (screenX + 50);
-        if (rightEdgeX > visibleRightEdgeX) {
-            this.x = (int) ((float) this.x - recipeButtonWidth * (float) ((int) ((rightEdgeX - visibleRightEdgeX) / recipeButtonWidth)));
-        }
-
-        float bottomEdgeY = (float) (this.y + rows * 25);
-        float visibleBottomEdgeY = (float) (screenY + 50);
-        if (bottomEdgeY > visibleBottomEdgeY) {
-            this.y = (int) ((float) this.y - recipeButtonWidth * (float) Mth.ceil((bottomEdgeY - visibleBottomEdgeY) / recipeButtonWidth));
-        }
-
-        float currentTopY = (float) this.y;
-        float visibleTopY = (float) (screenY - 100);
-        if (currentTopY < visibleTopY) {
-            this.y = (int) ((float) this.y - recipeButtonWidth * (float) Mth.ceil((currentTopY - visibleTopY) / recipeButtonWidth));
-        }
+        // screw it hardcode these values not like they are adding more armour anytime soon
+        // trimming tools, anyone?
+        this.x = screenX - 150;
+        this.y = screenY - 70;
 
         this.isVisible = true;
         this.recipeButtons.clear();
