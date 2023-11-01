@@ -1,26 +1,37 @@
 package marsh.town.brb.smithingtable;
 
 import com.google.common.collect.Lists;
+import marsh.town.brb.mixins.accessors.HolderReferenceAccessor;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.core.Holder;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.util.Mth;
+import net.minecraft.world.inventory.SmithingMenu;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.armortrim.*;
 import net.minecraft.world.item.crafting.Ingredient;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 public class SmithingGhostRecipe {
+    private final Consumer<SmithingGhostRecipe> onGhostUpdate;
     @Nullable
     private SmithableResult recipe;
     private final List<SmithingGhostIngredient> ingredients = Lists.newArrayList();
     float time;
 
-    public SmithingGhostRecipe() {
+    public SmithingGhostRecipe(Consumer<SmithingGhostRecipe> onGhostUpdate) {
+        this.onGhostUpdate = onGhostUpdate;
     }
 
     public void clear() {
@@ -46,6 +57,37 @@ public class SmithingGhostRecipe {
         return this.recipe;
     }
 
+    public ItemStack getCurrentResult(RegistryAccess registryAccess) {
+        if (this.recipe == null) {
+            return ItemStack.EMPTY;
+        }
+
+        if (this.recipe.isTransform) {
+            return this.recipe.result;
+        }
+
+        ItemStack itemStack = this.recipe.base.copy();
+
+        Stream<Holder.Reference<TrimMaterial>> holders = registryAccess.registryOrThrow(Registries.TRIM_MATERIAL).holders();
+
+        Optional<Holder.Reference<TrimMaterial>> currentMaterialReference = TrimMaterials.getFromIngredient(Minecraft.getInstance().getConnection().registryAccess(), this.ingredients.get(0).getItem());
+
+        if (currentMaterialReference.isEmpty()) {
+            return itemStack;
+        }
+
+        Holder.Reference<TrimMaterial> material = holders.filter(holder -> ((HolderReferenceAccessor<TrimMaterial>) holder).getKey().equals(((HolderReferenceAccessor<TrimMaterial>) currentMaterialReference.get()).getKey())).findFirst().get();
+
+        Optional<Holder.Reference<TrimPattern>> trim = TrimPatterns.getFromTemplate(registryAccess, recipe.template.getItems()[0]);
+
+        if (trim.isPresent()) {
+            ArmorTrim armorTri = new ArmorTrim(material, trim.get());
+            ArmorTrim.setTrim(registryAccess, itemStack, armorTri);
+        }
+
+        return itemStack;
+    }
+
     public void setRecipe(@Nullable SmithableResult recipe) {
         this.recipe = recipe;
     }
@@ -53,6 +95,7 @@ public class SmithingGhostRecipe {
     public void render(GuiGraphics guiGraphics, Minecraft minecraft, int i, int j, boolean bl, float f) {
         if (!Screen.hasControlDown()) {
             this.time += f;
+            this.onGhostUpdate.accept(this);
         }
 
         for (int k = 0; k < this.ingredients.size(); ++k) {
@@ -73,6 +116,21 @@ public class SmithingGhostRecipe {
             }
         }
 
+        ItemStack itemStack = getCurrentResult(Minecraft.getInstance().getConnection().registryAccess());
+
+        if (itemStack.isEmpty()) return;
+
+        int l = 98 + i;
+        int m = SmithingMenu.SLOT_Y_PLACEMENT + j;
+        if (bl) {
+            guiGraphics.fill(l - 4, m - 4, l + 20, m + 20, 822018048);
+        } else {
+            guiGraphics.fill(l, m, l + 16, m + 16, 822018048);
+        }
+
+        guiGraphics.renderFakeItem(itemStack, l, m);
+        guiGraphics.fill(RenderType.guiGhostRecipeOverlay(), l, m, l + 16, m + 16, 822083583);
+        guiGraphics.renderItemDecorations(minecraft.font, itemStack, l, m);
     }
 
     @Environment(EnvType.CLIENT)

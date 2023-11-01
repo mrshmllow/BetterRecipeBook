@@ -17,6 +17,7 @@
     "accessors.OverlayRecipeComponentAccessor",
     "accessors.RecipeBookComponentAccessor",
     "accessors.RecipeBookPageAccessor",
+    "accessors.HolderReferenceAccessor",
     "alternativerecipes.OverlayRecipeButtonMixin",
     "centered.RecipeBookComponentMixin",
     "instantcraft.ClientPacketListenerMixin",

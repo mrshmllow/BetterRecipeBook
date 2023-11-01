@@ -1,8 +1,10 @@
 package marsh.town.brb.mixins;
 
 import marsh.town.brb.BetterRecipeBook;
+import marsh.town.brb.smithingtable.SmithingGhostRecipe;
 import marsh.town.brb.smithingtable.SmithingRecipeBookComponent;
 import marsh.town.brb.util.BRBTextures;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.screens.inventory.CyclingSlotBackground;
@@ -17,6 +19,7 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.inventory.SmithingMenu;
 import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -25,6 +28,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(SmithingScreen.class)
 public abstract class SmithingScreenMixin extends ItemCombinerScreen<SmithingMenu> {
+    @Shadow protected abstract void updateArmorStandPreview(ItemStack itemStack);
+
     @Unique
     public final SmithingRecipeBookComponent _$recipeBookComponent = new SmithingRecipeBookComponent();
     @Unique
@@ -38,7 +43,9 @@ public abstract class SmithingScreenMixin extends ItemCombinerScreen<SmithingMen
     void init(CallbackInfo ci) {
         if (BetterRecipeBook.config.enableBook) {
             this._$widthNarrow = this.width < 379;
-            this._$recipeBookComponent.initialize(this.width, this.height, this.minecraft, _$widthNarrow, this.menu);
+            this._$recipeBookComponent.initialize(this.width, this.height, this.minecraft, _$widthNarrow, this.menu, s -> {
+                if (s.getRecipe() != null) this.updateArmorStandPreview(s.getCurrentResult(Minecraft.getInstance().getConnection().registryAccess()));
+            });
 
             if (!BetterRecipeBook.config.keepCentered) {
                 this.leftPos = this._$recipeBookComponent.findLeftEdge(this.width, this.imageWidth);
@@ -80,6 +87,10 @@ public abstract class SmithingScreenMixin extends ItemCombinerScreen<SmithingMen
         return this._$recipeBookComponent.hasClickedOutside(d, e, this.leftPos, this.topPos, this.imageWidth, this.imageHeight, k) && bl;
     }
 
+    public void ghostRecipeChanged(SmithingGhostRecipe ghostRecipe) {
+
+    }
+
     @Inject(method = "render", at = @At("RETURN"))
     public void render(GuiGraphics guiGraphics, int i, int j, float f, CallbackInfo ci) {
         if (this._$recipeBookComponent.isOpen()) {
@@ -98,7 +109,11 @@ public abstract class SmithingScreenMixin extends ItemCombinerScreen<SmithingMen
 
     @Redirect(method = "renderBg", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/inventory/CyclingSlotBackground;render(Lnet/minecraft/world/inventory/AbstractContainerMenu;Lnet/minecraft/client/gui/GuiGraphics;FII)V"))
     public void renderBg(CyclingSlotBackground instance, AbstractContainerMenu slot, GuiGraphics bl, float g, int k, int arg) {
-        // pass, cancel render of onboarding tip slots
+        if (!_$recipeBookComponent.isShowingGhostRecipe()) {
+            instance.render(this.menu, bl, g, this.leftPos, this.topPos);
+        }
+
+        // pass, cancel render of onboarding tip slots if there is a ghost recipe
     }
 
     @Inject(method = "renderOnboardingTooltips", at = @At(value = "HEAD"), cancellable = true)

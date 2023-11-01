@@ -30,6 +30,7 @@ import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.*;
+import java.util.function.Consumer;
 
 public class SmithingRecipeBookComponent extends RecipeBookComponent {
     private boolean open;
@@ -55,19 +56,20 @@ public class SmithingRecipeBookComponent extends RecipeBookComponent {
     boolean doubleRefresh = true;
     private boolean searching;
     private String searchText;
-    public final SmithingGhostRecipe ghostRecipe = new SmithingGhostRecipe();
+    public SmithingGhostRecipe ghostRecipe;
 
-    public void initialize(int width, int height, Minecraft minecraft, boolean narrow, SmithingMenu smithingScreenHandler) {
+    public void initialize(int width, int height, Minecraft minecraft, boolean widthNarrow, SmithingMenu menu, Consumer<SmithingGhostRecipe> onGhostRecipeUpdate) {
         this.minecraft = minecraft;
         this.width = width;
         this.height = height;
-        this.smithingScreenHandler = smithingScreenHandler;
-        this.narrow = narrow;
+        this.smithingScreenHandler = menu;
+        this.narrow = widthNarrow;
         this.minecraft.player.containerMenu = smithingScreenHandler;
         this.recipeBook = new SmithingClientRecipeBook();
         this.open = BetterRecipeBook.rememberedSmithingOpen;
         // this.cachedInvChangeCount = client.player.getInventory().getChangeCount();
         this.reset();
+        this.ghostRecipe = new SmithingGhostRecipe(onGhostRecipeUpdate);
 
         if (BetterRecipeBook.config.keepCentered) {
             this.leftOffset = this.narrow ? 0 : 162;
@@ -498,4 +500,5 @@ public class SmithingRecipeBookComponent extends RecipeBookComponent {
         ALL_RECIPES_TOOLTIP = Component.translatable("gui.recipebook.toggleRecipes.all");
         OPEN_SETTINGS_TOOLTIP = Component.translatable("brb.gui.settings.open");
     }
+
 }

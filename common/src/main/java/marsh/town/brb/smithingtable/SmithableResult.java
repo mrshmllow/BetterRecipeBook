@@ -24,15 +24,18 @@ public class SmithableResult {
     public Ingredient addition;
     public ItemStack result;
 
-    public SmithableResult(Ingredient template, ItemStack base, Ingredient addition, ItemStack result) {
+    public boolean isTransform;
+
+    public SmithableResult(Ingredient template, ItemStack base, Ingredient addition, ItemStack result, boolean isTransform) {
         this.template = template;
         this.base = base;
         this.addition = addition;
         this.result = result;
+        this.isTransform = isTransform;
     }
 
     public static SmithableResult of(SmithingTransformRecipe recipe) {
-        return new SmithableResult(recipe.template, recipe.base.getItems()[0], recipe.addition, recipe.getResultItem(null));
+        return new SmithableResult(recipe.template, recipe.base.getItems()[0], recipe.addition, recipe.getResultItem(null), true);
     }
 
     public static List<SmithableResult> of(SmithingTrimRecipe recipe) {
@@ -41,13 +44,13 @@ public class SmithableResult {
         for (ItemStack base : recipe.base.getItems()) {
             ItemStack result = getTrimmedItem(recipe, base, TrimMaterials.REDSTONE, Minecraft.getInstance().getConnection().registryAccess());
 
-            results.add(new SmithableResult(recipe.template, base, recipe.addition, result));
+            results.add(new SmithableResult(recipe.template, base, recipe.addition, result, false));
         }
 
         return results;
     }
 
-    private static ItemStack getTrimmedItem(SmithingTrimRecipe recipe, ItemStack base, ResourceKey<TrimMaterial> trim_mat, RegistryAccess registryAccess) {
+    public static ItemStack getTrimmedItem(SmithingTrimRecipe recipe, ItemStack base, ResourceKey<TrimMaterial> trim_mat, RegistryAccess registryAccess) {
         Optional<Holder.Reference<TrimMaterial>> material = registryAccess.registryOrThrow(Registries.TRIM_MATERIAL).getHolder(trim_mat);
         Optional<Holder.Reference<TrimPattern>> trim = TrimPatterns.getFromTemplate(registryAccess, recipe.template.getItems()[0]);
 
