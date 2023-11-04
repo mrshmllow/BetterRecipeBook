@@ -28,7 +28,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(SmithingScreen.class)
 public abstract class SmithingScreenMixin extends ItemCombinerScreen<SmithingMenu> {
-    @Shadow protected abstract void updateArmorStandPreview(ItemStack itemStack);
+    @Shadow
+    protected abstract void updateArmorStandPreview(ItemStack itemStack);
 
     @Unique
     public final SmithingRecipeBookComponent _$recipeBookComponent = new SmithingRecipeBookComponent();
@@ -70,16 +71,10 @@ public abstract class SmithingScreenMixin extends ItemCombinerScreen<SmithingMen
     protected void slotClicked(Slot slot, int x, int y, ClickType clickType) {
         // clear ghost recipe if an empty ingredient slot is clicked with no items
         if (slot != null && slot.index < 4 && menu.getCarried().isEmpty() && menu.slots.get(slot.index).getItem().isEmpty()) {
-//            _$recipeBookComponent.ghostRecipe.clear();
+            _$recipeBookComponent.ghostRecipe.clear();
         }
 
         super.slotClicked(slot, x, y, clickType);
-
-        // clear ghostRecipe if ingredients match
-//        BrewableResult result = _$recipeBookComponent.recipesArea.getLastClickedRecipe();
-//        if (slot != null && slot.index < 4 && result != null && _$recipeBookComponent.currentTab != null && result.hasMaterials(_$recipeBookComponent.currentTab.getGroup(), menu.slots.subList(0, 4))) {
-//            _$recipeBookComponent.ghostRecipe.clear();
-//        }
     }
 
     @Override
