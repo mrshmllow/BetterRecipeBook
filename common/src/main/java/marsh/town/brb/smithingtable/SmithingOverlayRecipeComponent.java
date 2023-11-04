@@ -27,7 +27,7 @@ public class SmithingOverlayRecipeComponent implements Renderable, GuiEventListe
     private int y;
     private int x;
 
-    public void init(SmithingRecipeCollection recipeCollection, int x, int y, int screenX, int screenY, float recipeButtonWidth) {
+    public void init(SmithingRecipeCollection recipeCollection, int x, int y) {
         this.collection = recipeCollection;
 
         boolean isFiltering = BetterRecipeBook.rememberedSmithableToggle;
@@ -38,8 +38,8 @@ public class SmithingOverlayRecipeComponent implements Renderable, GuiEventListe
         int columns = totalRecipeCount <= 16 ? 4 : 5;
         // screw it hardcode these values not like they are adding more armour anytime soon
         // trimming tools, anyone?
-        this.x = screenX - 150;
-        this.y = screenY - 70;
+        this.x = x + 7;
+        this.y = y + 26;
 
         this.isVisible = true;
         this.recipeButtons.clear();

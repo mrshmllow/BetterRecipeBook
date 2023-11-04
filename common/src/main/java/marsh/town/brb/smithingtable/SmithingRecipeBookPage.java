@@ -26,6 +26,9 @@ public class SmithingRecipeBookPage {
     private SmithableResult lastClickedRecipe;
     public final SmithingOverlayRecipeComponent overlay = new SmithingOverlayRecipeComponent();
     private SmithingRecipeCollection lastClickedRecipeCollection;
+    private int leftOffset;
+    private int parentLeft;
+    private int parentTop;
 
     public SmithingRecipeBookPage() {
         for (int i = 0; i < 20; ++i) {
@@ -33,10 +36,12 @@ public class SmithingRecipeBookPage {
         }
     }
 
-    public void initialize(Minecraft client, int parentLeft, int parentTop, SmithingMenu smithingMenuHandler) {
+    public void initialize(Minecraft client, int parentLeft, int parentTop, SmithingMenu smithingMenuHandler, int leftOffset) {
         this.minecraft = client;
         this.smithingMenuHandler = smithingMenuHandler;
         // this.recipeBook = client.player.getRecipeBook();
+        this.parentLeft = parentLeft;
+        this.parentTop = parentTop;
 
         for (int k = 0; k < this.buttons.size(); ++k) {
             this.buttons.get(k).setPosition(parentLeft + 11 + 25 * (k % 5), parentTop + 31 + 25 * (k / 5));
@@ -46,6 +51,7 @@ public class SmithingRecipeBookPage {
         this.forwardButton.initTextureValues(BRBTextures.RECIPE_BOOK_PAGE_FORWARD_SPRITES);
         this.backButton = new StateSwitchingButton(parentLeft + 38, parentTop + 137, 12, 17, true);
         this.backButton.initTextureValues(BRBTextures.RECIPE_BOOK_PAGE_BACKWARD_SPRITES);
+        this.leftOffset = leftOffset;
     }
 
     public void setResults(List<SmithingRecipeCollection> recipeCollection, boolean resetCurrentPage, SmithingRecipeBookGroup group) {
@@ -109,7 +115,7 @@ public class SmithingRecipeBookPage {
                     this.lastClickedRecipe = recipeButton.getCurrentArmour();
                     this.lastClickedRecipeCollection = recipeButton.getCollection();
                 } else if (button == 1 && !this.overlay.isVisible() && !recipeButton.isOnlyOption()) {
-                    this.overlay.init(recipeButton.getCollection(), recipeButton.getX(), recipeButton.getY(), j + l / 2, k + 13 + m / 2, recipeButton.getWidth());
+                    this.overlay.init(recipeButton.getCollection(), this.parentLeft, this.parentTop);
                 }
                 return true;
             }

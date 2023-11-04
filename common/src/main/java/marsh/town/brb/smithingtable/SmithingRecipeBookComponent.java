@@ -114,7 +114,7 @@ public class SmithingRecipeBookComponent extends RecipeBookComponent {
         this.searchBox.setValue(string);
         this.searchBox.setHint(SEARCH_HINT);
 
-        this.recipesPage.initialize(this.minecraft, i, j, smithingScreenHandler);
+        this.recipesPage.initialize(this.minecraft, i, j, smithingScreenHandler, leftOffset);
         this.tabButtons.clear();
         this.recipeBook.setFilteringCraftable(BetterRecipeBook.rememberedBrewingToggle);
         this.toggleSmithableButton = new StateSwitchingButton(i + 110, j + 12, 26, 16, this.recipeBook.isFilteringCraftable());
