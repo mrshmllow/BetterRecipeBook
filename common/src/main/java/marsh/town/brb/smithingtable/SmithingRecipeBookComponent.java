@@ -299,7 +299,7 @@ public class SmithingRecipeBookComponent extends RecipeBookComponent {
 
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (this.open) {
-            if (this.recipesPage.mouseClicked(mouseX, mouseY, button, (this.width - 147) / 2 - this.xOffset, (this.height - 166) / 2, 147, 166)) {
+            if (this.recipesPage.mouseClicked(mouseX, mouseY, button, (this.width - 147) / 2 - ((RecipeBookComponentAccessor) this).getXOffset(), (this.height - 166) / 2, 147, 166)) {
                 SmithableResult result = this.recipesPage.getCurrentClickedRecipe();
                 SmithingRecipeCollection recipeCollection = this.recipesPage.getLastClickedRecipeCollection();
 

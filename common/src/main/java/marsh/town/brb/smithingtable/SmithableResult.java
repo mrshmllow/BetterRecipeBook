@@ -1,5 +1,7 @@
 package marsh.town.brb.smithingtable;
 
+import marsh.town.brb.mixins.accessors.SmithingTransformRecipeAccessor;
+import marsh.town.brb.mixins.accessors.SmithingTrimRecipeAccessor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.Holder;
 import net.minecraft.core.NonNullList;
@@ -35,16 +37,19 @@ public class SmithableResult {
     }
 
     public static SmithableResult of(SmithingTransformRecipe recipe) {
-        return new SmithableResult(recipe.template, recipe.base.getItems()[0], recipe.addition, recipe.getResultItem(null), true);
+        SmithingTransformRecipeAccessor r = (SmithingTransformRecipeAccessor) recipe;
+
+        return new SmithableResult(r.getTemplate(), r.getBase().getItems()[0], r.getAddtion(), recipe.getResultItem(null), true);
     }
 
     public static List<SmithableResult> of(SmithingTrimRecipe recipe) {
         List<SmithableResult> results = new ArrayList<>();
+        SmithingTrimRecipeAccessor r = (SmithingTrimRecipeAccessor) recipe;
 
-        for (ItemStack base : recipe.base.getItems()) {
+        for (ItemStack base : r.getBase().getItems()) {
             ItemStack result = getTrimmedItem(recipe, base, TrimMaterials.REDSTONE, Minecraft.getInstance().getConnection().registryAccess());
 
-            results.add(new SmithableResult(recipe.template, base, recipe.addition, result, false));
+            results.add(new SmithableResult(r.getTemplate(), base, r.getAddtion(), result, false));
         }
 
         return results;
@@ -52,7 +57,7 @@ public class SmithableResult {
 
     public static ItemStack getTrimmedItem(SmithingTrimRecipe recipe, ItemStack base, ResourceKey<TrimMaterial> trim_mat, RegistryAccess registryAccess) {
         Optional<Holder.Reference<TrimMaterial>> material = registryAccess.registryOrThrow(Registries.TRIM_MATERIAL).getHolder(trim_mat);
-        Optional<Holder.Reference<TrimPattern>> trim = TrimPatterns.getFromTemplate(registryAccess, recipe.template.getItems()[0]);
+        Optional<Holder.Reference<TrimPattern>> trim = TrimPatterns.getFromTemplate(registryAccess, ((SmithingTrimRecipeAccessor) recipe).getTemplate().getItems()[0]);
 
         ItemStack itemStack = base.copy();
 
