@@ -25,6 +25,7 @@ import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.inventory.SmithingMenu;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.armortrim.ArmorTrim;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeManager;
 import org.jetbrains.annotations.NotNull;
@@ -318,7 +319,7 @@ public class SmithingRecipeBookComponent extends RecipeBookComponent {
                     }
 
                     int slotIndex = 0;
-                    int usedInputSlots = 0;
+                    boolean placedBase = false;
                     for (Slot slot : smithingScreenHandler.slots) {
                         ItemStack itemStack = slot.getItem();
 
@@ -328,13 +329,13 @@ public class SmithingRecipeBookComponent extends RecipeBookComponent {
                             Minecraft.getInstance().gameMode.handleInventoryMouseClick(smithingScreenHandler.containerId, smithingScreenHandler.getSlot(slotIndex).index, 0, ClickType.PICKUP, Minecraft.getInstance().player);
                             Minecraft.getInstance().gameMode.handleInventoryMouseClick(smithingScreenHandler.containerId, SmithingMenu.TEMPLATE_SLOT, 0, ClickType.PICKUP, Minecraft.getInstance().player);
                             ClientInventoryUtil.storeItem(-1, i -> i > 4);
-                            ++usedInputSlots;
-                        } else if (result.base.getItem().equals(slot.getItem().getItem())) {
+                        } else if (!placedBase && ArmorTrim.getTrim(registryAccess, itemStack, true).isEmpty() && result.base.getItem().equals(itemStack.getItem())) {
                             assert Minecraft.getInstance().gameMode != null;
                             ClientInventoryUtil.storeItem(-1, i -> i > 4);
                             Minecraft.getInstance().gameMode.handleInventoryMouseClick(smithingScreenHandler.containerId, smithingScreenHandler.getSlot(slotIndex).index, 0, ClickType.PICKUP, Minecraft.getInstance().player);
                             Minecraft.getInstance().gameMode.handleInventoryMouseClick(smithingScreenHandler.containerId, SmithingMenu.BASE_SLOT, 0, ClickType.PICKUP, Minecraft.getInstance().player);
                             ClientInventoryUtil.storeItem(-1, i -> i > 4);
+                            placedBase = true;
                         } else if (result.addition.test(itemStack)) {
                             assert Minecraft.getInstance().gameMode != null;
                             ClientInventoryUtil.storeItem(-1, i -> i > 4);
