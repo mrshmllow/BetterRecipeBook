@@ -89,25 +89,30 @@ public class SmithingRecipeBookPage {
             }
             return true;
         }
+
         if (this.forwardButton.mouseClicked(mouseX, mouseY, button)) {
-            ++this.currentPage;
-            this.updateButtonsForPage();
-            return true;
-        }
-        if (this.backButton.mouseClicked(mouseX, mouseY, button)) {
-            --this.currentPage;
-            this.updateButtonsForPage();
-            return true;
-        }
-        for (SmithableRecipeButton recipeButton : this.buttons) {
-            if (!recipeButton.mouseClicked(mouseX, mouseY, button)) continue;
-            if (button == 0) {
-                this.lastClickedRecipe = recipeButton.getCurrentArmour();
-                this.lastClickedRecipeCollection = recipeButton.getCollection();
-            } else if (button == 1 && !this.overlay.isVisible() && !recipeButton.isOnlyOption()) {
-                this.overlay.init(recipeButton.getCollection(), recipeButton.getX(), recipeButton.getY(), j + l / 2, k + 13 + m / 2, recipeButton.getWidth());
+            if (++currentPage >= totalPages) {
+                currentPage = BetterRecipeBook.config.scrolling.scrollAround ? 0 : totalPages - 1;
             }
+            this.updateButtonsForPage();
             return true;
+        } else if (this.backButton.mouseClicked(mouseX, mouseY, button)) {
+            if (--currentPage < 0) {
+                currentPage = BetterRecipeBook.config.scrolling.scrollAround ? totalPages - 1 : 0;
+            }
+            this.updateButtonsForPage();
+            return true;
+        } else {
+            for (SmithableRecipeButton recipeButton : this.buttons) {
+                if (!recipeButton.mouseClicked(mouseX, mouseY, button)) continue;
+                if (button == 0) {
+                    this.lastClickedRecipe = recipeButton.getCurrentArmour();
+                    this.lastClickedRecipeCollection = recipeButton.getCollection();
+                } else if (button == 1 && !this.overlay.isVisible() && !recipeButton.isOnlyOption()) {
+                    this.overlay.init(recipeButton.getCollection(), recipeButton.getX(), recipeButton.getY(), j + l / 2, k + 13 + m / 2, recipeButton.getWidth());
+                }
+                return true;
+            }
         }
         return false;
     }
