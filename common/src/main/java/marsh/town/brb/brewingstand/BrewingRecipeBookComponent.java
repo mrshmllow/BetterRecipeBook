@@ -5,8 +5,8 @@ import marsh.town.brb.BetterRecipeBook;
 import marsh.town.brb.config.Config;
 import marsh.town.brb.mixins.accessors.RecipeBookComponentAccessor;
 import marsh.town.brb.util.BRBTextures;
-import marsh.town.brb.util.ClientInventoryUtil;
 import marsh.town.brb.util.BrewingGhostRecipe;
+import marsh.town.brb.util.ClientInventoryUtil;
 import me.shedaniel.autoconfig.AutoConfig;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -337,7 +337,7 @@ public class BrewingRecipeBookComponent extends RecipeBookComponent {
             }
         }
 
-         this.recipesArea.setResults(results, resetCurrentPage, currentTab.getGroup());
+        this.recipesArea.setResults(results, resetCurrentPage, currentTab.getGroup());
     }
 
     private void refreshTabButtons() {
@@ -409,7 +409,7 @@ public class BrewingRecipeBookComponent extends RecipeBookComponent {
         return j;
     }
 
-    public void drawGhostSlots(GuiGraphics guiGraphics, int x, int y, boolean bl, float delta) {
+    public void renderGhostRecipe(GuiGraphics guiGraphics, int x, int y, boolean bl, float delta) {
         this.ghostRecipe.render(guiGraphics, this.client, x, y, bl, delta);
     }
 
@@ -542,8 +542,8 @@ public class BrewingRecipeBookComponent extends RecipeBookComponent {
         if (!this.isVisible()) {
             return true;
         }
-        boolean bl = d < (double)i || e < (double)j || d >= (double)(i + k) || e >= (double)(j + l);
-        boolean bl2 = (double)(i - 147) < d && d < (double)i && (double)j < e && e < (double)(j + l);
+        boolean bl = d < (double) i || e < (double) j || d >= (double) (i + k) || e >= (double) (j + l);
+        boolean bl2 = (double) (i - 147) < d && d < (double) i && (double) j < e && e < (double) (j + l);
         return bl && !bl2 && !this.currentTab.isHoveredOrFocused();
     }
 
