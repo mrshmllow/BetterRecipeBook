@@ -15,7 +15,6 @@ import net.minecraft.world.inventory.BrewingStandMenu;
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -25,8 +24,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(BrewingStandScreen.class)
 public abstract class BrewingStandScreenMixin extends AbstractContainerScreen<BrewingStandMenu> implements RecipeUpdateListener {
 
-    @Unique public final BrewingRecipeBookComponent _$recipeBookComponent = new BrewingRecipeBookComponent();
-    @Unique private boolean _$widthNarrow;
+    @Unique
+    public final BrewingRecipeBookComponent _$recipeBookComponent = new BrewingRecipeBookComponent();
+    @Unique
+    private boolean _$widthNarrow;
 
     public BrewingStandScreenMixin(BrewingStandMenu handler, Inventory inventory, Component title) {
         super(handler, inventory, title);
@@ -74,34 +75,17 @@ public abstract class BrewingStandScreenMixin extends AbstractContainerScreen<Br
 
     @Override
     protected boolean hasClickedOutside(double d, double e, int i, int j, int k) {
-        boolean bl = d < (double)i || e < (double)j || d >= (double)(i + this.imageWidth) || e >= (double)(j + this.imageHeight);
+        boolean bl = d < (double) i || e < (double) j || d >= (double) (i + this.imageWidth) || e >= (double) (j + this.imageHeight);
         return this._$recipeBookComponent.hasClickedOutside(d, e, this.leftPos, this.topPos, this.imageWidth, this.imageHeight, k) && bl;
     }
 
-    /**
-     * @author marshmallow
-     */
-    @Overwrite
-    public void render(GuiGraphics gui, int mouseX, int mouseY, float delta) {
-        this.renderBackground(gui, mouseX, mouseY, delta);
-
-        // clear ghost recipe if book is closed
-        if (!_$recipeBookComponent.isOpen() && _$recipeBookComponent.ghostRecipe.size() > 0) {
-            _$recipeBookComponent.ghostRecipe.clear();
+    @Inject(method = "render", at = @At("RETURN"))
+    public void render(GuiGraphics guiGraphics, int i, int j, float f, CallbackInfo ci) {
+        if (this._$recipeBookComponent.isOpen()) {
+            this._$recipeBookComponent.render(guiGraphics, i, j, f);
+            this._$recipeBookComponent.renderGhostRecipe(guiGraphics, this.leftPos, this.topPos, false, f);
+            this._$recipeBookComponent.drawTooltip(guiGraphics, this.leftPos, this.topPos, i, j);
         }
-
-        if (this._$recipeBookComponent.isOpen() && this._$widthNarrow) {
-            this.renderBg(gui, delta, mouseX, mouseY);
-            super.render(gui, mouseX, mouseY, delta);
-            this.renderTooltip(gui, mouseX, mouseY);
-        } else {
-            this._$recipeBookComponent.render(gui, mouseX, mouseY, delta);
-            super.render(gui, mouseX, mouseY, delta);
-            this._$recipeBookComponent.drawGhostSlots(gui, this.leftPos, this.topPos, false, delta);
-        }
-
-        this.renderTooltip(gui, mouseX, mouseY);
-        this._$recipeBookComponent.drawTooltip(gui, this.leftPos, this.topPos, mouseX, mouseY);
     }
 
     // fix brewing progress indicator offset when recipe book is open by modifying the width offset
