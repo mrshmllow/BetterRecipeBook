@@ -3,19 +3,16 @@ package marsh.town.brb.smithingtable;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import net.minecraft.core.NonNullList;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.inventory.SmithingMenu;
 
 import java.util.List;
 
 public class SmithingRecipeCollection {
-    private final RegistryAccess registryAccess;
     private final List<SmithableResult> recipes;
     private SmithingMenu smithingScreenHandler;
 
-    public SmithingRecipeCollection(RegistryAccess registryAccess, List<SmithableResult> list, SmithingMenu smithingScreenHandler) {
-        this.registryAccess = registryAccess;
+    public SmithingRecipeCollection(List<SmithableResult> list, SmithingMenu smithingScreenHandler) {
         this.recipes = ImmutableList.copyOf(list);
         this.smithingScreenHandler = smithingScreenHandler;
     }

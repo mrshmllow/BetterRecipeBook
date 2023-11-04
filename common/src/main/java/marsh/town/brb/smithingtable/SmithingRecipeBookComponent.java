@@ -17,6 +17,7 @@ import net.minecraft.client.gui.components.StateSwitchingButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.recipebook.RecipeBookComponent;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.player.StackedContents;
@@ -25,6 +26,7 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.inventory.SmithingMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
@@ -57,8 +59,10 @@ public class SmithingRecipeBookComponent extends RecipeBookComponent {
     private boolean searching;
     private String searchText;
     public SmithingGhostRecipe ghostRecipe;
+    private RegistryAccess registryAccess;
+    private RecipeManager recipeManager;
 
-    public void initialize(int width, int height, Minecraft minecraft, boolean widthNarrow, SmithingMenu menu, Consumer<SmithingGhostRecipe> onGhostRecipeUpdate) {
+    public void initialize(int width, int height, Minecraft minecraft, boolean widthNarrow, SmithingMenu menu, Consumer<SmithingGhostRecipe> onGhostRecipeUpdate, RegistryAccess registryAccess, RecipeManager recipeManager) {
         this.minecraft = minecraft;
         this.width = width;
         this.height = height;
@@ -67,9 +71,11 @@ public class SmithingRecipeBookComponent extends RecipeBookComponent {
         this.minecraft.player.containerMenu = smithingScreenHandler;
         this.recipeBook = new SmithingClientRecipeBook();
         this.open = BetterRecipeBook.rememberedSmithingOpen;
+        this.registryAccess = registryAccess;
+        this.recipeManager = recipeManager;
         // this.cachedInvChangeCount = client.player.getInventory().getChangeCount();
         this.reset();
-        this.ghostRecipe = new SmithingGhostRecipe(onGhostRecipeUpdate);
+        this.ghostRecipe = new SmithingGhostRecipe(onGhostRecipeUpdate, registryAccess);
 
         if (BetterRecipeBook.config.keepCentered) {
             this.leftOffset = this.narrow ? 0 : 162;
@@ -194,7 +200,7 @@ public class SmithingRecipeBookComponent extends RecipeBookComponent {
         if (this.searchBox == null) return;
 
         // Create a copy to not mess with the original list
-        List<SmithingRecipeCollection> results = new ArrayList<>(recipeBook.getCollectionsForCategory(currentTab.getGroup(), smithingScreenHandler));
+        List<SmithingRecipeCollection> results = new ArrayList<>(recipeBook.getCollectionsForCategory(currentTab.getGroup(), smithingScreenHandler, registryAccess, recipeManager));
 
         String string = this.searchBox.getValue();
         if (!string.isEmpty()) {

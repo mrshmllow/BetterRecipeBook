@@ -29,9 +29,11 @@ public class SmithingGhostRecipe {
     private SmithableResult recipe;
     private final List<SmithingGhostIngredient> ingredients = Lists.newArrayList();
     float time;
+    private final RegistryAccess registryAccess;
 
-    public SmithingGhostRecipe(Consumer<SmithingGhostRecipe> onGhostUpdate) {
+    public SmithingGhostRecipe(Consumer<SmithingGhostRecipe> onGhostUpdate, RegistryAccess registryAccess) {
         this.onGhostUpdate = onGhostUpdate;
+        this.registryAccess = registryAccess;
     }
 
     public void clear() {
@@ -57,7 +59,7 @@ public class SmithingGhostRecipe {
         return this.recipe;
     }
 
-    public ItemStack getCurrentResult(RegistryAccess registryAccess) {
+    public ItemStack getCurrentResult() {
         if (this.recipe == null) {
             return ItemStack.EMPTY;
         }
@@ -70,7 +72,7 @@ public class SmithingGhostRecipe {
 
         Stream<Holder.Reference<TrimMaterial>> holders = registryAccess.registryOrThrow(Registries.TRIM_MATERIAL).holders();
 
-        Optional<Holder.Reference<TrimMaterial>> currentMaterialReference = TrimMaterials.getFromIngredient(Minecraft.getInstance().getConnection().registryAccess(), this.ingredients.get(0).getItem());
+        Optional<Holder.Reference<TrimMaterial>> currentMaterialReference = TrimMaterials.getFromIngredient(registryAccess, this.ingredients.get(0).getItem());
 
         if (currentMaterialReference.isEmpty()) {
             return itemStack;
@@ -116,7 +118,7 @@ public class SmithingGhostRecipe {
             }
         }
 
-        ItemStack itemStack = getCurrentResult(Minecraft.getInstance().getConnection().registryAccess());
+        ItemStack itemStack = getCurrentResult();
 
         if (itemStack.isEmpty()) return;
 

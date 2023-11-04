@@ -42,12 +42,12 @@ public class SmithableResult {
         return new SmithableResult(r.getTemplate(), r.getBase().getItems()[0], r.getAddtion(), recipe.getResultItem(null), true);
     }
 
-    public static List<SmithableResult> of(SmithingTrimRecipe recipe) {
+    public static List<SmithableResult> of(SmithingTrimRecipe recipe, RegistryAccess registryAccess) {
         List<SmithableResult> results = new ArrayList<>();
         SmithingTrimRecipeAccessor r = (SmithingTrimRecipeAccessor) recipe;
 
         for (ItemStack base : r.getBase().getItems()) {
-            ItemStack result = getTrimmedItem(recipe, base, TrimMaterials.REDSTONE, Minecraft.getInstance().getConnection().registryAccess());
+            ItemStack result = getTrimmedItem(recipe, base, TrimMaterials.REDSTONE, registryAccess);
 
             results.add(new SmithableResult(r.getTemplate(), base, r.getAddtion(), result, false));
         }
