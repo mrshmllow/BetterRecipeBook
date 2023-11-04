@@ -7,10 +7,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.StateSwitchingButton;
-import net.minecraft.client.gui.screens.recipebook.RecipeBookComponent;
-import net.minecraft.client.gui.screens.recipebook.RecipeBookPage;
-import net.minecraft.client.gui.screens.recipebook.RecipeButton;
-import net.minecraft.client.gui.screens.recipebook.RecipeCollection;
+import net.minecraft.client.gui.screens.recipebook.*;
 import net.minecraft.network.chat.Component;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -41,9 +38,19 @@ public abstract class RecipeBookComponentMixin {
     @Unique private static final Component TOGGLE_INSTANT_CRAFT_ON_TEXT;
     @Unique private static final Component TOGGLE_INSTANT_CRAFT_OFF_TEXT;
 
+    @Unique
+    private boolean betterRecipeBook$shouldSkip() {
+        if (!BetterRecipeBook.config.instantCraft.showButton) {
+            return true;
+        }
+
+        // remove instant craft button in furnaces
+        return ((Object) this) instanceof AbstractFurnaceRecipeBookComponent;
+    }
+
     @Inject(method = "initVisuals", at = @At("RETURN"))
     public void reset(CallbackInfo ci) {
-        if (!BetterRecipeBook.config.instantCraft.showButton) {
+        if (betterRecipeBook$shouldSkip()) {
             return;
         }
 
@@ -56,7 +63,7 @@ public abstract class RecipeBookComponentMixin {
 
     @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/recipebook/RecipeBookPage;render(Lnet/minecraft/client/gui/GuiGraphics;IIIIF)V"))
     public void render(GuiGraphics gui, int mouseX, int mouseY, float delta, CallbackInfo ci) {
-        if (!BetterRecipeBook.config.instantCraft.showButton) {
+        if (betterRecipeBook$shouldSkip()) {
             return;
         }
 
@@ -65,7 +72,7 @@ public abstract class RecipeBookComponentMixin {
 
     @Inject(method = "mouseClicked", at = @At("HEAD"), cancellable = true)
     public void mouseClicked(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir) {
-        if (this.isVisible() && BetterRecipeBook.config.instantCraft.showButton) {
+        if (this.isVisible() && !betterRecipeBook$shouldSkip()) {
             if (this._$instantCraftButton.mouseClicked(mouseX, mouseY, button)) {
                 boolean bl = BetterRecipeBook.instantCraftingManager.toggleOn();
                 this._$instantCraftButton.setStateTriggered(bl);
@@ -76,7 +83,7 @@ public abstract class RecipeBookComponentMixin {
 
     @Inject(method = "renderTooltip", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/recipebook/RecipeBookComponent;renderGhostRecipeTooltip(Lnet/minecraft/client/gui/GuiGraphics;IIII)V"))
     public void drawTooltip(GuiGraphics gui, int x, int y, int mouseX, int mouseY, CallbackInfo ci) {
-        if (!BetterRecipeBook.config.instantCraft.showButton) {
+        if (betterRecipeBook$shouldSkip()) {
             return;
         }
 
