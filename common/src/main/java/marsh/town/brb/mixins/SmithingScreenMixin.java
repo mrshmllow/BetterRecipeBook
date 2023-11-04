@@ -52,13 +52,13 @@ public abstract class SmithingScreenMixin extends ItemCombinerScreen<SmithingMen
             }
 
             // NOTE : width and height are both 0
-            this.addRenderableWidget(new ImageButton(this.leftPos + 145, this.height / 2 - 70, 20, 18, BRBTextures.RECIPE_BOOK_BUTTON_SPRITES, (button) -> {
+            this.addRenderableWidget(new ImageButton(this.leftPos + 147, this.height / 2 - 75, 20, 18, BRBTextures.RECIPE_BOOK_BUTTON_SPRITES, (button) -> {
                 this._$recipeBookComponent.toggleOpen();
                 BetterRecipeBook.rememberedSmithingOpen = this._$recipeBookComponent.isOpen();
                 if (!BetterRecipeBook.config.keepCentered) {
                     this.leftPos = this._$recipeBookComponent.findLeftEdge(this.width, this.imageWidth);
                 }
-                button.setPosition(this.leftPos + 145, this.height / 2 - 70);
+                button.setPosition(this.leftPos + 147, this.height / 2 - 75);
             }));
 
             this.addWidget(this._$recipeBookComponent);
