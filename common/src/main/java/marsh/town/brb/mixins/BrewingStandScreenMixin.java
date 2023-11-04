@@ -60,7 +60,7 @@ public abstract class BrewingStandScreenMixin extends AbstractContainerScreen<Br
     @Override
     protected void slotClicked(Slot slot, int x, int y, ClickType clickType) {
         // clear ghost recipe if an empty ingredient slot is clicked with no items
-        if (slot != null && slot.index < 4 && menu.getCarried().isEmpty() && menu.slots.get(slot.index).getItem().isEmpty()) {
+        if (slot != null && slot.index < 4 && menu.slots.get(slot.index).getItem().isEmpty()) {
             _$recipeBookComponent.ghostRecipe.clear();
         }
 
