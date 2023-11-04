@@ -298,7 +298,7 @@ public class BrewingRecipeBookComponent extends RecipeBookComponent {
 
         assert currentTab != null;
         ItemStack inputStack = result.inputAsItemStack(currentTab.getGroup());
-        this.ghostRecipe.addIngredient(0, Ingredient.of(result.ingredient), slots.get(0).x, slots.get(0).y);
+        this.ghostRecipe.addIngredient(0, Ingredient.of(inputStack), slots.get(0).x, slots.get(0).y);
         this.ghostRecipe.addIngredient(1, Ingredient.of(inputStack), slots.get(1).x, slots.get(1).y);
         this.ghostRecipe.addIngredient(2, Ingredient.of(inputStack), slots.get(2).x, slots.get(2).y);
     }
