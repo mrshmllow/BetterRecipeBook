@@ -6,7 +6,7 @@ import marsh.town.brb.config.Config;
 import marsh.town.brb.mixins.accessors.RecipeBookComponentAccessor;
 import marsh.town.brb.util.BRBTextures;
 import marsh.town.brb.util.ClientInventoryUtil;
-import marsh.town.brb.util.MyGhostRecipe;
+import marsh.town.brb.util.BrewingGhostRecipe;
 import me.shedaniel.autoconfig.AutoConfig;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -50,7 +50,7 @@ public class BrewingRecipeBookComponent extends RecipeBookComponent {
     private boolean narrow;
     BrewingClientRecipeBook recipeBook;
     private int leftOffset;
-    public final MyGhostRecipe ghostRecipe = new MyGhostRecipe();
+    public final BrewingGhostRecipe ghostRecipe = new BrewingGhostRecipe();
 
     private boolean open;
     public final BrewingRecipeBookResults recipesArea = new BrewingRecipeBookResults();

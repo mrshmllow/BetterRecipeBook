@@ -31,5 +31,7 @@
   "brb.gui.togglePotions.brewable": "Showing Brewable",
   "brb.gui.instantCraft.on": "Instant crafting is on",
   "brb.gui.instantCraft.off": "Instant crafting is off",
-  "brb.gui.settings.open": "Open settings"
+  "brb.gui.settings.open": "Open settings",
+
+  "brb.gui.smithable": "Showing Smithable"
 }

@@ -12,13 +12,13 @@ import net.minecraft.world.item.crafting.Ingredient;
 import java.util.List;
 import java.util.function.BiPredicate;
 
-public class MyGhostRecipe extends GhostRecipe {
+public class BrewingGhostRecipe extends GhostRecipe {
 
-    private final List<MyGhostIngredient> ingredients = Lists.newArrayList();
+    private final List<BrewingGhostIngredient> ingredients = Lists.newArrayList();
 
-    private BiPredicate<GhostRender, MyGhostIngredient> renderingPredicate = (a, b) -> true;
+    private BiPredicate<GhostRender, BrewingGhostIngredient> renderingPredicate = (a, b) -> true;
 
-    public BiPredicate<GhostRender, MyGhostIngredient> getRenderingPredicate() {
+    public BiPredicate<GhostRender, BrewingGhostIngredient> getRenderingPredicate() {
         return renderingPredicate;
     }
 
@@ -26,25 +26,25 @@ public class MyGhostRecipe extends GhostRecipe {
         this.ingredients.clear();
     }
 
-    public MyGhostRecipe setRenderingPredicate(BiPredicate<GhostRender, MyGhostIngredient> renderingPredicate) {
+    public BrewingGhostRecipe setRenderingPredicate(BiPredicate<GhostRender, BrewingGhostIngredient> renderingPredicate) {
         this.renderingPredicate = renderingPredicate;
         return this;
     }
 
     public void addIngredient(Ingredient ingredient, int x, int y) {
-        this.ingredients.add(new MyGhostIngredient(this, ingredients.size(), ingredient, x, y));
+        this.ingredients.add(new BrewingGhostIngredient(this, ingredients.size(), ingredient, x, y));
     }
 
     public void addIngredient(int containerSlot, Ingredient ingredient, int x, int y) {
-        this.ingredients.add(new MyGhostIngredient(this, containerSlot, ingredient, x, y));
+        this.ingredients.add(new BrewingGhostIngredient(this, containerSlot, ingredient, x, y));
     }
 
-    public MyGhostIngredient get(int i) {
+    public BrewingGhostIngredient get(int i) {
         return this.ingredients.get(i);
     }
 
-    public MyGhostIngredient getBySlot(int i) {
-        for (MyGhostIngredient ingredient : ingredients) {
+    public BrewingGhostIngredient getBySlot(int i) {
+        for (BrewingGhostIngredient ingredient : ingredients) {
             if (ingredient.getContainerSlot() == i) return ingredient;
         }
         return null;
@@ -56,7 +56,7 @@ public class MyGhostRecipe extends GhostRecipe {
 
     public void render(GuiGraphics guiGraphics, Minecraft minecraft, int x, int y, boolean bl, float f) {
         for (int k = 0; k < this.ingredients.size(); ++k) {
-            MyGhostIngredient ghostIngredient = this.ingredients.get(k);
+            BrewingGhostIngredient ghostIngredient = this.ingredients.get(k);
             int tx = ghostIngredient.getX() + x;
             int ty = ghostIngredient.getY() + y;
             // don't render background if the predicate returns false
@@ -85,7 +85,7 @@ public class MyGhostRecipe extends GhostRecipe {
     public void renderTooltip(GuiGraphics gui, int x, int y, int mouseX, int mouseY) {
         ItemStack itemStack = null;
 
-        for (MyGhostIngredient ghostInputSlot : ingredients) {
+        for (BrewingGhostIngredient ghostInputSlot : ingredients) {
             int j = ghostInputSlot.getX() + x;
             int k = ghostInputSlot.getY() + y;
 
@@ -100,18 +100,18 @@ public class MyGhostRecipe extends GhostRecipe {
         }
     }
 
-    public class MyGhostIngredient extends GhostIngredient {
+    public class BrewingGhostIngredient extends GhostIngredient {
 
-        protected final MyGhostRecipe owner;
+        protected final BrewingGhostRecipe owner;
         protected final int containerSlot;
 
-        public MyGhostIngredient(MyGhostRecipe owner, int containerSlot, Ingredient ingredient, int x, int z) {
+        public BrewingGhostIngredient(BrewingGhostRecipe owner, int containerSlot, Ingredient ingredient, int x, int z) {
             super(ingredient, x, z);
             this.owner = owner;
             this.containerSlot = containerSlot;
         }
 
-        public MyGhostRecipe getOwner() {
+        public BrewingGhostRecipe getOwner() {
             return owner;
         }
 

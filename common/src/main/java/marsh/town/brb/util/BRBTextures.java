@@ -46,11 +46,11 @@ public class BRBTextures {
             new ResourceLocation("brb:recipe_book/crafting_overlay_disabled_highlighted")
     );
 
-    public static WidgetSprites RECIPE_BOOK_FURNACE_OVERLAY_SPRITE = new WidgetSprites(
-            new ResourceLocation("brb:recipe_book/furnace_overlay"),
-            new ResourceLocation("brb:recipe_book/furnace_overlay_disabled"),
-            new ResourceLocation("brb:recipe_book/furnace_overlay_highlighted"),
-            new ResourceLocation("brb:recipe_book/furnace_overlay_disabled_highlighted")
+    public static WidgetSprites RECIPE_BOOK_PLAIN_OVERLAY_SPRITE = new WidgetSprites(
+            new ResourceLocation("brb:recipe_book/plain_overlay"),
+            new ResourceLocation("brb:recipe_book/plain_overlay_disabled"),
+            new ResourceLocation("brb:recipe_book/plain_overlay_highlighted"),
+            new ResourceLocation("brb:recipe_book/plain_overlay_disabled_highlighted")
     );
 
     public static final WidgetSprites SETTINGS_BUTTON_SPRITES = new WidgetSprites(

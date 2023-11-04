@@ -29,4 +29,7 @@ public interface RecipeBookComponentAccessor {
     @Invoker("updateCollections")
     void updateCollectionsInvoker(boolean b);
 
+    @Accessor("xOffset")
+    int getXOffset();
+
 }

@@ -24,13 +24,22 @@ import java.util.List;
 @Mixin(OverlayRecipeComponent.OverlayRecipeButton.class)
 public abstract class OverlayRecipeButtonMixin extends AbstractWidget {
 
-    @Final @Shadow
+    @Final
+    @Shadow
     private boolean isCraftable;
-    @Final @Shadow
+    @Final
+    @Shadow
     RecipeHolder<?> recipe;
-    @Shadow public abstract void renderWidget(GuiGraphics gui, int mouseX, int mouseY, float delta);
-    @Shadow @Final protected List<OverlayRecipeComponent.OverlayRecipeButton.Pos> ingredientPos;
-    @Shadow @Final OverlayRecipeComponent field_3113;
+
+    @Shadow
+    public abstract void renderWidget(GuiGraphics gui, int mouseX, int mouseY, float delta);
+
+    @Shadow
+    @Final
+    protected List<OverlayRecipeComponent.OverlayRecipeButton.Pos> ingredientPos;
+    @Shadow
+    @Final
+    OverlayRecipeComponent field_3113;
 
     public OverlayRecipeButtonMixin(int x, int y, int width, int height, Component message) {
         super(x, y, width, height, message);
@@ -41,7 +50,7 @@ public abstract class OverlayRecipeButtonMixin extends AbstractWidget {
         ResourceLocation resourceLocation;
 
         if (((OverlayRecipeComponentAccessor) field_3113).isFurnaceMenu()) {
-            resourceLocation = BRBTextures.RECIPE_BOOK_FURNACE_OVERLAY_SPRITE.get(this.isCraftable, isHoveredOrFocused());
+            resourceLocation = BRBTextures.RECIPE_BOOK_PLAIN_OVERLAY_SPRITE.get(this.isCraftable, isHoveredOrFocused());
         } else {
             resourceLocation = BRBTextures.RECIPE_BOOK_CRAFTING_OVERLAY_SPRITE.get(this.isCraftable, isHoveredOrFocused());
         }
