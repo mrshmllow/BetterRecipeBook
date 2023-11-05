@@ -14,5 +14,5 @@ public interface SmithingTransformRecipeAccessor {
     Ingredient getBase();
 
     @Accessor("addition")
-    Ingredient getAddtion();
+    Ingredient getAddition();
 }

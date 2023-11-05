@@ -39,7 +39,7 @@ public class SmithableResult {
     public static SmithableResult of(SmithingTransformRecipe recipe) {
         SmithingTransformRecipeAccessor r = (SmithingTransformRecipeAccessor) recipe;
 
-        return new SmithableResult(r.getTemplate(), r.getBase().getItems()[0], r.getAddtion(), recipe.getResultItem(null), true);
+        return new SmithableResult(r.getTemplate(), r.getBase().getItems()[0], r.getAddition(), recipe.getResultItem(null), true);
     }
 
     public static List<SmithableResult> of(SmithingTrimRecipe recipe, RegistryAccess registryAccess) {
@@ -49,7 +49,7 @@ public class SmithableResult {
         for (ItemStack base : r.getBase().getItems()) {
             ItemStack result = getTrimmedItem(recipe, base, TrimMaterials.REDSTONE, registryAccess);
 
-            results.add(new SmithableResult(r.getTemplate(), base, r.getAddtion(), result, false));
+            results.add(new SmithableResult(r.getTemplate(), base, r.getAddition(), result, false));
         }
 
         return results;
