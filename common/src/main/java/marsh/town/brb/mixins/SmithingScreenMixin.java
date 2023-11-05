@@ -1,7 +1,6 @@
 package marsh.town.brb.mixins;
 
 import marsh.town.brb.BetterRecipeBook;
-import marsh.town.brb.smithingtable.SmithingGhostRecipe;
 import marsh.town.brb.smithingtable.SmithingRecipeBookComponent;
 import marsh.town.brb.util.BRBTextures;
 import net.minecraft.client.Minecraft;
@@ -70,7 +69,7 @@ public abstract class SmithingScreenMixin extends ItemCombinerScreen<SmithingMen
     @Override
     protected void slotClicked(Slot slot, int x, int y, ClickType clickType) {
         // clear ghost recipe if an empty ingredient slot is clicked with no items
-        if (slot != null && slot.index < 4 && menu.getCarried().isEmpty() && menu.slots.get(slot.index).getItem().isEmpty()) {
+        if (BetterRecipeBook.config.enableBook && slot != null && slot.index < 4 && menu.getCarried().isEmpty() && menu.slots.get(slot.index).getItem().isEmpty()) {
             _$recipeBookComponent.ghostRecipe.clear();
         }
 
@@ -83,10 +82,6 @@ public abstract class SmithingScreenMixin extends ItemCombinerScreen<SmithingMen
         return this._$recipeBookComponent.hasClickedOutside(d, e, this.leftPos, this.topPos, this.imageWidth, this.imageHeight, k) && bl;
     }
 
-    public void ghostRecipeChanged(SmithingGhostRecipe ghostRecipe) {
-
-    }
-
     @Inject(method = "render", at = @At("RETURN"))
     public void render(GuiGraphics guiGraphics, int i, int j, float f, CallbackInfo ci) {
         if (this._$recipeBookComponent.isOpen()) {
@@ -96,16 +91,9 @@ public abstract class SmithingScreenMixin extends ItemCombinerScreen<SmithingMen
         }
     }
 
-//    @Inject(method = "renderBg", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/inventory/CyclingSlotBackground;render(Lnet/minecraft/world/inventory/AbstractContainerMenu;Lnet/minecraft/client/gui/GuiGraphics;FII)V"), cancellable = true)
-//    public void renderBg(GuiGraphics guiGraphics, float f, int i, int j, CallbackInfo ci) {
-//        if (_$recipeBookComponent.isShowingGhostRecipe()) {
-//            ci.cancel();
-//        }
-//    }
-
     @Redirect(method = "renderBg", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/inventory/CyclingSlotBackground;render(Lnet/minecraft/world/inventory/AbstractContainerMenu;Lnet/minecraft/client/gui/GuiGraphics;FII)V"))
     public void renderBg(CyclingSlotBackground instance, AbstractContainerMenu slot, GuiGraphics bl, float g, int k, int arg) {
-        if (!_$recipeBookComponent.isShowingGhostRecipe()) {
+        if (!BetterRecipeBook.config.enableBook || !_$recipeBookComponent.isShowingGhostRecipe()) {
             instance.render(this.menu, bl, g, this.leftPos, this.topPos);
         }
 
@@ -114,7 +102,7 @@ public abstract class SmithingScreenMixin extends ItemCombinerScreen<SmithingMen
 
     @Inject(method = "renderOnboardingTooltips", at = @At(value = "HEAD"), cancellable = true)
     public void renderOnboardingTooltips(GuiGraphics guiGraphics, int i, int j, CallbackInfo ci) {
-        if (_$recipeBookComponent.isShowingGhostRecipe()) {
+        if (BetterRecipeBook.config.enableBook && _$recipeBookComponent.isShowingGhostRecipe()) {
             ci.cancel();
         }
     }
