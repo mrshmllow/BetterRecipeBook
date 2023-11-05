@@ -23,9 +23,6 @@ public interface RecipeBookComponentAccessor {
     @Accessor("searchBox")
     void setSearchBox(EditBox searchBox);
 
-    @Accessor("ignoreTextInput")
-    void setIgnoreInputText(boolean ignore);
-
     @Invoker("updateCollections")
     void updateCollectionsInvoker(boolean b);
 
