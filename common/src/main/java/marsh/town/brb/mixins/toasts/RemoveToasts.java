@@ -1,4 +1,4 @@
-package marsh.town.brb.mixins;
+package marsh.town.brb.mixins.toasts;
 
 import marsh.town.brb.BetterRecipeBook;
 import net.minecraft.client.gui.GuiGraphics;
