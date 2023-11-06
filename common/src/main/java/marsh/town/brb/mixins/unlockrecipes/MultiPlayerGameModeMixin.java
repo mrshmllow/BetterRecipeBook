@@ -1,6 +1,7 @@
 package marsh.town.brb.mixins.unlockrecipes;
 
 import marsh.town.brb.BetterRecipeBook;
+import marsh.town.brb.interfaces.unlockrecipes.IMixinRecipeManager;
 import marsh.town.brb.mixins.accessors.RecipeBookComponentAccessor;
 import marsh.town.brb.util.ClientInventoryUtil;
 import marsh.town.brb.util.RecipeMenuUtil;
@@ -11,6 +12,7 @@ import net.minecraft.client.gui.screens.recipebook.RecipeBookPage;
 import net.minecraft.client.gui.screens.recipebook.RecipeCollection;
 import net.minecraft.client.gui.screens.recipebook.RecipeUpdateListener;
 import net.minecraft.client.multiplayer.MultiPlayerGameMode;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.StackedContents;
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.RecipeBookMenu;
@@ -23,6 +25,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.util.Set;
+
 @Mixin(MultiPlayerGameMode.class)
 public abstract class MultiPlayerGameModeMixin {
 
@@ -30,7 +34,7 @@ public abstract class MultiPlayerGameModeMixin {
 
     @Inject(method = "handlePlaceRecipe", at = @At(value = "HEAD"), cancellable = true)
     public void onPlaceRecipe(int z, RecipeHolder<?> recipe, boolean shiftKeyDown, CallbackInfo ci) {
-        if (BetterRecipeBook.config.newRecipes.unlockAll && minecraft.player != null &&
+        if (BetterRecipeBook.config.newRecipes.unlockAll && minecraft.player != null && minecraft.gameMode != null && minecraft.getConnection() != null &&
                 minecraft.screen instanceof RecipeUpdateListener rul && minecraft.player.containerMenu instanceof RecipeBookMenu<?> menu) {
             RecipeBookComponent comp = rul.getRecipeBookComponent();
 
@@ -42,6 +46,8 @@ public abstract class MultiPlayerGameModeMixin {
             }
             lastRecipe.canCraft(contents, menu.getGridWidth(), menu.getGridHeight(), minecraft.player.getRecipeBook());
 
+            Set<ResourceLocation> serverUnlockedRecipes = ((IMixinRecipeManager) minecraft.getConnection().getRecipeManager())._$getServerUnlockedRecipes();
+
             // if we don't have all the items place a client side ghost recipe
             if (!lastRecipe.isCraftable(recipe)) {
                 // remove items from the crafting grid: not all backends do this for us if we haven't unlocked the recipe
@@ -51,14 +57,17 @@ public abstract class MultiPlayerGameModeMixin {
 
                 // place the ghost recipe as we can't craft the recipe yet
                 comp.setupGhostRecipe(recipe, menu.slots);
-            } else if (!shiftKeyDown && BetterRecipeBook.config.newRecipes.forcePlaceRecipes) { // otherwise, if we have forcePlaceRecipes enabled, manually place the recipe
-                MultiPlayerGameMode gameMode = Minecraft.getInstance().gameMode;
+
+                // don't send requests to the server that we shouldn't
+                if (!serverUnlockedRecipes.contains(recipe.id())) ci.cancel();
+            } else if (!serverUnlockedRecipes.contains(recipe.id())) { // if the server didn't unlock this recipe for us, manually place the recipe
+                MultiPlayerGameMode gameMode = minecraft.gameMode;
 
                 // we are placing the recipe ourselves, don't ask the server to do it.
                 ci.cancel();
 
-                // drop held item if required
-                if (!menu.getCarried().isEmpty()) ClientInventoryUtil.storeItem(-1,  idx -> idx < menu.getResultSlotIndex() || idx >= menu.getSize());
+                // store/drop held item if required
+                if (!menu.getCarried().isEmpty()) ClientInventoryUtil.storeItem(-1, idx -> idx < menu.getResultSlotIndex() || idx >= menu.getSize());
 
                 // get the recipe placement to use to filter items and place them in the crafting grid
                 var placement = RecipePlacement.create(recipe, menu.getGridWidth(), menu.getGridHeight());

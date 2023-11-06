@@ -25,8 +25,6 @@
   "text.autoconfig.brb.option.newRecipes.unlockAll": "Automatically unlock all recipes",
   "text.autoconfig.brb.option.newRecipes.enableBounce": "Enable unlock bounce animation",
   "text.autoconfig.brb.option.newRecipes.enableBounce.@Tooltip": "Enable the little bounce animation when you unlock a new item",
-  "text.autoconfig.brb.option.newRecipes.forcePlaceRecipes": "Force place recipes",
-  "text.autoconfig.brb.option.newRecipes.forcePlaceRecipes.@Tooltip": "Manually place a recipe client-side instead of asking the server to do it.\nThis fixes issues where clicking on a recipe might not place, it if you haven't unlocked it yet.\nThis feature doesn't work for batch crafting.",
 
   "brb.gui.pin.add": "Press F to pin this recipe",
   "brb.gui.pin.remove": "Press F to unpin this recipe",

@@ -8,6 +8,4 @@ public class NewRecipes {
     public boolean unlockAll = true;
     @ConfigEntry.Gui.Tooltip()
     public boolean enableBounce = false;
-    @ConfigEntry.Gui.Tooltip()
-    public boolean forcePlaceRecipes = false;
 }
