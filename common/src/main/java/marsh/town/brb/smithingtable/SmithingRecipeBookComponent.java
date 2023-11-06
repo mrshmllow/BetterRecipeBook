@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import marsh.town.brb.BetterRecipeBook;
 import marsh.town.brb.config.Config;
 import marsh.town.brb.mixins.accessors.RecipeBookComponentAccessor;
+import marsh.town.brb.smithingtable.recipe.BRBSmithingRecipe;
 import marsh.town.brb.util.BRBTextures;
 import marsh.town.brb.util.ClientInventoryUtil;
 import me.shedaniel.autoconfig.AutoConfig;
@@ -50,7 +51,7 @@ public class SmithingRecipeBookComponent extends RecipeBookComponent {
     private static final MutableComponent ONLY_CRAFTABLES_TOOLTIP;
     private static final MutableComponent ALL_RECIPES_TOOLTIP;
     private static final MutableComponent OPEN_SETTINGS_TOOLTIP;
-    public final SmithingRecipeBookPage recipesPage = new SmithingRecipeBookPage();
+    public SmithingRecipeBookPage recipesPage;
     private final List<SmithingRecipeGroupButtonWidget> tabButtons = Lists.newArrayList();
     @Nullable
     public SmithingRecipeGroupButtonWidget currentTab;
@@ -59,6 +60,7 @@ public class SmithingRecipeBookComponent extends RecipeBookComponent {
     boolean doubleRefresh = true;
     private boolean searching;
     private String searchText;
+    @Nullable
     public SmithingGhostRecipe ghostRecipe;
     private RegistryAccess registryAccess;
     private RecipeManager recipeManager;
@@ -75,14 +77,16 @@ public class SmithingRecipeBookComponent extends RecipeBookComponent {
         this.registryAccess = registryAccess;
         this.recipeManager = recipeManager;
         // this.cachedInvChangeCount = client.player.getInventory().getChangeCount();
-        this.reset();
         this.ghostRecipe = new SmithingGhostRecipe(onGhostRecipeUpdate, registryAccess);
+        this.recipesPage = new SmithingRecipeBookPage(registryAccess);
 
         if (BetterRecipeBook.config.keepCentered) {
             this.leftOffset = this.narrow ? 0 : 162;
         } else {
             this.leftOffset = this.narrow ? 0 : 86;
         }
+
+        this.reset();
 
         // still required?
         //client.keyboardHandler.setSendRepeatsToGui(true);
@@ -307,7 +311,7 @@ public class SmithingRecipeBookComponent extends RecipeBookComponent {
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (this.open) {
             if (this.recipesPage.mouseClicked(mouseX, mouseY, button, (this.width - 147) / 2 - ((RecipeBookComponentAccessor) this).getXOffset(), (this.height - 166) / 2, 147, 166)) {
-                SmithableResult result = this.recipesPage.getCurrentClickedRecipe();
+                BRBSmithingRecipe result = this.recipesPage.getCurrentClickedRecipe();
                 SmithingRecipeCollection recipeCollection = this.recipesPage.getLastClickedRecipeCollection();
 
                 if (result != null && recipeCollection != null) {
@@ -323,20 +327,20 @@ public class SmithingRecipeBookComponent extends RecipeBookComponent {
                     for (Slot slot : smithingScreenHandler.slots) {
                         ItemStack itemStack = slot.getItem();
 
-                        if (result.template.test(itemStack)) {
+                        if (result.getTemplate().test(itemStack)) {
                             assert Minecraft.getInstance().gameMode != null;
                             ClientInventoryUtil.storeItem(-1, i -> i > 4);
                             Minecraft.getInstance().gameMode.handleInventoryMouseClick(smithingScreenHandler.containerId, smithingScreenHandler.getSlot(slotIndex).index, 0, ClickType.PICKUP, Minecraft.getInstance().player);
                             Minecraft.getInstance().gameMode.handleInventoryMouseClick(smithingScreenHandler.containerId, SmithingMenu.TEMPLATE_SLOT, 0, ClickType.PICKUP, Minecraft.getInstance().player);
                             ClientInventoryUtil.storeItem(-1, i -> i > 4);
-                        } else if (!placedBase && ArmorTrim.getTrim(registryAccess, itemStack, true).isEmpty() && result.base.getItem().equals(itemStack.getItem())) {
+                        } else if (!placedBase && ArmorTrim.getTrim(registryAccess, itemStack, true).isEmpty() && result.getBase().getItem().equals(itemStack.getItem())) {
                             assert Minecraft.getInstance().gameMode != null;
                             ClientInventoryUtil.storeItem(-1, i -> i > 4);
                             Minecraft.getInstance().gameMode.handleInventoryMouseClick(smithingScreenHandler.containerId, smithingScreenHandler.getSlot(slotIndex).index, 0, ClickType.PICKUP, Minecraft.getInstance().player);
                             Minecraft.getInstance().gameMode.handleInventoryMouseClick(smithingScreenHandler.containerId, SmithingMenu.BASE_SLOT, 0, ClickType.PICKUP, Minecraft.getInstance().player);
                             ClientInventoryUtil.storeItem(-1, i -> i > 4);
                             placedBase = true;
-                        } else if (result.addition.test(itemStack)) {
+                        } else if (result.getAddition().test(itemStack)) {
                             assert Minecraft.getInstance().gameMode != null;
                             ClientInventoryUtil.storeItem(-1, i -> i > 4);
                             Minecraft.getInstance().gameMode.handleInventoryMouseClick(smithingScreenHandler.containerId, smithingScreenHandler.getSlot(slotIndex).index, 0, ClickType.PICKUP, Minecraft.getInstance().player);
@@ -400,12 +404,12 @@ public class SmithingRecipeBookComponent extends RecipeBookComponent {
         }
     }
 
-    public void setupGhostRecipe(SmithableResult result, List<Slot> list) {
+    public void setupGhostRecipe(BRBSmithingRecipe result, List<Slot> list) {
         this.ghostRecipe.setRecipe(result);
 
-        this.ghostRecipe.addIngredient(result.addition, SmithingMenu.ADDITIONAL_SLOT_X_PLACEMENT, SmithingMenu.SLOT_Y_PLACEMENT);
-        this.ghostRecipe.addIngredient(result.template, SmithingMenu.TEMPLATE_SLOT_X_PLACEMENT, SmithingMenu.SLOT_Y_PLACEMENT);
-        this.ghostRecipe.addIngredient(Ingredient.of(result.base), SmithingMenu.BASE_SLOT_X_PLACEMENT, SmithingMenu.SLOT_Y_PLACEMENT);
+        this.ghostRecipe.addIngredient(result.getAddition(), SmithingMenu.ADDITIONAL_SLOT_X_PLACEMENT, SmithingMenu.SLOT_Y_PLACEMENT);
+        this.ghostRecipe.addIngredient(result.getTemplate(), SmithingMenu.TEMPLATE_SLOT_X_PLACEMENT, SmithingMenu.SLOT_Y_PLACEMENT);
+        this.ghostRecipe.addIngredient(Ingredient.of(result.getBase()), SmithingMenu.BASE_SLOT_X_PLACEMENT, SmithingMenu.SLOT_Y_PLACEMENT);
     }
 
     public void renderGhostRecipe(GuiGraphics guiGraphics, int i, int j, boolean bl, float f) {
@@ -456,7 +460,7 @@ public class SmithingRecipeBookComponent extends RecipeBookComponent {
     }
 
     public boolean isShowingGhostRecipe() {
-        return this.ghostRecipe.size() > 0;
+        return this.ghostRecipe != null && this.ghostRecipe.size() > 0;
     }
 
     private Component getCraftableButtonText() {

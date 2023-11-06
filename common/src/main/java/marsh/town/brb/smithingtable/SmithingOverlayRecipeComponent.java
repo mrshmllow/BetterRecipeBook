@@ -3,12 +3,14 @@ package marsh.town.brb.smithingtable;
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.systems.RenderSystem;
 import marsh.town.brb.BetterRecipeBook;
+import marsh.town.brb.smithingtable.recipe.BRBSmithingRecipe;
 import marsh.town.brb.util.BRBTextures;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -19,7 +21,7 @@ import java.util.List;
 
 public class SmithingOverlayRecipeComponent implements Renderable, GuiEventListener {
     private final List<OverlayRecipeButton> recipeButtons = Lists.newArrayList();
-    private SmithableResult lastRecipeClicked;
+    private BRBSmithingRecipe lastRecipeClicked;
     private SmithingRecipeCollection collection;
     private boolean isVisible;
     private static final ResourceLocation OVERLAY_RECIPE_SPRITE = new ResourceLocation("recipe_book/overlay_recipe");
@@ -27,12 +29,12 @@ public class SmithingOverlayRecipeComponent implements Renderable, GuiEventListe
     private int y;
     private int x;
 
-    public void init(SmithingRecipeCollection recipeCollection, int x, int y) {
+    public void init(SmithingRecipeCollection recipeCollection, int x, int y, RegistryAccess registryAccess) {
         this.collection = recipeCollection;
 
         boolean isFiltering = BetterRecipeBook.rememberedSmithableToggle;
-        List<SmithableResult> lockedRecipes = recipeCollection.getDisplayRecipes(true);
-        List<SmithableResult> unlockedRecipes = isFiltering ? Collections.emptyList() : recipeCollection.getDisplayRecipes(false);
+        List<BRBSmithingRecipe> lockedRecipes = recipeCollection.getDisplayRecipes(true);
+        List<BRBSmithingRecipe> unlockedRecipes = isFiltering ? Collections.emptyList() : recipeCollection.getDisplayRecipes(false);
         int lockedRecipeCount = lockedRecipes.size();
         int totalRecipeCount = lockedRecipeCount + unlockedRecipes.size();
         int columns = totalRecipeCount <= 16 ? 4 : 5;
@@ -46,10 +48,10 @@ public class SmithingOverlayRecipeComponent implements Renderable, GuiEventListe
 
         for (int index = 0; index < totalRecipeCount; ++index) {
             boolean isCraftable = index < lockedRecipeCount;
-            SmithableResult recipeHolder = isCraftable ? lockedRecipes.get(index) : unlockedRecipes.get(index - lockedRecipeCount);
+            BRBSmithingRecipe recipeHolder = isCraftable ? lockedRecipes.get(index) : unlockedRecipes.get(index - lockedRecipeCount);
             int buttonX = this.x + 4 + 25 * (index % columns);
             int buttonY = this.y + 5 + 25 * (index / columns);
-            this.recipeButtons.add(new OverlayRecipeButton(buttonX, buttonY, recipeHolder, isCraftable));
+            this.recipeButtons.add(new OverlayRecipeButton(buttonX, buttonY, recipeHolder, isCraftable, registryAccess));
         }
 
         this.lastRecipeClicked = null;
@@ -72,7 +74,7 @@ public class SmithingOverlayRecipeComponent implements Renderable, GuiEventListe
     }
 
     @Nullable
-    public SmithableResult getLastRecipeClicked() {
+    public BRBSmithingRecipe getLastRecipeClicked() {
         return this.lastRecipeClicked;
     }
 
@@ -117,15 +119,17 @@ public class SmithingOverlayRecipeComponent implements Renderable, GuiEventListe
     }
 
     public static class OverlayRecipeButton extends AbstractWidget {
-        final SmithableResult recipe;
+        final BRBSmithingRecipe recipe;
         private final boolean isCraftable;
+        private RegistryAccess registryAccess;
 
-        public OverlayRecipeButton(int i, int j, SmithableResult smithableResult, boolean isCraftable) {
+        public OverlayRecipeButton(int i, int j, BRBSmithingRecipe smithableResult, boolean isCraftable, RegistryAccess registryAccess) {
             super(i, j, 200, 20, CommonComponents.EMPTY);
             this.width = 24;
             this.height = 24;
             this.recipe = smithableResult;
             this.isCraftable = isCraftable;
+            this.registryAccess = registryAccess;
         }
 
         public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {
@@ -142,7 +146,7 @@ public class SmithingOverlayRecipeComponent implements Renderable, GuiEventListe
 //            guiGraphics.pose().translate(this.getX() + 2, this.getY() + 2, 150.0);
 
             int offset = 4;
-            guiGraphics.renderFakeItem(recipe.result, getX() + offset, getY() + offset);
+            guiGraphics.renderFakeItem(recipe.getResult(registryAccess), getX() + offset, getY() + offset);
 
             guiGraphics.pose().popPose();
         }

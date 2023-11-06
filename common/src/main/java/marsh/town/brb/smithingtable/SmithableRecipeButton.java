@@ -2,12 +2,14 @@ package marsh.town.brb.smithingtable;
 
 import com.google.common.collect.Lists;
 import marsh.town.brb.BetterRecipeBook;
+import marsh.town.brb.smithingtable.recipe.BRBSmithingRecipe;
 import marsh.town.brb.util.BRBTextures;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -23,9 +25,11 @@ public class SmithableRecipeButton extends AbstractWidget {
     private SmithingMenu smithingMenu;
     private float time;
     private int currentIndex;
+    private RegistryAccess registryAccess;
 
-    public SmithableRecipeButton() {
+    public SmithableRecipeButton(RegistryAccess registryAccess) {
         super(0, 0, 25, 25, CommonComponents.EMPTY);
+        this.registryAccess = registryAccess;
     }
 
     public void showSmithableRecipe(SmithingRecipeCollection potionRecipe, SmithingMenu smithingMenu) {
@@ -39,7 +43,7 @@ public class SmithableRecipeButton extends AbstractWidget {
             this.time += delta;
         }
 
-        List<SmithableResult> list = getOrderedRecipes();
+        List<BRBSmithingRecipe> list = getOrderedRecipes();
 
         this.currentIndex = Mth.floor(this.time / 30.0F) % list.size();
 
@@ -48,7 +52,7 @@ public class SmithableRecipeButton extends AbstractWidget {
                 BRBTextures.RECIPE_BOOK_BUTTON_SLOT_CRAFTABLE_SPRITE : BRBTextures.RECIPE_BOOK_BUTTON_SLOT_UNCRAFTABLE_SPRITE;
         gui.blitSprite(outlineTexture, getX(), getY(), this.width, this.height);
 
-        ItemStack result = getCurrentArmour().result;
+        ItemStack result = getCurrentArmour().getResult(registryAccess);
 
         // render ingredient item
         int offset = 4;
@@ -64,8 +68,8 @@ public class SmithableRecipeButton extends AbstractWidget {
         return this.getOrderedRecipes().size() == 1;
     }
 
-    private List<SmithableResult> getOrderedRecipes() {
-        List<SmithableResult> list = this.getCollection().getDisplayRecipes(true);
+    private List<BRBSmithingRecipe> getOrderedRecipes() {
+        List<BRBSmithingRecipe> list = this.getCollection().getDisplayRecipes(true);
 
         if (!BetterRecipeBook.rememberedSmithableToggle) {
             list.addAll(this.collection.getDisplayRecipes(false));
@@ -74,8 +78,8 @@ public class SmithableRecipeButton extends AbstractWidget {
         return list;
     }
 
-    public SmithableResult getCurrentArmour() {
-        List<SmithableResult> list = getOrderedRecipes();
+    public BRBSmithingRecipe getCurrentArmour() {
+        List<BRBSmithingRecipe> list = getOrderedRecipes();
 
         return list.get(currentIndex);
     }
@@ -94,7 +98,7 @@ public class SmithableRecipeButton extends AbstractWidget {
     public List<Component> getTooltipText() {
         List<Component> list = Lists.newArrayList();
 
-        list.addAll(getCurrentArmour().result.getTooltipLines(Minecraft.getInstance().player, TooltipFlag.NORMAL));
+        list.addAll(getCurrentArmour().getResult(registryAccess).getTooltipLines(Minecraft.getInstance().player, TooltipFlag.NORMAL));
         list.add(Component.literal(""));
 
         if (BetterRecipeBook.config.enablePinning) {

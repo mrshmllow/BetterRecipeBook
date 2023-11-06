@@ -4,8 +4,8 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
 import marsh.town.brb.mixins.accessors.RecipeBookComponentAccessor;
-import marsh.town.brb.smithingtable.SmithableResult;
 import marsh.town.brb.smithingtable.SmithingRecipeCollection;
+import marsh.town.brb.smithingtable.recipe.BRBSmithingRecipe;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.recipebook.RecipeBookComponent;
 import net.minecraft.client.gui.screens.recipebook.RecipeBookPage;
@@ -39,7 +39,8 @@ public class PinnedRecipeManager {
 
             if (pinsFile.exists()) {
                 reader = new JsonReader(new FileReader(pinsFile.getAbsolutePath()));
-                Type type = new TypeToken<HashSet<ResourceLocation>>() {}.getType();
+                Type type = new TypeToken<HashSet<ResourceLocation>>() {
+                }.getType();
                 pinned = gson.fromJson(reader, type);
             }
         } catch (Throwable var8) {
@@ -97,8 +98,8 @@ public class PinnedRecipeManager {
         this.store();
     }
 
-    public void addOrRemoveFavouriteSmithing(SmithableResult recipe) {
-        ResourceLocation targetIdentifier = BuiltInRegistries.ITEM.getKey(recipe.template.getItems()[0].getItem());
+    public void addOrRemoveFavouriteSmithing(BRBSmithingRecipe recipe) {
+        ResourceLocation targetIdentifier = BuiltInRegistries.ITEM.getKey(recipe.getTemplate().getItems()[0].getItem());
 
         for (ResourceLocation identifier : this.pinned) {
             if (identifier.equals(targetIdentifier)) {
@@ -135,7 +136,7 @@ public class PinnedRecipeManager {
     }
 
     public boolean hasSmithing(SmithingRecipeCollection target) {
-        ResourceLocation targetIdentifier = BuiltInRegistries.ITEM.getKey(target.getFirst().template.getItems()[0].getItem());
+        ResourceLocation targetIdentifier = BuiltInRegistries.ITEM.getKey(target.getFirst().getTemplate().getItems()[0].getItem());
 
         for (ResourceLocation identifier : this.pinned) {
             if (targetIdentifier.equals(identifier)) {

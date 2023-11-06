@@ -2,6 +2,8 @@ package marsh.town.brb.smithingtable;
 
 import com.google.common.collect.Lists;
 import marsh.town.brb.mixins.accessors.HolderReferenceAccessor;
+import marsh.town.brb.smithingtable.recipe.BRBSmithingRecipe;
+import marsh.town.brb.smithingtable.recipe.BRBSmithingTransformRecipe;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
@@ -26,7 +28,7 @@ import java.util.stream.Stream;
 public class SmithingGhostRecipe {
     private final Consumer<SmithingGhostRecipe> onGhostUpdate;
     @Nullable
-    private SmithableResult recipe;
+    private BRBSmithingRecipe recipe;
     private final List<SmithingGhostIngredient> ingredients = Lists.newArrayList();
     float time;
     private final RegistryAccess registryAccess;
@@ -55,7 +57,7 @@ public class SmithingGhostRecipe {
     }
 
     @Nullable
-    public SmithableResult getRecipe() {
+    public BRBSmithingRecipe getRecipe() {
         return this.recipe;
     }
 
@@ -64,11 +66,11 @@ public class SmithingGhostRecipe {
             return ItemStack.EMPTY;
         }
 
-        if (this.recipe.isTransform) {
-            return this.recipe.result;
+        if (this.recipe instanceof BRBSmithingTransformRecipe) {
+            return this.recipe.getResult(registryAccess);
         }
 
-        ItemStack itemStack = this.recipe.base.copy();
+        ItemStack itemStack = this.recipe.getBase().copy();
 
         Stream<Holder.Reference<TrimMaterial>> holders = registryAccess.registryOrThrow(Registries.TRIM_MATERIAL).holders();
 
@@ -80,7 +82,7 @@ public class SmithingGhostRecipe {
 
         Holder.Reference<TrimMaterial> material = holders.filter(holder -> ((HolderReferenceAccessor<TrimMaterial>) holder).getKey().equals(((HolderReferenceAccessor<TrimMaterial>) currentMaterialReference.get()).getKey())).findFirst().get();
 
-        Optional<Holder.Reference<TrimPattern>> trim = TrimPatterns.getFromTemplate(registryAccess, recipe.template.getItems()[0]);
+        Optional<Holder.Reference<TrimPattern>> trim = TrimPatterns.getFromTemplate(registryAccess, recipe.getTemplate().getItems()[0]);
 
         if (trim.isPresent()) {
             ArmorTrim armorTri = new ArmorTrim(material, trim.get());
@@ -90,7 +92,7 @@ public class SmithingGhostRecipe {
         return itemStack;
     }
 
-    public void setRecipe(@Nullable SmithableResult recipe) {
+    public void setRecipe(@Nullable BRBSmithingRecipe recipe) {
         this.recipe = recipe;
     }
 

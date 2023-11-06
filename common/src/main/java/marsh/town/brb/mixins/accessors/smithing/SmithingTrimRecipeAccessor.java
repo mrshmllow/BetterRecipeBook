@@ -1,4 +1,4 @@
-package marsh.town.brb.mixins.accessors;
+package marsh.town.brb.mixins.accessors.smithing;
 
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.SmithingTrimRecipe;
@@ -8,11 +8,11 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 @Mixin(SmithingTrimRecipe.class)
 public interface SmithingTrimRecipeAccessor {
     @Accessor("template")
-    Ingredient getTemplate();
+    Ingredient getUnderlyingTemplate();
 
     @Accessor("base")
-    Ingredient getBase();
+    Ingredient getUnderlyingBase();
 
     @Accessor("addition")
-    Ingredient getAddition();
+    Ingredient getUnderlyingAddition();
 }

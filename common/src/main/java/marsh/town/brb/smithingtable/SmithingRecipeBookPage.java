@@ -3,10 +3,12 @@ package marsh.town.brb.smithingtable;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import marsh.town.brb.BetterRecipeBook;
+import marsh.town.brb.smithingtable.recipe.BRBSmithingRecipe;
 import marsh.town.brb.util.BRBTextures;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.StateSwitchingButton;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.inventory.SmithingMenu;
 import org.jetbrains.annotations.Nullable;
 
@@ -23,16 +25,18 @@ public class SmithingRecipeBookPage {
     SmithingRecipeBookGroup group;
     private int currentPage;
     private SmithableRecipeButton hoveredButton;
-    private SmithableResult lastClickedRecipe;
+    private BRBSmithingRecipe lastClickedRecipe;
     public final SmithingOverlayRecipeComponent overlay = new SmithingOverlayRecipeComponent();
     private SmithingRecipeCollection lastClickedRecipeCollection;
     private int leftOffset;
     private int parentLeft;
     private int parentTop;
+    private RegistryAccess registryAccess;
 
-    public SmithingRecipeBookPage() {
+    public SmithingRecipeBookPage(RegistryAccess registryAccess) {
+        this.registryAccess = registryAccess;
         for (int i = 0; i < 20; ++i) {
-            this.buttons.add(new SmithableRecipeButton());
+            this.buttons.add(new SmithableRecipeButton(registryAccess));
         }
     }
 
@@ -115,7 +119,7 @@ public class SmithingRecipeBookPage {
                     this.lastClickedRecipe = recipeButton.getCurrentArmour();
                     this.lastClickedRecipeCollection = recipeButton.getCollection();
                 } else if (button == 1 && !this.overlay.isVisible() && !recipeButton.isOnlyOption()) {
-                    this.overlay.init(recipeButton.getCollection(), this.parentLeft, this.parentTop);
+                    this.overlay.init(recipeButton.getCollection(), this.parentLeft, this.parentTop, registryAccess);
                 }
                 return true;
             }
@@ -176,7 +180,7 @@ public class SmithingRecipeBookPage {
     }
 
     @Nullable
-    public SmithableResult getCurrentClickedRecipe() {
+    public BRBSmithingRecipe getCurrentClickedRecipe() {
         return this.lastClickedRecipe;
     }
 

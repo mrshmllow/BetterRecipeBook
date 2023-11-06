@@ -1,5 +1,7 @@
 package marsh.town.brb.smithingtable;
 
+import marsh.town.brb.smithingtable.recipe.BRBSmithingTransformRecipe;
+import marsh.town.brb.smithingtable.recipe.BRBSmithingTrimRecipe;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.stats.RecipeBook;
 import net.minecraft.world.inventory.RecipeBookType;
@@ -25,16 +27,16 @@ public class SmithingClientRecipeBook extends RecipeBook {
 
             if (group == SmithingRecipeBookGroup.SMITHING_SEARCH) {
                 if (value instanceof SmithingTransformRecipe) {
-                    results.add(new SmithingRecipeCollection(List.of(SmithableResult.of((SmithingTransformRecipe) value)), smithingScreenHandler));
+                    results.add(new SmithingRecipeCollection(List.of(BRBSmithingTransformRecipe.from((SmithingTransformRecipe) value, registryAccess)), smithingScreenHandler));
                 } else if (value instanceof SmithingTrimRecipe) {
-                    results.add(new SmithingRecipeCollection(SmithableResult.of((SmithingTrimRecipe) value, registryAccess), smithingScreenHandler));
+                    results.add(new SmithingRecipeCollection(BRBSmithingTrimRecipe.from((SmithingTrimRecipe) value), smithingScreenHandler));
                 }
             } else if (group == SmithingRecipeBookGroup.SMITHING_TRANSFORM) {
                 if (value instanceof SmithingTransformRecipe) {
-                    results.add(new SmithingRecipeCollection(List.of(SmithableResult.of((SmithingTransformRecipe) value)), smithingScreenHandler));
+                    results.add(new SmithingRecipeCollection(List.of(BRBSmithingTransformRecipe.from((SmithingTransformRecipe) value, registryAccess)), smithingScreenHandler));
                 }
             } else if (value instanceof SmithingTrimRecipe) {
-                results.add(new SmithingRecipeCollection(SmithableResult.of((SmithingTrimRecipe) value, registryAccess), smithingScreenHandler));
+                results.add(new SmithingRecipeCollection(BRBSmithingTrimRecipe.from((SmithingTrimRecipe) value), smithingScreenHandler));
             }
         }
 
