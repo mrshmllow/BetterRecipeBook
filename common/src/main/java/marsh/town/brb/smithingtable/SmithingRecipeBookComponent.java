@@ -317,7 +317,7 @@ public class SmithingRecipeBookComponent extends RecipeBookComponent {
                 if (result != null && recipeCollection != null) {
                     this.ghostRecipe.clear();
 
-                    if (!result.hasMaterials(this.smithingScreenHandler.slots)) {
+                    if (!result.hasMaterials(this.smithingScreenHandler.slots, registryAccess)) {
                         this.setupGhostRecipe(result, this.smithingScreenHandler.slots);
                         return true;
                     }

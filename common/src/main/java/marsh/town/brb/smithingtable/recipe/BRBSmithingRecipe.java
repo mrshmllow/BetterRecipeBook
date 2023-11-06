@@ -7,6 +7,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.armortrim.ArmorTrim;
 import net.minecraft.world.item.armortrim.TrimMaterial;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.SmithingRecipe;
@@ -24,8 +25,8 @@ public interface BRBSmithingRecipe extends SmithingRecipe {
 
     Ingredient getAddition();
 
-    default boolean hasMaterials(NonNullList<Slot> slots) {
-        return hasTemplate(slots) && hasBase(slots) && hasAddition(slots);
+    default boolean hasMaterials(NonNullList<Slot> slots, RegistryAccess registryAccess) {
+        return hasTemplate(slots) && hasBase(slots, registryAccess) && hasAddition(slots);
     }
 
     default boolean hasTemplate(List<Slot> slots) {
@@ -35,9 +36,10 @@ public interface BRBSmithingRecipe extends SmithingRecipe {
         return false;
     }
 
-    default boolean hasBase(List<Slot> slots) {
+    default boolean hasBase(List<Slot> slots, RegistryAccess registryAccess) {
         for (Slot slot : slots) {
-            if (getBase().getItem().equals(slot.getItem().getItem())) return true;
+            if (ArmorTrim.getTrim(registryAccess, slot.getItem(), true).isEmpty() && getBase().getItem().equals(slot.getItem().getItem()))
+                return true;
         }
         return false;
     }

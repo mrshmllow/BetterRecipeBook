@@ -27,16 +27,16 @@ public class SmithingClientRecipeBook extends RecipeBook {
 
             if (group == SmithingRecipeBookGroup.SMITHING_SEARCH) {
                 if (value instanceof SmithingTransformRecipe) {
-                    results.add(new SmithingRecipeCollection(List.of(BRBSmithingTransformRecipe.from((SmithingTransformRecipe) value, registryAccess)), smithingScreenHandler));
+                    results.add(new SmithingRecipeCollection(List.of(BRBSmithingTransformRecipe.from((SmithingTransformRecipe) value, registryAccess)), smithingScreenHandler, registryAccess));
                 } else if (value instanceof SmithingTrimRecipe) {
-                    results.add(new SmithingRecipeCollection(BRBSmithingTrimRecipe.from((SmithingTrimRecipe) value), smithingScreenHandler));
+                    results.add(new SmithingRecipeCollection(BRBSmithingTrimRecipe.from((SmithingTrimRecipe) value), smithingScreenHandler, registryAccess));
                 }
             } else if (group == SmithingRecipeBookGroup.SMITHING_TRANSFORM) {
                 if (value instanceof SmithingTransformRecipe) {
-                    results.add(new SmithingRecipeCollection(List.of(BRBSmithingTransformRecipe.from((SmithingTransformRecipe) value, registryAccess)), smithingScreenHandler));
+                    results.add(new SmithingRecipeCollection(List.of(BRBSmithingTransformRecipe.from((SmithingTransformRecipe) value, registryAccess)), smithingScreenHandler, registryAccess));
                 }
             } else if (value instanceof SmithingTrimRecipe) {
-                results.add(new SmithingRecipeCollection(BRBSmithingTrimRecipe.from((SmithingTrimRecipe) value), smithingScreenHandler));
+                results.add(new SmithingRecipeCollection(BRBSmithingTrimRecipe.from((SmithingTrimRecipe) value), smithingScreenHandler, registryAccess));
             }
         }
 
