@@ -62,7 +62,7 @@ public abstract class ClientPacketListenerMixin {
                 && _$minecraft.player.containerMenu instanceof RecipeBookMenu<?> menu
                 && _$minecraft.player.containerMenu.containerId == packet.getContainerId()
                 && _$minecraft.screen instanceof RecipeUpdateListener rul) {
-            if (!packet.getItem().isEmpty() && RecipeMenuUtil.isCraftingGridSlot(menu, packet.getSlot())) {
+            if (!packet.getItem().isEmpty() && RecipeMenuUtil.isRecipeSlot(menu, packet.getSlot())) {
                 ((RecipeBookComponentAccessor) rul.getRecipeBookComponent()).getGhostRecipe().clear();
             }
         }

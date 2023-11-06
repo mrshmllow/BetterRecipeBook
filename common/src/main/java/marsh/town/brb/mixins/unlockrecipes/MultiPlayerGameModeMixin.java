@@ -11,7 +11,9 @@ import net.minecraft.client.gui.screens.recipebook.RecipeBookComponent;
 import net.minecraft.client.gui.screens.recipebook.RecipeBookPage;
 import net.minecraft.client.gui.screens.recipebook.RecipeCollection;
 import net.minecraft.client.gui.screens.recipebook.RecipeUpdateListener;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.multiplayer.MultiPlayerGameMode;
+import net.minecraft.client.multiplayer.prediction.PredictiveAction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.StackedContents;
 import net.minecraft.world.inventory.ClickType;
@@ -32,6 +34,10 @@ public abstract class MultiPlayerGameModeMixin {
 
     @Shadow @Final private Minecraft minecraft;
 
+    @Shadow protected abstract void startPrediction(ClientLevel arg, PredictiveAction arg2);
+
+    @Shadow private int carriedIndex;
+
     @Inject(method = "handlePlaceRecipe", at = @At(value = "HEAD"), cancellable = true)
     public void onPlaceRecipe(int z, RecipeHolder<?> recipe, boolean shiftKeyDown, CallbackInfo ci) {
         if (BetterRecipeBook.config.newRecipes.unlockAll && minecraft.player != null && minecraft.gameMode != null && minecraft.getConnection() != null &&
@@ -51,7 +57,7 @@ public abstract class MultiPlayerGameModeMixin {
             // if we don't have all the items place a client side ghost recipe
             if (!lastRecipe.isCraftable(recipe)) {
                 // remove items from the crafting grid: not all backends do this for us if we haven't unlocked the recipe
-                for (int i = menu.getResultSlotIndex() + 1; i < menu.getSize(); i++) {
+                for (int i = 0; i < menu.getSize() && i != menu.getResultSlotIndex(); i++) {
                     ClientInventoryUtil.storeItem(i, idx -> idx < menu.getResultSlotIndex() || idx >= menu.getSize());
                 }
 
@@ -71,12 +77,13 @@ public abstract class MultiPlayerGameModeMixin {
 
                 // get the recipe placement to use to filter items and place them in the crafting grid
                 var placement = RecipePlacement.create(recipe, menu.getGridWidth(), menu.getGridHeight());
+                //System.out.println("placement: " + Joiner.on(", ").join(placement.stream().map(s -> s.stream().map(i -> i.toJson(true)).toList()).toList()));
 
                 for (Slot craftingSlot : menu.slots) {
-                    if (RecipeMenuUtil.isCraftingGridSlot(menu, craftingSlot.index)) {
+                    if (RecipeMenuUtil.isRecipeSlot(menu, craftingSlot.index)) {
                         // get the ingredients for this slot in the crafting grid
-                        // we need to adjust out the offset of the result slot when getting the ingredient
-                        var slotIngredients = placement.get(craftingSlot.index - (1 + menu.getResultSlotIndex()));
+                        // we need to adjust out the offset of the result slot when getting the ingredient for crafting tables
+                        var slotIngredients = placement.get(craftingSlot.index - (menu.getResultSlotIndex() > 0 ? 0 : 1));
 
                         // if the item in the crafting grid doesn't match the recipe, remove it.
                         if (!craftingSlot.getItem().isEmpty() && (slotIngredients.isEmpty() || slotIngredients.stream().anyMatch(i -> !i.test(craftingSlot.getItem())))) {
@@ -86,7 +93,7 @@ public abstract class MultiPlayerGameModeMixin {
                         // find items to put in the crafting grid
                         for (Slot inventorySlot : menu.slots) {
                             // ignore crafting slots to prevent us from taking recipe items already in the crafting grid
-                            if (!RecipeMenuUtil.isCraftingGridSlot(menu, inventorySlot.index)) {
+                            if (!RecipeMenuUtil.isRecipeSlot(menu, inventorySlot.index)) {
                                 // check if any ingredient is compatible with the item in this inventory slot
                                 if (slotIngredients.stream().anyMatch(i -> i.test(inventorySlot.getItem()))) {
                                     // pickup whole stack, deposit one, then return remaining stack
