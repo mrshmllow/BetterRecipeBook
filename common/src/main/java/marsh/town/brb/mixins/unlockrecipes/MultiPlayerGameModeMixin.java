@@ -14,6 +14,7 @@ import net.minecraft.client.gui.screens.recipebook.RecipeUpdateListener;
 import net.minecraft.client.multiplayer.MultiPlayerGameMode;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.StackedContents;
+import net.minecraft.world.inventory.AbstractFurnaceMenu;
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.RecipeBookMenu;
 import net.minecraft.world.inventory.Slot;
@@ -50,7 +51,7 @@ public abstract class MultiPlayerGameModeMixin {
 
                 // if the item in the crafting grid doesn't match the recipe, remove it.
                 if (!craftingSlot.getItem().isEmpty() && (slotIngredients.isEmpty() || slotIngredients.stream().anyMatch(i -> !i.test(craftingSlot.getItem())))) {
-                    ClientInventoryUtil.storeItem(craftingSlot.index, idx -> idx < menu.getResultSlotIndex() || idx >= menu.getSize());
+                    ClientInventoryUtil.storeItem(craftingSlot.index, idx -> idx != menu.getResultSlotIndex() || idx >= menu.getSize());
                 }
 
                 // find items to put in the crafting grid
@@ -113,7 +114,7 @@ public abstract class MultiPlayerGameModeMixin {
 
             // remove items from the crafting grid
             for (int i = 0; i < menu.getSize() && i != menu.getResultSlotIndex(); i++) {
-                ClientInventoryUtil.storeItem(i, idx -> idx < menu.getResultSlotIndex() || idx >= menu.getSize());
+                ClientInventoryUtil.storeItem(i, idx -> idx != menu.getResultSlotIndex() || idx >= menu.getSize());
             }
 
             // if we don't have all the items place a client side ghost recipe
@@ -131,7 +132,7 @@ public abstract class MultiPlayerGameModeMixin {
 
                 // store/drop held item if required
                 if (!menu.getCarried().isEmpty())
-                    ClientInventoryUtil.storeItem(-1, idx -> idx < menu.getResultSlotIndex() || idx >= menu.getSize());
+                    ClientInventoryUtil.storeItem(-1, idx -> idx != menu.getResultSlotIndex() || idx >= menu.getSize());
 
                 // get the recipe placement to use to filter items and place them in the crafting grid
                 var placement = RecipePlacement.create(recipe, menu.getGridWidth(), menu.getGridHeight());
@@ -148,6 +149,9 @@ public abstract class MultiPlayerGameModeMixin {
                     this.betterRecipeBook$placeSlots(slotItemStackMap, menu, placement, gameMode);
                 }
 
+                if (menu instanceof AbstractFurnaceMenu && menu.getSlot(menu.getResultSlotIndex()).hasItem()) {
+                    ClientInventoryUtil.storeItem(menu.getResultSlotIndex(), idx -> idx != menu.getResultSlotIndex() || idx >= menu.getSize());
+                }
 
                 // if instant craft is enabled, set last craft
                 if (BetterRecipeBook.instantCraftingManager.on && !menu.getSlot(menu.getResultSlotIndex()).getItem().isEmpty()) {
