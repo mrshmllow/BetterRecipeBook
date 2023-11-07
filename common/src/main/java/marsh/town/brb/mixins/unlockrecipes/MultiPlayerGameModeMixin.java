@@ -111,13 +111,13 @@ public abstract class MultiPlayerGameModeMixin {
 
             Set<ResourceLocation> serverUnlockedRecipes = ((IMixinRecipeManager) minecraft.getConnection().getRecipeManager())._$getServerUnlockedRecipes();
 
+            // remove items from the crafting grid
+            for (int i = 0; i < menu.getSize() && i != menu.getResultSlotIndex(); i++) {
+                ClientInventoryUtil.storeItem(i, idx -> idx < menu.getResultSlotIndex() || idx >= menu.getSize());
+            }
+
             // if we don't have all the items place a client side ghost recipe
             if (!lastRecipe.isCraftable(recipe)) {
-                // remove items from the crafting grid: not all backends do this for us if we haven't unlocked the recipe
-                for (int i = 0; i < menu.getSize() && i != menu.getResultSlotIndex(); i++) {
-                    ClientInventoryUtil.storeItem(i, idx -> idx < menu.getResultSlotIndex() || idx >= menu.getSize());
-                }
-
                 // place the ghost recipe as we can't craft the recipe yet
                 comp.setupGhostRecipe(recipe, menu.slots);
 
