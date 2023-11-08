@@ -2,12 +2,11 @@ package marsh.town.brb.brewingstand;
 
 import com.google.common.collect.Lists;
 import marsh.town.brb.BetterRecipeBook;
-import marsh.town.brb.config.Config;
+import marsh.town.brb.interfaces.ISettingsButton;
 import marsh.town.brb.mixins.accessors.RecipeBookComponentAccessor;
 import marsh.town.brb.util.BRBTextures;
 import marsh.town.brb.util.BrewingGhostRecipe;
 import marsh.town.brb.util.ClientInventoryUtil;
-import me.shedaniel.autoconfig.AutoConfig;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.ChatFormatting;
@@ -42,7 +41,7 @@ import static marsh.town.brb.brewingstand.PlatformPotionUtil.getFrom;
 import static marsh.town.brb.brewingstand.PlatformPotionUtil.getIngredient;
 
 @Environment(EnvType.CLIENT)
-public class BrewingRecipeBookComponent extends RecipeBookComponent {
+public class BrewingRecipeBookComponent extends RecipeBookComponent implements ISettingsButton {
     protected BrewingStandMenu brewingStandScreenHandler;
     Minecraft client;
     private int parentWidth;
@@ -67,7 +66,6 @@ public class BrewingRecipeBookComponent extends RecipeBookComponent {
     private String searchText;
     private static final Component ONLY_CRAFTABLES_TOOLTIP;
     private static final Component ALL_RECIPES_TOOLTIP;
-    private static final Component OPEN_SETTINGS_TOOLTIP;
     boolean doubleRefresh = true;
 
     public BrewingRecipeBookComponent() {
@@ -188,11 +186,7 @@ public class BrewingRecipeBookComponent extends RecipeBookComponent {
             this.currentTab = this.tabButtons.get(0);
         }
 
-        if (BetterRecipeBook.config.settingsButton) {
-            this.settingsButton = new ImageButton(i + 11, j + 137, 18, 18, BRBTextures.SETTINGS_BUTTON_SPRITES, button -> {
-                Minecraft.getInstance().setScreen(AutoConfig.getConfigScreen(Config.class, Minecraft.getInstance().screen).get());
-            });
-        }
+        this.settingsButton = this.createSettingsButton(i, j);
 
         this.currentTab.setStateTriggered(true);
         this.refreshResults(false);
@@ -260,10 +254,8 @@ public class BrewingRecipeBookComponent extends RecipeBookComponent {
                     BetterRecipeBook.rememberedBrewingToggle = bl;
                     this.refreshResults(false);
                     return true;
-                } else if (this.settingsButton != null) {
-                    if (this.settingsButton.mouseClicked(mouseX, mouseY, button) && BetterRecipeBook.config.settingsButton) {
-                        return true;
-                    }
+                } else if (this.settingsButtonMouseClicked(this.settingsButton, mouseX, mouseY, button)) {
+                    return true;
                 }
 
                 Iterator<BrewableRecipeGroupButtonWidget> var6 = this.tabButtons.iterator();
@@ -387,10 +379,7 @@ public class BrewingRecipeBookComponent extends RecipeBookComponent {
         // render the toggle brewable filter button
         this.toggleBrewableButton.render(gui, mouseX, mouseY, delta);
 
-        // render the BRB settings button
-        if (BetterRecipeBook.config.settingsButton) {
-            this.settingsButton.render(gui, mouseX, mouseY, delta);
-        }
+        this.renderSettingsButton(this.settingsButton, gui, mouseX, mouseY, delta);
 
         // render the recipe book page contents
         this.recipesArea.render(gui, blitX, blitY, mouseX, mouseY, delta);
@@ -444,13 +433,7 @@ public class BrewingRecipeBookComponent extends RecipeBookComponent {
                 }
             }
 
-            if (this.settingsButton != null) {
-                if (this.settingsButton.isHoveredOrFocused() && BetterRecipeBook.config.settingsButton) {
-                    if (this.client.screen != null) {
-                        gui.renderTooltip(Minecraft.getInstance().font, OPEN_SETTINGS_TOOLTIP, mouseX, mouseY);
-                    }
-                }
-            }
+            this.renderSettingsButtonTooltip(this.settingsButton, gui, mouseX, mouseY);
 
             ghostRecipe.renderTooltip(gui, x, y, mouseX, mouseY);
         }
@@ -561,7 +544,6 @@ public class BrewingRecipeBookComponent extends RecipeBookComponent {
         SEARCH_HINT = (Component.translatable("gui.recipebook.search_hint")).withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY);
         ONLY_CRAFTABLES_TOOLTIP = Component.translatable("brb.gui.togglePotions.brewable");
         ALL_RECIPES_TOOLTIP = Component.translatable("gui.recipebook.toggleRecipes.all");
-        OPEN_SETTINGS_TOOLTIP = Component.translatable("brb.gui.settings.open");
     }
 
     @Override
