@@ -37,7 +37,7 @@ public abstract class ClientPacketListenerMixin {
     @Inject(method = "handleAddOrRemoveRecipes", at = @At(value = "RETURN"))
     public void onAddOrRemoveRecipes(ClientboundRecipePacket packet, CallbackInfo ci) {
         //System.out.println("addOrRemoveRecipes %s: %s".formatted(packet.getState(), Joiner.on(", ").join(packet.getRecipes())));
-        Set<ResourceLocation> serverUnlockedRecipes = ((IMixinRecipeManager) recipeManager)._$getServerUnlockedRecipes();
+        Set<ResourceLocation> serverUnlockedRecipes = ((IMixinRecipeManager) recipeManager).betterRecipeBook$getServerUnlockedRecipes();
         switch (packet.getState()) {
             case INIT:
                 serverUnlockedRecipes.clear();

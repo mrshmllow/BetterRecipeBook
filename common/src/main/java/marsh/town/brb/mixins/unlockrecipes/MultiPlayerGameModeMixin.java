@@ -57,7 +57,7 @@ public abstract class MultiPlayerGameModeMixin {
             }
             lastRecipe.canCraft(contents, menu.getGridWidth(), menu.getGridHeight(), minecraft.player.getRecipeBook());
 
-            Set<ResourceLocation> serverUnlockedRecipes = ((IMixinRecipeManager) minecraft.getConnection().getRecipeManager())._$getServerUnlockedRecipes();
+            Set<ResourceLocation> serverUnlockedRecipes = ((IMixinRecipeManager) minecraft.getConnection().getRecipeManager()).betterRecipeBook$getServerUnlockedRecipes();
 
             // if we don't have all the items place a client side ghost recipe
             if (!lastRecipe.isCraftable(recipe)) {
@@ -69,7 +69,7 @@ public abstract class MultiPlayerGameModeMixin {
                 // place the ghost recipe as we can't craft the recipe yet
                 comp.setupGhostRecipe(recipe, menu.slots);
 
-                // don't send requests to the server that we shouldn't
+                // don't send recipe requests to the server that we don't have
                 if (!serverUnlockedRecipes.contains(recipe.id())) ci.cancel();
             } else if (!serverUnlockedRecipes.contains(recipe.id())) { // if the server didn't unlock this recipe for us, manually place the recipe
                 MultiPlayerGameMode gameMode = minecraft.gameMode;
@@ -115,13 +115,16 @@ public abstract class MultiPlayerGameModeMixin {
                     }
                 }
 
-                if (menu instanceof AbstractFurnaceMenu && menu.getSlot(menu.getResultSlotIndex()).hasItem()) {
-                    ClientInventoryUtil.storeItem(menu.getResultSlotIndex(), idx -> idx != menu.getResultSlotIndex() || idx >= menu.getSize());
-                }
-
-                // if instant craft is enabled, set last craft
-                if (BetterRecipeBook.instantCraftingManager.on && !menu.getSlot(menu.getResultSlotIndex()).getItem().isEmpty()) {
-                    BetterRecipeBook.instantCraftingManager.recipeClicked(recipe.value(), minecraft.level.registryAccess());
+                if (menu instanceof AbstractFurnaceMenu) {
+                    // furnace menus are supposed to take out the result item when a recipe is placed
+                    if (menu.getSlot(menu.getResultSlotIndex()).hasItem()) {
+                        ClientInventoryUtil.storeItem(menu.getResultSlotIndex(), idx -> idx != menu.getResultSlotIndex() || idx >= menu.getSize());
+                    }
+                } else {
+                    // if instant craft is enabled, set last craft
+                    if (BetterRecipeBook.instantCraftingManager.on && !menu.getSlot(menu.getResultSlotIndex()).getItem().isEmpty()) {
+                        BetterRecipeBook.instantCraftingManager.recipeClicked(recipe.value(), minecraft.level.registryAccess());
+                    }
                 }
             }
         }

@@ -9,6 +9,6 @@ import java.util.Set;
  */
 public interface IMixinRecipeManager {
 
-    Set<ResourceLocation> _$getServerUnlockedRecipes();
+    Set<ResourceLocation> betterRecipeBook$getServerUnlockedRecipes();
 
 }
