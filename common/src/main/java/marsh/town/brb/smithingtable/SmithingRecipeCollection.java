@@ -2,15 +2,19 @@ package marsh.town.brb.smithingtable;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
+import marsh.town.brb.generic.GenericRecipe;
+import marsh.town.brb.generic.GenericRecipeBookCollection;
+import marsh.town.brb.generic.pins.Pinnable;
 import marsh.town.brb.smithingtable.recipe.BRBSmithingRecipe;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.inventory.SmithingMenu;
 
 import java.util.List;
 
-public class SmithingRecipeCollection {
+public class SmithingRecipeCollection implements GenericRecipeBookCollection, Pinnable {
     private final List<BRBSmithingRecipe> recipes;
     private SmithingMenu smithingScreenHandler;
     private RegistryAccess registryAccess;
@@ -40,6 +44,22 @@ public class SmithingRecipeCollection {
     public boolean atleastOneCraftable(NonNullList<Slot> slots) {
         for (BRBSmithingRecipe recipe : this.recipes) {
             if (recipe.hasMaterials(slots, registryAccess)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    @Override
+    public List<? extends GenericRecipe> getRecipes() {
+        return this.recipes;
+    }
+
+    @Override
+    public boolean has(ResourceLocation resourceLocation) {
+        for (GenericRecipe recipe : getRecipes()) {
+            if (recipe.id().equals(resourceLocation)) {
                 return true;
             }
         }

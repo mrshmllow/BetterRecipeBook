@@ -1,5 +1,6 @@
 package marsh.town.brb.brewingstand;
 
+import marsh.town.brb.generic.GenericRecipe;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.Slot;
@@ -10,10 +11,9 @@ import net.minecraft.world.item.alchemy.PotionBrewing;
 
 import java.util.List;
 
-import static marsh.town.brb.brewingstand.PlatformPotionUtil.getFrom;
-import static marsh.town.brb.brewingstand.PlatformPotionUtil.getIngredient;
+import static marsh.town.brb.brewingstand.PlatformPotionUtil.*;
 
-public class BrewableResult {
+public class BrewableResult implements GenericRecipe {
     public ItemStack ingredient;
     public PotionBrewing.Mix<?> recipe;
     public ResourceLocation input;
@@ -57,7 +57,8 @@ public class BrewableResult {
             ItemStack itemStack = slot.getItem();
 
             if (inputStack.getTag() == null) return false;
-            if (inputStack.getTag().equals(itemStack.getTag()) && inputStack.getItem().equals(itemStack.getItem())) return true;
+            if (inputStack.getTag().equals(itemStack.getTag()) && inputStack.getItem().equals(itemStack.getItem()))
+                return true;
         }
 
         return false;
@@ -70,4 +71,8 @@ public class BrewableResult {
         return hasIngredient && hasInput;
     }
 
+    @Override
+    public ResourceLocation id() {
+        return BuiltInRegistries.POTION.getKey(getTo(recipe));
+    }
 }

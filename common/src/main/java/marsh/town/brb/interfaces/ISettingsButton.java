@@ -9,6 +9,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import org.jetbrains.annotations.Nullable;
 
 public interface ISettingsButton {
     MutableComponent OPEN_SETTINGS_TOOLTIP = Component.translatable("brb.gui.settings.open");
@@ -23,19 +24,19 @@ public interface ISettingsButton {
         return null;
     }
 
-    default void renderSettingsButton(ImageButton settingsButton, GuiGraphics gui, int mouseX, int mouseY, float delta) {
-        if (BetterRecipeBook.config.settingsButton) {
+    default void renderSettingsButton(@Nullable ImageButton settingsButton, GuiGraphics gui, int mouseX, int mouseY, float delta) {
+        if (settingsButton != null && BetterRecipeBook.config.settingsButton) {
             settingsButton.render(gui, mouseX, mouseY, delta);
         }
     }
 
-    default boolean settingsButtonMouseClicked(ImageButton settingsButton, double mouseX, double mouseY, int button) {
+    default boolean settingsButtonMouseClicked(@Nullable ImageButton settingsButton, double mouseX, double mouseY, int button) {
         if (settingsButton == null || !BetterRecipeBook.config.settingsButton) return false;
 
         return settingsButton.mouseClicked(mouseX, mouseY, button);
     }
 
-    default void renderSettingsButtonTooltip(ImageButton settingsButton, GuiGraphics gui, int mouseX, int mouseY) {
+    default void renderSettingsButtonTooltip(@Nullable ImageButton settingsButton, GuiGraphics gui, int mouseX, int mouseY) {
         if (settingsButton != null && settingsButton.isHoveredOrFocused() && BetterRecipeBook.config.settingsButton
                 && Minecraft.getInstance().screen != null) {
             gui.renderTooltip(Minecraft.getInstance().font, OPEN_SETTINGS_TOOLTIP, mouseX, mouseY);

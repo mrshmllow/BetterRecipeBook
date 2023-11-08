@@ -3,8 +3,8 @@ package marsh.town.brb;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
+import marsh.town.brb.generic.pins.Pinnable;
 import marsh.town.brb.mixins.accessors.RecipeBookComponentAccessor;
-import marsh.town.brb.smithingtable.SmithingRecipeCollection;
 import marsh.town.brb.smithingtable.recipe.BRBSmithingRecipe;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.recipebook.RecipeBookComponent;
@@ -113,36 +113,13 @@ public class PinnedRecipeManager {
         this.store();
     }
 
-    public boolean has(Object target) {
+    public boolean has(Pinnable target) {
         for (ResourceLocation identifier : this.pinned) {
-            for (RecipeHolder<?> recipe : ((RecipeCollection) target).getRecipes()) {
-                if (recipe.id().equals(identifier)) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    public boolean hasPotion(PotionBrewing.Mix<?> target) {
-        ResourceLocation targetIdentifier = BuiltInRegistries.POTION.getKey(getTo(target));
-
-        for (ResourceLocation identifier : this.pinned) {
-            if (targetIdentifier.equals(identifier)) {
+            if (target.has(identifier)) {
                 return true;
             }
         }
-        return false;
-    }
 
-    public boolean hasSmithing(SmithingRecipeCollection target) {
-        ResourceLocation targetIdentifier = BuiltInRegistries.ITEM.getKey(target.getFirst().getTemplate().getItems()[0].getItem());
-
-        for (ResourceLocation identifier : this.pinned) {
-            if (targetIdentifier.equals(identifier)) {
-                return true;
-            }
-        }
         return false;
     }
 

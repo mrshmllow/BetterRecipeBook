@@ -54,7 +54,7 @@ public class BrewableAnimatedResultButton extends AbstractWidget {
         gui.renderFakeItem(potionRecipe.ingredient, getX() + offset, getY() + offset);
 
         // if pinned recipe, blit the pin texture over it
-        if (BetterRecipeBook.config.enablePinning && BetterRecipeBook.pinnedRecipeManager.hasPotion(potionRecipe.recipe)) {
+        if (BetterRecipeBook.config.enablePinning && BetterRecipeBook.pinnedRecipeManager.has(potionRecipe)) {
             gui.blitSprite(BRBTextures.RECIPE_BOOK_PIN_SPRITE, getX() - 4, getY() - 4, 32, 32);
         }
     }
@@ -100,7 +100,7 @@ public class BrewableAnimatedResultButton extends AbstractWidget {
         list.add(Component.literal(inputStack.getHoverName().getString()).withStyle(colour));
 
         if (BetterRecipeBook.config.enablePinning) {
-            if (BetterRecipeBook.pinnedRecipeManager.hasPotion(this.potionRecipe.recipe)) {
+            if (BetterRecipeBook.pinnedRecipeManager.has(this.potionRecipe)) {
                 list.add(Component.translatable("brb.gui.pin.remove"));
             } else {
                 list.add(Component.translatable("brb.gui.pin.add"));

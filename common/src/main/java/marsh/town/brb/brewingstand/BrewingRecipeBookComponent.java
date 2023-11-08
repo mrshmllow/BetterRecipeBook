@@ -2,6 +2,7 @@ package marsh.town.brb.brewingstand;
 
 import com.google.common.collect.Lists;
 import marsh.town.brb.BetterRecipeBook;
+import marsh.town.brb.interfaces.IPinningComponent;
 import marsh.town.brb.interfaces.ISettingsButton;
 import marsh.town.brb.mixins.accessors.RecipeBookComponentAccessor;
 import marsh.town.brb.util.BRBTextures;
@@ -41,7 +42,7 @@ import static marsh.town.brb.brewingstand.PlatformPotionUtil.getFrom;
 import static marsh.town.brb.brewingstand.PlatformPotionUtil.getIngredient;
 
 @Environment(EnvType.CLIENT)
-public class BrewingRecipeBookComponent extends RecipeBookComponent implements ISettingsButton {
+public class BrewingRecipeBookComponent extends RecipeBookComponent implements ISettingsButton, IPinningComponent<BrewableResult> {
     protected BrewingStandMenu brewingStandScreenHandler;
     Minecraft client;
     private int parentWidth;
@@ -318,16 +319,7 @@ public class BrewingRecipeBookComponent extends RecipeBookComponent implements I
             results.removeIf((result) -> !result.hasMaterials(currentTab.getGroup(), brewingStandScreenHandler.slots));
         }
 
-        if (BetterRecipeBook.config.enablePinning) {
-            List<BrewableResult> tempResults = Lists.newArrayList(results);
-
-            for (BrewableResult result : tempResults) {
-                if (BetterRecipeBook.pinnedRecipeManager.hasPotion(result.recipe)) {
-                    results.remove(result);
-                    results.add(0, result);
-                }
-            }
-        }
+        this.betterRecipeBook$sortByPinsInPlace(results);
 
         this.recipesArea.setResults(results, resetCurrentPage, currentTab.getGroup());
     }

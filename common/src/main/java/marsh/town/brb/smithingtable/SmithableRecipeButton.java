@@ -59,7 +59,7 @@ public class SmithableRecipeButton extends AbstractWidget {
         gui.renderFakeItem(result, getX() + offset, getY() + offset);
 
         // if pinned recipe, blit the pin texture over it
-        if (BetterRecipeBook.config.enablePinning && BetterRecipeBook.pinnedRecipeManager.hasSmithing(collection)) {
+        if (BetterRecipeBook.config.enablePinning && BetterRecipeBook.pinnedRecipeManager.has(collection)) {
             gui.blitSprite(BRBTextures.RECIPE_BOOK_PIN_SPRITE, getX() - 4, getY() - 4, 32, 32);
         }
     }
@@ -102,7 +102,7 @@ public class SmithableRecipeButton extends AbstractWidget {
         list.add(Component.literal(""));
 
         if (BetterRecipeBook.config.enablePinning) {
-            if (BetterRecipeBook.pinnedRecipeManager.hasSmithing(collection)) {
+            if (BetterRecipeBook.pinnedRecipeManager.has(collection)) {
                 list.add(Component.translatable("brb.gui.pin.remove"));
             } else {
                 list.add(Component.translatable("brb.gui.pin.add"));

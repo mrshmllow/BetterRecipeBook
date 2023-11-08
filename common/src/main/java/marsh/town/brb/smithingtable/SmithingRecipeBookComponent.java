@@ -3,6 +3,7 @@ package marsh.town.brb.smithingtable;
 import com.google.common.collect.Lists;
 import marsh.town.brb.BetterRecipeBook;
 import marsh.town.brb.config.Config;
+import marsh.town.brb.interfaces.IPinningComponent;
 import marsh.town.brb.mixins.accessors.RecipeBookComponentAccessor;
 import marsh.town.brb.smithingtable.recipe.BRBSmithingRecipe;
 import marsh.town.brb.util.BRBTextures;
@@ -36,7 +37,7 @@ import org.lwjgl.glfw.GLFW;
 import java.util.*;
 import java.util.function.Consumer;
 
-public class SmithingRecipeBookComponent extends RecipeBookComponent {
+public class SmithingRecipeBookComponent extends RecipeBookComponent implements IPinningComponent<SmithingRecipeCollection> {
     private boolean open;
     private Minecraft minecraft;
     private int width;
@@ -216,16 +217,7 @@ public class SmithingRecipeBookComponent extends RecipeBookComponent {
             results.removeIf((result) -> !result.atleastOneCraftable(this.smithingScreenHandler.slots));
         }
 
-        if (BetterRecipeBook.config.enablePinning) {
-            List<SmithingRecipeCollection> tempResults = Lists.newArrayList(results);
-
-            for (SmithingRecipeCollection result : tempResults) {
-                if (BetterRecipeBook.pinnedRecipeManager.hasSmithing(result)) {
-                    results.remove(result);
-                    results.add(0, result);
-                }
-            }
-        }
+        this.betterRecipeBook$sortByPinsInPlace(results);
 
         this.recipesPage.setResults(results, resetCurrentPage, currentTab.getGroup());
     }

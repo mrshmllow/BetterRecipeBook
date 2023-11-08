@@ -1,6 +1,7 @@
 package marsh.town.brb.mixins.pins;
 
 import marsh.town.brb.BetterRecipeBook;
+import marsh.town.brb.generic.pins.PinnableRecipeCollection;
 import marsh.town.brb.util.BRBTextures;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -25,13 +26,14 @@ public abstract class RecipeButtonMixin extends AbstractWidget {
         super(i, j, k, l, component);
     }
 
-    @Shadow public abstract RecipeCollection getCollection();
+    @Shadow
+    public abstract RecipeCollection getCollection();
 
     @Inject(method = "getTooltipText", locals = LocalCapture.CAPTURE_FAILHARD, at = @At("RETURN"))
     public void getTooltip(CallbackInfoReturnable<List<Component>> cir, ItemStack itemStack, List<Component> list) {
         if (!BetterRecipeBook.config.enablePinning) return;
 
-        if (BetterRecipeBook.pinnedRecipeManager.has(this.getCollection())) {
+        if (BetterRecipeBook.pinnedRecipeManager.has(PinnableRecipeCollection.of(this.getCollection()))) {
             list.add(Component.translatable("brb.gui.pin.remove"));
         } else {
             list.add(Component.translatable("brb.gui.pin.add"));
@@ -41,7 +43,7 @@ public abstract class RecipeButtonMixin extends AbstractWidget {
     @Inject(method = "renderWidget", at = @At(value = "RETURN", target = "Lnet/minecraft/client/gui/GuiGraphics;renderFakeItem(Lnet/minecraft/world/item/ItemStack;II)V"))
     public void renderWidget_renderFakeItem(GuiGraphics gui, int x, int y, float delta, CallbackInfo ci) {
         // if pins are enabled, and the recipe is pinned, blit the pin texture after the recipe collection is rendered
-        if (BetterRecipeBook.config.enablePinning && BetterRecipeBook.pinnedRecipeManager.has(getCollection())) {
+        if (BetterRecipeBook.config.enablePinning && BetterRecipeBook.pinnedRecipeManager.has(PinnableRecipeCollection.of(getCollection()))) {
             gui.blitSprite(BRBTextures.RECIPE_BOOK_PIN_SPRITE, getX() - 4, getY() - 4, 32, 32);
         }
     }

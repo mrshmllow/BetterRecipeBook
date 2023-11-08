@@ -1,9 +1,12 @@
 package marsh.town.brb.smithingtable.recipe;
 
+import marsh.town.brb.generic.GenericRecipe;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -14,7 +17,7 @@ import net.minecraft.world.item.crafting.SmithingRecipe;
 
 import java.util.List;
 
-public interface BRBSmithingRecipe extends SmithingRecipe {
+public interface BRBSmithingRecipe extends SmithingRecipe, GenericRecipe {
     ItemStack getResult(RegistryAccess registryAccess);
 
     ItemStack getResult(ResourceKey<TrimMaterial> trimMaterialResourceKey, RegistryAccess registryAccess);
@@ -53,5 +56,9 @@ public interface BRBSmithingRecipe extends SmithingRecipe {
 
     default String getTemplateType() {
         return getTemplate().getItems()[0].getTooltipLines(Minecraft.getInstance().player, TooltipFlag.NORMAL).get(1).getString();
+    }
+
+    default ResourceLocation id() {
+        return BuiltInRegistries.ITEM.getKey(getTemplate().getItems()[0].getItem());
     }
 }
