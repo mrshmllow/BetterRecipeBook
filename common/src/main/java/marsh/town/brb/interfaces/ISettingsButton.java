@@ -36,6 +36,7 @@ public interface ISettingsButton {
         return settingsButton.mouseClicked(mouseX, mouseY, button);
     }
 
+    // TODO: Remove this and use .setTooltip and render it automatically
     default void renderSettingsButtonTooltip(@Nullable ImageButton settingsButton, GuiGraphics gui, int mouseX, int mouseY) {
         if (settingsButton != null && settingsButton.isHoveredOrFocused() && BetterRecipeBook.config.settingsButton
                 && Minecraft.getInstance().screen != null) {

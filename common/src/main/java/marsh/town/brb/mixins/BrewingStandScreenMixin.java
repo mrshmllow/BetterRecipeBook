@@ -8,7 +8,6 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.BrewingStandScreen;
-import net.minecraft.client.gui.screens.recipebook.RecipeUpdateListener;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.BrewingStandMenu;
@@ -22,7 +21,7 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(BrewingStandScreen.class)
-public abstract class BrewingStandScreenMixin extends AbstractContainerScreen<BrewingStandMenu> implements RecipeUpdateListener {
+public abstract class BrewingStandScreenMixin extends AbstractContainerScreen<BrewingStandMenu> {
 
     @Unique
     public final BrewingRecipeBookComponent _$recipeBookComponent = new BrewingRecipeBookComponent();
@@ -46,7 +45,7 @@ public abstract class BrewingStandScreenMixin extends AbstractContainerScreen<Br
 
             this.addRenderableWidget(new ImageButton(this.leftPos + 135, this.height / 2 - 50, 20, 18, BRBTextures.RECIPE_BOOK_BUTTON_SPRITES, (button) -> {
                 this._$recipeBookComponent.toggleOpen();
-                BetterRecipeBook.rememberedBrewingOpen = this._$recipeBookComponent.isOpen();
+                BetterRecipeBook.rememberedBrewingOpen = this._$recipeBookComponent.isVisible();
                 if (!BetterRecipeBook.config.keepCentered) {
                     this.leftPos = this._$recipeBookComponent.findLeftEdge(this.width, this.imageWidth);
                 }
@@ -81,7 +80,7 @@ public abstract class BrewingStandScreenMixin extends AbstractContainerScreen<Br
 
     @Inject(method = "render", at = @At("RETURN"))
     public void render(GuiGraphics guiGraphics, int i, int j, float f, CallbackInfo ci) {
-        if (this._$recipeBookComponent.isOpen()) {
+        if (this._$recipeBookComponent.isVisible()) {
             this._$recipeBookComponent.render(guiGraphics, i, j, f);
             this._$recipeBookComponent.renderGhostRecipe(guiGraphics, this.leftPos, this.topPos, false, f);
             this._$recipeBookComponent.drawTooltip(guiGraphics, this.leftPos, this.topPos, i, j);
@@ -95,21 +94,10 @@ public abstract class BrewingStandScreenMixin extends AbstractContainerScreen<Br
             at = @At("STORE")
     )
     public int renderBg_width(int i) {
-        if (this._$recipeBookComponent.isOpen() && !BetterRecipeBook.config.keepCentered) {
+        if (this._$recipeBookComponent.isVisible() && !BetterRecipeBook.config.keepCentered) {
             return i + 77;
         } else {
             return i;
         }
     }
-
-    @Override
-    public BrewingRecipeBookComponent getRecipeBookComponent() {
-        return _$recipeBookComponent;
-    }
-
-    @Override
-    public void recipesUpdated() {
-        _$recipeBookComponent.recipesUpdated();
-    }
-
 }
