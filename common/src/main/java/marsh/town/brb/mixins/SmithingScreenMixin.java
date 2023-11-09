@@ -54,8 +54,8 @@ public abstract class SmithingScreenMixin extends ItemCombinerScreen<SmithingMen
 
             // NOTE : width and height are both 0
             this.addRenderableWidget(new ImageButton(this.leftPos + 147, this.height / 2 - 75, 20, 18, BRBTextures.RECIPE_BOOK_BUTTON_SPRITES, (button) -> {
-                this._$recipeBookComponent.toggleOpen();
-                BetterRecipeBook.rememberedSmithingOpen = this._$recipeBookComponent.isOpen();
+                this._$recipeBookComponent.toggleVisibility();
+                BetterRecipeBook.rememberedSmithingOpen = this._$recipeBookComponent.isVisible();
                 if (!BetterRecipeBook.config.keepCentered) {
                     this.leftPos = this._$recipeBookComponent.findLeftEdge(this.width, this.imageWidth);
                 }
@@ -84,7 +84,7 @@ public abstract class SmithingScreenMixin extends ItemCombinerScreen<SmithingMen
 
     @Inject(method = "render", at = @At("RETURN"))
     public void render(GuiGraphics guiGraphics, int i, int j, float f, CallbackInfo ci) {
-        if (this._$recipeBookComponent.isOpen()) {
+        if (this._$recipeBookComponent.isVisible()) {
             this._$recipeBookComponent.render(guiGraphics, i, j, f);
             this._$recipeBookComponent.renderGhostRecipe(guiGraphics, this.leftPos, this.topPos, false, f);
             this._$recipeBookComponent.drawTooltip(guiGraphics, this.leftPos, this.topPos, i, j);
@@ -112,10 +112,5 @@ public abstract class SmithingScreenMixin extends ItemCombinerScreen<SmithingMen
         if (i == SmithingMenu.BASE_SLOT || i == SmithingMenu.ADDITIONAL_SLOT || i == SmithingMenu.TEMPLATE_SLOT || i == SmithingMenu.RESULT_SLOT) {
             _$recipeBookComponent.ghostRecipe.clear();
         }
-    }
-
-    @Unique
-    public void recipesUpdated() {
-        _$recipeBookComponent.recipesUpdated();
     }
 }
