@@ -11,10 +11,8 @@ import marsh.town.brb.util.BRBTextures;
 import marsh.town.brb.util.ClientInventoryUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.StateSwitchingButton;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.gui.screens.recipebook.RecipeShownListener;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -35,25 +33,23 @@ import java.util.List;
 import java.util.Locale;
 import java.util.function.Consumer;
 
-public class SmithingRecipeBookComponent extends GenericRecipeBookComponent<SmithingMenu> implements IPinningComponent<SmithingRecipeCollection>,
-        Renderable,
-        RecipeShownListener {
-    private SmithingClientRecipeBook recipeBook;
+public class SmithingRecipeBookComponent extends GenericRecipeBookComponent<SmithingMenu> implements IPinningComponent<SmithingRecipeCollection> {
+    private SmithingClientRecipeBook book;
     private static final MutableComponent ONLY_CRAFTABLES_TOOLTIP = Component.translatable("brb.gui.smithable");
     public SmithingRecipeBookPage recipesPage;
     private final List<SmithingRecipeGroupButtonWidget> tabButtons = Lists.newArrayList();
     @Nullable
-    public SmithingRecipeGroupButtonWidget currentTab;
+    public SmithingRecipeGroupButtonWidget selectedTab;
     boolean doubleRefresh = true;
     @Nullable
     public SmithingGhostRecipe ghostRecipe;
     private RegistryAccess registryAccess;
     private RecipeManager recipeManager;
 
-    public void initialize(int width, int height, Minecraft minecraft, boolean widthNarrow, SmithingMenu menu, Consumer<SmithingGhostRecipe> onGhostRecipeUpdate, RegistryAccess registryAccess, RecipeManager recipeManager) {
+    public void init(int width, int height, Minecraft minecraft, boolean widthNarrow, SmithingMenu menu, Consumer<SmithingGhostRecipe> onGhostRecipeUpdate, RegistryAccess registryAccess, RecipeManager recipeManager) {
         super.init(width, height, minecraft, widthNarrow, menu);
 
-        this.recipeBook = new SmithingClientRecipeBook();
+        this.book = new SmithingClientRecipeBook();
         this.setVisible(BetterRecipeBook.rememberedSmithingOpen);
         this.registryAccess = registryAccess;
         this.recipeManager = recipeManager;
@@ -74,8 +70,8 @@ public class SmithingRecipeBookComponent extends GenericRecipeBookComponent<Smit
 
         this.recipesPage.initialize(this.minecraft, i, j, menu, xOffset);
         this.tabButtons.clear();
-        this.recipeBook.setFilteringCraftable(BetterRecipeBook.rememberedBrewingToggle);
-        this.filterButton = new StateSwitchingButton(i + 110, j + 12, 26, 16, this.recipeBook.isFilteringCraftable());
+        this.book.setFilteringCraftable(BetterRecipeBook.rememberedBrewingToggle);
+        this.filterButton = new StateSwitchingButton(i + 110, j + 12, 26, 16, this.book.isFilteringCraftable());
         this.updateFilterButtonTooltip();
         this.setBookButtonTexture();
 
@@ -83,15 +79,15 @@ public class SmithingRecipeBookComponent extends GenericRecipeBookComponent<Smit
             this.tabButtons.add(new SmithingRecipeGroupButtonWidget(BRBRecipeBookCategories));
         }
 
-        if (this.currentTab != null) {
-            this.currentTab = this.tabButtons.stream().filter((button) -> button.getGroup().equals(this.currentTab.getGroup())).findFirst().orElse(null);
+        if (this.selectedTab != null) {
+            this.selectedTab = this.tabButtons.stream().filter((button) -> button.getGroup().equals(this.selectedTab.getGroup())).findFirst().orElse(null);
         }
 
-        if (this.currentTab == null) {
-            this.currentTab = this.tabButtons.get(0);
+        if (this.selectedTab == null) {
+            this.selectedTab = this.tabButtons.get(0);
         }
 
-        this.currentTab.setStateTriggered(true);
+        this.selectedTab.setStateTriggered(true);
         this.updateCollections(false);
         this.refreshTabButtons();
     }
@@ -147,24 +143,24 @@ public class SmithingRecipeBookComponent extends GenericRecipeBookComponent<Smit
 
     @Override
     public void updateCollections(boolean resetCurrentPage) {
-        if (this.currentTab == null) return;
+        if (this.selectedTab == null) return;
         if (this.searchBox == null) return;
 
         // Create a copy to not mess with the original list
-        List<SmithingRecipeCollection> results = new ArrayList<>(recipeBook.getCollectionsForCategory(currentTab.getGroup(), menu, registryAccess, recipeManager));
+        List<SmithingRecipeCollection> results = new ArrayList<>(book.getCollectionsForCategory(selectedTab.getGroup(), menu, registryAccess, recipeManager));
 
         String string = this.searchBox.getValue();
         if (!string.isEmpty()) {
             results.removeIf(collection -> !collection.getFirst().getTemplateType().toLowerCase(Locale.ROOT).contains(string.toLowerCase(Locale.ROOT)));
         }
 
-        if (this.recipeBook.isFilteringCraftable()) {
+        if (this.book.isFilteringCraftable()) {
             results.removeIf((result) -> !result.atleastOneCraftable(this.menu.slots));
         }
 
         this.betterRecipeBook$sortByPinsInPlace(results);
 
-        this.recipesPage.setResults(results, resetCurrentPage, currentTab.getGroup());
+        this.recipesPage.setResults(results, resetCurrentPage, selectedTab.getGroup());
     }
 
     @Override
@@ -271,13 +267,13 @@ public class SmithingRecipeBookComponent extends GenericRecipeBookComponent<Smit
                     smithingRecipeGroupButtonWidget = tabButtonsIter.next();
                 } while (!smithingRecipeGroupButtonWidget.mouseClicked(mouseX, mouseY, button));
 
-                if (this.currentTab != smithingRecipeGroupButtonWidget) {
-                    if (this.currentTab != null) {
-                        this.currentTab.setStateTriggered(false);
+                if (this.selectedTab != smithingRecipeGroupButtonWidget) {
+                    if (this.selectedTab != null) {
+                        this.selectedTab.setStateTriggered(false);
                     }
 
-                    this.currentTab = smithingRecipeGroupButtonWidget;
-                    this.currentTab.setStateTriggered(true);
+                    this.selectedTab = smithingRecipeGroupButtonWidget;
+                    this.selectedTab.setStateTriggered(true);
                     this.updateCollections(true);
                 }
                 return false;
@@ -335,8 +331,8 @@ public class SmithingRecipeBookComponent extends GenericRecipeBookComponent<Smit
     }
 
     private boolean toggleFiltering() {
-        boolean bl = !this.recipeBook.isFilteringCraftable();
-        this.recipeBook.setFilteringCraftable(bl);
+        boolean bl = !this.book.isFilteringCraftable();
+        this.book.setFilteringCraftable(bl);
         BetterRecipeBook.rememberedSmithableToggle = bl;
         return bl;
     }

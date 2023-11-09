@@ -43,7 +43,7 @@ public abstract class SmithingScreenMixin extends ItemCombinerScreen<SmithingMen
     void init(CallbackInfo ci) {
         if (BetterRecipeBook.config.enableBook) {
             this._$widthNarrow = this.width < 379;
-            this._$recipeBookComponent.initialize(this.width, this.height, this.minecraft, _$widthNarrow, this.menu, s -> {
+            this._$recipeBookComponent.init(this.width, this.height, this.minecraft, _$widthNarrow, this.menu, s -> {
                 if (s.getRecipe() != null)
                     this.updateArmorStandPreview(s.getCurrentResult());
             }, Minecraft.getInstance().getConnection().registryAccess(), Minecraft.getInstance().getConnection().getRecipeManager());
