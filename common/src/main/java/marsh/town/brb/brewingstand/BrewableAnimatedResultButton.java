@@ -2,6 +2,7 @@ package marsh.town.brb.brewingstand;
 
 import com.google.common.collect.Lists;
 import marsh.town.brb.BetterRecipeBook;
+import marsh.town.brb.recipe.BRBRecipeBookCategories;
 import marsh.town.brb.util.BRBTextures;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -26,16 +27,16 @@ import static marsh.town.brb.brewingstand.PlatformPotionUtil.getIngredient;
 public class BrewableAnimatedResultButton extends AbstractWidget {
     private float time;
     private BrewableResult potionRecipe;
-    private BrewingRecipeBookGroup group;
+    private BRBRecipeBookCategories categories;
     private BrewingStandMenu brewingStandScreenHandler;
 
     public BrewableAnimatedResultButton() {
         super(0, 0, 25, 25, CommonComponents.EMPTY);
     }
 
-    public void showPotionRecipe(BrewableResult potionRecipe, BrewingRecipeBookGroup group, BrewingStandMenu brewingStandScreenHandler) {
+    public void showPotionRecipe(BrewableResult potionRecipe, BRBRecipeBookCategories categories, BrewingStandMenu brewingStandScreenHandler) {
         this.potionRecipe = potionRecipe;
-        this.group = group;
+        this.categories = categories;
         this.brewingStandScreenHandler = brewingStandScreenHandler;
     }
 
@@ -45,7 +46,7 @@ public class BrewableAnimatedResultButton extends AbstractWidget {
         }
 
         // blit outline texture
-        ResourceLocation outlineTexture = potionRecipe.hasMaterials(group, brewingStandScreenHandler.slots) ?
+        ResourceLocation outlineTexture = potionRecipe.hasMaterials(categories, brewingStandScreenHandler.slots) ?
                 BRBTextures.RECIPE_BOOK_BUTTON_SLOT_CRAFTABLE_SPRITE : BRBTextures.RECIPE_BOOK_BUTTON_SLOT_UNCRAFTABLE_SPRITE;
         gui.blitSprite(outlineTexture, getX(), getY(), this.width, this.height);
 
@@ -69,7 +70,7 @@ public class BrewableAnimatedResultButton extends AbstractWidget {
     }
 
     public void updateWidgetNarration(NarrationElementOutput builder) {
-        ItemStack inputStack = this.potionRecipe.inputAsItemStack(group);
+        ItemStack inputStack = this.potionRecipe.inputAsItemStack(categories);
 
         builder.add(NarratedElementType.TITLE, Component.translatable("narration.recipe", inputStack.getHoverName()));
         builder.add(NarratedElementType.USAGE, Component.translatable("narration.button.usage.hovered"));
@@ -91,9 +92,9 @@ public class BrewableAnimatedResultButton extends AbstractWidget {
 
         list.add(Component.literal("↓").withStyle(ChatFormatting.DARK_GRAY));
 
-        ItemStack inputStack = this.potionRecipe.inputAsItemStack(group);
+        ItemStack inputStack = this.potionRecipe.inputAsItemStack(categories);
 
-        if (!potionRecipe.hasInput(group, brewingStandScreenHandler.slots)) {
+        if (!potionRecipe.hasInput(categories, brewingStandScreenHandler.slots)) {
             colour = ChatFormatting.DARK_GRAY;
         }
 

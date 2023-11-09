@@ -1,4 +1,4 @@
-package marsh.town.brb.smithingtable;
+package marsh.town.brb.recipe;
 
 import com.google.common.collect.ImmutableList;
 import marsh.town.brb.enums.BRBRecipeBookType;
@@ -10,9 +10,14 @@ import java.util.List;
 public enum BRBRecipeBookCategories {
     SMITHING_SEARCH(new ItemStack(Items.COMPASS)),
     SMITHING_TRANSFORM(new ItemStack(Items.NETHERITE_UPGRADE_SMITHING_TEMPLATE)),
-    SMITHING_TRIM(new ItemStack(Items.NETHERITE_CHESTPLATE));
+    SMITHING_TRIM(new ItemStack(Items.NETHERITE_CHESTPLATE)),
+    BREWING_SEARCH(new ItemStack(Items.COMPASS)),
+    BREWING_POTION(new ItemStack(Items.POTION)),
+    BREWING_SPLASH_POTION(new ItemStack(Items.SPLASH_POTION)),
+    BREWING_LINGERING_POTION(new ItemStack(Items.LINGERING_POTION));
 
     public static final List<BRBRecipeBookCategories> SMITHING_RECIPES = ImmutableList.of(SMITHING_SEARCH, SMITHING_TRIM, SMITHING_TRANSFORM);
+    public static final List<BRBRecipeBookCategories> BREWING_RECIPES = ImmutableList.of(BREWING_SEARCH, BREWING_POTION, BREWING_SPLASH_POTION, BREWING_LINGERING_POTION);
     private final List<ItemStack> itemIcons;
 
     BRBRecipeBookCategories(ItemStack... entries) {
@@ -21,8 +26,8 @@ public enum BRBRecipeBookCategories {
 
     public static List<BRBRecipeBookCategories> getGroups(BRBRecipeBookType recipeBookType) {
         return switch (recipeBookType) {
-            default -> throw new IncompatibleClassChangeError();
             case SMITHING -> SMITHING_RECIPES;
+            case BREWING -> BREWING_RECIPES;
         };
     }
 

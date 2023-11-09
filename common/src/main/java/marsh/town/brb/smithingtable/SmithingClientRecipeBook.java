@@ -1,5 +1,6 @@
 package marsh.town.brb.smithingtable;
 
+import marsh.town.brb.recipe.BRBRecipeBookCategories;
 import marsh.town.brb.recipe.smithing.BRBSmithingTransformRecipe;
 import marsh.town.brb.recipe.smithing.BRBSmithingTrimRecipe;
 import net.minecraft.core.RegistryAccess;

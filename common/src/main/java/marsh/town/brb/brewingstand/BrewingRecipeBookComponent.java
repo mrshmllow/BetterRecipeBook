@@ -2,9 +2,11 @@ package marsh.town.brb.brewingstand;
 
 import com.google.common.collect.Lists;
 import marsh.town.brb.BetterRecipeBook;
+import marsh.town.brb.enums.BRBRecipeBookType;
 import marsh.town.brb.interfaces.IPinningComponent;
 import marsh.town.brb.interfaces.ISettingsButton;
 import marsh.town.brb.mixins.accessors.RecipeBookComponentAccessor;
+import marsh.town.brb.recipe.BRBRecipeBookCategories;
 import marsh.town.brb.util.BRBTextures;
 import marsh.town.brb.util.BrewingGhostRecipe;
 import marsh.town.brb.util.ClientInventoryUtil;
@@ -131,9 +133,9 @@ public class BrewingRecipeBookComponent extends RecipeBookComponent implements I
         Ingredient ingredient = getIngredient(result.recipe);
         ResourceLocation identifier = BuiltInRegistries.POTION.getKey(inputPotion);
         ItemStack inputStack;
-        if (this.currentTab.getGroup() == BrewingRecipeBookGroup.BREWING_SPLASH_POTION) {
+        if (this.currentTab.getGroup() == BRBRecipeBookCategories.BREWING_SPLASH_POTION) {
             inputStack = new ItemStack(Items.SPLASH_POTION);
-        } else if (this.currentTab.getGroup() == BrewingRecipeBookGroup.BREWING_LINGERING_POTION) {
+        } else if (this.currentTab.getGroup() == BRBRecipeBookCategories.BREWING_LINGERING_POTION) {
             inputStack = new ItemStack(Items.LINGERING_POTION);
         } else {
             inputStack = new ItemStack(Items.POTION);
@@ -175,7 +177,7 @@ public class BrewingRecipeBookComponent extends RecipeBookComponent implements I
         this.toggleBrewableButton = new StateSwitchingButton(i + 110, j + 12, 26, 16, this.recipeBook.isFilteringCraftable());
         this.setBookButtonTexture();
 
-        for (BrewingRecipeBookGroup brewingRecipeBookGroup : BrewingRecipeBookGroup.getGroups()) {
+        for (BRBRecipeBookCategories brewingRecipeBookGroup : BRBRecipeBookCategories.getGroups(BRBRecipeBookType.BREWING)) {
             this.tabButtons.add(new BrewableRecipeGroupButtonWidget(brewingRecipeBookGroup));
         }
 
@@ -330,8 +332,8 @@ public class BrewingRecipeBookComponent extends RecipeBookComponent implements I
         int l = 0;
 
         for (BrewableRecipeGroupButtonWidget brewableRecipeGroupButtonWidget : this.tabButtons) {
-            BrewingRecipeBookGroup brewingRecipeBookGroup = brewableRecipeGroupButtonWidget.getGroup();
-            if (brewingRecipeBookGroup == BrewingRecipeBookGroup.BREWING_SEARCH) {
+            BRBRecipeBookCategories categories = brewableRecipeGroupButtonWidget.getGroup();
+            if (categories == BRBRecipeBookCategories.BREWING_SEARCH) {
                 brewableRecipeGroupButtonWidget.visible = true;
             }
             brewableRecipeGroupButtonWidget.setPosition(i, j + 27 * l++);

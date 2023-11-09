@@ -2,6 +2,7 @@ package marsh.town.brb.brewingstand;
 
 import com.google.common.collect.Lists;
 import marsh.town.brb.BetterRecipeBook;
+import marsh.town.brb.recipe.BRBRecipeBookCategories;
 import marsh.town.brb.util.BRBTextures;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -25,11 +26,11 @@ public class BrewingRecipeBookResults {
     private BrewableAnimatedResultButton hoveredButton;
     private BrewableResult currentClickedRecipe;
     private BrewableResult lastClickedRecipe;
-    BrewingRecipeBookGroup group;
+    BRBRecipeBookCategories categories;
     private BrewingStandMenu brewingStandScreenHandler;
 
     public BrewingRecipeBookResults() {
-        for(int i = 0; i < 20; ++i) {
+        for (int i = 0; i < 20; ++i) {
             this.buttons.add(new BrewableAnimatedResultButton());
         }
 
@@ -50,11 +51,11 @@ public class BrewingRecipeBookResults {
         this.backButton.initTextureValues(BRBTextures.RECIPE_BOOK_PAGE_BACKWARD_SPRITES);
     }
 
-    public void setResults(List<BrewableResult> recipeCollection, boolean resetCurrentPage, BrewingRecipeBookGroup group) {
+    public void setResults(List<BrewableResult> recipeCollection, boolean resetCurrentPage, BRBRecipeBookCategories categories) {
         this.recipeCollection = recipeCollection;
-        this.group = group;
+        this.categories = categories;
 
-        this.totalPages = (int)Math.ceil((double)recipeCollection.size() / 20.0D);
+        this.totalPages = (int) Math.ceil((double) recipeCollection.size() / 20.0D);
         if (this.totalPages <= this.currentPage || resetCurrentPage) {
             this.currentPage = 0;
         }
@@ -65,11 +66,11 @@ public class BrewingRecipeBookResults {
     private void updateButtonsForPage() {
         int i = 20 * this.currentPage;
 
-        for(int j = 0; j < this.buttons.size(); ++j) {
+        for (int j = 0; j < this.buttons.size(); ++j) {
             BrewableAnimatedResultButton brewableAnimatedResultButton = this.buttons.get(j);
             if (i + j < this.recipeCollection.size()) {
                 BrewableResult output = this.recipeCollection.get(i + j);
-                brewableAnimatedResultButton.showPotionRecipe(output, group, brewingStandScreenHandler);
+                brewableAnimatedResultButton.showPotionRecipe(output, categories, brewingStandScreenHandler);
                 brewableAnimatedResultButton.visible = true;
             } else {
                 brewableAnimatedResultButton.visible = false;
@@ -103,7 +104,7 @@ public class BrewingRecipeBookResults {
                 }
 
                 brewableAnimatedResultButton = var10.next();
-            } while(!brewableAnimatedResultButton.mouseClicked(mouseX, mouseY, button));
+            } while (!brewableAnimatedResultButton.mouseClicked(mouseX, mouseY, button));
 
             if (button == 0) {
                 this.lastClickedRecipe = this.currentClickedRecipe = brewableAnimatedResultButton.getRecipe();

@@ -1,6 +1,7 @@
 package marsh.town.brb.smithingtable;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import marsh.town.brb.recipe.BRBRecipeBookCategories;
 import marsh.town.brb.util.BRBTextures;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;

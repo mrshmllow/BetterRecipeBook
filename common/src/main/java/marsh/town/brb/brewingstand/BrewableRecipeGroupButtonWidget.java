@@ -1,6 +1,7 @@
 package marsh.town.brb.brewingstand;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import marsh.town.brb.recipe.BRBRecipeBookCategories;
 import marsh.town.brb.util.BRBTextures;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -15,12 +16,12 @@ import java.util.List;
 
 @Environment(EnvType.CLIENT)
 public class BrewableRecipeGroupButtonWidget extends StateSwitchingButton {
-    private final BrewingRecipeBookGroup group;
+    private final BRBRecipeBookCategories category;
 
-    public BrewableRecipeGroupButtonWidget(BrewingRecipeBookGroup category) {
+    public BrewableRecipeGroupButtonWidget(BRBRecipeBookCategories category) {
         super(0, 0, 35, 27, false);
         this.initTextureValues(BRBTextures.RECIPE_BOOK_TAB_SPRITES);
-        this.group = category;
+        this.category = category;
     }
 
     public void renderWidget(GuiGraphics gui, int mouseX, int mouseY, float delta) {
@@ -40,7 +41,7 @@ public class BrewableRecipeGroupButtonWidget extends StateSwitchingButton {
     }
 
     private void renderIcons(GuiGraphics guiGraphics, ItemRenderer itemRenderer) {
-        List<ItemStack> list = this.group.getIcons();
+        List<ItemStack> list = this.category.getItemIcons();
         int i = this.isStateTriggered ? -2 : 0;
         if (list.size() == 1) {
             guiGraphics.renderFakeItem(list.get(0), getX() + 9 + i, getY() + 5);
@@ -51,7 +52,7 @@ public class BrewableRecipeGroupButtonWidget extends StateSwitchingButton {
 
     }
 
-    public BrewingRecipeBookGroup getGroup() {
-        return this.group;
+    public BRBRecipeBookCategories getGroup() {
+        return this.category;
     }
 }

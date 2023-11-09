@@ -1,6 +1,7 @@
 package marsh.town.brb.brewingstand;
 
 import marsh.town.brb.generic.GenericRecipe;
+import marsh.town.brb.recipe.BRBRecipeBookCategories;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.Slot;
@@ -33,14 +34,14 @@ public class BrewableResult implements GenericRecipe {
         return false;
     }
 
-    public ItemStack inputAsItemStack(BrewingRecipeBookGroup group) {
+    public ItemStack inputAsItemStack(BRBRecipeBookCategories categories) {
         Potion inputPotion = getFrom(recipe);
 
         ResourceLocation identifier = BuiltInRegistries.POTION.getKey(inputPotion);
         ItemStack inputStack;
-        if (group == BrewingRecipeBookGroup.BREWING_SPLASH_POTION) {
+        if (categories == BRBRecipeBookCategories.BREWING_SPLASH_POTION) {
             inputStack = new ItemStack(Items.SPLASH_POTION);
-        } else if (group == BrewingRecipeBookGroup.BREWING_LINGERING_POTION) {
+        } else if (categories == BRBRecipeBookCategories.BREWING_LINGERING_POTION) {
             inputStack = new ItemStack(Items.LINGERING_POTION);
         } else {
             inputStack = new ItemStack(Items.POTION);
@@ -50,8 +51,8 @@ public class BrewableResult implements GenericRecipe {
         return inputStack;
     }
 
-    public boolean hasInput(BrewingRecipeBookGroup group, List<Slot> slots) {
-        ItemStack inputStack = inputAsItemStack(group);
+    public boolean hasInput(BRBRecipeBookCategories categories, List<Slot> slots) {
+        ItemStack inputStack = inputAsItemStack(categories);
 
         for (Slot slot : slots) {
             ItemStack itemStack = slot.getItem();
@@ -64,9 +65,9 @@ public class BrewableResult implements GenericRecipe {
         return false;
     }
 
-    public boolean hasMaterials(BrewingRecipeBookGroup group, List<Slot> slots) {
+    public boolean hasMaterials(BRBRecipeBookCategories categories, List<Slot> slots) {
         boolean hasIngredient = hasIngredient(slots);
-        boolean hasInput = hasInput(group, slots);
+        boolean hasInput = hasInput(categories, slots);
 
         return hasIngredient && hasInput;
     }

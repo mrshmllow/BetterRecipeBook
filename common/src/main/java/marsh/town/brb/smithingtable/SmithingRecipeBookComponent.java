@@ -6,6 +6,7 @@ import marsh.town.brb.config.Config;
 import marsh.town.brb.enums.BRBRecipeBookType;
 import marsh.town.brb.interfaces.IPinningComponent;
 import marsh.town.brb.mixins.accessors.RecipeBookComponentAccessor;
+import marsh.town.brb.recipe.BRBRecipeBookCategories;
 import marsh.town.brb.recipe.BRBSmithingRecipe;
 import marsh.town.brb.util.BRBTextures;
 import marsh.town.brb.util.ClientInventoryUtil;
@@ -126,7 +127,7 @@ public class SmithingRecipeBookComponent extends RecipeBookComponent implements 
         this.toggleSmithableButton = new StateSwitchingButton(i + 110, j + 12, 26, 16, this.recipeBook.isFilteringCraftable());
         this.setBookButtonTexture();
 
-        for (BRBRecipeBookCategories BRBRecipeBookCategories : BRBRecipeBookCategories.getGroups(BRBRecipeBookType.SMITHING)) {
+        for (marsh.town.brb.recipe.BRBRecipeBookCategories BRBRecipeBookCategories : BRBRecipeBookCategories.getGroups(BRBRecipeBookType.SMITHING)) {
             this.tabButtons.add(new SmithingRecipeGroupButtonWidget(BRBRecipeBookCategories));
         }
 

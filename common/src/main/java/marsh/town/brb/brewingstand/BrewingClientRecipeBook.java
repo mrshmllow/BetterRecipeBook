@@ -1,6 +1,7 @@
 package marsh.town.brb.brewingstand;
 
 import marsh.town.brb.loaders.PotionLoader;
+import marsh.town.brb.recipe.BRBRecipeBookCategories;
 import net.minecraft.stats.RecipeBook;
 import net.minecraft.world.inventory.RecipeBookType;
 
@@ -13,12 +14,12 @@ public class BrewingClientRecipeBook extends RecipeBook {
         return filteringCraftable;
     }
 
-    public List<BrewableResult> getResultsForCategory(BrewingRecipeBookGroup group) {
+    public List<BrewableResult> getResultsForCategory(BRBRecipeBookCategories category) {
         List<BrewableResult> results = PotionLoader.POTIONS;
 
-        if (group == BrewingRecipeBookGroup.BREWING_SPLASH_POTION) {
+        if (category == BRBRecipeBookCategories.BREWING_SPLASH_POTION) {
             results = PotionLoader.SPLASHES;
-        } else if (group == BrewingRecipeBookGroup.BREWING_LINGERING_POTION) {
+        } else if (category == BRBRecipeBookCategories.BREWING_LINGERING_POTION) {
             results = PotionLoader.LINGERINGS;
         }
 
