@@ -3,9 +3,10 @@ package marsh.town.brb.smithingtable;
 import com.google.common.collect.Lists;
 import marsh.town.brb.BetterRecipeBook;
 import marsh.town.brb.config.Config;
+import marsh.town.brb.enums.BRBRecipeBookType;
 import marsh.town.brb.interfaces.IPinningComponent;
 import marsh.town.brb.mixins.accessors.RecipeBookComponentAccessor;
-import marsh.town.brb.smithingtable.recipe.BRBSmithingRecipe;
+import marsh.town.brb.recipe.BRBSmithingRecipe;
 import marsh.town.brb.util.BRBTextures;
 import marsh.town.brb.util.ClientInventoryUtil;
 import me.shedaniel.autoconfig.AutoConfig;
@@ -125,8 +126,8 @@ public class SmithingRecipeBookComponent extends RecipeBookComponent implements 
         this.toggleSmithableButton = new StateSwitchingButton(i + 110, j + 12, 26, 16, this.recipeBook.isFilteringCraftable());
         this.setBookButtonTexture();
 
-        for (SmithingRecipeBookGroup smithingRecipeBookGroup : SmithingRecipeBookGroup.getGroups()) {
-            this.tabButtons.add(new SmithingRecipeGroupButtonWidget(smithingRecipeBookGroup));
+        for (BRBRecipeBookCategories BRBRecipeBookCategories : BRBRecipeBookCategories.getGroups(BRBRecipeBookType.SMITHING)) {
+            this.tabButtons.add(new SmithingRecipeGroupButtonWidget(BRBRecipeBookCategories));
         }
 
         if (this.currentTab != null) {
@@ -154,8 +155,8 @@ public class SmithingRecipeBookComponent extends RecipeBookComponent implements 
         int l = 0;
 
         for (SmithingRecipeGroupButtonWidget smithingRecipeGroupButtonWidget : this.tabButtons) {
-            SmithingRecipeBookGroup smithingRecipeBookGroup = smithingRecipeGroupButtonWidget.getGroup();
-            if (smithingRecipeBookGroup == SmithingRecipeBookGroup.SMITHING_SEARCH) {
+            BRBRecipeBookCategories smithingRecipeBookGroup = smithingRecipeGroupButtonWidget.getGroup();
+            if (smithingRecipeBookGroup == BRBRecipeBookCategories.SMITHING_SEARCH) {
                 smithingRecipeGroupButtonWidget.visible = true;
             }
             smithingRecipeGroupButtonWidget.setPosition(i, j + 27 * l++);

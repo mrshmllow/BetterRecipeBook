@@ -1,4 +1,4 @@
-package marsh.town.brb.smithingtable.recipe;
+package marsh.town.brb.recipe;
 
 import marsh.town.brb.generic.GenericRecipe;
 import net.minecraft.client.Minecraft;

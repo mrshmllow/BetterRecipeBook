@@ -1,6 +1,7 @@
-package marsh.town.brb.smithingtable.recipe;
+package marsh.town.brb.recipe.smithing;
 
 import marsh.town.brb.mixins.accessors.smithing.SmithingTrimRecipeAccessor;
+import marsh.town.brb.recipe.BRBSmithingRecipe;
 import net.minecraft.core.Holder;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;

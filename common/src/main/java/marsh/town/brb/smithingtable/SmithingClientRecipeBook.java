@@ -1,7 +1,7 @@
 package marsh.town.brb.smithingtable;
 
-import marsh.town.brb.smithingtable.recipe.BRBSmithingTransformRecipe;
-import marsh.town.brb.smithingtable.recipe.BRBSmithingTrimRecipe;
+import marsh.town.brb.recipe.smithing.BRBSmithingTransformRecipe;
+import marsh.town.brb.recipe.smithing.BRBSmithingTrimRecipe;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.stats.RecipeBook;
 import net.minecraft.world.inventory.RecipeBookType;
@@ -18,20 +18,20 @@ public class SmithingClientRecipeBook extends RecipeBook {
         return filteringCraftable;
     }
 
-    public List<SmithingRecipeCollection> getCollectionsForCategory(SmithingRecipeBookGroup group, SmithingMenu smithingScreenHandler, RegistryAccess registryAccess, RecipeManager recipeManager) {
+    public List<SmithingRecipeCollection> getCollectionsForCategory(BRBRecipeBookCategories group, SmithingMenu smithingScreenHandler, RegistryAccess registryAccess, RecipeManager recipeManager) {
         List<RecipeHolder<SmithingRecipe>> recipes = recipeManager.getAllRecipesFor(RecipeType.SMITHING);
         List<SmithingRecipeCollection> results = new ArrayList<>();
 
         for (RecipeHolder<SmithingRecipe> recipe : recipes) {
             SmithingRecipe value = recipe.value();
 
-            if (group == SmithingRecipeBookGroup.SMITHING_SEARCH) {
+            if (group == BRBRecipeBookCategories.SMITHING_SEARCH) {
                 if (value instanceof SmithingTransformRecipe) {
                     results.add(new SmithingRecipeCollection(List.of(BRBSmithingTransformRecipe.from((SmithingTransformRecipe) value, registryAccess)), smithingScreenHandler, registryAccess));
                 } else if (value instanceof SmithingTrimRecipe) {
                     results.add(new SmithingRecipeCollection(BRBSmithingTrimRecipe.from((SmithingTrimRecipe) value), smithingScreenHandler, registryAccess));
                 }
-            } else if (group == SmithingRecipeBookGroup.SMITHING_TRANSFORM) {
+            } else if (group == BRBRecipeBookCategories.SMITHING_TRANSFORM) {
                 if (value instanceof SmithingTransformRecipe) {
                     results.add(new SmithingRecipeCollection(List.of(BRBSmithingTransformRecipe.from((SmithingTransformRecipe) value, registryAccess)), smithingScreenHandler, registryAccess));
                 }

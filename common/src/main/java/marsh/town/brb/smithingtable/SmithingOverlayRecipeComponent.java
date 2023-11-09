@@ -3,7 +3,7 @@ package marsh.town.brb.smithingtable;
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.systems.RenderSystem;
 import marsh.town.brb.BetterRecipeBook;
-import marsh.town.brb.smithingtable.recipe.BRBSmithingRecipe;
+import marsh.town.brb.recipe.BRBSmithingRecipe;
 import marsh.town.brb.util.BRBTextures;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;

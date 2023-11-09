@@ -3,7 +3,7 @@ package marsh.town.brb.smithingtable;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import marsh.town.brb.BetterRecipeBook;
-import marsh.town.brb.smithingtable.recipe.BRBSmithingRecipe;
+import marsh.town.brb.recipe.BRBSmithingRecipe;
 import marsh.town.brb.util.BRBTextures;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -22,7 +22,7 @@ public class SmithingRecipeBookPage {
     private StateSwitchingButton forwardButton;
     private StateSwitchingButton backButton;
     private List<SmithingRecipeCollection> recipeCollections = ImmutableList.of();
-    SmithingRecipeBookGroup group;
+    BRBRecipeBookCategories group;
     private int currentPage;
     private SmithableRecipeButton hoveredButton;
     private BRBSmithingRecipe lastClickedRecipe;
@@ -58,7 +58,7 @@ public class SmithingRecipeBookPage {
         this.leftOffset = leftOffset;
     }
 
-    public void setResults(List<SmithingRecipeCollection> recipeCollection, boolean resetCurrentPage, SmithingRecipeBookGroup group) {
+    public void setResults(List<SmithingRecipeCollection> recipeCollection, boolean resetCurrentPage, BRBRecipeBookCategories group) {
         this.recipeCollections = recipeCollection;
         this.group = group;
 

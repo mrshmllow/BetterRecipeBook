@@ -2,8 +2,8 @@ package marsh.town.brb.smithingtable;
 
 import com.google.common.collect.Lists;
 import marsh.town.brb.mixins.accessors.HolderReferenceAccessor;
-import marsh.town.brb.smithingtable.recipe.BRBSmithingRecipe;
-import marsh.town.brb.smithingtable.recipe.BRBSmithingTransformRecipe;
+import marsh.town.brb.recipe.BRBSmithingRecipe;
+import marsh.town.brb.recipe.smithing.BRBSmithingTransformRecipe;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;

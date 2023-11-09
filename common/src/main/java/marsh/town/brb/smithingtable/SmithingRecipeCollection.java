@@ -5,7 +5,7 @@ import com.google.common.collect.Lists;
 import marsh.town.brb.generic.GenericRecipe;
 import marsh.town.brb.generic.GenericRecipeBookCollection;
 import marsh.town.brb.generic.pins.Pinnable;
-import marsh.town.brb.smithingtable.recipe.BRBSmithingRecipe;
+import marsh.town.brb.recipe.BRBSmithingRecipe;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;

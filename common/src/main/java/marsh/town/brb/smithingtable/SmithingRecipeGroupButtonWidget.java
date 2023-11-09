@@ -12,9 +12,9 @@ import net.minecraft.world.item.ItemStack;
 import java.util.List;
 
 public class SmithingRecipeGroupButtonWidget extends StateSwitchingButton {
-    private final SmithingRecipeBookGroup group;
+    private final BRBRecipeBookCategories group;
 
-    public SmithingRecipeGroupButtonWidget(SmithingRecipeBookGroup category) {
+    public SmithingRecipeGroupButtonWidget(BRBRecipeBookCategories category) {
         super(0, 0, 35, 27, false);
         this.initTextureValues(BRBTextures.RECIPE_BOOK_TAB_SPRITES);
         this.group = category;
@@ -37,7 +37,7 @@ public class SmithingRecipeGroupButtonWidget extends StateSwitchingButton {
     }
 
     private void renderIcons(GuiGraphics guiGraphics, ItemRenderer itemRenderer) {
-        List<ItemStack> list = this.group.getIcons();
+        List<ItemStack> list = this.group.getItemIcons();
         int i = this.isStateTriggered ? -2 : 0;
         if (list.size() == 1) {
             guiGraphics.renderFakeItem(list.get(0), getX() + 9 + i, getY() + 5);
@@ -48,7 +48,7 @@ public class SmithingRecipeGroupButtonWidget extends StateSwitchingButton {
 
     }
 
-    public SmithingRecipeBookGroup getGroup() {
+    public BRBRecipeBookCategories getGroup() {
         return this.group;
     }
 }

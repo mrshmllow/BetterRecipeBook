@@ -5,7 +5,7 @@ import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
 import marsh.town.brb.generic.pins.Pinnable;
 import marsh.town.brb.mixins.accessors.RecipeBookComponentAccessor;
-import marsh.town.brb.smithingtable.recipe.BRBSmithingRecipe;
+import marsh.town.brb.recipe.BRBSmithingRecipe;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.recipebook.RecipeBookComponent;
 import net.minecraft.client.gui.screens.recipebook.RecipeBookPage;
