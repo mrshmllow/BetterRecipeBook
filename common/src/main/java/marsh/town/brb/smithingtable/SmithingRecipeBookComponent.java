@@ -6,7 +6,6 @@ import marsh.town.brb.generic.BRBGroupButtonWidget;
 import marsh.town.brb.generic.GenericRecipeBookComponent;
 import marsh.town.brb.interfaces.IPinningComponent;
 import marsh.town.brb.recipe.BRBSmithingRecipe;
-import marsh.town.brb.util.BRBTextures;
 import marsh.town.brb.util.ClientInventoryUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -33,7 +32,6 @@ import java.util.function.Consumer;
 
 public class SmithingRecipeBookComponent extends GenericRecipeBookComponent<SmithingMenu, SmithingRecipeBookPage, SmithingClientRecipeBook> implements IPinningComponent<SmithingRecipeCollection> {
     private static final MutableComponent ONLY_CRAFTABLES_TOOLTIP = Component.translatable("brb.gui.smithable");
-    boolean doubleRefresh = true;
     @Nullable
     public SmithingGhostRecipe ghostRecipe;
     private RegistryAccess registryAccess;
@@ -54,41 +52,6 @@ public class SmithingRecipeBookComponent extends GenericRecipeBookComponent<Smit
 //        if (this.isVisible()) {
         this.initVisuals();
 //        }
-    }
-
-    public void render(GuiGraphics gui, int mouseX, int mouseY, float delta) {
-        if (!this.isVisible()) return;
-
-        if (doubleRefresh) {
-            // Minecraft doesn't populate the inventory on initialization so this is the only solution I have
-            updateCollections(true);
-            doubleRefresh = false;
-        }
-
-        gui.pose().pushPose();
-        gui.pose().translate(0.0f, 0.0f, 100.0f);
-
-        // blit recipe book background texture
-        int blitX = (this.width - 147) / 2 - this.xOffset;
-        int blitY = (this.height - 166) / 2;
-        gui.blit(BRBTextures.RECIPE_BOOK_BACKGROUND_TEXTURE, blitX, blitY, 1, 1, 147, 166);
-
-        // render search box
-        this.searchBox.render(gui, mouseX, mouseY, delta);
-
-        // render tab buttons
-        for (BRBGroupButtonWidget smithingRecipeGroupButtonWidget : this.tabButtons) {
-            smithingRecipeGroupButtonWidget.render(gui, mouseX, mouseY, delta);
-        }
-
-        this.filterButton.render(gui, mouseX, mouseY, delta);
-
-        this.renderSettingsButton(gui, mouseX, mouseY, delta);
-
-        // render the recipe book page contents
-        this.recipesPage.render(gui, blitX, blitY, mouseX, mouseY, delta);
-
-        gui.pose().popPose();
     }
 
     @Override

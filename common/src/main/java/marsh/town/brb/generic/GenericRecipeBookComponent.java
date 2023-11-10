@@ -50,6 +50,7 @@ public abstract class GenericRecipeBookComponent<M extends AbstractContainerMenu
     protected C book;
 
     private final Supplier<? extends C> bookSupplier;
+    private boolean doubleRefresh = true;
 
 //    private int timesInventoryChanged;
 
@@ -122,6 +123,41 @@ public abstract class GenericRecipeBookComponent<M extends AbstractContainerMenu
         this.selectedTab.setStateTriggered(true);
         this.updateCollections(false);
         this.refreshTabButtons();
+    }
+
+    public void render(GuiGraphics gui, int mouseX, int mouseY, float delta) {
+        if (!this.isVisible()) return;
+
+        if (this.doubleRefresh) {
+            // Minecraft doesn't populate the inventory on initialization so this is the only solution I have
+            updateCollections(true);
+            this.doubleRefresh = false;
+        }
+
+        gui.pose().pushPose();
+        gui.pose().translate(0.0f, 0.0f, 100.0f);
+
+        // blit recipe book background texture
+        int blitX = (this.width - 147) / 2 - this.xOffset;
+        int blitY = (this.height - 166) / 2;
+        gui.blit(BRBTextures.RECIPE_BOOK_BACKGROUND_TEXTURE, blitX, blitY, 1, 1, 147, 166);
+
+        // render search box
+        this.searchBox.render(gui, mouseX, mouseY, delta);
+
+        // render tab buttons
+        for (BRBGroupButtonWidget widget : this.tabButtons) {
+            widget.render(gui, mouseX, mouseY, delta);
+        }
+
+        this.filterButton.render(gui, mouseX, mouseY, delta);
+
+        this.renderSettingsButton(gui, mouseX, mouseY, delta);
+
+        // render the recipe book page contents
+        this.recipesPage.render(gui, blitX, blitY, mouseX, mouseY, delta);
+
+        gui.pose().popPose();
     }
 
     @Override

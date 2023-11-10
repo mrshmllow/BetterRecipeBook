@@ -14,4 +14,6 @@ public interface GenericRecipePage<M extends AbstractContainerMenu> {
     boolean overlayIsVisible();
 
     boolean isFilteringCraftable();
+
+    void render(GuiGraphics gui, int blitX, int blitY, int mouseX, int mouseY, float delta);
 }

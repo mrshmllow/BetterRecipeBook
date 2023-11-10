@@ -6,7 +6,6 @@ import marsh.town.brb.generic.BRBGroupButtonWidget;
 import marsh.town.brb.generic.GenericRecipeBookComponent;
 import marsh.town.brb.interfaces.IPinningComponent;
 import marsh.town.brb.recipe.BRBRecipeBookCategory;
-import marsh.town.brb.util.BRBTextures;
 import marsh.town.brb.util.BrewingGhostRecipe;
 import marsh.town.brb.util.ClientInventoryUtil;
 import net.fabricmc.api.EnvType;
@@ -40,7 +39,6 @@ import static marsh.town.brb.brewingstand.PlatformPotionUtil.getIngredient;
 public class BrewingRecipeBookComponent extends GenericRecipeBookComponent<BrewingStandMenu, BrewingRecipeBookResults, BrewingClientRecipeBook> implements IPinningComponent<BrewableResult> {
     public final BrewingGhostRecipe ghostRecipe = new BrewingGhostRecipe();
     private static final Component ONLY_CRAFTABLES_TOOLTIP = Component.translatable("brb.gui.togglePotions.brewable");
-    boolean doubleRefresh = true;
 
     public BrewingRecipeBookComponent() {
         super(BrewingClientRecipeBook::new);
@@ -243,43 +241,6 @@ public class BrewingRecipeBookComponent extends GenericRecipeBookComponent<Brewi
     @Override
     protected boolean selfRecallFiltering() {
         return BetterRecipeBook.rememberedBrewingToggle;
-    }
-
-    @Override
-    public void render(GuiGraphics gui, int mouseX, int mouseY, float delta) {
-        if (!this.isVisible()) return;
-
-        if (doubleRefresh) {
-            // Minecraft doesn't populate the inventory on initialization so this is the only solution I have
-            updateCollections(true);
-            doubleRefresh = false;
-        }
-
-        gui.pose().pushPose();
-        gui.pose().translate(0.0f, 0.0f, 100.0f);
-
-        // blit recipe book background texture
-        int blitX = (this.width - 147) / 2 - this.xOffset;
-        int blitY = (this.height - 166) / 2;
-        gui.blit(BRBTextures.RECIPE_BOOK_BACKGROUND_TEXTURE, blitX, blitY, 1, 1, 147, 166);
-
-        // render search box
-        this.searchBox.render(gui, mouseX, mouseY, delta);
-
-        // render tab buttons
-        for (BRBGroupButtonWidget brewableRecipeGroupButtonWidget : this.tabButtons) {
-            brewableRecipeGroupButtonWidget.render(gui, mouseX, mouseY, delta);
-        }
-
-        // render the toggle brewable filter button
-        this.filterButton.render(gui, mouseX, mouseY, delta);
-
-        this.renderSettingsButton(this.settingsButton, gui, mouseX, mouseY, delta);
-
-        // render the recipe book page contents
-        this.recipesPage.render(gui, blitX, blitY, mouseX, mouseY, delta);
-
-        gui.pose().popPose();
     }
 
     public void renderGhostRecipe(GuiGraphics guiGraphics, int x, int y, boolean bl, float delta) {
