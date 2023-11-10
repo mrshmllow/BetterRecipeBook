@@ -27,7 +27,7 @@ public class SmithingClientRecipeBook extends RecipeBook implements GenericClien
         for (RecipeHolder<SmithingRecipe> recipe : recipes) {
             SmithingRecipe value = recipe.value();
 
-            if (group == BRBRecipeBookCategories.SMITHING_SEARCH) {
+            if (group == BRBRecipeBookCategories.SEARCH) {
                 if (value instanceof SmithingTransformRecipe) {
                     results.add(new SmithingRecipeCollection(List.of(BRBSmithingTransformRecipe.from((SmithingTransformRecipe) value, registryAccess)), smithingScreenHandler, registryAccess));
                 } else if (value instanceof SmithingTrimRecipe) {

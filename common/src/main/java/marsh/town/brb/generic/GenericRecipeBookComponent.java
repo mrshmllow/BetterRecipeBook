@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import marsh.town.brb.BetterRecipeBook;
 import marsh.town.brb.interfaces.ISettingsButton;
 import marsh.town.brb.mixins.accessors.RecipeBookComponentAccessor;
+import marsh.town.brb.recipe.BRBRecipeBookCategories;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.*;
@@ -265,6 +266,20 @@ public abstract class GenericRecipeBookComponent<M extends AbstractContainerMenu
         }
 
         this.renderGhostRecipeTooltip(gui, x, y, mouseX, mouseY);
+    }
+
+    protected void refreshTabButtons() {
+        int i = (this.width - 147) / 2 - this.xOffset - 30;
+        int j = (this.height - 166) / 2 + 3;
+        int l = 0;
+
+        for (T button : this.tabButtons) {
+            BRBRecipeBookCategories smithingRecipeBookGroup = button.getGroup();
+            if (smithingRecipeBookGroup == BRBRecipeBookCategories.SEARCH) {
+                button.setVisible(true);
+            }
+            button.setPosition(i, j + 27 * l++);
+        }
     }
 
     protected abstract void renderGhostRecipeTooltip(GuiGraphics gui, int x, int y, int mouseX, int mouseY);

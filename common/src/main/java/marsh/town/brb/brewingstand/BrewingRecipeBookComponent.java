@@ -272,20 +272,6 @@ public class BrewingRecipeBookComponent extends GenericRecipeBookComponent<Brewi
         return BetterRecipeBook.rememberedBrewingToggle;
     }
 
-    private void refreshTabButtons() {
-        int i = (this.width - 147) / 2 - this.xOffset - 30;
-        int j = (this.height - 166) / 2 + 3;
-        int l = 0;
-
-        for (BrewableRecipeGroupButtonWidget brewableRecipeGroupButtonWidget : this.tabButtons) {
-            BRBRecipeBookCategories categories = brewableRecipeGroupButtonWidget.getGroup();
-            if (categories == BRBRecipeBookCategories.BREWING_SEARCH) {
-                brewableRecipeGroupButtonWidget.visible = true;
-            }
-            brewableRecipeGroupButtonWidget.setPosition(i, j + 27 * l++);
-        }
-    }
-
     @Override
     public void render(GuiGraphics gui, int mouseX, int mouseY, float delta) {
         if (!this.isVisible()) return;

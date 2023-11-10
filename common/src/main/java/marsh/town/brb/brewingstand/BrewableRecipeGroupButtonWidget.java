@@ -8,7 +8,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.StateSwitchingButton;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -16,7 +15,7 @@ import net.minecraft.world.item.ItemStack;
 import java.util.List;
 
 @Environment(EnvType.CLIENT)
-public class BrewableRecipeGroupButtonWidget extends StateSwitchingButton implements GenericRecipeGroupButtonWidget {
+public class BrewableRecipeGroupButtonWidget extends GenericRecipeGroupButtonWidget {
     private final BRBRecipeBookCategories category;
 
     public BrewableRecipeGroupButtonWidget(BRBRecipeBookCategories category) {

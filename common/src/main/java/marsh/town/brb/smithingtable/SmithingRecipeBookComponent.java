@@ -86,20 +86,6 @@ public class SmithingRecipeBookComponent extends GenericRecipeBookComponent<Smit
         this.refreshTabButtons();
     }
 
-    private void refreshTabButtons() {
-        int i = (this.width - 147) / 2 - this.xOffset - 30;
-        int j = (this.height - 166) / 2 + 3;
-        int l = 0;
-
-        for (SmithingRecipeGroupButtonWidget smithingRecipeGroupButtonWidget : this.tabButtons) {
-            BRBRecipeBookCategories smithingRecipeBookGroup = smithingRecipeGroupButtonWidget.getGroup();
-            if (smithingRecipeBookGroup == BRBRecipeBookCategories.SMITHING_SEARCH) {
-                smithingRecipeGroupButtonWidget.visible = true;
-            }
-            smithingRecipeGroupButtonWidget.setPosition(i, j + 27 * l++);
-        }
-    }
-
     public void render(GuiGraphics gui, int mouseX, int mouseY, float delta) {
         if (!this.isVisible()) return;
 

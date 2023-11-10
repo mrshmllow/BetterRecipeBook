@@ -6,14 +6,13 @@ import marsh.town.brb.recipe.BRBRecipeBookCategories;
 import marsh.town.brb.util.BRBTextures;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.StateSwitchingButton;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
 
-public class SmithingRecipeGroupButtonWidget extends StateSwitchingButton implements GenericRecipeGroupButtonWidget {
+public class SmithingRecipeGroupButtonWidget extends GenericRecipeGroupButtonWidget {
     private final BRBRecipeBookCategories group;
 
     public SmithingRecipeGroupButtonWidget(BRBRecipeBookCategories category) {

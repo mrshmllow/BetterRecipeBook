@@ -1,7 +1,16 @@
 package marsh.town.brb.generic;
 
-import net.minecraft.client.gui.GuiGraphics;
+import marsh.town.brb.recipe.BRBRecipeBookCategories;
+import net.minecraft.client.gui.components.StateSwitchingButton;
 
-public interface GenericRecipeGroupButtonWidget {
-    void render(GuiGraphics gui, int mouseX, int mouseY, float delta);
+public abstract class GenericRecipeGroupButtonWidget extends StateSwitchingButton {
+    public GenericRecipeGroupButtonWidget(int i, int j, int k, int l, boolean bl) {
+        super(i, j, k, l, bl);
+    }
+
+    protected void setVisible(boolean visible) {
+        this.visible = visible;
+    }
+
+    protected abstract BRBRecipeBookCategories getGroup();
 }
