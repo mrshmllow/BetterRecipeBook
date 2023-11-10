@@ -285,16 +285,6 @@ public class BrewingRecipeBookComponent extends GenericRecipeBookComponent<Brewi
     }
 
     @Override
-    public boolean hasClickedOutside(double d, double e, int i, int j, int k, int l, int m) {
-        if (!this.isVisible()) {
-            return true;
-        }
-        boolean bl = d < (double) i || e < (double) j || d >= (double) (i + k) || e >= (double) (j + l);
-        boolean bl2 = (double) (i - 147) < d && d < (double) i && (double) j < e && e < (double) (j + l);
-        return bl && !bl2 && !this.selectedTab.isHoveredOrFocused();
-    }
-
-    @Override
     public void recipesShown(List<RecipeHolder<?>> list) {
 
     }
