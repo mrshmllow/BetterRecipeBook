@@ -247,7 +247,7 @@ public class BrewingRecipeBookComponent extends GenericRecipeBookComponent<Brewi
         if (this.searchBox == null) return;
 
         // Create a copy to not mess with the original list
-        List<BrewableResult> results = new ArrayList<>(book.getResultsForCategory(selectedTab.getCategory()));
+        List<BrewableResult> results = new ArrayList<>(book.getCollectionsForCategory(selectedTab.getCategory()));
 
         String string = this.searchBox.getValue();
         if (!string.isEmpty()) {
