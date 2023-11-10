@@ -12,4 +12,6 @@ public interface GenericRecipePage<M extends AbstractContainerMenu> {
     void drawTooltip(GuiGraphics gui, int mouseX, int mouseY);
 
     boolean overlayIsVisible();
+
+    boolean isFilteringCraftable();
 }

@@ -2,8 +2,8 @@ package marsh.town.brb.smithingtable;
 
 import marsh.town.brb.BetterRecipeBook;
 import marsh.town.brb.enums.BRBRecipeBookType;
+import marsh.town.brb.generic.BRBGroupButtonWidget;
 import marsh.town.brb.generic.GenericRecipeBookComponent;
-import marsh.town.brb.generic.GenericRecipeGroupButtonWidget;
 import marsh.town.brb.interfaces.IPinningComponent;
 import marsh.town.brb.recipe.BRBRecipeBookCategories;
 import marsh.town.brb.recipe.BRBSmithingRecipe;
@@ -33,7 +33,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.function.Consumer;
 
-public class SmithingRecipeBookComponent extends GenericRecipeBookComponent<SmithingMenu, SmithingRecipeGroupButtonWidget, SmithingRecipeBookPage, SmithingClientRecipeBook> implements IPinningComponent<SmithingRecipeCollection> {
+public class SmithingRecipeBookComponent extends GenericRecipeBookComponent<SmithingMenu, SmithingRecipeBookPage, SmithingClientRecipeBook> implements IPinningComponent<SmithingRecipeCollection> {
     private static final MutableComponent ONLY_CRAFTABLES_TOOLTIP = Component.translatable("brb.gui.smithable");
     boolean doubleRefresh = true;
     @Nullable
@@ -69,12 +69,12 @@ public class SmithingRecipeBookComponent extends GenericRecipeBookComponent<Smit
         this.updateFilterButtonTooltip();
         this.setBookButtonTexture();
 
-        for (marsh.town.brb.recipe.BRBRecipeBookCategories BRBRecipeBookCategories : BRBRecipeBookCategories.getGroups(BRBRecipeBookType.SMITHING)) {
-            this.tabButtons.add(new SmithingRecipeGroupButtonWidget(BRBRecipeBookCategories));
+        for (BRBRecipeBookCategories category : BRBRecipeBookCategories.getGroups(BRBRecipeBookType.SMITHING)) {
+            this.tabButtons.add(new BRBGroupButtonWidget(category));
         }
 
         if (this.selectedTab != null) {
-            this.selectedTab = this.tabButtons.stream().filter((button) -> button.getGroup().equals(this.selectedTab.getGroup())).findFirst().orElse(null);
+            this.selectedTab = this.tabButtons.stream().filter((button) -> button.getCategory().equals(this.selectedTab.getCategory())).findFirst().orElse(null);
         }
 
         if (this.selectedTab == null) {
@@ -107,7 +107,7 @@ public class SmithingRecipeBookComponent extends GenericRecipeBookComponent<Smit
         this.searchBox.render(gui, mouseX, mouseY, delta);
 
         // render tab buttons
-        for (GenericRecipeGroupButtonWidget smithingRecipeGroupButtonWidget : this.tabButtons) {
+        for (BRBGroupButtonWidget smithingRecipeGroupButtonWidget : this.tabButtons) {
             smithingRecipeGroupButtonWidget.render(gui, mouseX, mouseY, delta);
         }
 
@@ -127,7 +127,7 @@ public class SmithingRecipeBookComponent extends GenericRecipeBookComponent<Smit
         if (this.searchBox == null) return;
 
         // Create a copy to not mess with the original list
-        List<SmithingRecipeCollection> results = new ArrayList<>(book.getCollectionsForCategory(selectedTab.getGroup(), (SmithingMenu) menu, registryAccess, recipeManager));
+        List<SmithingRecipeCollection> results = new ArrayList<>(book.getCollectionsForCategory(selectedTab.getCategory(), (SmithingMenu) menu, registryAccess, recipeManager));
 
         String string = this.searchBox.getValue();
         if (!string.isEmpty()) {
@@ -140,7 +140,7 @@ public class SmithingRecipeBookComponent extends GenericRecipeBookComponent<Smit
 
         this.betterRecipeBook$sortByPinsInPlace(results);
 
-        this.recipesPage.setResults(results, resetCurrentPage, selectedTab.getGroup());
+        this.recipesPage.setResults(results, resetCurrentPage, selectedTab.getCategory());
     }
 
     @Override
@@ -246,9 +246,9 @@ public class SmithingRecipeBookComponent extends GenericRecipeBookComponent<Smit
                     return true;
                 }
 
-                Iterator<SmithingRecipeGroupButtonWidget> tabButtonsIter = this.tabButtons.iterator();
+                Iterator<BRBGroupButtonWidget> tabButtonsIter = this.tabButtons.iterator();
 
-                SmithingRecipeGroupButtonWidget smithingRecipeGroupButtonWidget;
+                BRBGroupButtonWidget smithingRecipeGroupButtonWidget;
                 do {
                     if (!tabButtonsIter.hasNext()) {
                         return false;

@@ -1,24 +1,24 @@
-package marsh.town.brb.smithingtable;
+package marsh.town.brb.generic;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import marsh.town.brb.generic.GenericRecipeGroupButtonWidget;
 import marsh.town.brb.recipe.BRBRecipeBookCategories;
 import marsh.town.brb.util.BRBTextures;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.StateSwitchingButton;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
 
-public class SmithingRecipeGroupButtonWidget extends GenericRecipeGroupButtonWidget {
-    private final BRBRecipeBookCategories group;
+public class BRBGroupButtonWidget extends StateSwitchingButton {
+    protected BRBRecipeBookCategories category;
 
-    public SmithingRecipeGroupButtonWidget(BRBRecipeBookCategories category) {
+    public BRBGroupButtonWidget(BRBRecipeBookCategories category) {
         super(0, 0, 35, 27, false);
+        this.category = category;
         this.initTextureValues(BRBTextures.RECIPE_BOOK_TAB_SPRITES);
-        this.group = category;
     }
 
     public void renderWidget(GuiGraphics gui, int mouseX, int mouseY, float delta) {
@@ -38,7 +38,7 @@ public class SmithingRecipeGroupButtonWidget extends GenericRecipeGroupButtonWid
     }
 
     private void renderIcons(GuiGraphics guiGraphics, ItemRenderer itemRenderer) {
-        List<ItemStack> list = this.group.getItemIcons();
+        List<ItemStack> list = this.category.getItemIcons();
         int i = this.isStateTriggered ? -2 : 0;
         if (list.size() == 1) {
             guiGraphics.renderFakeItem(list.get(0), getX() + 9 + i, getY() + 5);
@@ -49,7 +49,11 @@ public class SmithingRecipeGroupButtonWidget extends GenericRecipeGroupButtonWid
 
     }
 
-    public BRBRecipeBookCategories getGroup() {
-        return this.group;
+    protected void setVisible(boolean visible) {
+        this.visible = visible;
+    }
+
+    public BRBRecipeBookCategories getCategory() {
+        return this.category;
     }
 }

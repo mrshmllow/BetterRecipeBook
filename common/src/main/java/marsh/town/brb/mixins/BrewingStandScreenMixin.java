@@ -67,7 +67,7 @@ public abstract class BrewingStandScreenMixin extends AbstractContainerScreen<Br
 
         // clear ghostRecipe if ingredients match
         BrewableResult result = _$recipeBookComponent.recipesPage.getLastClickedRecipe();
-        if (slot != null && slot.index < 4 && result != null && _$recipeBookComponent.selectedTab != null && result.hasMaterials(_$recipeBookComponent.selectedTab.getGroup(), menu.slots.subList(0, 4))) {
+        if (slot != null && slot.index < 4 && result != null && _$recipeBookComponent.selectedTab != null && result.hasMaterials(_$recipeBookComponent.selectedTab.getCategory(), menu.slots.subList(0, 4))) {
             _$recipeBookComponent.ghostRecipe.clear();
         }
     }

@@ -2,6 +2,7 @@ package marsh.town.brb.brewingstand;
 
 import marsh.town.brb.BetterRecipeBook;
 import marsh.town.brb.enums.BRBRecipeBookType;
+import marsh.town.brb.generic.BRBGroupButtonWidget;
 import marsh.town.brb.generic.GenericRecipeBookComponent;
 import marsh.town.brb.interfaces.IPinningComponent;
 import marsh.town.brb.recipe.BRBRecipeBookCategories;
@@ -37,7 +38,7 @@ import static marsh.town.brb.brewingstand.PlatformPotionUtil.getFrom;
 import static marsh.town.brb.brewingstand.PlatformPotionUtil.getIngredient;
 
 @Environment(EnvType.CLIENT)
-public class BrewingRecipeBookComponent extends GenericRecipeBookComponent<BrewingStandMenu, BrewableRecipeGroupButtonWidget, BrewingRecipeBookResults, BrewingClientRecipeBook> implements IPinningComponent<BrewableResult> {
+public class BrewingRecipeBookComponent extends GenericRecipeBookComponent<BrewingStandMenu, BrewingRecipeBookResults, BrewingClientRecipeBook> implements IPinningComponent<BrewableResult> {
     public final BrewingGhostRecipe ghostRecipe = new BrewingGhostRecipe();
     private static final Component ONLY_CRAFTABLES_TOOLTIP = Component.translatable("brb.gui.togglePotions.brewable");
     boolean doubleRefresh = true;
@@ -91,9 +92,9 @@ public class BrewingRecipeBookComponent extends GenericRecipeBookComponent<Brewi
         Ingredient ingredient = getIngredient(result.recipe);
         ResourceLocation identifier = BuiltInRegistries.POTION.getKey(inputPotion);
         ItemStack inputStack;
-        if (this.selectedTab.getGroup() == BRBRecipeBookCategories.BREWING_SPLASH_POTION) {
+        if (this.selectedTab.getCategory() == BRBRecipeBookCategories.BREWING_SPLASH_POTION) {
             inputStack = new ItemStack(Items.SPLASH_POTION);
-        } else if (this.selectedTab.getGroup() == BRBRecipeBookCategories.BREWING_LINGERING_POTION) {
+        } else if (this.selectedTab.getCategory() == BRBRecipeBookCategories.BREWING_LINGERING_POTION) {
             inputStack = new ItemStack(Items.LINGERING_POTION);
         } else {
             inputStack = new ItemStack(Items.POTION);
@@ -114,11 +115,11 @@ public class BrewingRecipeBookComponent extends GenericRecipeBookComponent<Brewi
         this.setBookButtonTexture();
 
         for (BRBRecipeBookCategories brewingRecipeBookGroup : BRBRecipeBookCategories.getGroups(BRBRecipeBookType.BREWING)) {
-            this.tabButtons.add(new BrewableRecipeGroupButtonWidget(brewingRecipeBookGroup));
+            this.tabButtons.add(new BRBGroupButtonWidget(brewingRecipeBookGroup));
         }
 
         if (this.selectedTab != null) {
-            this.selectedTab = this.tabButtons.stream().filter((button) -> button.getGroup().equals(this.selectedTab.getGroup())).findFirst().orElse(null);
+            this.selectedTab = this.tabButtons.stream().filter((button) -> button.getCategory().equals(this.selectedTab.getCategory())).findFirst().orElse(null);
         }
 
         if (this.selectedTab == null) {
@@ -137,7 +138,7 @@ public class BrewingRecipeBookComponent extends GenericRecipeBookComponent<Brewi
                 if (result != null) {
                     this.ghostRecipe.clear();
 
-                    if (!result.hasMaterials(this.selectedTab.getGroup(), menu.slots)) {
+                    if (!result.hasMaterials(this.selectedTab.getCategory(), menu.slots)) {
                         showGhostRecipe(result, menu.slots);
                         return true;
                     }
@@ -196,9 +197,9 @@ public class BrewingRecipeBookComponent extends GenericRecipeBookComponent<Brewi
                     return true;
                 }
 
-                Iterator<BrewableRecipeGroupButtonWidget> var6 = this.tabButtons.iterator();
+                Iterator<BRBGroupButtonWidget> var6 = this.tabButtons.iterator();
 
-                BrewableRecipeGroupButtonWidget brewableRecipeGroupButtonWidget;
+                BRBGroupButtonWidget brewableRecipeGroupButtonWidget;
                 do {
                     if (!var6.hasNext()) {
                         return false;
@@ -227,7 +228,7 @@ public class BrewingRecipeBookComponent extends GenericRecipeBookComponent<Brewi
         this.ghostRecipe.addIngredient(3, Ingredient.of(getIngredient(result.recipe).getItems()[0]), slots.get(3).x, slots.get(3).y);
 
         assert selectedTab != null;
-        ItemStack inputStack = result.inputAsItemStack(selectedTab.getGroup());
+        ItemStack inputStack = result.inputAsItemStack(selectedTab.getCategory());
         this.ghostRecipe.addIngredient(0, Ingredient.of(inputStack), slots.get(0).x, slots.get(0).y);
         this.ghostRecipe.addIngredient(1, Ingredient.of(inputStack), slots.get(1).x, slots.get(1).y);
         this.ghostRecipe.addIngredient(2, Ingredient.of(inputStack), slots.get(2).x, slots.get(2).y);
@@ -246,7 +247,7 @@ public class BrewingRecipeBookComponent extends GenericRecipeBookComponent<Brewi
         if (this.searchBox == null) return;
 
         // Create a copy to not mess with the original list
-        List<BrewableResult> results = new ArrayList<>(book.getResultsForCategory(selectedTab.getGroup()));
+        List<BrewableResult> results = new ArrayList<>(book.getResultsForCategory(selectedTab.getCategory()));
 
         String string = this.searchBox.getValue();
         if (!string.isEmpty()) {
@@ -254,12 +255,12 @@ public class BrewingRecipeBookComponent extends GenericRecipeBookComponent<Brewi
         }
 
         if (this.book.isFilteringCraftable()) {
-            results.removeIf((result) -> !result.hasMaterials(selectedTab.getGroup(), menu.slots));
+            results.removeIf((result) -> !result.hasMaterials(selectedTab.getCategory(), menu.slots));
         }
 
         this.betterRecipeBook$sortByPinsInPlace(results);
 
-        this.recipesPage.setResults(results, resetCurrentPage, selectedTab.getGroup());
+        this.recipesPage.setResults(results, resetCurrentPage, selectedTab.getCategory());
     }
 
     @Override
@@ -294,7 +295,7 @@ public class BrewingRecipeBookComponent extends GenericRecipeBookComponent<Brewi
         this.searchBox.render(gui, mouseX, mouseY, delta);
 
         // render tab buttons
-        for (BrewableRecipeGroupButtonWidget brewableRecipeGroupButtonWidget : this.tabButtons) {
+        for (BRBGroupButtonWidget brewableRecipeGroupButtonWidget : this.tabButtons) {
             brewableRecipeGroupButtonWidget.render(gui, mouseX, mouseY, delta);
         }
 

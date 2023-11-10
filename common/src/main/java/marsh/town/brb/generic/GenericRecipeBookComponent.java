@@ -25,7 +25,7 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.function.Supplier;
 
-public abstract class GenericRecipeBookComponent<M extends AbstractContainerMenu, T extends GenericRecipeGroupButtonWidget, P extends GenericRecipePage<M>, C extends GenericClientRecipeBook> implements Renderable, NarratableEntry, GuiEventListener, ISettingsButton, RecipeShownListener {
+public abstract class GenericRecipeBookComponent<M extends AbstractContainerMenu, P extends GenericRecipePage<M>, C extends GenericClientRecipeBook> implements Renderable, NarratableEntry, GuiEventListener, ISettingsButton, RecipeShownListener {
     protected static final Component SEARCH_HINT = RecipeBookComponentAccessor.getSEARCH_HINT();
     protected static final Component ALL_RECIPES_TOOLTIP = RecipeBookComponentAccessor.getALL_RECIPES_TOOLTIP();
     boolean visible;
@@ -42,9 +42,9 @@ public abstract class GenericRecipeBookComponent<M extends AbstractContainerMenu
     protected StateSwitchingButton filterButton;
     protected ImageButton settingsButton;
     public P recipesPage;
-    protected final List<T> tabButtons = Lists.newArrayList();
+    protected final List<BRBGroupButtonWidget> tabButtons = Lists.newArrayList();
     @Nullable
-    public T selectedTab;
+    public BRBGroupButtonWidget selectedTab;
     protected C book;
 
     private final Supplier<? extends C> bookSupplier;
@@ -273,8 +273,8 @@ public abstract class GenericRecipeBookComponent<M extends AbstractContainerMenu
         int j = (this.height - 166) / 2 + 3;
         int l = 0;
 
-        for (T button : this.tabButtons) {
-            BRBRecipeBookCategories smithingRecipeBookGroup = button.getGroup();
+        for (BRBGroupButtonWidget button : this.tabButtons) {
+            BRBRecipeBookCategories smithingRecipeBookGroup = button.getCategory();
             if (smithingRecipeBookGroup == BRBRecipeBookCategories.SEARCH) {
                 button.setVisible(true);
             }
