@@ -33,22 +33,21 @@ import java.util.List;
 import java.util.Locale;
 import java.util.function.Consumer;
 
-public class SmithingRecipeBookComponent extends GenericRecipeBookComponent<SmithingMenu, SmithingRecipeGroupButtonWidget, SmithingRecipeBookPage> implements IPinningComponent<SmithingRecipeCollection> {
-    private SmithingClientRecipeBook book;
+public class SmithingRecipeBookComponent extends GenericRecipeBookComponent<SmithingMenu, SmithingRecipeGroupButtonWidget, SmithingRecipeBookPage, SmithingClientRecipeBook> implements IPinningComponent<SmithingRecipeCollection> {
     private static final MutableComponent ONLY_CRAFTABLES_TOOLTIP = Component.translatable("brb.gui.smithable");
-    public SmithingRecipeBookPage recipesPage;
-    @Nullable
-    public SmithingRecipeGroupButtonWidget selectedTab;
     boolean doubleRefresh = true;
     @Nullable
     public SmithingGhostRecipe ghostRecipe;
     private RegistryAccess registryAccess;
     private RecipeManager recipeManager;
 
+    public SmithingRecipeBookComponent() {
+        super(SmithingClientRecipeBook::new);
+    }
+
     public void init(int width, int height, Minecraft minecraft, boolean widthNarrow, SmithingMenu menu, Consumer<SmithingGhostRecipe> onGhostRecipeUpdate, RegistryAccess registryAccess, RecipeManager recipeManager) {
         super.init(width, height, minecraft, widthNarrow, menu);
 
-        this.book = new SmithingClientRecipeBook();
         this.registryAccess = registryAccess;
         this.recipeManager = recipeManager;
         this.ghostRecipe = new SmithingGhostRecipe(onGhostRecipeUpdate, registryAccess);
@@ -66,7 +65,6 @@ public class SmithingRecipeBookComponent extends GenericRecipeBookComponent<Smit
         int i = (this.width - 147) / 2 - this.xOffset;
         int j = (this.height - 166) / 2;
 
-        this.book.setFilteringCraftable(BetterRecipeBook.rememberedBrewingToggle);
         this.filterButton = new StateSwitchingButton(i + 110, j + 12, 26, 16, this.book.isFilteringCraftable());
         this.updateFilterButtonTooltip();
         this.setBookButtonTexture();
@@ -162,6 +160,11 @@ public class SmithingRecipeBookComponent extends GenericRecipeBookComponent<Smit
     @Override
     protected boolean selfRecallOpen() {
         return BetterRecipeBook.rememberedSmithingOpen;
+    }
+
+    @Override
+    protected boolean selfRecallFiltering() {
+        return BetterRecipeBook.rememberedSmithableToggle;
     }
 
     @Override

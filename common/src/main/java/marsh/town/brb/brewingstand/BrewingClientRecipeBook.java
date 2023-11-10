@@ -1,5 +1,6 @@
 package marsh.town.brb.brewingstand;
 
+import marsh.town.brb.generic.GenericClientRecipeBook;
 import marsh.town.brb.loaders.PotionLoader;
 import marsh.town.brb.recipe.BRBRecipeBookCategories;
 import net.minecraft.stats.RecipeBook;
@@ -7,7 +8,7 @@ import net.minecraft.world.inventory.RecipeBookType;
 
 import java.util.List;
 
-public class BrewingClientRecipeBook extends RecipeBook {
+public class BrewingClientRecipeBook extends RecipeBook implements GenericClientRecipeBook {
     private boolean filteringCraftable;
 
     public boolean isFilteringCraftable() {

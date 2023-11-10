@@ -1,5 +1,6 @@
 package marsh.town.brb.smithingtable;
 
+import marsh.town.brb.generic.GenericClientRecipeBook;
 import marsh.town.brb.recipe.BRBRecipeBookCategories;
 import marsh.town.brb.recipe.smithing.BRBSmithingTransformRecipe;
 import marsh.town.brb.recipe.smithing.BRBSmithingTrimRecipe;
@@ -12,7 +13,7 @@ import net.minecraft.world.item.crafting.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SmithingClientRecipeBook extends RecipeBook {
+public class SmithingClientRecipeBook extends RecipeBook implements GenericClientRecipeBook {
     private boolean filteringCraftable;
 
     public boolean isFilteringCraftable() {

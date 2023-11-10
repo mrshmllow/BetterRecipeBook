@@ -1,6 +1,5 @@
 package marsh.town.brb.brewingstand;
 
-import com.google.common.collect.Lists;
 import marsh.town.brb.BetterRecipeBook;
 import marsh.town.brb.enums.BRBRecipeBookType;
 import marsh.town.brb.generic.GenericRecipeBookComponent;
@@ -27,7 +26,6 @@ import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
-import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;
@@ -39,19 +37,18 @@ import static marsh.town.brb.brewingstand.PlatformPotionUtil.getFrom;
 import static marsh.town.brb.brewingstand.PlatformPotionUtil.getIngredient;
 
 @Environment(EnvType.CLIENT)
-public class BrewingRecipeBookComponent extends GenericRecipeBookComponent<BrewingStandMenu, BrewableRecipeGroupButtonWidget, BrewingRecipeBookResults> implements IPinningComponent<BrewableResult> {
-    BrewingClientRecipeBook book;
+public class BrewingRecipeBookComponent extends GenericRecipeBookComponent<BrewingStandMenu, BrewableRecipeGroupButtonWidget, BrewingRecipeBookResults, BrewingClientRecipeBook> implements IPinningComponent<BrewableResult> {
     public final BrewingGhostRecipe ghostRecipe = new BrewingGhostRecipe();
-    private final List<BrewableRecipeGroupButtonWidget> tabButtons = Lists.newArrayList();
-    @Nullable
-    public BrewableRecipeGroupButtonWidget selectedTab;
     private static final Component ONLY_CRAFTABLES_TOOLTIP = Component.translatable("brb.gui.togglePotions.brewable");
     boolean doubleRefresh = true;
+
+    public BrewingRecipeBookComponent() {
+        super(BrewingClientRecipeBook::new);
+    }
 
     public void initialize(int parentWidth, int parentHeight, Minecraft client, boolean narrow, BrewingStandMenu brewingStandScreenHandler) {
         super.init(parentWidth, parentHeight, client, narrow, brewingStandScreenHandler);
 
-        this.book = new BrewingClientRecipeBook();
         this.recipesPage = new BrewingRecipeBookResults();
         // this.cachedInvChangeCount = client.player.getInventory().getChangeCount();
         this.initVisuals();
@@ -112,7 +109,6 @@ public class BrewingRecipeBookComponent extends GenericRecipeBookComponent<Brewi
         int i = (this.width - 147) / 2 - this.xOffset;
         int j = (this.height - 166) / 2;
 
-        this.book.setFilteringCraftable(BetterRecipeBook.rememberedBrewingToggle);
         this.filterButton = new StateSwitchingButton(i + 110, j + 12, 26, 16, this.book.isFilteringCraftable());
         this.updateFilterButtonTooltip();
         this.setBookButtonTexture();
@@ -269,6 +265,11 @@ public class BrewingRecipeBookComponent extends GenericRecipeBookComponent<Brewi
     @Override
     protected boolean selfRecallOpen() {
         return BetterRecipeBook.rememberedBrewingOpen;
+    }
+
+    @Override
+    protected boolean selfRecallFiltering() {
+        return BetterRecipeBook.rememberedBrewingToggle;
     }
 
     private void refreshTabButtons() {

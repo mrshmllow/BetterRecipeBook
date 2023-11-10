@@ -22,8 +22,9 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.function.Supplier;
 
-public abstract class GenericRecipeBookComponent<M extends AbstractContainerMenu, T extends GenericRecipeGroupButtonWidget, P extends GenericRecipePage<M>> implements Renderable, NarratableEntry, GuiEventListener, ISettingsButton, RecipeShownListener {
+public abstract class GenericRecipeBookComponent<M extends AbstractContainerMenu, T extends GenericRecipeGroupButtonWidget, P extends GenericRecipePage<M>, C extends GenericClientRecipeBook> implements Renderable, NarratableEntry, GuiEventListener, ISettingsButton, RecipeShownListener {
     protected static final Component SEARCH_HINT = RecipeBookComponentAccessor.getSEARCH_HINT();
     protected static final Component ALL_RECIPES_TOOLTIP = RecipeBookComponentAccessor.getALL_RECIPES_TOOLTIP();
     boolean visible;
@@ -42,9 +43,16 @@ public abstract class GenericRecipeBookComponent<M extends AbstractContainerMenu
     public P recipesPage;
     protected final List<T> tabButtons = Lists.newArrayList();
     @Nullable
-    protected M selectedTab;
+    public T selectedTab;
+    protected C book;
+
+    private final Supplier<? extends C> bookSupplier;
 
 //    private int timesInventoryChanged;
+
+    protected GenericRecipeBookComponent(Supplier<? extends C> bookSupplier) {
+        this.bookSupplier = bookSupplier;
+    }
 
     abstract public Component getRecipeFilterName();
 
@@ -58,6 +66,8 @@ public abstract class GenericRecipeBookComponent<M extends AbstractContainerMenu
         this.minecraft.player.containerMenu = menu;
 
         this.setVisible(this.selfRecallOpen());
+
+        this.book = bookSupplier.get();
 
 //        this.timesInventoryChanged = minecraft.player.getInventory().getTimesChanged();
     }
@@ -90,6 +100,8 @@ public abstract class GenericRecipeBookComponent<M extends AbstractContainerMenu
         this.recipesPage.initialize(this.minecraft, i, j, menu, xOffset);
 
         this.tabButtons.clear();
+
+        this.book.setFilteringCraftable(this.selfRecallFiltering());
     }
 
     @Override
@@ -150,6 +162,8 @@ public abstract class GenericRecipeBookComponent<M extends AbstractContainerMenu
     protected abstract void updateCollections(boolean b);
 
     protected abstract boolean selfRecallOpen();
+
+    protected abstract boolean selfRecallFiltering();
 
     private void pirateSpeechForThePeople(String string) {
         if ("excitedze".equals(string)) {
