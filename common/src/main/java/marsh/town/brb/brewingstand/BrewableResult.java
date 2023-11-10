@@ -1,7 +1,7 @@
 package marsh.town.brb.brewingstand;
 
 import marsh.town.brb.generic.GenericRecipe;
-import marsh.town.brb.recipe.BRBRecipeBookCategories;
+import marsh.town.brb.recipe.BRBRecipeBookCategory;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.Slot;
@@ -34,14 +34,14 @@ public class BrewableResult implements GenericRecipe {
         return false;
     }
 
-    public ItemStack inputAsItemStack(BRBRecipeBookCategories categories) {
+    public ItemStack inputAsItemStack(BRBRecipeBookCategory category) {
         Potion inputPotion = getFrom(recipe);
 
         ResourceLocation identifier = BuiltInRegistries.POTION.getKey(inputPotion);
         ItemStack inputStack;
-        if (categories == BRBRecipeBookCategories.BREWING_SPLASH_POTION) {
+        if (category == BRBRecipeBookCategory.BREWING_SPLASH_POTION) {
             inputStack = new ItemStack(Items.SPLASH_POTION);
-        } else if (categories == BRBRecipeBookCategories.BREWING_LINGERING_POTION) {
+        } else if (category == BRBRecipeBookCategory.BREWING_LINGERING_POTION) {
             inputStack = new ItemStack(Items.LINGERING_POTION);
         } else {
             inputStack = new ItemStack(Items.POTION);
@@ -51,8 +51,8 @@ public class BrewableResult implements GenericRecipe {
         return inputStack;
     }
 
-    public boolean hasInput(BRBRecipeBookCategories categories, List<Slot> slots) {
-        ItemStack inputStack = inputAsItemStack(categories);
+    public boolean hasInput(BRBRecipeBookCategory category, List<Slot> slots) {
+        ItemStack inputStack = inputAsItemStack(category);
 
         for (Slot slot : slots) {
             ItemStack itemStack = slot.getItem();
@@ -65,9 +65,9 @@ public class BrewableResult implements GenericRecipe {
         return false;
     }
 
-    public boolean hasMaterials(BRBRecipeBookCategories categories, List<Slot> slots) {
+    public boolean hasMaterials(BRBRecipeBookCategory category, List<Slot> slots) {
         boolean hasIngredient = hasIngredient(slots);
-        boolean hasInput = hasInput(categories, slots);
+        boolean hasInput = hasInput(category, slots);
 
         return hasIngredient && hasInput;
     }

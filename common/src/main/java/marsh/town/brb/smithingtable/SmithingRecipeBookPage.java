@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import marsh.town.brb.BetterRecipeBook;
 import marsh.town.brb.generic.GenericRecipePage;
-import marsh.town.brb.recipe.BRBRecipeBookCategories;
+import marsh.town.brb.recipe.BRBRecipeBookCategory;
 import marsh.town.brb.recipe.BRBSmithingRecipe;
 import marsh.town.brb.util.BRBTextures;
 import net.minecraft.client.Minecraft;
@@ -24,7 +24,7 @@ public class SmithingRecipeBookPage implements GenericRecipePage<SmithingMenu> {
     private StateSwitchingButton forwardButton;
     private StateSwitchingButton backButton;
     private List<SmithingRecipeCollection> recipeCollections = ImmutableList.of();
-    BRBRecipeBookCategories group;
+    BRBRecipeBookCategory category;
     private int currentPage;
     private SmithableRecipeButton hoveredButton;
     private BRBSmithingRecipe lastClickedRecipe;
@@ -60,9 +60,9 @@ public class SmithingRecipeBookPage implements GenericRecipePage<SmithingMenu> {
         this.leftOffset = leftOffset;
     }
 
-    public void setResults(List<SmithingRecipeCollection> recipeCollection, boolean resetCurrentPage, BRBRecipeBookCategories group) {
+    public void setResults(List<SmithingRecipeCollection> recipeCollection, boolean resetCurrentPage, BRBRecipeBookCategory category) {
         this.recipeCollections = recipeCollection;
-        this.group = group;
+        this.category = category;
 
         this.totalPages = (int) Math.ceil((double) recipeCollection.size() / 20.0D);
         if (this.totalPages <= this.currentPage || resetCurrentPage) {

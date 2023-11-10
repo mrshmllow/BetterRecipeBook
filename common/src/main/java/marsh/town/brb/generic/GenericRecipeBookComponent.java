@@ -4,7 +4,7 @@ import com.google.common.collect.Lists;
 import marsh.town.brb.BetterRecipeBook;
 import marsh.town.brb.interfaces.ISettingsButton;
 import marsh.town.brb.mixins.accessors.RecipeBookComponentAccessor;
-import marsh.town.brb.recipe.BRBRecipeBookCategories;
+import marsh.town.brb.recipe.BRBRecipeBookCategory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.*;
@@ -274,8 +274,8 @@ public abstract class GenericRecipeBookComponent<M extends AbstractContainerMenu
         int l = 0;
 
         for (BRBGroupButtonWidget button : this.tabButtons) {
-            BRBRecipeBookCategories smithingRecipeBookGroup = button.getCategory();
-            if (smithingRecipeBookGroup == BRBRecipeBookCategories.SEARCH) {
+            BRBRecipeBookCategory smithingRecipeBookGroup = button.getCategory();
+            if (smithingRecipeBookGroup == BRBRecipeBookCategory.SEARCH) {
                 button.visible = true;
             }
             button.setPosition(i, j + 27 * l++);

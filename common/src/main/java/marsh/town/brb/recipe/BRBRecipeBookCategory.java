@@ -7,7 +7,7 @@ import net.minecraft.world.item.Items;
 
 import java.util.List;
 
-public enum BRBRecipeBookCategories {
+public enum BRBRecipeBookCategory {
     SEARCH(new ItemStack(Items.COMPASS)),
     SMITHING_TRANSFORM(new ItemStack(Items.NETHERITE_UPGRADE_SMITHING_TEMPLATE)),
     SMITHING_TRIM(new ItemStack(Items.NETHERITE_CHESTPLATE)),
@@ -15,15 +15,15 @@ public enum BRBRecipeBookCategories {
     BREWING_SPLASH_POTION(new ItemStack(Items.SPLASH_POTION)),
     BREWING_LINGERING_POTION(new ItemStack(Items.LINGERING_POTION));
 
-    public static final List<BRBRecipeBookCategories> SMITHING_RECIPES = ImmutableList.of(SEARCH, SMITHING_TRIM, SMITHING_TRANSFORM);
-    public static final List<BRBRecipeBookCategories> BREWING_RECIPES = ImmutableList.of(BREWING_POTION, BREWING_SPLASH_POTION, BREWING_LINGERING_POTION);
+    public static final List<BRBRecipeBookCategory> SMITHING_RECIPES = ImmutableList.of(SEARCH, SMITHING_TRIM, SMITHING_TRANSFORM);
+    public static final List<BRBRecipeBookCategory> BREWING_RECIPES = ImmutableList.of(BREWING_POTION, BREWING_SPLASH_POTION, BREWING_LINGERING_POTION);
     private final List<ItemStack> itemIcons;
 
-    BRBRecipeBookCategories(ItemStack... entries) {
+    BRBRecipeBookCategory(ItemStack... entries) {
         this.itemIcons = ImmutableList.copyOf(entries);
     }
 
-    public static List<BRBRecipeBookCategories> getGroups(BRBRecipeBookType recipeBookType) {
+    public static List<BRBRecipeBookCategory> getCategories(BRBRecipeBookType recipeBookType) {
         return switch (recipeBookType) {
             case SMITHING -> SMITHING_RECIPES;
             case BREWING -> BREWING_RECIPES;

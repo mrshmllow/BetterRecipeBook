@@ -3,7 +3,7 @@ package marsh.town.brb.brewingstand;
 import com.google.common.collect.Lists;
 import marsh.town.brb.BetterRecipeBook;
 import marsh.town.brb.generic.GenericRecipePage;
-import marsh.town.brb.recipe.BRBRecipeBookCategories;
+import marsh.town.brb.recipe.BRBRecipeBookCategory;
 import marsh.town.brb.util.BRBTextures;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -27,7 +27,7 @@ public class BrewingRecipeBookResults implements GenericRecipePage<BrewingStandM
     private BrewableAnimatedResultButton hoveredButton;
     private BrewableResult currentClickedRecipe;
     private BrewableResult lastClickedRecipe;
-    BRBRecipeBookCategories categories;
+    BRBRecipeBookCategory category;
     private BrewingStandMenu brewingStandScreenHandler;
 
     public BrewingRecipeBookResults() {
@@ -53,9 +53,9 @@ public class BrewingRecipeBookResults implements GenericRecipePage<BrewingStandM
         this.backButton.initTextureValues(BRBTextures.RECIPE_BOOK_PAGE_BACKWARD_SPRITES);
     }
 
-    public void setResults(List<BrewableResult> recipeCollection, boolean resetCurrentPage, BRBRecipeBookCategories categories) {
+    public void setResults(List<BrewableResult> recipeCollection, boolean resetCurrentPage, BRBRecipeBookCategory category) {
         this.recipeCollection = recipeCollection;
-        this.categories = categories;
+        this.category = category;
 
         this.totalPages = (int) Math.ceil((double) recipeCollection.size() / 20.0D);
         if (this.totalPages <= this.currentPage || resetCurrentPage) {
@@ -72,7 +72,7 @@ public class BrewingRecipeBookResults implements GenericRecipePage<BrewingStandM
             BrewableAnimatedResultButton brewableAnimatedResultButton = this.buttons.get(j);
             if (i + j < this.recipeCollection.size()) {
                 BrewableResult output = this.recipeCollection.get(i + j);
-                brewableAnimatedResultButton.showPotionRecipe(output, categories, brewingStandScreenHandler);
+                brewableAnimatedResultButton.showPotionRecipe(output, category, brewingStandScreenHandler);
                 brewableAnimatedResultButton.visible = true;
             } else {
                 brewableAnimatedResultButton.visible = false;

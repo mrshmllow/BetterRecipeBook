@@ -5,7 +5,7 @@ import marsh.town.brb.enums.BRBRecipeBookType;
 import marsh.town.brb.generic.BRBGroupButtonWidget;
 import marsh.town.brb.generic.GenericRecipeBookComponent;
 import marsh.town.brb.interfaces.IPinningComponent;
-import marsh.town.brb.recipe.BRBRecipeBookCategories;
+import marsh.town.brb.recipe.BRBRecipeBookCategory;
 import marsh.town.brb.util.BRBTextures;
 import marsh.town.brb.util.BrewingGhostRecipe;
 import marsh.town.brb.util.ClientInventoryUtil;
@@ -92,9 +92,9 @@ public class BrewingRecipeBookComponent extends GenericRecipeBookComponent<Brewi
         Ingredient ingredient = getIngredient(result.recipe);
         ResourceLocation identifier = BuiltInRegistries.POTION.getKey(inputPotion);
         ItemStack inputStack;
-        if (this.selectedTab.getCategory() == BRBRecipeBookCategories.BREWING_SPLASH_POTION) {
+        if (this.selectedTab.getCategory() == BRBRecipeBookCategory.BREWING_SPLASH_POTION) {
             inputStack = new ItemStack(Items.SPLASH_POTION);
-        } else if (this.selectedTab.getCategory() == BRBRecipeBookCategories.BREWING_LINGERING_POTION) {
+        } else if (this.selectedTab.getCategory() == BRBRecipeBookCategory.BREWING_LINGERING_POTION) {
             inputStack = new ItemStack(Items.LINGERING_POTION);
         } else {
             inputStack = new ItemStack(Items.POTION);
@@ -114,8 +114,8 @@ public class BrewingRecipeBookComponent extends GenericRecipeBookComponent<Brewi
         this.updateFilterButtonTooltip();
         this.setBookButtonTexture();
 
-        for (BRBRecipeBookCategories brewingRecipeBookGroup : BRBRecipeBookCategories.getGroups(BRBRecipeBookType.BREWING)) {
-            this.tabButtons.add(new BRBGroupButtonWidget(brewingRecipeBookGroup));
+        for (BRBRecipeBookCategory category : BRBRecipeBookCategory.getCategories(BRBRecipeBookType.BREWING)) {
+            this.tabButtons.add(new BRBGroupButtonWidget(category));
         }
 
         if (this.selectedTab != null) {

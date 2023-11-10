@@ -5,7 +5,7 @@ import marsh.town.brb.enums.BRBRecipeBookType;
 import marsh.town.brb.generic.BRBGroupButtonWidget;
 import marsh.town.brb.generic.GenericRecipeBookComponent;
 import marsh.town.brb.interfaces.IPinningComponent;
-import marsh.town.brb.recipe.BRBRecipeBookCategories;
+import marsh.town.brb.recipe.BRBRecipeBookCategory;
 import marsh.town.brb.recipe.BRBSmithingRecipe;
 import marsh.town.brb.util.BRBTextures;
 import marsh.town.brb.util.ClientInventoryUtil;
@@ -69,7 +69,7 @@ public class SmithingRecipeBookComponent extends GenericRecipeBookComponent<Smit
         this.updateFilterButtonTooltip();
         this.setBookButtonTexture();
 
-        for (BRBRecipeBookCategories category : BRBRecipeBookCategories.getGroups(BRBRecipeBookType.SMITHING)) {
+        for (BRBRecipeBookCategory category : BRBRecipeBookCategory.getCategories(BRBRecipeBookType.SMITHING)) {
             this.tabButtons.add(new BRBGroupButtonWidget(category));
         }
 
