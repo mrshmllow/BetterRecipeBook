@@ -49,10 +49,6 @@ public class BRBGroupButtonWidget extends StateSwitchingButton {
 
     }
 
-    protected void setVisible(boolean visible) {
-        this.visible = visible;
-    }
-
     public BRBRecipeBookCategories getCategory() {
         return this.category;
     }

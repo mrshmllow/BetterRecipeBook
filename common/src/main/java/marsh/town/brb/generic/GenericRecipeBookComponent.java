@@ -276,7 +276,7 @@ public abstract class GenericRecipeBookComponent<M extends AbstractContainerMenu
         for (BRBGroupButtonWidget button : this.tabButtons) {
             BRBRecipeBookCategories smithingRecipeBookGroup = button.getCategory();
             if (smithingRecipeBookGroup == BRBRecipeBookCategories.SEARCH) {
-                button.setVisible(true);
+                button.visible = true;
             }
             button.setPosition(i, j + 27 * l++);
         }
