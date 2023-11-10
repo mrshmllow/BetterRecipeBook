@@ -128,6 +128,11 @@ public class BrewingRecipeBookResults implements GenericRecipePage<BrewingStandM
         return false;
     }
 
+    @Override
+    public boolean isFilteringCraftable() {
+        return BetterRecipeBook.rememberedBrewingToggle;
+    }
+
     public BrewableResult getCurrentClickedRecipe() {
         return this.currentClickedRecipe;
     }

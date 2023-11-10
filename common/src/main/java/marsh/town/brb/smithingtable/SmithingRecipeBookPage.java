@@ -176,6 +176,11 @@ public class SmithingRecipeBookPage implements GenericRecipePage<SmithingMenu> {
         return this.overlay.isVisible();
     }
 
+    @Override
+    public boolean isFilteringCraftable() {
+        return BetterRecipeBook.rememberedSmithableToggle;
+    }
+
     private void updateArrowButtons() {
         if (BetterRecipeBook.config.scrolling.scrollAround && totalPages > 1) {
             forwardButton.visible = true;
