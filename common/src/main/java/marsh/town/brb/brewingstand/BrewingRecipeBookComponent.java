@@ -13,7 +13,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.StateSwitchingButton;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -102,33 +101,6 @@ public class BrewingRecipeBookComponent extends GenericRecipeBookComponent<Brewi
 
         inputStack.getOrCreateTag().putString("Potion", identifier.toString());
         return inputStack;
-    }
-
-    public void initVisuals() {
-        super.initVisuals();
-
-        int i = (this.width - 147) / 2 - this.xOffset;
-        int j = (this.height - 166) / 2;
-
-        this.filterButton = new StateSwitchingButton(i + 110, j + 12, 26, 16, this.book.isFilteringCraftable());
-        this.updateFilterButtonTooltip();
-        this.setBookButtonTexture();
-
-        for (BRBRecipeBookCategory category : BRBRecipeBookCategory.getCategories(BRBRecipeBookType.BREWING)) {
-            this.tabButtons.add(new BRBGroupButtonWidget(category));
-        }
-
-        if (this.selectedTab != null) {
-            this.selectedTab = this.tabButtons.stream().filter((button) -> button.getCategory().equals(this.selectedTab.getCategory())).findFirst().orElse(null);
-        }
-
-        if (this.selectedTab == null) {
-            this.selectedTab = this.tabButtons.get(0);
-        }
-
-        this.selectedTab.setStateTriggered(true);
-        this.updateCollections(false);
-        this.refreshTabButtons();
     }
 
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
@@ -318,10 +290,6 @@ public class BrewingRecipeBookComponent extends GenericRecipeBookComponent<Brewi
         this.setVisible(!this.isVisible());
     }
 
-    protected void setBookButtonTexture() {
-        this.filterButton.initTextureValues(BRBTextures.RECIPE_BOOK_FILTER_BUTTON_SPRITES);
-    }
-
     @Override
     protected void renderGhostRecipeTooltip(GuiGraphics gui, int x, int y, int mouseX, int mouseY) {
         ghostRecipe.renderTooltip(gui, x, y, mouseX, mouseY);
@@ -330,6 +298,11 @@ public class BrewingRecipeBookComponent extends GenericRecipeBookComponent<Brewi
     @Override
     public Component getRecipeFilterName() {
         return ONLY_CRAFTABLES_TOOLTIP;
+    }
+
+    @Override
+    public BRBRecipeBookType getRecipeBookType() {
+        return BRBRecipeBookType.BREWING;
     }
 
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {

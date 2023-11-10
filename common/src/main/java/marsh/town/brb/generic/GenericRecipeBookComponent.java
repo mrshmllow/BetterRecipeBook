@@ -2,9 +2,11 @@ package marsh.town.brb.generic;
 
 import com.google.common.collect.Lists;
 import marsh.town.brb.BetterRecipeBook;
+import marsh.town.brb.enums.BRBRecipeBookType;
 import marsh.town.brb.interfaces.ISettingsButton;
 import marsh.town.brb.mixins.accessors.RecipeBookComponentAccessor;
 import marsh.town.brb.recipe.BRBRecipeBookCategory;
+import marsh.town.brb.util.BRBTextures;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.*;
@@ -57,6 +59,8 @@ public abstract class GenericRecipeBookComponent<M extends AbstractContainerMenu
 
     abstract public Component getRecipeFilterName();
 
+    abstract public BRBRecipeBookType getRecipeBookType();
+
     public void init(int width, int height, Minecraft minecraft, boolean widthNarrow, M menu) {
         this.minecraft = minecraft;
         this.width = width;
@@ -95,14 +99,29 @@ public abstract class GenericRecipeBookComponent<M extends AbstractContainerMenu
         this.searchBox.setTextColor(0xFFFFFF);
         this.searchBox.setValue(string);
         this.searchBox.setHint(SEARCH_HINT);
-
         this.settingsButton = createSettingsButton(i, j);
-
         this.recipesPage.initialize(this.minecraft, i, j, menu, xOffset);
-
         this.tabButtons.clear();
-
         this.book.setFilteringCraftable(this.selfRecallFiltering());
+        this.filterButton = new StateSwitchingButton(i + 110, j + 12, 26, 16, this.book.isFilteringCraftable());
+        this.updateFilterButtonTooltip();
+        this.setBookButtonTexture();
+
+        for (BRBRecipeBookCategory category : BRBRecipeBookCategory.getCategories(this.getRecipeBookType())) {
+            this.tabButtons.add(new BRBGroupButtonWidget(category));
+        }
+
+        if (this.selectedTab != null) {
+            this.selectedTab = this.tabButtons.stream().filter((button) -> button.getCategory().equals(this.selectedTab.getCategory())).findFirst().orElse(null);
+        }
+
+        if (this.selectedTab == null) {
+            this.selectedTab = this.tabButtons.get(0);
+        }
+
+        this.selectedTab.setStateTriggered(true);
+        this.updateCollections(false);
+        this.refreshTabButtons();
     }
 
     @Override
@@ -298,5 +317,9 @@ public abstract class GenericRecipeBookComponent<M extends AbstractContainerMenu
 
     public boolean recipesPageMouseClicked(double mouseX, double mouseY, int button) {
         return this.recipesPage.mouseClicked(mouseX, mouseY, button, (this.width - 147) / 2 - this.xOffset, (this.height - 166) / 2, 147, 166);
+    }
+
+    protected void setBookButtonTexture() {
+        this.filterButton.initTextureValues(BRBTextures.RECIPE_BOOK_FILTER_BUTTON_SPRITES);
     }
 }

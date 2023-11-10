@@ -5,13 +5,11 @@ import marsh.town.brb.enums.BRBRecipeBookType;
 import marsh.town.brb.generic.BRBGroupButtonWidget;
 import marsh.town.brb.generic.GenericRecipeBookComponent;
 import marsh.town.brb.interfaces.IPinningComponent;
-import marsh.town.brb.recipe.BRBRecipeBookCategory;
 import marsh.town.brb.recipe.BRBSmithingRecipe;
 import marsh.town.brb.util.BRBTextures;
 import marsh.town.brb.util.ClientInventoryUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.StateSwitchingButton;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.Component;
@@ -56,34 +54,6 @@ public class SmithingRecipeBookComponent extends GenericRecipeBookComponent<Smit
 //        if (this.isVisible()) {
         this.initVisuals();
 //        }
-    }
-
-    @Override
-    public void initVisuals() {
-        super.initVisuals();
-
-        int i = (this.width - 147) / 2 - this.xOffset;
-        int j = (this.height - 166) / 2;
-
-        this.filterButton = new StateSwitchingButton(i + 110, j + 12, 26, 16, this.book.isFilteringCraftable());
-        this.updateFilterButtonTooltip();
-        this.setBookButtonTexture();
-
-        for (BRBRecipeBookCategory category : BRBRecipeBookCategory.getCategories(BRBRecipeBookType.SMITHING)) {
-            this.tabButtons.add(new BRBGroupButtonWidget(category));
-        }
-
-        if (this.selectedTab != null) {
-            this.selectedTab = this.tabButtons.stream().filter((button) -> button.getCategory().equals(this.selectedTab.getCategory())).findFirst().orElse(null);
-        }
-
-        if (this.selectedTab == null) {
-            this.selectedTab = this.tabButtons.get(0);
-        }
-
-        this.selectedTab.setStateTriggered(true);
-        this.updateCollections(false);
-        this.refreshTabButtons();
     }
 
     public void render(GuiGraphics gui, int mouseX, int mouseY, float delta) {
@@ -156,6 +126,11 @@ public class SmithingRecipeBookComponent extends GenericRecipeBookComponent<Smit
     @Override
     public Component getRecipeFilterName() {
         return ONLY_CRAFTABLES_TOOLTIP;
+    }
+
+    @Override
+    public BRBRecipeBookType getRecipeBookType() {
+        return BRBRecipeBookType.SMITHING;
     }
 
     @Override
@@ -311,10 +286,6 @@ public class SmithingRecipeBookComponent extends GenericRecipeBookComponent<Smit
         this.book.setFilteringCraftable(bl);
         BetterRecipeBook.rememberedSmithableToggle = bl;
         return bl;
-    }
-
-    protected void setBookButtonTexture() {
-        this.filterButton.initTextureValues(BRBTextures.RECIPE_BOOK_FILTER_BUTTON_SPRITES);
     }
 
     @Override
