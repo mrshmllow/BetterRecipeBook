@@ -2,7 +2,6 @@ package marsh.town.brb.brewingstand;
 
 import marsh.town.brb.BetterRecipeBook;
 import marsh.town.brb.enums.BRBRecipeBookType;
-import marsh.town.brb.generic.BRBGroupButtonWidget;
 import marsh.town.brb.generic.GenericRecipeBookComponent;
 import marsh.town.brb.interfaces.IPinningComponent;
 import marsh.town.brb.recipe.BRBRecipeBookCategory;
@@ -28,7 +27,6 @@ import net.minecraft.world.item.crafting.RecipeHolder;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
@@ -101,99 +99,6 @@ public class BrewingRecipeBookComponent extends GenericRecipeBookComponent<Brewi
         return inputStack;
     }
 
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (this.isVisible()) {
-            if (this.recipesPageMouseClicked(mouseX, mouseY, button)) {
-                BrewableResult result = this.recipesPage.getCurrentClickedRecipe();
-                if (result != null) {
-                    this.ghostRecipe.clear();
-
-                    if (!result.hasMaterials(this.selectedTab.getCategory(), menu.slots)) {
-                        showGhostRecipe(result, menu.slots);
-                        return true;
-                    }
-
-                    ItemStack inputStack = getInputStack(result);
-                    Ingredient ingredient = getIngredient(result.recipe);
-
-                    int slotIndex = 0;
-                    int usedInputSlots = 0;
-                    for (Slot slot : menu.slots) {
-                        ItemStack itemStack = slot.getItem();
-
-                        assert inputStack.getTag() != null;
-                        if (inputStack.getTag().equals(itemStack.getTag()) && inputStack.getItem().equals(itemStack.getItem())) {
-                            if (usedInputSlots <= 2) {
-                                assert Minecraft.getInstance().gameMode != null;
-                                ClientInventoryUtil.storeItem(-1, i -> i > 4);
-                                Minecraft.getInstance().gameMode.handleInventoryMouseClick(menu.containerId, menu.getSlot(slotIndex).index, 0, ClickType.PICKUP, Minecraft.getInstance().player);
-                                Minecraft.getInstance().gameMode.handleInventoryMouseClick(menu.containerId, menu.getSlot(usedInputSlots).index, 0, ClickType.PICKUP, Minecraft.getInstance().player);
-                                ClientInventoryUtil.storeItem(-1, i -> i > 4);
-                                ++usedInputSlots;
-                            }
-                        } else if (ingredient.getItems()[0].getItem().equals(slot.getItem().getItem())) {
-                            assert Minecraft.getInstance().gameMode != null;
-                            ClientInventoryUtil.storeItem(-1, i -> i > 4);
-                            Minecraft.getInstance().gameMode.handleInventoryMouseClick(menu.containerId, menu.getSlot(slotIndex).index, 0, ClickType.PICKUP, Minecraft.getInstance().player);
-                            Minecraft.getInstance().gameMode.handleInventoryMouseClick(menu.containerId, menu.getSlot(3).index, 0, ClickType.PICKUP, Minecraft.getInstance().player);
-                            ClientInventoryUtil.storeItem(-1, i -> i > 4);
-                        }
-
-                        ++slotIndex;
-                    }
-
-                    this.updateCollections(false);
-                }
-
-                return true;
-            } else {
-                assert this.searchBox != null;
-                if (this.searchBox.mouseClicked(mouseX, mouseY, button)) {
-                    searchBox.setFocused(true);
-                    ignoreTextInput = true;
-                    return true;
-                }
-                searchBox.setFocused(false);
-                ignoreTextInput = false;
-
-                if (this.filterButton.mouseClicked(mouseX, mouseY, button)) {
-                    boolean bl = this.toggleFiltering();
-                    this.filterButton.setStateTriggered(bl);
-                    this.updateFilterButtonTooltip();
-                    BetterRecipeBook.rememberedBrewingToggle = bl;
-                    this.updateCollections(false);
-                    return true;
-                } else if (this.settingsButtonMouseClicked(this.settingsButton, mouseX, mouseY, button)) {
-                    return true;
-                }
-
-                Iterator<BRBGroupButtonWidget> var6 = this.tabButtons.iterator();
-
-                BRBGroupButtonWidget brewableRecipeGroupButtonWidget;
-                do {
-                    if (!var6.hasNext()) {
-                        return false;
-                    }
-
-                    brewableRecipeGroupButtonWidget = var6.next();
-                } while (!brewableRecipeGroupButtonWidget.mouseClicked(mouseX, mouseY, button));
-
-                if (this.selectedTab != brewableRecipeGroupButtonWidget) {
-                    if (this.selectedTab != null) {
-                        this.selectedTab.setStateTriggered(false);
-                    }
-
-                    this.selectedTab = brewableRecipeGroupButtonWidget;
-                    this.selectedTab.setStateTriggered(true);
-                    this.updateCollections(true);
-                }
-                return false;
-            }
-        } else {
-            return false;
-        }
-    }
-
     public void showGhostRecipe(BrewableResult result, List<Slot> slots) {
         this.ghostRecipe.addIngredient(3, Ingredient.of(getIngredient(result.recipe).getItems()[0]), slots.get(3).x, slots.get(3).y);
 
@@ -204,7 +109,7 @@ public class BrewingRecipeBookComponent extends GenericRecipeBookComponent<Brewi
         this.ghostRecipe.addIngredient(2, Ingredient.of(inputStack), slots.get(2).x, slots.get(2).y);
     }
 
-    private boolean toggleFiltering() {
+    public boolean toggleFiltering() {
         boolean bl = !this.book.isFilteringCraftable();
         this.book.setFilteringCraftable(bl);
         BetterRecipeBook.rememberedBrewingToggle = bl;
@@ -282,6 +187,51 @@ public class BrewingRecipeBookComponent extends GenericRecipeBookComponent<Brewi
         }
 
         return false;
+    }
+
+    @Override
+    public void handlePlaceRecipe() {
+        BrewableResult result = this.recipesPage.getCurrentClickedRecipe();
+
+        if (result == null) return;
+
+        this.ghostRecipe.clear();
+
+        if (!result.hasMaterials(this.selectedTab.getCategory(), menu.slots)) {
+            showGhostRecipe(result, menu.slots);
+            return;
+        }
+
+        ItemStack inputStack = getInputStack(result);
+        Ingredient ingredient = getIngredient(result.recipe);
+
+        int slotIndex = 0;
+        int usedInputSlots = 0;
+        for (Slot slot : menu.slots) {
+            ItemStack itemStack = slot.getItem();
+
+            assert inputStack.getTag() != null;
+            if (inputStack.getTag().equals(itemStack.getTag()) && inputStack.getItem().equals(itemStack.getItem())) {
+                if (usedInputSlots <= 2) {
+                    assert Minecraft.getInstance().gameMode != null;
+                    ClientInventoryUtil.storeItem(-1, i -> i > 4);
+                    Minecraft.getInstance().gameMode.handleInventoryMouseClick(menu.containerId, menu.getSlot(slotIndex).index, 0, ClickType.PICKUP, Minecraft.getInstance().player);
+                    Minecraft.getInstance().gameMode.handleInventoryMouseClick(menu.containerId, menu.getSlot(usedInputSlots).index, 0, ClickType.PICKUP, Minecraft.getInstance().player);
+                    ClientInventoryUtil.storeItem(-1, i -> i > 4);
+                    ++usedInputSlots;
+                }
+            } else if (ingredient.getItems()[0].getItem().equals(slot.getItem().getItem())) {
+                assert Minecraft.getInstance().gameMode != null;
+                ClientInventoryUtil.storeItem(-1, i -> i > 4);
+                Minecraft.getInstance().gameMode.handleInventoryMouseClick(menu.containerId, menu.getSlot(slotIndex).index, 0, ClickType.PICKUP, Minecraft.getInstance().player);
+                Minecraft.getInstance().gameMode.handleInventoryMouseClick(menu.containerId, menu.getSlot(3).index, 0, ClickType.PICKUP, Minecraft.getInstance().player);
+                ClientInventoryUtil.storeItem(-1, i -> i > 4);
+            }
+
+            ++slotIndex;
+        }
+
+        this.updateCollections(false);
     }
 
     @Override

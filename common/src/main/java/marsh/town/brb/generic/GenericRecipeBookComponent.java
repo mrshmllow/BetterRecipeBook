@@ -22,6 +22,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
@@ -185,6 +186,8 @@ public abstract class GenericRecipeBookComponent<M extends AbstractContainerMenu
         return false;
     }
 
+    public abstract void handlePlaceRecipe();
+
     @Override
     public boolean keyReleased(int i, int j, int k) {
         this.ignoreTextInput = false;
@@ -267,6 +270,68 @@ public abstract class GenericRecipeBookComponent<M extends AbstractContainerMenu
 //        return bl && !bl2 && !this.selectedTab.isHoveredOrFocused();
         return bl && !bl2;
     }
+
+    @Override
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        if (!this.isVisible()) return false;
+
+        if (this.recipesPageMouseClicked(mouseX, mouseY, button)) {
+            this.handlePlaceRecipe();
+            return true;
+        }
+
+        if (this.searchBox.mouseClicked(mouseX, mouseY, button)) {
+            searchBox.setFocused(true);
+            ignoreTextInput = true;
+            return true;
+        }
+
+        searchBox.setFocused(false);
+        ignoreTextInput = false;
+
+        if (this.filterButton.mouseClicked(mouseX, mouseY, button)) {
+            boolean bl = this.toggleFiltering();
+            this.filterButton.setStateTriggered(bl);
+            this.updateFilterButtonTooltip();
+//                    this.sendUpdateSettings();
+            this.updateCollections(false);
+            return true;
+        }
+
+        if (this.settingsButtonMouseClicked(mouseX, mouseY, button)) {
+            return true;
+        }
+
+        Iterator<BRBGroupButtonWidget> tabButtonsIter = this.tabButtons.iterator();
+
+        BRBGroupButtonWidget widget;
+        if (!tabButtonsIter.hasNext()) {
+            return false;
+        }
+
+        widget = tabButtonsIter.next();
+        while (!widget.mouseClicked(mouseX, mouseY, button)) {
+            if (!tabButtonsIter.hasNext()) {
+                return false;
+            }
+
+            widget = tabButtonsIter.next();
+        }
+
+        if (this.selectedTab != widget) {
+            if (this.selectedTab != null) {
+                this.selectedTab.setStateTriggered(false);
+            }
+
+            this.selectedTab = widget;
+            this.selectedTab.setStateTriggered(true);
+            this.updateCollections(true);
+        }
+
+        return false;
+    }
+
+    protected abstract boolean toggleFiltering();
 
     @Override
     public void updateNarration(NarrationElementOutput narrationElementOutput) {

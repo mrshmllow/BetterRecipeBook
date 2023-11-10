@@ -2,7 +2,6 @@ package marsh.town.brb.smithingtable;
 
 import marsh.town.brb.BetterRecipeBook;
 import marsh.town.brb.enums.BRBRecipeBookType;
-import marsh.town.brb.generic.BRBGroupButtonWidget;
 import marsh.town.brb.generic.GenericRecipeBookComponent;
 import marsh.town.brb.interfaces.IPinningComponent;
 import marsh.town.brb.recipe.BRBSmithingRecipe;
@@ -25,7 +24,6 @@ import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.function.Consumer;
@@ -115,100 +113,50 @@ public class SmithingRecipeBookComponent extends GenericRecipeBookComponent<Smit
         return false;
     }
 
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (this.isVisible()) {
-            if (this.recipesPageMouseClicked(mouseX, mouseY, button)) {
-                BRBSmithingRecipe result = this.recipesPage.getCurrentClickedRecipe();
-                SmithingRecipeCollection recipeCollection = this.recipesPage.getLastClickedRecipeCollection();
+    @Override
+    public void handlePlaceRecipe() {
+        BRBSmithingRecipe result = this.recipesPage.getCurrentClickedRecipe();
+        SmithingRecipeCollection recipeCollection = this.recipesPage.getLastClickedRecipeCollection();
 
-                if (result != null && recipeCollection != null) {
-                    this.ghostRecipe.clear();
+        if (result == null || recipeCollection == null) return;
 
-                    if (!result.hasMaterials(this.menu.slots, registryAccess)) {
-                        this.setupGhostRecipe(result, this.menu.slots);
-                        return true;
-                    }
+        this.ghostRecipe.clear();
 
-                    int slotIndex = 0;
-                    boolean placedBase = false;
-                    for (Slot slot : menu.slots) {
-                        ItemStack itemStack = slot.getItem();
-
-                        if (result.getTemplate().test(itemStack)) {
-                            assert Minecraft.getInstance().gameMode != null;
-                            ClientInventoryUtil.storeItem(-1, i -> i > 4);
-                            Minecraft.getInstance().gameMode.handleInventoryMouseClick(menu.containerId, menu.getSlot(slotIndex).index, 0, ClickType.PICKUP, Minecraft.getInstance().player);
-                            Minecraft.getInstance().gameMode.handleInventoryMouseClick(menu.containerId, SmithingMenu.TEMPLATE_SLOT, 0, ClickType.PICKUP, Minecraft.getInstance().player);
-                            ClientInventoryUtil.storeItem(-1, i -> i > 4);
-                        } else if (!placedBase && ArmorTrim.getTrim(registryAccess, itemStack, true).isEmpty() && result.getBase().getItem().equals(itemStack.getItem())) {
-                            assert Minecraft.getInstance().gameMode != null;
-                            ClientInventoryUtil.storeItem(-1, i -> i > 4);
-                            Minecraft.getInstance().gameMode.handleInventoryMouseClick(menu.containerId, menu.getSlot(slotIndex).index, 0, ClickType.PICKUP, Minecraft.getInstance().player);
-                            Minecraft.getInstance().gameMode.handleInventoryMouseClick(menu.containerId, SmithingMenu.BASE_SLOT, 0, ClickType.PICKUP, Minecraft.getInstance().player);
-                            ClientInventoryUtil.storeItem(-1, i -> i > 4);
-                            placedBase = true;
-                        } else if (result.getAddition().test(itemStack)) {
-                            assert Minecraft.getInstance().gameMode != null;
-                            ClientInventoryUtil.storeItem(-1, i -> i > 4);
-                            Minecraft.getInstance().gameMode.handleInventoryMouseClick(menu.containerId, menu.getSlot(slotIndex).index, 0, ClickType.PICKUP, Minecraft.getInstance().player);
-                            Minecraft.getInstance().gameMode.handleInventoryMouseClick(menu.containerId, SmithingMenu.ADDITIONAL_SLOT, 0, ClickType.PICKUP, Minecraft.getInstance().player);
-                            ClientInventoryUtil.storeItem(-1, i -> i > 4);
-                        }
-
-                        ++slotIndex;
-                    }
-
-                    this.updateCollections(false);
-                }
-
-                return true;
-            } else {
-                assert this.searchBox != null;
-                if (this.searchBox.mouseClicked(mouseX, mouseY, button)) {
-                    searchBox.setFocused(true);
-                    ignoreTextInput = true;
-                    return true;
-                }
-                searchBox.setFocused(false);
-                ignoreTextInput = false;
-
-                if (this.filterButton.mouseClicked(mouseX, mouseY, button)) {
-                    boolean bl = this.toggleFiltering();
-                    this.filterButton.setStateTriggered(bl);
-                    this.updateFilterButtonTooltip();
-//                    this.sendUpdateSettings();
-                    BetterRecipeBook.rememberedBrewingToggle = bl;
-                    this.updateCollections(false);
-                    return true;
-                } else if (this.settingsButtonMouseClicked(mouseX, mouseY, button)) {
-                    return true;
-                }
-
-                Iterator<BRBGroupButtonWidget> tabButtonsIter = this.tabButtons.iterator();
-
-                BRBGroupButtonWidget smithingRecipeGroupButtonWidget;
-                do {
-                    if (!tabButtonsIter.hasNext()) {
-                        return false;
-                    }
-
-                    smithingRecipeGroupButtonWidget = tabButtonsIter.next();
-                } while (!smithingRecipeGroupButtonWidget.mouseClicked(mouseX, mouseY, button));
-
-                if (this.selectedTab != smithingRecipeGroupButtonWidget) {
-                    if (this.selectedTab != null) {
-                        this.selectedTab.setStateTriggered(false);
-                    }
-
-                    this.selectedTab = smithingRecipeGroupButtonWidget;
-                    this.selectedTab.setStateTriggered(true);
-                    this.updateCollections(true);
-                }
-                return false;
-            }
-        } else {
-            return false;
+        if (!result.hasMaterials(this.menu.slots, registryAccess)) {
+            this.setupGhostRecipe(result, this.menu.slots);
+            return;
         }
+
+        int slotIndex = 0;
+        boolean placedBase = false;
+        for (Slot slot : menu.slots) {
+            ItemStack itemStack = slot.getItem();
+
+            if (result.getTemplate().test(itemStack)) {
+                assert Minecraft.getInstance().gameMode != null;
+                ClientInventoryUtil.storeItem(-1, i -> i > 4);
+                Minecraft.getInstance().gameMode.handleInventoryMouseClick(menu.containerId, menu.getSlot(slotIndex).index, 0, ClickType.PICKUP, Minecraft.getInstance().player);
+                Minecraft.getInstance().gameMode.handleInventoryMouseClick(menu.containerId, SmithingMenu.TEMPLATE_SLOT, 0, ClickType.PICKUP, Minecraft.getInstance().player);
+                ClientInventoryUtil.storeItem(-1, i -> i > 4);
+            } else if (!placedBase && ArmorTrim.getTrim(registryAccess, itemStack, true).isEmpty() && result.getBase().getItem().equals(itemStack.getItem())) {
+                assert Minecraft.getInstance().gameMode != null;
+                ClientInventoryUtil.storeItem(-1, i -> i > 4);
+                Minecraft.getInstance().gameMode.handleInventoryMouseClick(menu.containerId, menu.getSlot(slotIndex).index, 0, ClickType.PICKUP, Minecraft.getInstance().player);
+                Minecraft.getInstance().gameMode.handleInventoryMouseClick(menu.containerId, SmithingMenu.BASE_SLOT, 0, ClickType.PICKUP, Minecraft.getInstance().player);
+                ClientInventoryUtil.storeItem(-1, i -> i > 4);
+                placedBase = true;
+            } else if (result.getAddition().test(itemStack)) {
+                assert Minecraft.getInstance().gameMode != null;
+                ClientInventoryUtil.storeItem(-1, i -> i > 4);
+                Minecraft.getInstance().gameMode.handleInventoryMouseClick(menu.containerId, menu.getSlot(slotIndex).index, 0, ClickType.PICKUP, Minecraft.getInstance().player);
+                Minecraft.getInstance().gameMode.handleInventoryMouseClick(menu.containerId, SmithingMenu.ADDITIONAL_SLOT, 0, ClickType.PICKUP, Minecraft.getInstance().player);
+                ClientInventoryUtil.storeItem(-1, i -> i > 4);
+            }
+
+            ++slotIndex;
+        }
+
+        this.updateCollections(false);
     }
 
     public void setupGhostRecipe(BRBSmithingRecipe result, List<Slot> list) {
@@ -244,7 +192,7 @@ public class SmithingRecipeBookComponent extends GenericRecipeBookComponent<Smit
         return this.ghostRecipe != null && this.ghostRecipe.size() > 0;
     }
 
-    private boolean toggleFiltering() {
+    public boolean toggleFiltering() {
         boolean bl = !this.book.isFilteringCraftable();
         this.book.setFilteringCraftable(bl);
         BetterRecipeBook.rememberedSmithableToggle = bl;
