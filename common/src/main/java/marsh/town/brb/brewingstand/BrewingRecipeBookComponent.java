@@ -39,10 +39,9 @@ import static marsh.town.brb.brewingstand.PlatformPotionUtil.getFrom;
 import static marsh.town.brb.brewingstand.PlatformPotionUtil.getIngredient;
 
 @Environment(EnvType.CLIENT)
-public class BrewingRecipeBookComponent extends GenericRecipeBookComponent<BrewingStandMenu> implements IPinningComponent<BrewableResult> {
+public class BrewingRecipeBookComponent extends GenericRecipeBookComponent<BrewingStandMenu, BrewableRecipeGroupButtonWidget, BrewingRecipeBookResults> implements IPinningComponent<BrewableResult> {
     BrewingClientRecipeBook book;
     public final BrewingGhostRecipe ghostRecipe = new BrewingGhostRecipe();
-    public final BrewingRecipeBookResults recipesPage = new BrewingRecipeBookResults();
     private final List<BrewableRecipeGroupButtonWidget> tabButtons = Lists.newArrayList();
     @Nullable
     public BrewableRecipeGroupButtonWidget selectedTab;
@@ -53,7 +52,7 @@ public class BrewingRecipeBookComponent extends GenericRecipeBookComponent<Brewi
         super.init(parentWidth, parentHeight, client, narrow, brewingStandScreenHandler);
 
         this.book = new BrewingClientRecipeBook();
-        this.setVisible(BetterRecipeBook.rememberedBrewingOpen);
+        this.recipesPage = new BrewingRecipeBookResults();
         // this.cachedInvChangeCount = client.player.getInventory().getChangeCount();
         this.initVisuals();
 
@@ -113,8 +112,6 @@ public class BrewingRecipeBookComponent extends GenericRecipeBookComponent<Brewi
         int i = (this.width - 147) / 2 - this.xOffset;
         int j = (this.height - 166) / 2;
 
-        this.recipesPage.initialize(this.minecraft, i, j, menu);
-        this.tabButtons.clear();
         this.book.setFilteringCraftable(BetterRecipeBook.rememberedBrewingToggle);
         this.filterButton = new StateSwitchingButton(i + 110, j + 12, 26, 16, this.book.isFilteringCraftable());
         this.updateFilterButtonTooltip();
@@ -139,7 +136,7 @@ public class BrewingRecipeBookComponent extends GenericRecipeBookComponent<Brewi
 
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (this.isVisible()) {
-            if (this.recipesPage.mouseClicked(mouseX, mouseY, button)) {
+            if (this.recipesPageMouseClicked(mouseX, mouseY, button)) {
                 BrewableResult result = this.recipesPage.getCurrentClickedRecipe();
                 if (result != null) {
                     this.ghostRecipe.clear();
@@ -269,6 +266,11 @@ public class BrewingRecipeBookComponent extends GenericRecipeBookComponent<Brewi
         this.recipesPage.setResults(results, resetCurrentPage, selectedTab.getGroup());
     }
 
+    @Override
+    protected boolean selfRecallOpen() {
+        return BetterRecipeBook.rememberedBrewingOpen;
+    }
+
     private void refreshTabButtons() {
         int i = (this.width - 147) / 2 - this.xOffset - 30;
         int j = (this.height - 166) / 2 + 3;
@@ -332,14 +334,9 @@ public class BrewingRecipeBookComponent extends GenericRecipeBookComponent<Brewi
         this.filterButton.initTextureValues(BRBTextures.RECIPE_BOOK_FILTER_BUTTON_SPRITES);
     }
 
-    public void drawTooltip(GuiGraphics gui, int x, int y, int mouseX, int mouseY) {
-        if (this.isVisible()) {
-            this.recipesPage.drawTooltip(gui, mouseX, mouseY);
-
-            this.renderSettingsButtonTooltip(this.settingsButton, gui, mouseX, mouseY);
-
-            ghostRecipe.renderTooltip(gui, x, y, mouseX, mouseY);
-        }
+    @Override
+    protected void renderGhostRecipeTooltip(GuiGraphics gui, int x, int y, int mouseX, int mouseY) {
+        ghostRecipe.renderTooltip(gui, x, y, mouseX, mouseY);
     }
 
     @Override

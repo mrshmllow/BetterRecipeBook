@@ -3,6 +3,7 @@ package marsh.town.brb.smithingtable;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import marsh.town.brb.BetterRecipeBook;
+import marsh.town.brb.generic.GenericRecipePage;
 import marsh.town.brb.recipe.BRBRecipeBookCategories;
 import marsh.town.brb.recipe.BRBSmithingRecipe;
 import marsh.town.brb.util.BRBTextures;
@@ -15,7 +16,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class SmithingRecipeBookPage {
+public class SmithingRecipeBookPage implements GenericRecipePage<SmithingMenu> {
     public final List<SmithableRecipeButton> buttons = Lists.newArrayListWithCapacity(20);
     private int totalPages;
     private Minecraft minecraft;
@@ -168,6 +169,11 @@ public class SmithingRecipeBookPage {
         if (this.minecraft.screen != null && hoveredButton != null) {
             gui.renderComponentTooltip(Minecraft.getInstance().font, this.hoveredButton.getTooltipText(), x, y);
         }
+    }
+
+    @Override
+    public boolean overlayIsVisible() {
+        return this.overlay.isVisible();
     }
 
     private void updateArrowButtons() {

@@ -1,6 +1,7 @@
 package marsh.town.brb.smithingtable;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import marsh.town.brb.generic.GenericRecipeGroupButtonWidget;
 import marsh.town.brb.recipe.BRBRecipeBookCategories;
 import marsh.town.brb.util.BRBTextures;
 import net.minecraft.client.Minecraft;
@@ -12,7 +13,7 @@ import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
 
-public class SmithingRecipeGroupButtonWidget extends StateSwitchingButton {
+public class SmithingRecipeGroupButtonWidget extends StateSwitchingButton implements GenericRecipeGroupButtonWidget {
     private final BRBRecipeBookCategories group;
 
     public SmithingRecipeGroupButtonWidget(BRBRecipeBookCategories category) {

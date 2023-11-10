@@ -2,6 +2,7 @@ package marsh.town.brb.brewingstand;
 
 import com.google.common.collect.Lists;
 import marsh.town.brb.BetterRecipeBook;
+import marsh.town.brb.generic.GenericRecipePage;
 import marsh.town.brb.recipe.BRBRecipeBookCategories;
 import marsh.town.brb.util.BRBTextures;
 import net.fabricmc.api.EnvType;
@@ -15,7 +16,7 @@ import java.util.Iterator;
 import java.util.List;
 
 @Environment(EnvType.CLIENT)
-public class BrewingRecipeBookResults {
+public class BrewingRecipeBookResults implements GenericRecipePage<BrewingStandMenu> {
     private List<BrewableResult> recipeCollection;
     public final List<BrewableAnimatedResultButton> buttons = Lists.newArrayListWithCapacity(20);
     private int totalPages;
@@ -36,7 +37,8 @@ public class BrewingRecipeBookResults {
 
     }
 
-    public void initialize(Minecraft client, int parentLeft, int parentTop, BrewingStandMenu brewingStandScreenHandler) {
+    @Override
+    public void initialize(Minecraft client, int parentLeft, int parentTop, BrewingStandMenu brewingStandScreenHandler, int leftOffset) {
         this.minecraft = client;
         this.brewingStandScreenHandler = brewingStandScreenHandler;
         // this.recipeBook = client.player.getRecipeBook();
@@ -80,7 +82,8 @@ public class BrewingRecipeBookResults {
         this.updateArrowButtons();
     }
 
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    @Override
+    public boolean mouseClicked(double mouseX, double mouseY, int button, int j, int k, int l, int m) {
         this.currentClickedRecipe = null;
         if (this.forwardButton.mouseClicked(mouseX, mouseY, button)) {
             if (++currentPage >= totalPages) {
@@ -118,6 +121,11 @@ public class BrewingRecipeBookResults {
         if (this.minecraft.screen != null && hoveredButton != null) {
             gui.renderComponentTooltip(Minecraft.getInstance().font, this.hoveredButton.getTooltipText(), x, y);
         }
+    }
+
+    @Override
+    public boolean overlayIsVisible() {
+        return false;
     }
 
     public BrewableResult getCurrentClickedRecipe() {

@@ -1,9 +1,9 @@
 package marsh.town.brb.smithingtable;
 
-import com.google.common.collect.Lists;
 import marsh.town.brb.BetterRecipeBook;
 import marsh.town.brb.enums.BRBRecipeBookType;
 import marsh.town.brb.generic.GenericRecipeBookComponent;
+import marsh.town.brb.generic.GenericRecipeGroupButtonWidget;
 import marsh.town.brb.interfaces.IPinningComponent;
 import marsh.town.brb.recipe.BRBRecipeBookCategories;
 import marsh.town.brb.recipe.BRBSmithingRecipe;
@@ -33,11 +33,10 @@ import java.util.List;
 import java.util.Locale;
 import java.util.function.Consumer;
 
-public class SmithingRecipeBookComponent extends GenericRecipeBookComponent<SmithingMenu> implements IPinningComponent<SmithingRecipeCollection> {
+public class SmithingRecipeBookComponent extends GenericRecipeBookComponent<SmithingMenu, SmithingRecipeGroupButtonWidget, SmithingRecipeBookPage> implements IPinningComponent<SmithingRecipeCollection> {
     private SmithingClientRecipeBook book;
     private static final MutableComponent ONLY_CRAFTABLES_TOOLTIP = Component.translatable("brb.gui.smithable");
     public SmithingRecipeBookPage recipesPage;
-    private final List<SmithingRecipeGroupButtonWidget> tabButtons = Lists.newArrayList();
     @Nullable
     public SmithingRecipeGroupButtonWidget selectedTab;
     boolean doubleRefresh = true;
@@ -50,7 +49,6 @@ public class SmithingRecipeBookComponent extends GenericRecipeBookComponent<Smit
         super.init(width, height, minecraft, widthNarrow, menu);
 
         this.book = new SmithingClientRecipeBook();
-        this.setVisible(BetterRecipeBook.rememberedSmithingOpen);
         this.registryAccess = registryAccess;
         this.recipeManager = recipeManager;
         this.ghostRecipe = new SmithingGhostRecipe(onGhostRecipeUpdate, registryAccess);
@@ -68,8 +66,6 @@ public class SmithingRecipeBookComponent extends GenericRecipeBookComponent<Smit
         int i = (this.width - 147) / 2 - this.xOffset;
         int j = (this.height - 166) / 2;
 
-        this.recipesPage.initialize(this.minecraft, i, j, menu, xOffset);
-        this.tabButtons.clear();
         this.book.setFilteringCraftable(BetterRecipeBook.rememberedBrewingToggle);
         this.filterButton = new StateSwitchingButton(i + 110, j + 12, 26, 16, this.book.isFilteringCraftable());
         this.updateFilterButtonTooltip();
@@ -127,7 +123,7 @@ public class SmithingRecipeBookComponent extends GenericRecipeBookComponent<Smit
         this.searchBox.render(gui, mouseX, mouseY, delta);
 
         // render tab buttons
-        for (SmithingRecipeGroupButtonWidget smithingRecipeGroupButtonWidget : this.tabButtons) {
+        for (GenericRecipeGroupButtonWidget smithingRecipeGroupButtonWidget : this.tabButtons) {
             smithingRecipeGroupButtonWidget.render(gui, mouseX, mouseY, delta);
         }
 
@@ -147,7 +143,7 @@ public class SmithingRecipeBookComponent extends GenericRecipeBookComponent<Smit
         if (this.searchBox == null) return;
 
         // Create a copy to not mess with the original list
-        List<SmithingRecipeCollection> results = new ArrayList<>(book.getCollectionsForCategory(selectedTab.getGroup(), menu, registryAccess, recipeManager));
+        List<SmithingRecipeCollection> results = new ArrayList<>(book.getCollectionsForCategory(selectedTab.getGroup(), (SmithingMenu) menu, registryAccess, recipeManager));
 
         String string = this.searchBox.getValue();
         if (!string.isEmpty()) {
@@ -161,6 +157,11 @@ public class SmithingRecipeBookComponent extends GenericRecipeBookComponent<Smit
         this.betterRecipeBook$sortByPinsInPlace(results);
 
         this.recipesPage.setResults(results, resetCurrentPage, selectedTab.getGroup());
+    }
+
+    @Override
+    protected boolean selfRecallOpen() {
+        return BetterRecipeBook.rememberedSmithingOpen;
     }
 
     @Override
@@ -189,7 +190,7 @@ public class SmithingRecipeBookComponent extends GenericRecipeBookComponent<Smit
 
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (this.isVisible()) {
-            if (this.recipesPage.mouseClicked(mouseX, mouseY, button, (this.width - 147) / 2 - this.xOffset, (this.height - 166) / 2, 147, 166)) {
+            if (this.recipesPageMouseClicked(mouseX, mouseY, button)) {
                 BRBSmithingRecipe result = this.recipesPage.getCurrentClickedRecipe();
                 SmithingRecipeCollection recipeCollection = this.recipesPage.getLastClickedRecipeCollection();
 
@@ -295,21 +296,7 @@ public class SmithingRecipeBookComponent extends GenericRecipeBookComponent<Smit
         this.ghostRecipe.render(guiGraphics, this.minecraft, i, j, bl, f);
     }
 
-    public void drawTooltip(GuiGraphics gui, int x, int y, int mouseX, int mouseY) {
-        if (!this.isVisible()) {
-            return;
-        }
-
-        if (!this.recipesPage.overlay.isVisible()) {
-            this.recipesPage.drawTooltip(gui, mouseX, mouseY);
-
-            this.renderSettingsButtonTooltip(gui, mouseX, mouseY);
-        }
-
-        this.renderGhostRecipeTooltip(gui, x, y, mouseX, mouseY);
-    }
-
-    private void renderGhostRecipeTooltip(GuiGraphics guiGraphics, int i, int j, int k, int l) {
+    public void renderGhostRecipeTooltip(GuiGraphics guiGraphics, int i, int j, int k, int l) {
         ItemStack itemStack = null;
 
         for (int m = 0; m < this.ghostRecipe.size(); ++m) {

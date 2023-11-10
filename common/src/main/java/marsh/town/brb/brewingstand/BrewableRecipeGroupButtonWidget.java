@@ -1,6 +1,7 @@
 package marsh.town.brb.brewingstand;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import marsh.town.brb.generic.GenericRecipeGroupButtonWidget;
 import marsh.town.brb.recipe.BRBRecipeBookCategories;
 import marsh.town.brb.util.BRBTextures;
 import net.fabricmc.api.EnvType;
@@ -15,7 +16,7 @@ import net.minecraft.world.item.ItemStack;
 import java.util.List;
 
 @Environment(EnvType.CLIENT)
-public class BrewableRecipeGroupButtonWidget extends StateSwitchingButton {
+public class BrewableRecipeGroupButtonWidget extends StateSwitchingButton implements GenericRecipeGroupButtonWidget {
     private final BRBRecipeBookCategories category;
 
     public BrewableRecipeGroupButtonWidget(BRBRecipeBookCategories category) {

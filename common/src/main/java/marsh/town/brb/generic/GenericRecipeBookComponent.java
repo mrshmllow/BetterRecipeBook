@@ -1,5 +1,6 @@
 package marsh.town.brb.generic;
 
+import com.google.common.collect.Lists;
 import marsh.town.brb.BetterRecipeBook;
 import marsh.town.brb.interfaces.ISettingsButton;
 import marsh.town.brb.mixins.accessors.RecipeBookComponentAccessor;
@@ -16,11 +17,13 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.StackedContents;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
-public abstract class GenericRecipeBookComponent<M extends AbstractContainerMenu> implements Renderable, NarratableEntry, GuiEventListener, ISettingsButton, RecipeShownListener {
+public abstract class GenericRecipeBookComponent<M extends AbstractContainerMenu, T extends GenericRecipeGroupButtonWidget, P extends GenericRecipePage<M>> implements Renderable, NarratableEntry, GuiEventListener, ISettingsButton, RecipeShownListener {
     protected static final Component SEARCH_HINT = RecipeBookComponentAccessor.getSEARCH_HINT();
     protected static final Component ALL_RECIPES_TOOLTIP = RecipeBookComponentAccessor.getALL_RECIPES_TOOLTIP();
     boolean visible;
@@ -36,6 +39,11 @@ public abstract class GenericRecipeBookComponent<M extends AbstractContainerMenu
     protected final StackedContents stackedContents = new StackedContents();
     protected StateSwitchingButton filterButton;
     protected ImageButton settingsButton;
+    public P recipesPage;
+    protected final List<T> tabButtons = Lists.newArrayList();
+    @Nullable
+    protected M selectedTab;
+
 //    private int timesInventoryChanged;
 
     abstract public Component getRecipeFilterName();
@@ -48,6 +56,8 @@ public abstract class GenericRecipeBookComponent<M extends AbstractContainerMenu
         this.widthTooNarrow = widthNarrow;
         if (this.minecraft.player == null) return;
         this.minecraft.player.containerMenu = menu;
+
+        this.setVisible(this.selfRecallOpen());
 
 //        this.timesInventoryChanged = minecraft.player.getInventory().getTimesChanged();
     }
@@ -76,6 +86,10 @@ public abstract class GenericRecipeBookComponent<M extends AbstractContainerMenu
         this.searchBox.setHint(SEARCH_HINT);
 
         this.settingsButton = createSettingsButton(i, j);
+
+        this.recipesPage.initialize(this.minecraft, i, j, menu, xOffset);
+
+        this.tabButtons.clear();
     }
 
     @Override
@@ -134,6 +148,8 @@ public abstract class GenericRecipeBookComponent<M extends AbstractContainerMenu
     }
 
     protected abstract void updateCollections(boolean b);
+
+    protected abstract boolean selfRecallOpen();
 
     private void pirateSpeechForThePeople(String string) {
         if ("excitedze".equals(string)) {
@@ -223,6 +239,22 @@ public abstract class GenericRecipeBookComponent<M extends AbstractContainerMenu
         return j;
     }
 
+    public void drawTooltip(GuiGraphics gui, int x, int y, int mouseX, int mouseY) {
+        if (!this.isVisible()) {
+            return;
+        }
+
+        if (!this.recipesPage.overlayIsVisible()) {
+            this.recipesPage.drawTooltip(gui, mouseX, mouseY);
+
+            this.renderSettingsButtonTooltip(gui, mouseX, mouseY);
+        }
+
+        this.renderGhostRecipeTooltip(gui, x, y, mouseX, mouseY);
+    }
+
+    protected abstract void renderGhostRecipeTooltip(GuiGraphics gui, int x, int y, int mouseX, int mouseY);
+
     public void renderSettingsButton(GuiGraphics gui, int mouseX, int mouseY, float delta) {
         ISettingsButton.super.renderSettingsButton(this.settingsButton, gui, mouseX, mouseY, delta);
     }
@@ -233,5 +265,9 @@ public abstract class GenericRecipeBookComponent<M extends AbstractContainerMenu
 
     public void renderSettingsButtonTooltip(GuiGraphics gui, int mouseX, int mouseY) {
         ISettingsButton.super.renderSettingsButtonTooltip(this.settingsButton, gui, mouseX, mouseY);
+    }
+
+    public boolean recipesPageMouseClicked(double mouseX, double mouseY, int button) {
+        return this.recipesPage.mouseClicked(mouseX, mouseY, button, (this.width - 147) / 2 - this.xOffset, (this.height - 166) / 2, 147, 166);
     }
 }
