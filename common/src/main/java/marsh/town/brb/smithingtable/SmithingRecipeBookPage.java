@@ -1,6 +1,5 @@
 package marsh.town.brb.smithingtable;
 
-import marsh.town.brb.BetterRecipeBook;
 import marsh.town.brb.generic.GenericRecipePage;
 import marsh.town.brb.recipe.BRBSmithingRecipe;
 import net.minecraft.client.gui.GuiGraphics;
@@ -11,11 +10,7 @@ public class SmithingRecipeBookPage extends GenericRecipePage<SmithingMenu, Smit
     public final SmithingOverlayRecipeComponent overlay = new SmithingOverlayRecipeComponent();
 
     public SmithingRecipeBookPage(RegistryAccess registryAccess) {
-        super(registryAccess);
-
-        for (int i = 0; i < 20; ++i) {
-            this.buttons.add(new SmithableRecipeButton(registryAccess));
-        }
+        super(registryAccess, SmithableRecipeButton::new);
     }
 
     @Override
@@ -44,10 +39,5 @@ public class SmithingRecipeBookPage extends GenericRecipePage<SmithingMenu, Smit
     @Override
     public boolean overlayIsVisible() {
         return this.overlay.isVisible();
-    }
-
-    @Override
-    public boolean isFilteringCraftable() {
-        return BetterRecipeBook.rememberedSmithableToggle;
     }
 }

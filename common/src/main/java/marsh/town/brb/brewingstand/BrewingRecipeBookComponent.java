@@ -3,6 +3,7 @@ package marsh.town.brb.brewingstand;
 import marsh.town.brb.BetterRecipeBook;
 import marsh.town.brb.enums.BRBRecipeBookType;
 import marsh.town.brb.generic.GenericRecipeBookComponent;
+import marsh.town.brb.generic.GenericRecipePage;
 import marsh.town.brb.interfaces.IPinningComponent;
 import marsh.town.brb.recipe.BRBRecipeBookCategory;
 import marsh.town.brb.util.BrewingGhostRecipe;
@@ -35,7 +36,7 @@ import static marsh.town.brb.brewingstand.PlatformPotionUtil.getFrom;
 import static marsh.town.brb.brewingstand.PlatformPotionUtil.getIngredient;
 
 @Environment(EnvType.CLIENT)
-public class BrewingRecipeBookComponent extends GenericRecipeBookComponent<BrewingStandMenu, BrewingRecipeBookResults, BrewingClientRecipeBook, BrewingRecipeCollection, BrewableResult, BrewableRecipeButton> implements IPinningComponent<BrewingRecipeCollection> {
+public class BrewingRecipeBookComponent extends GenericRecipeBookComponent<BrewingStandMenu, BrewingClientRecipeBook, BrewingRecipeCollection, BrewableResult, BrewableRecipeButton> implements IPinningComponent<BrewingRecipeCollection> {
     public final BrewingGhostRecipe ghostRecipe = new BrewingGhostRecipe();
     private static final Component ONLY_CRAFTABLES_TOOLTIP = Component.translatable("brb.gui.togglePotions.brewable");
 
@@ -47,7 +48,8 @@ public class BrewingRecipeBookComponent extends GenericRecipeBookComponent<Brewi
     public void init(int parentWidth, int parentHeight, Minecraft client, boolean narrow, BrewingStandMenu brewingStandScreenHandler, RegistryAccess registryAccess) {
         super.init(parentWidth, parentHeight, client, narrow, brewingStandScreenHandler, registryAccess);
 
-        this.recipesPage = new BrewingRecipeBookResults(registryAccess);
+        this.recipesPage = new GenericRecipePage<>(registryAccess, BrewableRecipeButton::new);
+
         // this.cachedInvChangeCount = client.player.getInventory().getChangeCount();
         this.initVisuals();
 

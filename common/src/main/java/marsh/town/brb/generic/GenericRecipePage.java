@@ -13,8 +13,9 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.function.Function;
 
-public abstract class GenericRecipePage<M extends AbstractContainerMenu, C extends GenericRecipeBookCollection<R, M>, R extends GenericRecipe, W extends GenericRecipeButton<C, R, M>> {
+public class GenericRecipePage<M extends AbstractContainerMenu, C extends GenericRecipeBookCollection<R, M>, R extends GenericRecipe, W extends GenericRecipeButton<C, R, M>> {
     protected final RegistryAccess registryAccess;
     protected M menu;
     protected Minecraft minecraft;
@@ -31,8 +32,12 @@ public abstract class GenericRecipePage<M extends AbstractContainerMenu, C exten
     public final List<W> buttons = Lists.newArrayListWithCapacity(20);
     protected W hoveredButton;
 
-    protected GenericRecipePage(RegistryAccess registryAccess) {
+    public GenericRecipePage(RegistryAccess registryAccess, Function<RegistryAccess, W> recipeButtonSupplier) {
         this.registryAccess = registryAccess;
+
+        for (int i = 0; i < 20; ++i) {
+            this.buttons.add(recipeButtonSupplier.apply(this.registryAccess));
+        }
     }
 
     protected void initialize(Minecraft client, int parentLeft, int parentTop, M menu, int leftOffset) {
@@ -52,9 +57,12 @@ public abstract class GenericRecipePage<M extends AbstractContainerMenu, C exten
         }
     }
 
-    protected abstract boolean overlayMouseClicked(double mouseX, double mouseY, int button, int j, int k, int l, int m);
+    protected boolean overlayMouseClicked(double mouseX, double mouseY, int button, int j, int k, int l, int m) {
+        return false;
+    }
 
-    protected abstract void initOverlay(C recipeCollection, int x, int y, RegistryAccess registryAccess);
+    protected void initOverlay(C recipeCollection, int x, int y, RegistryAccess registryAccess) {
+    }
 
     public boolean mouseClicked(double mouseX, double mouseY, int button, int j, int k, int l, int m) {
         this.lastClickedRecipe = null;
@@ -108,9 +116,9 @@ public abstract class GenericRecipePage<M extends AbstractContainerMenu, C exten
         this.updateArrowButtons();
     }
 
-    protected abstract boolean overlayIsVisible();
-
-    protected abstract boolean isFilteringCraftable();
+    protected boolean overlayIsVisible() {
+        return false;
+    }
 
     protected void render(GuiGraphics gui, int blitX, int blitY, int mouseX, int mouseY, float delta) {
         if (BetterRecipeBook.queuedScroll != 0 && BetterRecipeBook.config.scrolling.enableScrolling) {
