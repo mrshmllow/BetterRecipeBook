@@ -17,7 +17,6 @@ import java.util.List;
 public class BrewingRecipeBookResults extends GenericRecipePage<BrewingStandMenu, BrewingRecipeCollection, BrewableResult> {
     private List<BrewingRecipeCollection> recipeCollection;
     public final List<BrewableAnimatedResultButton> buttons = Lists.newArrayListWithCapacity(20);
-    private int totalPages;
     private int currentPage;
     private BrewableAnimatedResultButton hoveredButton;
     BRBRecipeBookCategory category;
@@ -39,18 +38,6 @@ public class BrewingRecipeBookResults extends GenericRecipePage<BrewingStandMenu
         for (int k = 0; k < this.buttons.size(); ++k) {
             this.buttons.get(k).setPosition(parentLeft + 11 + 25 * (k % 5), parentTop + 31 + 25 * (k / 5));
         }
-    }
-
-    public void setResults(List<BrewingRecipeCollection> recipeCollection, boolean resetCurrentPage, BRBRecipeBookCategory category) {
-        this.recipeCollection = recipeCollection;
-        this.category = category;
-
-        this.totalPages = (int) Math.ceil((double) recipeCollection.size() / 20.0D);
-        if (this.totalPages <= this.currentPage || resetCurrentPage) {
-            this.currentPage = 0;
-        }
-
-        this.updateButtonsForPage();
     }
 
     public void updateButtonsForPage() {
@@ -126,26 +113,7 @@ public class BrewingRecipeBookResults extends GenericRecipePage<BrewingStandMenu
 
     @Override
     public void render(GuiGraphics gui, int x, int y, int mouseX, int mouseY, float delta) {
-        if (BetterRecipeBook.queuedScroll != 0 && BetterRecipeBook.config.scrolling.enableScrolling) {
-            currentPage += BetterRecipeBook.queuedScroll;
-            BetterRecipeBook.queuedScroll = 0;
-
-            if (currentPage >= totalPages) {
-                currentPage = BetterRecipeBook.config.scrolling.scrollAround ? currentPage % totalPages : totalPages - 1;
-            } else if (currentPage < 0) {
-                // required as % is not modulus, it is remainder. we need to force output positive by((currentPage % totalPages) + totalPages)
-                currentPage = BetterRecipeBook.config.scrolling.scrollAround ? (currentPage % totalPages) + totalPages : 0;
-            }
-
-            updateButtonsForPage();
-        }
-
-
-        if (this.totalPages > 1) {
-            String string = this.currentPage + 1 + "/" + this.totalPages;
-            int width = this.minecraft.font.width(string);
-            gui.drawString(this.minecraft.font, string, x - width / 2 + 73, y + 141, -1, false);
-        }
+        super.render(gui, x, y, mouseX, mouseY, delta);
 
         this.hoveredButton = null;
 
