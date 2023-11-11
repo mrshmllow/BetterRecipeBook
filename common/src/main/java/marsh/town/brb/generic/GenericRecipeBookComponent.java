@@ -20,6 +20,7 @@ import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.StackedContents;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.crafting.RecipeManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -29,7 +30,7 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.function.Supplier;
 
-public abstract class GenericRecipeBookComponent<M extends AbstractContainerMenu, P extends GenericRecipePage<M, C, R, W>, B extends GenericClientRecipeBook, C extends GenericRecipeBookCollection<R, M>, R extends GenericRecipe, W> implements Renderable, NarratableEntry, GuiEventListener, ISettingsButton, RecipeShownListener {
+public abstract class GenericRecipeBookComponent<M extends AbstractContainerMenu, P extends GenericRecipePage<M, C, R, W>, B extends GenericClientRecipeBook, C extends GenericRecipeBookCollection<R, M>, R extends GenericRecipe, W extends GenericRecipeButton<C, R, M>> implements Renderable, NarratableEntry, GuiEventListener, ISettingsButton, RecipeShownListener {
     protected static final Component SEARCH_HINT = RecipeBookComponentAccessor.getSEARCH_HINT();
     protected static final Component ALL_RECIPES_TOOLTIP = RecipeBookComponentAccessor.getALL_RECIPES_TOOLTIP();
     boolean visible;
@@ -50,6 +51,7 @@ public abstract class GenericRecipeBookComponent<M extends AbstractContainerMenu
     @Nullable
     public BRBGroupButtonWidget selectedTab;
     protected B book;
+    protected RecipeManager recipeManager;
 
     private final Supplier<? extends B> bookSupplier;
     private boolean doubleRefresh = true;

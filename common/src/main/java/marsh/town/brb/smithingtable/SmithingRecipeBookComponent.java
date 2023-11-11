@@ -32,7 +32,6 @@ public class SmithingRecipeBookComponent extends GenericRecipeBookComponent<Smit
     private static final MutableComponent ONLY_CRAFTABLES_TOOLTIP = Component.translatable("brb.gui.smithable");
     @Nullable
     public SmithingGhostRecipe ghostRecipe;
-    private RecipeManager recipeManager;
 
     public SmithingRecipeBookComponent() {
         super(SmithingClientRecipeBook::new);

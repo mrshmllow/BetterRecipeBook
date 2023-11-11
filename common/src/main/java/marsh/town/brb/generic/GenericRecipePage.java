@@ -8,12 +8,14 @@ import marsh.town.brb.util.BRBTextures;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.StateSwitchingButton;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public abstract class GenericRecipePage<M extends AbstractContainerMenu, C extends GenericRecipeBookCollection<R, M>, R extends GenericRecipe, B> {
+public abstract class GenericRecipePage<M extends AbstractContainerMenu, C extends GenericRecipeBookCollection<R, M>, R extends GenericRecipe, W extends GenericRecipeButton<C, R, M>> {
+    protected final RegistryAccess registryAccess;
     protected M menu;
     protected Minecraft minecraft;
     protected int parentLeft;
@@ -26,11 +28,11 @@ public abstract class GenericRecipePage<M extends AbstractContainerMenu, C exten
     protected BRBRecipeBookCategory category;
     protected int totalPages;
     protected int currentPage;
-    public final List<B> buttons = Lists.newArrayListWithCapacity(20);
-    protected B hoveredButton;
+    public final List<W> buttons = Lists.newArrayListWithCapacity(20);
+    protected W hoveredButton;
 
-    protected GenericRecipePage() {
-
+    protected GenericRecipePage(RegistryAccess registryAccess) {
+        this.registryAccess = registryAccess;
     }
 
     protected void initialize(Minecraft client, int parentLeft, int parentTop, M menu, int leftOffset) {
@@ -44,11 +46,50 @@ public abstract class GenericRecipePage<M extends AbstractContainerMenu, C exten
         this.forwardButton.initTextureValues(BRBTextures.RECIPE_BOOK_PAGE_FORWARD_SPRITES);
         this.backButton = new StateSwitchingButton(parentLeft + 38, parentTop + 137, 12, 17, true);
         this.backButton.initTextureValues(BRBTextures.RECIPE_BOOK_PAGE_BACKWARD_SPRITES);
+
+        for (int k = 0; k < this.buttons.size(); ++k) {
+            this.buttons.get(k).setPosition(parentLeft + 11 + 25 * (k % 5), parentTop + 31 + 25 * (k / 5));
+        }
     }
 
-    protected abstract boolean mouseClicked(double mouseX, double mouseY, int button, int j, int k, int l, int m);
+    protected abstract boolean overlayMouseClicked(double mouseX, double mouseY, int button, int j, int k, int l, int m);
 
-    protected abstract void drawTooltip(GuiGraphics gui, int mouseX, int mouseY);
+    protected abstract void initOverlay(C recipeCollection, int x, int y, RegistryAccess registryAccess);
+
+    public boolean mouseClicked(double mouseX, double mouseY, int button, int j, int k, int l, int m) {
+        this.lastClickedRecipe = null;
+        this.lastClickedRecipeCollection = null;
+
+        if (overlayIsVisible() && overlayMouseClicked(mouseX, mouseY, button, j, k, l, m)) {
+            return true;
+        }
+
+        if (this.forwardButton.mouseClicked(mouseX, mouseY, button)) {
+            if (++currentPage >= totalPages) {
+                currentPage = BetterRecipeBook.config.scrolling.scrollAround ? 0 : totalPages - 1;
+            }
+            this.updateButtonsForPage();
+            return true;
+        } else if (this.backButton.mouseClicked(mouseX, mouseY, button)) {
+            if (--currentPage < 0) {
+                currentPage = BetterRecipeBook.config.scrolling.scrollAround ? totalPages - 1 : 0;
+            }
+            this.updateButtonsForPage();
+            return true;
+        } else {
+            for (W recipeButton : this.buttons) {
+                if (!recipeButton.mouseClicked(mouseX, mouseY, button)) continue;
+                if (button == 0) {
+                    this.lastClickedRecipe = recipeButton.getCurrentDisplayedRecipe();
+                    this.lastClickedRecipeCollection = recipeButton.getCollection();
+                } else if (button == 1 && !overlayIsVisible() && !recipeButton.isOnlyOption()) {
+                    this.initOverlay(recipeButton.getCollection(), this.parentLeft, this.parentTop, registryAccess);
+                }
+                return true;
+            }
+        }
+        return false;
+    }
 
     protected abstract boolean overlayIsVisible();
 
@@ -74,6 +115,18 @@ public abstract class GenericRecipePage<M extends AbstractContainerMenu, C exten
             int width = this.minecraft.font.width(string);
             gui.drawString(this.minecraft.font, string, blitX - width / 2 + 73, blitY + 141, -1, false);
         }
+
+        this.hoveredButton = null;
+
+        for (W button : this.buttons) {
+            button.render(gui, mouseX, mouseY, delta);
+            if (button.visible && button.isHoveredOrFocused()) {
+                this.hoveredButton = button;
+            }
+        }
+
+        this.backButton.render(gui, mouseX, mouseY, delta);
+        this.forwardButton.render(gui, mouseX, mouseY, delta);
     }
 
     public void setResults(List<C> recipeCollection, boolean resetCurrentPage, BRBRecipeBookCategory category) {
@@ -107,6 +160,12 @@ public abstract class GenericRecipePage<M extends AbstractContainerMenu, C exten
         } else {
             forwardButton.visible = totalPages > 1 && currentPage < totalPages - 1;
             backButton.visible = totalPages > 1 && currentPage > 0;
+        }
+    }
+
+    public void drawTooltip(GuiGraphics gui, int x, int y) {
+        if (this.minecraft.screen != null && hoveredButton != null) {
+            gui.renderComponentTooltip(Minecraft.getInstance().font, this.hoveredButton.getTooltipText(), x, y);
         }
     }
 }
