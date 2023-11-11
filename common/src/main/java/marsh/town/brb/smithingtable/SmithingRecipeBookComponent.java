@@ -3,6 +3,7 @@ package marsh.town.brb.smithingtable;
 import marsh.town.brb.BetterRecipeBook;
 import marsh.town.brb.enums.BRBRecipeBookType;
 import marsh.town.brb.generic.GenericRecipeBookComponent;
+import marsh.town.brb.generic.GenericRecipeButton;
 import marsh.town.brb.interfaces.IPinningComponent;
 import marsh.town.brb.recipe.BRBSmithingRecipe;
 import marsh.town.brb.util.ClientInventoryUtil;
@@ -26,7 +27,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.function.Consumer;
 
-public class SmithingRecipeBookComponent extends GenericRecipeBookComponent<SmithingMenu, SmithingClientRecipeBook, SmithingRecipeCollection, BRBSmithingRecipe, SmithableRecipeButton> implements IPinningComponent<SmithingRecipeCollection> {
+public class SmithingRecipeBookComponent extends GenericRecipeBookComponent<SmithingMenu, SmithingClientRecipeBook, SmithingRecipeCollection, BRBSmithingRecipe> implements IPinningComponent<SmithingRecipeCollection> {
     private static final MutableComponent ONLY_CRAFTABLES_TOOLTIP = Component.translatable("brb.gui.smithable");
 
     public SmithingRecipeBookComponent() {
@@ -95,7 +96,7 @@ public class SmithingRecipeBookComponent extends GenericRecipeBookComponent<Smit
         }
 
         if (keyCode == GLFW.GLFW_KEY_F && BetterRecipeBook.config.enablePinning) {
-            for (SmithableRecipeButton resultButton : this.recipesPage.buttons) {
+            for (GenericRecipeButton<SmithingRecipeCollection, BRBSmithingRecipe, SmithingMenu> resultButton : this.recipesPage.buttons) {
                 if (resultButton.isHoveredOrFocused()) {
                     BetterRecipeBook.pinnedRecipeManager.addOrRemoveFavouriteSmithing(resultButton.getCollection().getFirst());
                     this.updateCollections(false);

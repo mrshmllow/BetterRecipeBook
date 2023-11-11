@@ -1,5 +1,6 @@
 package marsh.town.brb.smithingtable;
 
+import marsh.town.brb.generic.GenericRecipeButton;
 import marsh.town.brb.generic.GenericRecipePage;
 import marsh.town.brb.recipe.BRBSmithingRecipe;
 import net.minecraft.client.gui.GuiGraphics;
@@ -8,11 +9,11 @@ import net.minecraft.world.inventory.SmithingMenu;
 
 import java.util.function.Supplier;
 
-public class SmithingRecipeBookPage extends GenericRecipePage<SmithingMenu, SmithingRecipeCollection, BRBSmithingRecipe, SmithableRecipeButton> {
+public class SmithingRecipeBookPage extends GenericRecipePage<SmithingMenu, SmithingRecipeCollection, BRBSmithingRecipe> {
     public final SmithingOverlayRecipeComponent overlay = new SmithingOverlayRecipeComponent();
 
     public SmithingRecipeBookPage(RegistryAccess registryAccess, Supplier<Boolean> filteringSupplier) {
-        super(registryAccess, () -> new SmithableRecipeButton(registryAccess, filteringSupplier));
+        super(registryAccess, () -> new GenericRecipeButton<>(registryAccess, filteringSupplier));
     }
 
     @Override

@@ -15,7 +15,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.function.Supplier;
 
-public class GenericRecipePage<M extends AbstractContainerMenu, C extends GenericRecipeBookCollection<R, M>, R extends GenericRecipe, W extends GenericRecipeButton<C, R, M>> {
+public class GenericRecipePage<M extends AbstractContainerMenu, C extends GenericRecipeBookCollection<R, M>, R extends GenericRecipe> {
     protected final RegistryAccess registryAccess;
     protected M menu;
     protected Minecraft minecraft;
@@ -29,10 +29,10 @@ public class GenericRecipePage<M extends AbstractContainerMenu, C extends Generi
     protected BRBRecipeBookCategory category;
     protected int totalPages;
     protected int currentPage;
-    public final List<W> buttons = Lists.newArrayListWithCapacity(20);
-    protected W hoveredButton;
+    public final List<GenericRecipeButton<C, R, M>> buttons = Lists.newArrayListWithCapacity(20);
+    protected GenericRecipeButton<C, R, M> hoveredButton;
 
-    public GenericRecipePage(RegistryAccess registryAccess, Supplier<W> recipeButtonSupplier) {
+    public GenericRecipePage(RegistryAccess registryAccess, Supplier<GenericRecipeButton<C, R, M>> recipeButtonSupplier) {
         this.registryAccess = registryAccess;
 
         for (int i = 0; i < 20; ++i) {
@@ -85,7 +85,7 @@ public class GenericRecipePage<M extends AbstractContainerMenu, C extends Generi
             this.updateButtonsForPage();
             return true;
         } else {
-            for (W recipeButton : this.buttons) {
+            for (GenericRecipeButton<C, R, M> recipeButton : this.buttons) {
                 if (!recipeButton.mouseClicked(mouseX, mouseY, button)) continue;
                 if (button == 0) {
                     this.lastClickedRecipe = recipeButton.getCurrentDisplayedRecipe();
@@ -103,7 +103,7 @@ public class GenericRecipePage<M extends AbstractContainerMenu, C extends Generi
         int i = 20 * this.currentPage;
 
         for (int j = 0; j < this.buttons.size(); ++j) {
-            W button = this.buttons.get(j);
+            GenericRecipeButton button = this.buttons.get(j);
             if (i + j < this.recipeCollections.size()) {
                 C output = this.recipeCollections.get(i + j);
                 button.showCollection(output, menu, this.category);
@@ -143,7 +143,7 @@ public class GenericRecipePage<M extends AbstractContainerMenu, C extends Generi
 
         this.hoveredButton = null;
 
-        for (W button : this.buttons) {
+        for (GenericRecipeButton button : this.buttons) {
             button.render(gui, mouseX, mouseY, delta);
             if (button.visible && button.isHoveredOrFocused()) {
                 this.hoveredButton = button;

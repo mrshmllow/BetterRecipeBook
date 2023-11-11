@@ -3,6 +3,7 @@ package marsh.town.brb.brewingstand;
 import marsh.town.brb.BetterRecipeBook;
 import marsh.town.brb.enums.BRBRecipeBookType;
 import marsh.town.brb.generic.GenericRecipeBookComponent;
+import marsh.town.brb.generic.GenericRecipeButton;
 import marsh.town.brb.generic.GenericRecipePage;
 import marsh.town.brb.interfaces.IPinningComponent;
 import marsh.town.brb.mixins.accessors.BrewingStandMenuAccessor;
@@ -37,7 +38,7 @@ import static marsh.town.brb.brewingstand.PlatformPotionUtil.getFrom;
 import static marsh.town.brb.brewingstand.PlatformPotionUtil.getIngredient;
 
 @Environment(EnvType.CLIENT)
-public class BrewingRecipeBookComponent extends GenericRecipeBookComponent<BrewingStandMenu, BrewingClientRecipeBook, BrewingRecipeCollection, BrewableResult, BrewableRecipeButton> implements IPinningComponent<BrewingRecipeCollection> {
+public class BrewingRecipeBookComponent extends GenericRecipeBookComponent<BrewingStandMenu, BrewingClientRecipeBook, BrewingRecipeCollection, BrewableResult> implements IPinningComponent<BrewingRecipeCollection> {
     private static final Component ONLY_CRAFTABLES_TOOLTIP = Component.translatable("brb.gui.togglePotions.brewable");
 
     public BrewingRecipeBookComponent() {
@@ -181,7 +182,7 @@ public class BrewingRecipeBookComponent extends GenericRecipeBookComponent<Brewi
         }
 
         if (keyCode == GLFW.GLFW_KEY_F && BetterRecipeBook.config.enablePinning) {
-            for (BrewableRecipeButton resultButton : this.recipesPage.buttons) {
+            for (GenericRecipeButton<BrewingRecipeCollection, BrewableResult, BrewingStandMenu> resultButton : this.recipesPage.buttons) {
                 if (resultButton.isHoveredOrFocused()) {
                     BetterRecipeBook.pinnedRecipeManager.addOrRemoveFavourite(resultButton.getCollection());
                     this.updateCollections(false);

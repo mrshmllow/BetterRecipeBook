@@ -32,7 +32,7 @@ import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public abstract class GenericRecipeBookComponent<M extends AbstractContainerMenu, B extends GenericClientRecipeBook, C extends GenericRecipeBookCollection<R, M>, R extends GenericRecipe, W extends GenericRecipeButton<C, R, M>> implements Renderable, NarratableEntry, GuiEventListener, ISettingsButton, RecipeShownListener {
+public abstract class GenericRecipeBookComponent<M extends AbstractContainerMenu, B extends GenericClientRecipeBook, C extends GenericRecipeBookCollection<R, M>, R extends GenericRecipe> implements Renderable, NarratableEntry, GuiEventListener, ISettingsButton, RecipeShownListener {
     protected static final Component SEARCH_HINT = RecipeBookComponentAccessor.getSEARCH_HINT();
     protected static final Component ALL_RECIPES_TOOLTIP = RecipeBookComponentAccessor.getALL_RECIPES_TOOLTIP();
     boolean visible;
@@ -48,7 +48,7 @@ public abstract class GenericRecipeBookComponent<M extends AbstractContainerMenu
     protected final StackedContents stackedContents = new StackedContents();
     protected StateSwitchingButton filterButton;
     protected ImageButton settingsButton;
-    public GenericRecipePage<M, C, R, W> recipesPage;
+    public GenericRecipePage<M, C, R> recipesPage;
     protected final List<BRBGroupButtonWidget> tabButtons = Lists.newArrayList();
     @Nullable
     public BRBGroupButtonWidget selectedTab;
