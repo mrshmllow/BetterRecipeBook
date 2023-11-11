@@ -28,11 +28,10 @@ import java.util.List;
 import java.util.Locale;
 import java.util.function.Consumer;
 
-public class SmithingRecipeBookComponent extends GenericRecipeBookComponent<SmithingMenu, SmithingRecipeBookPage, SmithingClientRecipeBook> implements IPinningComponent<SmithingRecipeCollection> {
+public class SmithingRecipeBookComponent extends GenericRecipeBookComponent<SmithingMenu, SmithingRecipeBookPage, SmithingClientRecipeBook, SmithingRecipeCollection, BRBSmithingRecipe> implements IPinningComponent<SmithingRecipeCollection> {
     private static final MutableComponent ONLY_CRAFTABLES_TOOLTIP = Component.translatable("brb.gui.smithable");
     @Nullable
     public SmithingGhostRecipe ghostRecipe;
-    private RegistryAccess registryAccess;
     private RecipeManager recipeManager;
 
     public SmithingRecipeBookComponent() {
@@ -40,9 +39,8 @@ public class SmithingRecipeBookComponent extends GenericRecipeBookComponent<Smit
     }
 
     public void init(int width, int height, Minecraft minecraft, boolean widthNarrow, SmithingMenu menu, Consumer<SmithingGhostRecipe> onGhostRecipeUpdate, RegistryAccess registryAccess, RecipeManager recipeManager) {
-        super.init(width, height, minecraft, widthNarrow, menu);
+        super.init(width, height, minecraft, widthNarrow, menu, registryAccess);
 
-        this.registryAccess = registryAccess;
         this.recipeManager = recipeManager;
         this.ghostRecipe = new SmithingGhostRecipe(onGhostRecipeUpdate, registryAccess);
         this.recipesPage = new SmithingRecipeBookPage(registryAccess);
@@ -122,7 +120,7 @@ public class SmithingRecipeBookComponent extends GenericRecipeBookComponent<Smit
 
         this.ghostRecipe.clear();
 
-        if (!result.hasMaterials(this.menu.slots, registryAccess)) {
+        if (!result.hasMaterials(this.menu.slots, this.registryAccess)) {
             this.setupGhostRecipe(result, this.menu.slots);
             return;
         }

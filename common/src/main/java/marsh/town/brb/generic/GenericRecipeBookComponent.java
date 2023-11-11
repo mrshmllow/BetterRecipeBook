@@ -16,6 +16,7 @@ import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.recipebook.RecipeShownListener;
 import net.minecraft.client.resources.language.LanguageInfo;
 import net.minecraft.client.resources.language.LanguageManager;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.StackedContents;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -28,7 +29,7 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.function.Supplier;
 
-public abstract class GenericRecipeBookComponent<M extends AbstractContainerMenu, P extends GenericRecipePage<M>, C extends GenericClientRecipeBook> implements Renderable, NarratableEntry, GuiEventListener, ISettingsButton, RecipeShownListener {
+public abstract class GenericRecipeBookComponent<M extends AbstractContainerMenu, P extends GenericRecipePage<M, C, R>, B extends GenericClientRecipeBook, C extends GenericRecipeBookCollection<R, M>, R extends GenericRecipe> implements Renderable, NarratableEntry, GuiEventListener, ISettingsButton, RecipeShownListener {
     protected static final Component SEARCH_HINT = RecipeBookComponentAccessor.getSEARCH_HINT();
     protected static final Component ALL_RECIPES_TOOLTIP = RecipeBookComponentAccessor.getALL_RECIPES_TOOLTIP();
     boolean visible;
@@ -48,14 +49,15 @@ public abstract class GenericRecipeBookComponent<M extends AbstractContainerMenu
     protected final List<BRBGroupButtonWidget> tabButtons = Lists.newArrayList();
     @Nullable
     public BRBGroupButtonWidget selectedTab;
-    protected C book;
+    protected B book;
 
-    private final Supplier<? extends C> bookSupplier;
+    private final Supplier<? extends B> bookSupplier;
     private boolean doubleRefresh = true;
+    protected RegistryAccess registryAccess;
 
 //    private int timesInventoryChanged;
 
-    protected GenericRecipeBookComponent(Supplier<? extends C> bookSupplier) {
+    protected GenericRecipeBookComponent(Supplier<? extends B> bookSupplier) {
         this.bookSupplier = bookSupplier;
     }
 
@@ -63,7 +65,7 @@ public abstract class GenericRecipeBookComponent<M extends AbstractContainerMenu
 
     abstract public BRBRecipeBookType getRecipeBookType();
 
-    public void init(int width, int height, Minecraft minecraft, boolean widthNarrow, M menu) {
+    public void init(int width, int height, Minecraft minecraft, boolean widthNarrow, M menu, RegistryAccess registryAccess) {
         this.minecraft = minecraft;
         this.width = width;
         this.height = height;
@@ -75,6 +77,7 @@ public abstract class GenericRecipeBookComponent<M extends AbstractContainerMenu
         this.setVisible(this.selfRecallOpen());
 
         this.book = bookSupplier.get();
+        this.registryAccess = registryAccess;
 
 //        this.timesInventoryChanged = minecraft.player.getInventory().getTimesChanged();
     }
@@ -107,7 +110,7 @@ public abstract class GenericRecipeBookComponent<M extends AbstractContainerMenu
         this.book.setFilteringCraftable(this.selfRecallFiltering());
         this.filterButton = new StateSwitchingButton(i + 110, j + 12, 26, 16, this.book.isFilteringCraftable());
         this.updateFilterButtonTooltip();
-        this.setBookButtonTexture();
+        this.filterButton.initTextureValues(BRBTextures.RECIPE_BOOK_FILTER_BUTTON_SPRITES);
 
         for (BRBRecipeBookCategory category : BRBRecipeBookCategory.getCategories(this.getRecipeBookType())) {
             this.tabButtons.add(new BRBGroupButtonWidget(category));
@@ -153,7 +156,7 @@ public abstract class GenericRecipeBookComponent<M extends AbstractContainerMenu
 
         this.filterButton.render(gui, mouseX, mouseY, delta);
 
-        this.renderSettingsButton(gui, mouseX, mouseY, delta);
+        ISettingsButton.super.renderSettingsButton(this.settingsButton, gui, mouseX, mouseY, delta);
 
         // render the recipe book page contents
         this.recipesPage.render(gui, blitX, blitY, mouseX, mouseY, delta);
@@ -275,7 +278,7 @@ public abstract class GenericRecipeBookComponent<M extends AbstractContainerMenu
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (!this.isVisible()) return false;
 
-        if (this.recipesPageMouseClicked(mouseX, mouseY, button)) {
+        if (this.recipesPage.mouseClicked(mouseX, mouseY, button, (this.width - 147) / 2 - this.xOffset, (this.height - 166) / 2, 147, 166)) {
             this.handlePlaceRecipe();
             return true;
         }
@@ -298,7 +301,7 @@ public abstract class GenericRecipeBookComponent<M extends AbstractContainerMenu
             return true;
         }
 
-        if (this.settingsButtonMouseClicked(mouseX, mouseY, button)) {
+        if (ISettingsButton.super.settingsButtonMouseClicked(this.settingsButton, mouseX, mouseY, button)) {
             return true;
         }
 
@@ -382,7 +385,7 @@ public abstract class GenericRecipeBookComponent<M extends AbstractContainerMenu
         if (!this.recipesPage.overlayIsVisible()) {
             this.recipesPage.drawTooltip(gui, mouseX, mouseY);
 
-            this.renderSettingsButtonTooltip(gui, mouseX, mouseY);
+            ISettingsButton.super.renderSettingsButtonTooltip(this.settingsButton, gui, mouseX, mouseY);
         }
 
         this.renderGhostRecipeTooltip(gui, x, y, mouseX, mouseY);
@@ -403,24 +406,4 @@ public abstract class GenericRecipeBookComponent<M extends AbstractContainerMenu
     }
 
     protected abstract void renderGhostRecipeTooltip(GuiGraphics gui, int x, int y, int mouseX, int mouseY);
-
-    public void renderSettingsButton(GuiGraphics gui, int mouseX, int mouseY, float delta) {
-        ISettingsButton.super.renderSettingsButton(this.settingsButton, gui, mouseX, mouseY, delta);
-    }
-
-    public boolean settingsButtonMouseClicked(double mouseX, double mouseY, int button) {
-        return ISettingsButton.super.settingsButtonMouseClicked(this.settingsButton, mouseX, mouseY, button);
-    }
-
-    public void renderSettingsButtonTooltip(GuiGraphics gui, int mouseX, int mouseY) {
-        ISettingsButton.super.renderSettingsButtonTooltip(this.settingsButton, gui, mouseX, mouseY);
-    }
-
-    public boolean recipesPageMouseClicked(double mouseX, double mouseY, int button) {
-        return this.recipesPage.mouseClicked(mouseX, mouseY, button, (this.width - 147) / 2 - this.xOffset, (this.height - 166) / 2, 147, 166);
-    }
-
-    protected void setBookButtonTexture() {
-        this.filterButton.initTextureValues(BRBTextures.RECIPE_BOOK_FILTER_BUTTON_SPRITES);
-    }
 }

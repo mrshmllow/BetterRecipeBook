@@ -1,85 +1,53 @@
 package marsh.town.brb.smithingtable;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import marsh.town.brb.BetterRecipeBook;
 import marsh.town.brb.generic.GenericRecipePage;
-import marsh.town.brb.recipe.BRBRecipeBookCategory;
 import marsh.town.brb.recipe.BRBSmithingRecipe;
-import marsh.town.brb.util.BRBTextures;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.StateSwitchingButton;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.inventory.SmithingMenu;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class SmithingRecipeBookPage implements GenericRecipePage<SmithingMenu> {
+public class SmithingRecipeBookPage extends GenericRecipePage<SmithingMenu, SmithingRecipeCollection, BRBSmithingRecipe> {
     public final List<SmithableRecipeButton> buttons = Lists.newArrayListWithCapacity(20);
-    private int totalPages;
-    private Minecraft minecraft;
-    private SmithingMenu smithingMenuHandler;
-    private StateSwitchingButton forwardButton;
-    private StateSwitchingButton backButton;
-    private List<SmithingRecipeCollection> recipeCollections = ImmutableList.of();
-    BRBRecipeBookCategory category;
-    private int currentPage;
     private SmithableRecipeButton hoveredButton;
-    private BRBSmithingRecipe lastClickedRecipe;
     public final SmithingOverlayRecipeComponent overlay = new SmithingOverlayRecipeComponent();
-    private SmithingRecipeCollection lastClickedRecipeCollection;
     private int leftOffset;
-    private int parentLeft;
-    private int parentTop;
     private RegistryAccess registryAccess;
 
     public SmithingRecipeBookPage(RegistryAccess registryAccess) {
+        super();
+
         this.registryAccess = registryAccess;
         for (int i = 0; i < 20; ++i) {
             this.buttons.add(new SmithableRecipeButton(registryAccess));
         }
     }
 
-    public void initialize(Minecraft client, int parentLeft, int parentTop, SmithingMenu smithingMenuHandler, int leftOffset) {
-        this.minecraft = client;
-        this.smithingMenuHandler = smithingMenuHandler;
+    @Override
+    public void initialize(Minecraft client, int parentLeft, int parentTop, SmithingMenu menu, int leftOffset) {
+        super.initialize(client, parentLeft, parentTop, this.menu, leftOffset);
+
         // this.recipeBook = client.player.getRecipeBook();
-        this.parentLeft = parentLeft;
-        this.parentTop = parentTop;
 
         for (int k = 0; k < this.buttons.size(); ++k) {
             this.buttons.get(k).setPosition(parentLeft + 11 + 25 * (k % 5), parentTop + 31 + 25 * (k / 5));
         }
-
-        this.forwardButton = new StateSwitchingButton(parentLeft + 93, parentTop + 137, 12, 17, false);
-        this.forwardButton.initTextureValues(BRBTextures.RECIPE_BOOK_PAGE_FORWARD_SPRITES);
-        this.backButton = new StateSwitchingButton(parentLeft + 38, parentTop + 137, 12, 17, true);
-        this.backButton.initTextureValues(BRBTextures.RECIPE_BOOK_PAGE_BACKWARD_SPRITES);
         this.leftOffset = leftOffset;
     }
 
-    public void setResults(List<SmithingRecipeCollection> recipeCollection, boolean resetCurrentPage, BRBRecipeBookCategory category) {
-        this.recipeCollections = recipeCollection;
-        this.category = category;
-
-        this.totalPages = (int) Math.ceil((double) recipeCollection.size() / 20.0D);
-        if (this.totalPages <= this.currentPage || resetCurrentPage) {
-            this.currentPage = 0;
-        }
-
-        this.updateButtonsForPage();
-    }
-
-    private void updateButtonsForPage() {
+    @Override
+    public void updateButtonsForPage() {
         int i = 20 * this.currentPage;
 
         for (int j = 0; j < this.buttons.size(); ++j) {
             SmithableRecipeButton smithableRecipeButton = this.buttons.get(j);
             if (i + j < this.recipeCollections.size()) {
                 SmithingRecipeCollection output = this.recipeCollections.get(i + j);
-                smithableRecipeButton.showSmithableRecipe(output, smithingMenuHandler);
+                smithableRecipeButton.showSmithableRecipe(output, menu);
                 smithableRecipeButton.visible = true;
             } else {
                 smithableRecipeButton.visible = false;
@@ -89,6 +57,7 @@ public class SmithingRecipeBookPage implements GenericRecipePage<SmithingMenu> {
         this.updateArrowButtons();
     }
 
+    @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button, int j, int k, int l, int m) {
         this.lastClickedRecipe = null;
         this.lastClickedRecipeCollection = null;
@@ -129,27 +98,9 @@ public class SmithingRecipeBookPage implements GenericRecipePage<SmithingMenu> {
         return false;
     }
 
+    @Override
     public void render(GuiGraphics gui, int x, int y, int mouseX, int mouseY, float delta) {
-        if (BetterRecipeBook.queuedScroll != 0 && BetterRecipeBook.config.scrolling.enableScrolling) {
-            currentPage += BetterRecipeBook.queuedScroll;
-            BetterRecipeBook.queuedScroll = 0;
-
-            if (currentPage >= totalPages) {
-                currentPage = BetterRecipeBook.config.scrolling.scrollAround ? currentPage % totalPages : totalPages - 1;
-            } else if (currentPage < 0) {
-                // required as % is not modulus, it is remainder. we need to force output positive by((currentPage % totalPages) + totalPages)
-                currentPage = BetterRecipeBook.config.scrolling.scrollAround ? (currentPage % totalPages) + totalPages : 0;
-            }
-
-            updateButtonsForPage();
-        }
-
-
-        if (this.totalPages > 1) {
-            String string = this.currentPage + 1 + "/" + this.totalPages;
-            int width = this.minecraft.font.width(string);
-            gui.drawString(this.minecraft.font, string, x - width / 2 + 73, y + 141, -1, false);
-        }
+        super.render(gui, x, y, mouseX, mouseY, delta);
 
         this.hoveredButton = null;
 
@@ -165,6 +116,7 @@ public class SmithingRecipeBookPage implements GenericRecipePage<SmithingMenu> {
         this.overlay.render(gui, mouseX, mouseY, delta);
     }
 
+    @Override
     public void drawTooltip(GuiGraphics gui, int x, int y) {
         if (this.minecraft.screen != null && hoveredButton != null) {
             gui.renderComponentTooltip(Minecraft.getInstance().font, this.hoveredButton.getTooltipText(), x, y);
@@ -179,25 +131,5 @@ public class SmithingRecipeBookPage implements GenericRecipePage<SmithingMenu> {
     @Override
     public boolean isFilteringCraftable() {
         return BetterRecipeBook.rememberedSmithableToggle;
-    }
-
-    private void updateArrowButtons() {
-        if (BetterRecipeBook.config.scrolling.scrollAround && totalPages > 1) {
-            forwardButton.visible = true;
-            backButton.visible = true;
-        } else {
-            forwardButton.visible = totalPages > 1 && currentPage < totalPages - 1;
-            backButton.visible = totalPages > 1 && currentPage > 0;
-        }
-    }
-
-    @Nullable
-    public BRBSmithingRecipe getCurrentClickedRecipe() {
-        return this.lastClickedRecipe;
-    }
-
-    @Nullable
-    public SmithingRecipeCollection getLastClickedRecipeCollection() {
-        return this.lastClickedRecipeCollection;
     }
 }

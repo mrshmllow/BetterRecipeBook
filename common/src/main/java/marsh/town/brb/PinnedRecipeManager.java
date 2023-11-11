@@ -3,6 +3,8 @@ package marsh.town.brb;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
+import marsh.town.brb.generic.GenericRecipe;
+import marsh.town.brb.generic.GenericRecipeBookCollection;
 import marsh.town.brb.generic.pins.Pinnable;
 import marsh.town.brb.mixins.accessors.RecipeBookComponentAccessor;
 import marsh.town.brb.recipe.BRBSmithingRecipe;
@@ -12,7 +14,7 @@ import net.minecraft.client.gui.screens.recipebook.RecipeBookPage;
 import net.minecraft.client.gui.screens.recipebook.RecipeCollection;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.alchemy.PotionBrewing;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import org.apache.commons.io.IOUtils;
 
@@ -24,8 +26,6 @@ import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 import java.util.HashSet;
 import java.util.List;
-
-import static marsh.town.brb.brewingstand.PlatformPotionUtil.getTo;
 
 public class PinnedRecipeManager {
     public HashSet<ResourceLocation> pinned;
@@ -83,18 +83,18 @@ public class PinnedRecipeManager {
         this.store();
     }
 
-    public void addOrRemoveFavouritePotion(PotionBrewing.Mix<?> target) {
-        ResourceLocation targetIdentifier = BuiltInRegistries.POTION.getKey(getTo(target));
-
+    public <R extends GenericRecipe, M extends AbstractContainerMenu> void addOrRemoveFavourite(GenericRecipeBookCollection<R, M> target) {
         for (ResourceLocation identifier : this.pinned) {
-            if (identifier.equals(targetIdentifier)) {
-                this.pinned.remove(targetIdentifier);
-                this.store();
-                return;
+            for (R recipe : target.getRecipes()) {
+                if (recipe.id().equals(identifier)) {
+                    this.pinned.remove(identifier);
+                    this.store();
+                    return;
+                }
             }
         }
 
-        this.pinned.add(targetIdentifier);
+        this.pinned.addAll(target.getRecipes().stream().map(R::id).toList());
         this.store();
     }
 

@@ -11,6 +11,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -34,16 +35,18 @@ import static marsh.town.brb.brewingstand.PlatformPotionUtil.getFrom;
 import static marsh.town.brb.brewingstand.PlatformPotionUtil.getIngredient;
 
 @Environment(EnvType.CLIENT)
-public class BrewingRecipeBookComponent extends GenericRecipeBookComponent<BrewingStandMenu, BrewingRecipeBookResults, BrewingClientRecipeBook> implements IPinningComponent<BrewableResult> {
+public class BrewingRecipeBookComponent extends GenericRecipeBookComponent<BrewingStandMenu, BrewingRecipeBookResults, BrewingClientRecipeBook, BrewingRecipeCollection, BrewableResult> implements IPinningComponent<BrewingRecipeCollection> {
     public final BrewingGhostRecipe ghostRecipe = new BrewingGhostRecipe();
     private static final Component ONLY_CRAFTABLES_TOOLTIP = Component.translatable("brb.gui.togglePotions.brewable");
+    private RegistryAccess registryAccess;
 
     public BrewingRecipeBookComponent() {
         super(BrewingClientRecipeBook::new);
     }
 
-    public void initialize(int parentWidth, int parentHeight, Minecraft client, boolean narrow, BrewingStandMenu brewingStandScreenHandler) {
-        super.init(parentWidth, parentHeight, client, narrow, brewingStandScreenHandler);
+    @Override
+    public void init(int parentWidth, int parentHeight, Minecraft client, boolean narrow, BrewingStandMenu brewingStandScreenHandler, RegistryAccess registryAccess) {
+        super.init(parentWidth, parentHeight, client, narrow, brewingStandScreenHandler, registryAccess);
 
         this.recipesPage = new BrewingRecipeBookResults();
         // this.cachedInvChangeCount = client.player.getInventory().getChangeCount();
@@ -122,15 +125,15 @@ public class BrewingRecipeBookComponent extends GenericRecipeBookComponent<Brewi
         if (this.searchBox == null) return;
 
         // Create a copy to not mess with the original list
-        List<BrewableResult> results = new ArrayList<>(book.getCollectionsForCategory(selectedTab.getCategory()));
+        List<BrewingRecipeCollection> results = new ArrayList<>(book.getCollectionsForCategory(selectedTab.getCategory(), this.menu, this.registryAccess));
 
         String string = this.searchBox.getValue();
         if (!string.isEmpty()) {
-            results.removeIf(itemStack -> !itemStack.ingredient.getHoverName().getString().toLowerCase(Locale.ROOT).contains(string.toLowerCase(Locale.ROOT)));
+            results.removeIf(itemStack -> !itemStack.getFirst().ingredient.getHoverName().getString().toLowerCase(Locale.ROOT).contains(string.toLowerCase(Locale.ROOT)));
         }
 
         if (this.book.isFilteringCraftable()) {
-            results.removeIf((result) -> !result.hasMaterials(selectedTab.getCategory(), menu.slots));
+            results.removeIf((result) -> !result.atleastOneCraftable(menu.slots));
         }
 
         this.betterRecipeBook$sortByPinsInPlace(results);
@@ -179,7 +182,7 @@ public class BrewingRecipeBookComponent extends GenericRecipeBookComponent<Brewi
         if (keyCode == GLFW.GLFW_KEY_F && BetterRecipeBook.config.enablePinning) {
             for (BrewableAnimatedResultButton resultButton : this.recipesPage.buttons) {
                 if (resultButton.isHoveredOrFocused()) {
-                    BetterRecipeBook.pinnedRecipeManager.addOrRemoveFavouritePotion(resultButton.getRecipe().recipe);
+                    BetterRecipeBook.pinnedRecipeManager.addOrRemoveFavourite(resultButton.getCollection());
                     this.updateCollections(false);
                     return true;
                 }

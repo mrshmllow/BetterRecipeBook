@@ -1,9 +1,9 @@
 package marsh.town.brb.mixins;
 
 import marsh.town.brb.BetterRecipeBook;
-import marsh.town.brb.brewingstand.BrewableResult;
 import marsh.town.brb.brewingstand.BrewingRecipeBookComponent;
 import marsh.town.brb.util.BRBTextures;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -37,7 +37,7 @@ public abstract class BrewingStandScreenMixin extends AbstractContainerScreen<Br
         if (BetterRecipeBook.config.enableBook) {
             this._$widthNarrow = this.width < 379;
             assert this.minecraft != null;
-            this._$recipeBookComponent.initialize(this.width, this.height, this.minecraft, _$widthNarrow, this.menu);
+            this._$recipeBookComponent.init(this.width, this.height, this.minecraft, _$widthNarrow, this.menu, Minecraft.getInstance().getConnection().registryAccess());
 
             if (!BetterRecipeBook.config.keepCentered) {
                 this.leftPos = this._$recipeBookComponent.findLeftEdge(this.width, this.imageWidth);
@@ -64,12 +64,6 @@ public abstract class BrewingStandScreenMixin extends AbstractContainerScreen<Br
         }
 
         super.slotClicked(slot, x, y, clickType);
-
-        // clear ghostRecipe if ingredients match
-        BrewableResult result = _$recipeBookComponent.recipesPage.getLastClickedRecipe();
-        if (slot != null && slot.index < 4 && result != null && _$recipeBookComponent.selectedTab != null && result.hasMaterials(_$recipeBookComponent.selectedTab.getCategory(), menu.slots.subList(0, 4))) {
-            _$recipeBookComponent.ghostRecipe.clear();
-        }
     }
 
     @Override
