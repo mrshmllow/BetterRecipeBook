@@ -51,7 +51,10 @@ public class BrewingRecipeBookComponent extends GenericRecipeBookComponent<Brewi
         this.recipesPage = new GenericRecipePage<>(registryAccess, BrewableRecipeButton::new);
 
         // this.cachedInvChangeCount = client.player.getInventory().getChangeCount();
-        this.initVisuals();
+
+        if (this.isVisible()) {
+            this.initVisuals();
+        }
 
         // this code is responsible for selectively rendering ghost slots
         ghostRecipe.setRenderingPredicate((type, ingredient) -> {

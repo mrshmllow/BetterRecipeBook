@@ -44,9 +44,9 @@ public class SmithingRecipeBookComponent extends GenericRecipeBookComponent<Smit
         this.ghostRecipe = new SmithingGhostRecipe(onGhostRecipeUpdate, registryAccess);
         this.recipesPage = new SmithingRecipeBookPage(registryAccess);
 
-//        if (this.isVisible()) {
-        this.initVisuals();
-//        }
+        if (this.isVisible()) {
+            this.initVisuals();
+        }
     }
 
     @Override
