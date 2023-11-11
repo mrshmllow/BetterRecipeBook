@@ -10,7 +10,6 @@ import net.minecraft.world.inventory.SmithingMenu;
 
 public class SmithingRecipeBookPage extends GenericRecipePage<SmithingMenu, SmithingRecipeCollection, BRBSmithingRecipe, SmithableRecipeButton> {
     public final SmithingOverlayRecipeComponent overlay = new SmithingOverlayRecipeComponent();
-    private int leftOffset;
     private RegistryAccess registryAccess;
 
     public SmithingRecipeBookPage(RegistryAccess registryAccess) {
@@ -31,7 +30,6 @@ public class SmithingRecipeBookPage extends GenericRecipePage<SmithingMenu, Smit
         for (int k = 0; k < this.buttons.size(); ++k) {
             this.buttons.get(k).setPosition(parentLeft + 11 + 25 * (k % 5), parentTop + 31 + 25 * (k / 5));
         }
-        this.leftOffset = leftOffset;
     }
 
     @Override
