@@ -29,7 +29,7 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.function.Supplier;
 
-public abstract class GenericRecipeBookComponent<M extends AbstractContainerMenu, P extends GenericRecipePage<M, C, R>, B extends GenericClientRecipeBook, C extends GenericRecipeBookCollection<R, M>, R extends GenericRecipe> implements Renderable, NarratableEntry, GuiEventListener, ISettingsButton, RecipeShownListener {
+public abstract class GenericRecipeBookComponent<M extends AbstractContainerMenu, P extends GenericRecipePage<M, C, R, W>, B extends GenericClientRecipeBook, C extends GenericRecipeBookCollection<R, M>, R extends GenericRecipe, W> implements Renderable, NarratableEntry, GuiEventListener, ISettingsButton, RecipeShownListener {
     protected static final Component SEARCH_HINT = RecipeBookComponentAccessor.getSEARCH_HINT();
     protected static final Component ALL_RECIPES_TOOLTIP = RecipeBookComponentAccessor.getALL_RECIPES_TOOLTIP();
     boolean visible;

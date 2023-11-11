@@ -35,7 +35,7 @@ import static marsh.town.brb.brewingstand.PlatformPotionUtil.getFrom;
 import static marsh.town.brb.brewingstand.PlatformPotionUtil.getIngredient;
 
 @Environment(EnvType.CLIENT)
-public class BrewingRecipeBookComponent extends GenericRecipeBookComponent<BrewingStandMenu, BrewingRecipeBookResults, BrewingClientRecipeBook, BrewingRecipeCollection, BrewableResult> implements IPinningComponent<BrewingRecipeCollection> {
+public class BrewingRecipeBookComponent extends GenericRecipeBookComponent<BrewingStandMenu, BrewingRecipeBookResults, BrewingClientRecipeBook, BrewingRecipeCollection, BrewableResult, BrewableAnimatedResultButton> implements IPinningComponent<BrewingRecipeCollection> {
     public final BrewingGhostRecipe ghostRecipe = new BrewingGhostRecipe();
     private static final Component ONLY_CRAFTABLES_TOOLTIP = Component.translatable("brb.gui.togglePotions.brewable");
     private RegistryAccess registryAccess;

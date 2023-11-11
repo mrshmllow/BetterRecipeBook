@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.function.Consumer;
 
-public class SmithingRecipeBookComponent extends GenericRecipeBookComponent<SmithingMenu, SmithingRecipeBookPage, SmithingClientRecipeBook, SmithingRecipeCollection, BRBSmithingRecipe> implements IPinningComponent<SmithingRecipeCollection> {
+public class SmithingRecipeBookComponent extends GenericRecipeBookComponent<SmithingMenu, SmithingRecipeBookPage, SmithingClientRecipeBook, SmithingRecipeCollection, BRBSmithingRecipe, SmithableRecipeButton> implements IPinningComponent<SmithingRecipeCollection> {
     private static final MutableComponent ONLY_CRAFTABLES_TOOLTIP = Component.translatable("brb.gui.smithable");
     @Nullable
     public SmithingGhostRecipe ghostRecipe;

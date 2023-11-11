@@ -1,6 +1,5 @@
 package marsh.town.brb.brewingstand;
 
-import com.google.common.collect.Lists;
 import marsh.town.brb.BetterRecipeBook;
 import marsh.town.brb.generic.GenericRecipePage;
 import marsh.town.brb.recipe.BRBRecipeBookCategory;
@@ -11,14 +10,9 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.inventory.BrewingStandMenu;
 
 import java.util.Iterator;
-import java.util.List;
 
 @Environment(EnvType.CLIENT)
-public class BrewingRecipeBookResults extends GenericRecipePage<BrewingStandMenu, BrewingRecipeCollection, BrewableResult> {
-    private List<BrewingRecipeCollection> recipeCollection;
-    public final List<BrewableAnimatedResultButton> buttons = Lists.newArrayListWithCapacity(20);
-    private int currentPage;
-    private BrewableAnimatedResultButton hoveredButton;
+public class BrewingRecipeBookResults extends GenericRecipePage<BrewingStandMenu, BrewingRecipeCollection, BrewableResult, BrewableAnimatedResultButton> {
     BRBRecipeBookCategory category;
 
     public BrewingRecipeBookResults() {
@@ -45,8 +39,8 @@ public class BrewingRecipeBookResults extends GenericRecipePage<BrewingStandMenu
 
         for (int j = 0; j < this.buttons.size(); ++j) {
             BrewableAnimatedResultButton brewableAnimatedResultButton = this.buttons.get(j);
-            if (i + j < this.recipeCollection.size()) {
-                BrewingRecipeCollection output = this.recipeCollection.get(i + j);
+            if (i + j < this.recipeCollections.size()) {
+                BrewingRecipeCollection output = this.recipeCollections.get(i + j);
                 brewableAnimatedResultButton.showPotionRecipe(output, category, menu);
                 brewableAnimatedResultButton.visible = true;
             } else {

@@ -1,6 +1,7 @@
 package marsh.town.brb.generic;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 import marsh.town.brb.BetterRecipeBook;
 import marsh.town.brb.recipe.BRBRecipeBookCategory;
 import marsh.town.brb.util.BRBTextures;
@@ -12,7 +13,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public abstract class GenericRecipePage<M extends AbstractContainerMenu, C extends GenericRecipeBookCollection<R, M>, R extends GenericRecipe> {
+public abstract class GenericRecipePage<M extends AbstractContainerMenu, C extends GenericRecipeBookCollection<R, M>, R extends GenericRecipe, B> {
     protected M menu;
     protected Minecraft minecraft;
     protected int parentLeft;
@@ -25,6 +26,8 @@ public abstract class GenericRecipePage<M extends AbstractContainerMenu, C exten
     protected BRBRecipeBookCategory category;
     protected int totalPages;
     protected int currentPage;
+    public final List<B> buttons = Lists.newArrayListWithCapacity(20);
+    protected B hoveredButton;
 
     protected GenericRecipePage() {
 
