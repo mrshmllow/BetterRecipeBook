@@ -40,7 +40,7 @@ public class SmithingRecipeBookPage extends GenericRecipePage<SmithingMenu, Smit
             SmithableRecipeButton smithableRecipeButton = this.buttons.get(j);
             if (i + j < this.recipeCollections.size()) {
                 SmithingRecipeCollection output = this.recipeCollections.get(i + j);
-                smithableRecipeButton.showSmithableRecipe(output, menu);
+                smithableRecipeButton.showCollection(output, menu);
                 smithableRecipeButton.visible = true;
             } else {
                 smithableRecipeButton.visible = false;
@@ -80,7 +80,7 @@ public class SmithingRecipeBookPage extends GenericRecipePage<SmithingMenu, Smit
             for (SmithableRecipeButton recipeButton : this.buttons) {
                 if (!recipeButton.mouseClicked(mouseX, mouseY, button)) continue;
                 if (button == 0) {
-                    this.lastClickedRecipe = recipeButton.getCurrentArmour();
+                    this.lastClickedRecipe = recipeButton.getCurrentDisplayedRecipe();
                     this.lastClickedRecipeCollection = recipeButton.getCollection();
                 } else if (button == 1 && !this.overlay.isVisible() && !recipeButton.isOnlyOption()) {
                     this.overlay.init(recipeButton.getCollection(), this.parentLeft, this.parentTop, registryAccess);

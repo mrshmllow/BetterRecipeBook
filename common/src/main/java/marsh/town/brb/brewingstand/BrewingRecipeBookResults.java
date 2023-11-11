@@ -7,19 +7,20 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.inventory.BrewingStandMenu;
 
 import java.util.Iterator;
 
 @Environment(EnvType.CLIENT)
-public class BrewingRecipeBookResults extends GenericRecipePage<BrewingStandMenu, BrewingRecipeCollection, BrewableResult, BrewableAnimatedResultButton> {
+public class BrewingRecipeBookResults extends GenericRecipePage<BrewingStandMenu, BrewingRecipeCollection, BrewableResult, BrewableRecipeButton> {
     BRBRecipeBookCategory category;
 
-    public BrewingRecipeBookResults() {
+    public BrewingRecipeBookResults(RegistryAccess registryAccess) {
         super();
 
         for (int i = 0; i < 20; ++i) {
-            this.buttons.add(new BrewableAnimatedResultButton());
+            this.buttons.add(new BrewableRecipeButton(registryAccess));
         }
     }
 
@@ -38,13 +39,13 @@ public class BrewingRecipeBookResults extends GenericRecipePage<BrewingStandMenu
         int i = 20 * this.currentPage;
 
         for (int j = 0; j < this.buttons.size(); ++j) {
-            BrewableAnimatedResultButton brewableAnimatedResultButton = this.buttons.get(j);
+            BrewableRecipeButton brewableRecipeButton = this.buttons.get(j);
             if (i + j < this.recipeCollections.size()) {
                 BrewingRecipeCollection output = this.recipeCollections.get(i + j);
-                brewableAnimatedResultButton.showPotionRecipe(output, category, menu);
-                brewableAnimatedResultButton.visible = true;
+                brewableRecipeButton.showCollection(output, menu, category);
+                brewableRecipeButton.visible = true;
             } else {
-                brewableAnimatedResultButton.visible = false;
+                brewableRecipeButton.visible = false;
             }
         }
 
@@ -68,19 +69,19 @@ public class BrewingRecipeBookResults extends GenericRecipePage<BrewingStandMenu
             this.updateButtonsForPage();
             return true;
         } else {
-            Iterator<BrewableAnimatedResultButton> var10 = this.buttons.iterator();
+            Iterator<BrewableRecipeButton> var10 = this.buttons.iterator();
 
-            BrewableAnimatedResultButton brewableAnimatedResultButton;
+            BrewableRecipeButton brewableRecipeButton;
             do {
                 if (!var10.hasNext()) {
                     return false;
                 }
 
-                brewableAnimatedResultButton = var10.next();
-            } while (!brewableAnimatedResultButton.mouseClicked(mouseX, mouseY, button));
+                brewableRecipeButton = var10.next();
+            } while (!brewableRecipeButton.mouseClicked(mouseX, mouseY, button));
 
             if (button == 0) {
-                this.lastClickedRecipeCollection = brewableAnimatedResultButton.getCollection();
+                this.lastClickedRecipeCollection = brewableRecipeButton.getCollection();
                 this.lastClickedRecipe = this.lastClickedRecipeCollection.getFirst();
             }
 
@@ -111,10 +112,10 @@ public class BrewingRecipeBookResults extends GenericRecipePage<BrewingStandMenu
 
         this.hoveredButton = null;
 
-        for (BrewableAnimatedResultButton brewableAnimatedResultButton : this.buttons) {
-            brewableAnimatedResultButton.render(gui, mouseX, mouseY, delta);
-            if (brewableAnimatedResultButton.visible && brewableAnimatedResultButton.isHoveredOrFocused()) {
-                this.hoveredButton = brewableAnimatedResultButton;
+        for (BrewableRecipeButton brewableRecipeButton : this.buttons) {
+            brewableRecipeButton.render(gui, mouseX, mouseY, delta);
+            if (brewableRecipeButton.visible && brewableRecipeButton.isHoveredOrFocused()) {
+                this.hoveredButton = brewableRecipeButton;
             }
         }
 

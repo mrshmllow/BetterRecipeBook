@@ -35,7 +35,7 @@ import static marsh.town.brb.brewingstand.PlatformPotionUtil.getFrom;
 import static marsh.town.brb.brewingstand.PlatformPotionUtil.getIngredient;
 
 @Environment(EnvType.CLIENT)
-public class BrewingRecipeBookComponent extends GenericRecipeBookComponent<BrewingStandMenu, BrewingRecipeBookResults, BrewingClientRecipeBook, BrewingRecipeCollection, BrewableResult, BrewableAnimatedResultButton> implements IPinningComponent<BrewingRecipeCollection> {
+public class BrewingRecipeBookComponent extends GenericRecipeBookComponent<BrewingStandMenu, BrewingRecipeBookResults, BrewingClientRecipeBook, BrewingRecipeCollection, BrewableResult, BrewableRecipeButton> implements IPinningComponent<BrewingRecipeCollection> {
     public final BrewingGhostRecipe ghostRecipe = new BrewingGhostRecipe();
     private static final Component ONLY_CRAFTABLES_TOOLTIP = Component.translatable("brb.gui.togglePotions.brewable");
     private RegistryAccess registryAccess;
@@ -48,7 +48,7 @@ public class BrewingRecipeBookComponent extends GenericRecipeBookComponent<Brewi
     public void init(int parentWidth, int parentHeight, Minecraft client, boolean narrow, BrewingStandMenu brewingStandScreenHandler, RegistryAccess registryAccess) {
         super.init(parentWidth, parentHeight, client, narrow, brewingStandScreenHandler, registryAccess);
 
-        this.recipesPage = new BrewingRecipeBookResults();
+        this.recipesPage = new BrewingRecipeBookResults(registryAccess);
         // this.cachedInvChangeCount = client.player.getInventory().getChangeCount();
         this.initVisuals();
 
@@ -180,7 +180,7 @@ public class BrewingRecipeBookComponent extends GenericRecipeBookComponent<Brewi
         }
 
         if (keyCode == GLFW.GLFW_KEY_F && BetterRecipeBook.config.enablePinning) {
-            for (BrewableAnimatedResultButton resultButton : this.recipesPage.buttons) {
+            for (BrewableRecipeButton resultButton : this.recipesPage.buttons) {
                 if (resultButton.isHoveredOrFocused()) {
                     BetterRecipeBook.pinnedRecipeManager.addOrRemoveFavourite(resultButton.getCollection());
                     this.updateCollections(false);

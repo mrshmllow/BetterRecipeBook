@@ -2,6 +2,7 @@ package marsh.town.brb.brewingstand;
 
 import marsh.town.brb.generic.GenericRecipe;
 import marsh.town.brb.recipe.BRBRecipeBookCategory;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.Slot;
@@ -75,5 +76,10 @@ public class BrewableResult implements GenericRecipe {
     @Override
     public ResourceLocation id() {
         return BuiltInRegistries.POTION.getKey(getTo(recipe));
+    }
+
+    @Override
+    public ItemStack getResult(RegistryAccess registryAccess) {
+        return ingredient;
     }
 }
