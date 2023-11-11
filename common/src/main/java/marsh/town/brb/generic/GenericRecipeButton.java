@@ -19,8 +19,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 public abstract class GenericRecipeButton<C extends GenericRecipeBookCollection<R, M>, R extends GenericRecipe, M extends AbstractContainerMenu> extends AbstractWidget {
+    private final Supplier<Boolean> filteringSupplier;
     protected C collection;
     protected M menu;
     protected float time;
@@ -28,9 +30,10 @@ public abstract class GenericRecipeButton<C extends GenericRecipeBookCollection<
     protected RegistryAccess registryAccess;
     protected BRBRecipeBookCategory category;
 
-    public GenericRecipeButton(RegistryAccess registryAccess) {
+    public GenericRecipeButton(RegistryAccess registryAccess, Supplier<Boolean> filteringSupplier) {
         super(0, 0, 25, 25, CommonComponents.EMPTY);
         this.registryAccess = registryAccess;
+        this.filteringSupplier = filteringSupplier;
     }
 
     public void showCollection(C collection, M smithingMenu, BRBRecipeBookCategory category) {
@@ -78,14 +81,12 @@ public abstract class GenericRecipeButton<C extends GenericRecipeBookCollection<
     public List<R> getOrderedRecipes() {
         List<R> list = this.getCollection().getDisplayRecipes(true);
 
-        if (!this.selfRecallFiltering()) {
+        if (!this.filteringSupplier.get()) {
             list.addAll(this.collection.getDisplayRecipes(false));
         }
 
         return list;
     }
-
-    protected abstract boolean selfRecallFiltering();
 
     public C getCollection() {
         return this.collection;

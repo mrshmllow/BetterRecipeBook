@@ -13,7 +13,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.function.Function;
+import java.util.function.Supplier;
 
 public class GenericRecipePage<M extends AbstractContainerMenu, C extends GenericRecipeBookCollection<R, M>, R extends GenericRecipe, W extends GenericRecipeButton<C, R, M>> {
     protected final RegistryAccess registryAccess;
@@ -32,11 +32,11 @@ public class GenericRecipePage<M extends AbstractContainerMenu, C extends Generi
     public final List<W> buttons = Lists.newArrayListWithCapacity(20);
     protected W hoveredButton;
 
-    public GenericRecipePage(RegistryAccess registryAccess, Function<RegistryAccess, W> recipeButtonSupplier) {
+    public GenericRecipePage(RegistryAccess registryAccess, Supplier<W> recipeButtonSupplier) {
         this.registryAccess = registryAccess;
 
         for (int i = 0; i < 20; ++i) {
-            this.buttons.add(recipeButtonSupplier.apply(this.registryAccess));
+            this.buttons.add(recipeButtonSupplier.get());
         }
     }
 

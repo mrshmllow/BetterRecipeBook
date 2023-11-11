@@ -1,7 +1,6 @@
 package marsh.town.brb.brewingstand;
 
 import com.google.common.collect.Lists;
-import marsh.town.brb.BetterRecipeBook;
 import marsh.town.brb.generic.GenericRecipeButton;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -15,18 +14,14 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.alchemy.PotionUtils;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 import static marsh.town.brb.brewingstand.PlatformPotionUtil.getIngredient;
 
 @Environment(EnvType.CLIENT)
 public class BrewableRecipeButton extends GenericRecipeButton<BrewingRecipeCollection, BrewableResult, BrewingStandMenu> {
-    public BrewableRecipeButton(RegistryAccess registryAccess) {
-        super(registryAccess);
-    }
-
-    @Override
-    protected boolean selfRecallFiltering() {
-        return BetterRecipeBook.rememberedBrewingToggle;
+    public BrewableRecipeButton(RegistryAccess registryAccess, Supplier<Boolean> rememberedFilteringSupplier) {
+        super(registryAccess, rememberedFilteringSupplier);
     }
 
     @Override

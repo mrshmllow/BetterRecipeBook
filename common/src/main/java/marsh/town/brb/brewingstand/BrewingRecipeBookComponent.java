@@ -48,7 +48,7 @@ public class BrewingRecipeBookComponent extends GenericRecipeBookComponent<Brewi
     public void init(int parentWidth, int parentHeight, Minecraft client, boolean narrow, BrewingStandMenu brewingStandScreenHandler, RegistryAccess registryAccess) {
         super.init(parentWidth, parentHeight, client, narrow, brewingStandScreenHandler, registryAccess);
 
-        this.recipesPage = new GenericRecipePage<>(registryAccess, BrewableRecipeButton::new);
+        this.recipesPage = new GenericRecipePage<>(registryAccess, () -> new BrewableRecipeButton(registryAccess, this::selfRecallFiltering));
 
         // this.cachedInvChangeCount = client.player.getInventory().getChangeCount();
 

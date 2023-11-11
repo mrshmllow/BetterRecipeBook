@@ -42,7 +42,7 @@ public class SmithingRecipeBookComponent extends GenericRecipeBookComponent<Smit
 
         this.recipeManager = recipeManager;
         this.ghostRecipe = new SmithingGhostRecipe(onGhostRecipeUpdate, registryAccess);
-        this.recipesPage = new SmithingRecipeBookPage(registryAccess);
+        this.recipesPage = new SmithingRecipeBookPage(registryAccess, () -> BetterRecipeBook.rememberedSmithableToggle);
 
         if (this.isVisible()) {
             this.initVisuals();

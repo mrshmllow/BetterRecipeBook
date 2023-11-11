@@ -6,11 +6,13 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.inventory.SmithingMenu;
 
+import java.util.function.Supplier;
+
 public class SmithingRecipeBookPage extends GenericRecipePage<SmithingMenu, SmithingRecipeCollection, BRBSmithingRecipe, SmithableRecipeButton> {
     public final SmithingOverlayRecipeComponent overlay = new SmithingOverlayRecipeComponent();
 
-    public SmithingRecipeBookPage(RegistryAccess registryAccess) {
-        super(registryAccess, SmithableRecipeButton::new);
+    public SmithingRecipeBookPage(RegistryAccess registryAccess, Supplier<Boolean> filteringSupplier) {
+        super(registryAccess, () -> new SmithableRecipeButton(registryAccess, filteringSupplier));
     }
 
     @Override
