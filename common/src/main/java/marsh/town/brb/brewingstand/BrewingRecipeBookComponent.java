@@ -4,7 +4,6 @@ import marsh.town.brb.BetterRecipeBook;
 import marsh.town.brb.api.BRBBookCategories;
 import marsh.town.brb.api.BRBBookSettings;
 import marsh.town.brb.generic.GenericRecipeBookComponent;
-import marsh.town.brb.generic.GenericRecipeButton;
 import marsh.town.brb.generic.GenericRecipePage;
 import marsh.town.brb.interfaces.IPinningComponent;
 import marsh.town.brb.loaders.PotionLoader;
@@ -211,11 +210,6 @@ public class BrewingRecipeBookComponent extends GenericRecipeBookComponent<Brewi
         }
 
         this.updateCollections(false);
-    }
-
-    @Override
-    public void recipesShown(List<RecipeHolder<?>> list) {
-
     }
 
     public void recipesUpdated() {

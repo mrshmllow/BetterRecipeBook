@@ -4,7 +4,6 @@ import marsh.town.brb.BetterRecipeBook;
 import marsh.town.brb.api.BRBBookCategories;
 import marsh.town.brb.api.BRBBookSettings;
 import marsh.town.brb.generic.GenericRecipeBookComponent;
-import marsh.town.brb.generic.GenericRecipeButton;
 import marsh.town.brb.interfaces.IPinningComponent;
 import marsh.town.brb.recipe.BRBSmithingRecipe;
 import marsh.town.brb.recipe.smithing.BRBSmithingTransformRecipe;
@@ -158,10 +157,5 @@ public class SmithingRecipeBookComponent extends GenericRecipeBookComponent<Smit
         }
 
         return results;
-    }
-
-    @Override
-    public void recipesShown(List<RecipeHolder<?>> list) {
-
     }
 }

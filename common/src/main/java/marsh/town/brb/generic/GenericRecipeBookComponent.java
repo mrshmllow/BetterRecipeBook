@@ -438,4 +438,9 @@ public abstract class GenericRecipeBookComponent<M extends AbstractContainerMenu
     }
 
     protected abstract List<C> getCollectionsForCategory();
+
+    @Override
+    public void recipesShown(List<RecipeHolder<?>> list) {
+
+    }
 }
