@@ -14,7 +14,6 @@ import marsh.town.brb.util.ClientInventoryUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
@@ -159,10 +158,6 @@ public class BrewingRecipeBookComponent extends GenericRecipeBookComponent<Brewi
         this.betterRecipeBook$sortByPinsInPlace(results);
 
         this.recipesPage.setResults(results, resetCurrentPage, selectedTab.getCategory());
-    }
-
-    public void renderGhostRecipe(GuiGraphics guiGraphics, int x, int y, boolean bl, float delta) {
-        this.ghostRecipe.render(guiGraphics, this.minecraft, x, y, bl, delta);
     }
 
     @Override

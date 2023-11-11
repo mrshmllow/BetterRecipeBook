@@ -420,5 +420,9 @@ public abstract class GenericRecipeBookComponent<M extends AbstractContainerMenu
         }
     }
 
+    public void renderGhostRecipe(GuiGraphics guiGraphics, int x, int y, boolean bl, float delta) {
+        this.ghostRecipe.render(guiGraphics, this.minecraft, x, y, bl, delta);
+    }
+
     protected abstract List<C> getCollectionsForCategory();
 }

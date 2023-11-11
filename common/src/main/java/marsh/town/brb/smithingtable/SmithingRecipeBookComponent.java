@@ -12,7 +12,6 @@ import marsh.town.brb.recipe.smithing.BRBSmithingTrimRecipe;
 import marsh.town.brb.util.BRBHelper;
 import marsh.town.brb.util.ClientInventoryUtil;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -148,10 +147,6 @@ public class SmithingRecipeBookComponent extends GenericRecipeBookComponent<Smit
         this.ghostRecipe.addIngredient(SmithingMenu.ADDITIONAL_SLOT, result.getAddition(), SmithingMenu.ADDITIONAL_SLOT_X_PLACEMENT, SmithingMenu.SLOT_Y_PLACEMENT);
         this.ghostRecipe.addIngredient(SmithingMenu.TEMPLATE_SLOT, result.getTemplate(), SmithingMenu.TEMPLATE_SLOT_X_PLACEMENT, SmithingMenu.SLOT_Y_PLACEMENT);
         this.ghostRecipe.addIngredient(SmithingMenu.BASE_SLOT, Ingredient.of(result.getBase()), SmithingMenu.BASE_SLOT_X_PLACEMENT, SmithingMenu.SLOT_Y_PLACEMENT);
-    }
-
-    public void renderGhostRecipe(GuiGraphics guiGraphics, int i, int j, boolean bl, float f) {
-        this.ghostRecipe.render(guiGraphics, this.minecraft, i, j, bl, f);
     }
 
     public boolean isShowingGhostRecipe() {
