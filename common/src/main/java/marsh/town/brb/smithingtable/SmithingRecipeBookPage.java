@@ -35,24 +35,6 @@ public class SmithingRecipeBookPage extends GenericRecipePage<SmithingMenu, Smit
     }
 
     @Override
-    public void updateButtonsForPage() {
-        int i = 20 * this.currentPage;
-
-        for (int j = 0; j < this.buttons.size(); ++j) {
-            SmithableRecipeButton smithableRecipeButton = this.buttons.get(j);
-            if (i + j < this.recipeCollections.size()) {
-                SmithingRecipeCollection output = this.recipeCollections.get(i + j);
-                smithableRecipeButton.showCollection(output, menu);
-                smithableRecipeButton.visible = true;
-            } else {
-                smithableRecipeButton.visible = false;
-            }
-        }
-
-        this.updateArrowButtons();
-    }
-
-    @Override
     public void render(GuiGraphics gui, int x, int y, int mouseX, int mouseY, float delta) {
         super.render(gui, x, y, mouseX, mouseY, delta);
 

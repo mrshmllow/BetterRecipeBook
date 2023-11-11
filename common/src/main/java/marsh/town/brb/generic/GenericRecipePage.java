@@ -91,6 +91,23 @@ public abstract class GenericRecipePage<M extends AbstractContainerMenu, C exten
         return false;
     }
 
+    public void updateButtonsForPage() {
+        int i = 20 * this.currentPage;
+
+        for (int j = 0; j < this.buttons.size(); ++j) {
+            W button = this.buttons.get(j);
+            if (i + j < this.recipeCollections.size()) {
+                C output = this.recipeCollections.get(i + j);
+                button.showCollection(output, menu, this.category);
+                button.visible = true;
+            } else {
+                button.visible = false;
+            }
+        }
+
+        this.updateArrowButtons();
+    }
+
     protected abstract boolean overlayIsVisible();
 
     protected abstract boolean isFilteringCraftable();
@@ -140,8 +157,6 @@ public abstract class GenericRecipePage<M extends AbstractContainerMenu, C exten
 
         this.updateButtonsForPage();
     }
-
-    protected abstract void updateButtonsForPage();
 
     @Nullable
     public R getCurrentClickedRecipe() {

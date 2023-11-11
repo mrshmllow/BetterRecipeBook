@@ -27,11 +27,6 @@ public class BrewableRecipeButton extends GenericRecipeButton<BrewingRecipeColle
         super(registryAccess);
     }
 
-    public void showCollection(BrewingRecipeCollection potionRecipe, BrewingStandMenu menu, BRBRecipeBookCategory category) {
-        super.showCollection(potionRecipe, menu);
-        this.category = category;
-    }
-
     @Override
     protected boolean selfRecallFiltering() {
         return BetterRecipeBook.rememberedBrewingToggle;

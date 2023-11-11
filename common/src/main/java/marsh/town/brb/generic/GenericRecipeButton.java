@@ -2,6 +2,7 @@ package marsh.town.brb.generic;
 
 import com.google.common.collect.Lists;
 import marsh.town.brb.BetterRecipeBook;
+import marsh.town.brb.recipe.BRBRecipeBookCategory;
 import marsh.town.brb.util.BRBTextures;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -25,15 +26,17 @@ public abstract class GenericRecipeButton<C extends GenericRecipeBookCollection<
     protected float time;
     protected int currentIndex;
     protected RegistryAccess registryAccess;
+    protected BRBRecipeBookCategory category;
 
     public GenericRecipeButton(RegistryAccess registryAccess) {
         super(0, 0, 25, 25, CommonComponents.EMPTY);
         this.registryAccess = registryAccess;
     }
 
-    public void showCollection(C collection, M smithingMenu) {
+    public void showCollection(C collection, M smithingMenu, BRBRecipeBookCategory category) {
         this.collection = collection;
         this.menu = smithingMenu;
+        this.category = category;
     }
 
     public void renderWidget(GuiGraphics gui, int mouseX, int mouseY, float delta) {
