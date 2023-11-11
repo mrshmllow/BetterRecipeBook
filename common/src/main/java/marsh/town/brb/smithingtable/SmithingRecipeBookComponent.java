@@ -8,7 +8,6 @@ import marsh.town.brb.recipe.BRBSmithingRecipe;
 import marsh.town.brb.util.ClientInventoryUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -20,7 +19,6 @@ import net.minecraft.world.item.armortrim.ArmorTrim;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
-import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;
@@ -30,23 +28,22 @@ import java.util.function.Consumer;
 
 public class SmithingRecipeBookComponent extends GenericRecipeBookComponent<SmithingMenu, SmithingClientRecipeBook, SmithingRecipeCollection, BRBSmithingRecipe, SmithableRecipeButton> implements IPinningComponent<SmithingRecipeCollection> {
     private static final MutableComponent ONLY_CRAFTABLES_TOOLTIP = Component.translatable("brb.gui.smithable");
-    @Nullable
-    public SmithingGhostRecipe ghostRecipe;
 
     public SmithingRecipeBookComponent() {
         super(SmithingClientRecipeBook::new);
     }
 
-    public void init(int width, int height, Minecraft minecraft, boolean widthNarrow, SmithingMenu menu, Consumer<SmithingGhostRecipe> onGhostRecipeUpdate, RegistryAccess registryAccess, RecipeManager recipeManager) {
-        super.init(width, height, minecraft, widthNarrow, menu, registryAccess);
+    public void init(int width, int height, Minecraft minecraft, boolean widthNarrow, SmithingMenu menu, Consumer<ItemStack> onGhostRecipeUpdate, RegistryAccess registryAccess, RecipeManager recipeManager) {
+        super.init(width, height, minecraft, widthNarrow, menu, onGhostRecipeUpdate, registryAccess);
 
         this.recipeManager = recipeManager;
         this.ghostRecipe = new SmithingGhostRecipe(onGhostRecipeUpdate, registryAccess);
+        this.ghostRecipe.setDefaultRenderingPredicate(this.menu);
         this.recipesPage = new SmithingRecipeBookPage(registryAccess, () -> BetterRecipeBook.rememberedSmithableToggle);
 
-        if (this.isVisible()) {
-            this.initVisuals();
-        }
+//        if (this.isVisible()) {
+        this.initVisuals();
+//        }
     }
 
     @Override
@@ -159,30 +156,13 @@ public class SmithingRecipeBookComponent extends GenericRecipeBookComponent<Smit
     public void setupGhostRecipe(BRBSmithingRecipe result, List<Slot> list) {
         this.ghostRecipe.setRecipe(result);
 
-        this.ghostRecipe.addIngredient(result.getAddition(), SmithingMenu.ADDITIONAL_SLOT_X_PLACEMENT, SmithingMenu.SLOT_Y_PLACEMENT);
-        this.ghostRecipe.addIngredient(result.getTemplate(), SmithingMenu.TEMPLATE_SLOT_X_PLACEMENT, SmithingMenu.SLOT_Y_PLACEMENT);
-        this.ghostRecipe.addIngredient(Ingredient.of(result.getBase()), SmithingMenu.BASE_SLOT_X_PLACEMENT, SmithingMenu.SLOT_Y_PLACEMENT);
+        this.ghostRecipe.addIngredient(SmithingMenu.ADDITIONAL_SLOT, result.getAddition(), SmithingMenu.ADDITIONAL_SLOT_X_PLACEMENT, SmithingMenu.SLOT_Y_PLACEMENT);
+        this.ghostRecipe.addIngredient(SmithingMenu.TEMPLATE_SLOT, result.getTemplate(), SmithingMenu.TEMPLATE_SLOT_X_PLACEMENT, SmithingMenu.SLOT_Y_PLACEMENT);
+        this.ghostRecipe.addIngredient(SmithingMenu.BASE_SLOT, Ingredient.of(result.getBase()), SmithingMenu.BASE_SLOT_X_PLACEMENT, SmithingMenu.SLOT_Y_PLACEMENT);
     }
 
     public void renderGhostRecipe(GuiGraphics guiGraphics, int i, int j, boolean bl, float f) {
         this.ghostRecipe.render(guiGraphics, this.minecraft, i, j, bl, f);
-    }
-
-    public void renderGhostRecipeTooltip(GuiGraphics guiGraphics, int i, int j, int k, int l) {
-        ItemStack itemStack = null;
-
-        for (int m = 0; m < this.ghostRecipe.size(); ++m) {
-            SmithingGhostRecipe.SmithingGhostIngredient ghostIngredient = this.ghostRecipe.get(m);
-            int n = ghostIngredient.getX() + i;
-            int o = ghostIngredient.getY() + j;
-            if (k >= n && l >= o && k < n + 16 && l < o + 16) {
-                itemStack = ghostIngredient.getItem();
-            }
-        }
-
-        if (itemStack != null && this.minecraft.screen != null) {
-            guiGraphics.renderComponentTooltip(this.minecraft.font, Screen.getTooltipFromItem(this.minecraft, itemStack), k, l);
-        }
     }
 
     public boolean isShowingGhostRecipe() {

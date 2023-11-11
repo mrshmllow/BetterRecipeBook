@@ -20,6 +20,7 @@ import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.StackedContents;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -28,6 +29,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public abstract class GenericRecipeBookComponent<M extends AbstractContainerMenu, B extends GenericClientRecipeBook, C extends GenericRecipeBookCollection<R, M>, R extends GenericRecipe, W extends GenericRecipeButton<C, R, M>> implements Renderable, NarratableEntry, GuiEventListener, ISettingsButton, RecipeShownListener {
@@ -56,6 +58,8 @@ public abstract class GenericRecipeBookComponent<M extends AbstractContainerMenu
     private final Supplier<? extends B> bookSupplier;
     private boolean doubleRefresh = true;
     protected RegistryAccess registryAccess;
+    @Nullable
+    public GenericGhostRecipe<R> ghostRecipe;
 
 //    private int timesInventoryChanged;
 
@@ -67,7 +71,11 @@ public abstract class GenericRecipeBookComponent<M extends AbstractContainerMenu
 
     abstract public BRBRecipeBookType getRecipeBookType();
 
-    public void init(int width, int height, Minecraft minecraft, boolean widthNarrow, M menu, RegistryAccess registryAccess) {
+    public void init(int parentWidth, int parentHeight, Minecraft client, boolean narrow, M menu, RegistryAccess registryAccess) {
+        this.init(parentWidth, parentHeight, client, narrow, menu, null, registryAccess);
+    }
+
+    public void init(int width, int height, Minecraft minecraft, boolean widthNarrow, M menu, @Nullable Consumer<ItemStack> onGhostRecipeUpdate, RegistryAccess registryAccess) {
         this.minecraft = minecraft;
         this.width = width;
         this.height = height;
@@ -80,6 +88,8 @@ public abstract class GenericRecipeBookComponent<M extends AbstractContainerMenu
 
         this.book = bookSupplier.get();
         this.registryAccess = registryAccess;
+
+        this.ghostRecipe = new GenericGhostRecipe<>(onGhostRecipeUpdate, registryAccess);
 
 //        this.timesInventoryChanged = minecraft.player.getInventory().getTimesChanged();
     }
@@ -390,7 +400,7 @@ public abstract class GenericRecipeBookComponent<M extends AbstractContainerMenu
             ISettingsButton.super.renderSettingsButtonTooltip(this.settingsButton, gui, mouseX, mouseY);
         }
 
-        this.renderGhostRecipeTooltip(gui, x, y, mouseX, mouseY);
+        this.ghostRecipe.drawTooltip(gui, x, y, mouseX, mouseY);
     }
 
     protected void refreshTabButtons() {
@@ -406,6 +416,4 @@ public abstract class GenericRecipeBookComponent<M extends AbstractContainerMenu
             button.setPosition(i, j + 27 * l++);
         }
     }
-
-    protected abstract void renderGhostRecipeTooltip(GuiGraphics gui, int x, int y, int mouseX, int mouseY);
 }

@@ -5,8 +5,8 @@ import marsh.town.brb.enums.BRBRecipeBookType;
 import marsh.town.brb.generic.GenericRecipeBookComponent;
 import marsh.town.brb.generic.GenericRecipePage;
 import marsh.town.brb.interfaces.IPinningComponent;
+import marsh.town.brb.mixins.accessors.BrewingStandMenuAccessor;
 import marsh.town.brb.recipe.BRBRecipeBookCategory;
-import marsh.town.brb.util.BrewingGhostRecipe;
 import marsh.town.brb.util.ClientInventoryUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -31,58 +31,59 @@ import org.lwjgl.glfw.GLFW;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.function.Consumer;
 
 import static marsh.town.brb.brewingstand.PlatformPotionUtil.getFrom;
 import static marsh.town.brb.brewingstand.PlatformPotionUtil.getIngredient;
 
 @Environment(EnvType.CLIENT)
 public class BrewingRecipeBookComponent extends GenericRecipeBookComponent<BrewingStandMenu, BrewingClientRecipeBook, BrewingRecipeCollection, BrewableResult, BrewableRecipeButton> implements IPinningComponent<BrewingRecipeCollection> {
-    public final BrewingGhostRecipe ghostRecipe = new BrewingGhostRecipe();
     private static final Component ONLY_CRAFTABLES_TOOLTIP = Component.translatable("brb.gui.togglePotions.brewable");
 
     public BrewingRecipeBookComponent() {
         super(BrewingClientRecipeBook::new);
     }
 
-    @Override
     public void init(int parentWidth, int parentHeight, Minecraft client, boolean narrow, BrewingStandMenu brewingStandScreenHandler, RegistryAccess registryAccess) {
-        super.init(parentWidth, parentHeight, client, narrow, brewingStandScreenHandler, registryAccess);
+        this.init(parentWidth, parentHeight, client, narrow, brewingStandScreenHandler, null, registryAccess);
+    }
+
+    @Override
+    public void init(int parentWidth, int parentHeight, Minecraft client, boolean narrow, BrewingStandMenu menu, Consumer<ItemStack> onGhostRecipeUpdate, RegistryAccess registryAccess) {
+        super.init(parentWidth, parentHeight, client, narrow, menu, onGhostRecipeUpdate, registryAccess);
 
         this.recipesPage = new GenericRecipePage<>(registryAccess, () -> new BrewableRecipeButton(registryAccess, this::selfRecallFiltering));
-
         // this.cachedInvChangeCount = client.player.getInventory().getChangeCount();
 
-        if (this.isVisible()) {
-            this.initVisuals();
-        }
+//        if (this.isVisible()) {
+        this.initVisuals();
+//        }
 
-        // this code is responsible for selectively rendering ghost slots
         ghostRecipe.setRenderingPredicate((type, ingredient) -> {
-            ItemStack real = brewingStandScreenHandler.slots.get(ingredient.getContainerSlot()).getItem();
+            ItemStack slot = menu.slots.get(ingredient.getContainerSlot()).getItem();
             switch (type) {
-                case ITEM:
-                case BACKGROUND:
-                    // slot 0 is the preview so map it to 1
-                    ItemStack fake = ingredient.getContainerSlot() == 0 ? ingredient.getOwner().getBySlot(1).getItem() : ingredient.getItem();
+                case ITEM, BACKGROUND -> {
+                    // slot 0 is the result so map it to 1
+                    ItemStack ghost = ingredient.getContainerSlot() == BrewingStandMenuAccessor.getBOTTLE_SLOT_START() ? ingredient.getOwner().getBySlot(1).getItem() : ingredient.getItem();
 
-                    // if the ingredient is in one of the output slots
-                    if (ingredient.getContainerSlot() < 3) {
-                        if (real.getItem() instanceof PotionItem) {
-                            Potion realPotion = PotionUtils.getPotion(real);
-                            Potion fakePotion = PotionUtils.getPotion(fake);
+                    // slot is result
+                    if (ingredient.getContainerSlot() >= BrewingStandMenuAccessor.getBOTTLE_SLOT_START() && ingredient.getContainerSlot() <= BrewingStandMenuAccessor.getBOTTLE_SLOT_END()) {
+                        if (!(slot.getItem() instanceof PotionItem)) return true;
 
-                            return !realPotion.equals(fakePotion);
-                        } else { // else it's not valid
-                            return true;
-                        }
+                        Potion slotPotion = PotionUtils.getPotion(slot);
+                        Potion ghostPotion = PotionUtils.getPotion(ghost);
+
+                        return !slotPotion.equals(ghostPotion);
                     } else { // else it's the consumable item
-                        return !real.is(fake.getItem());
+                        return !slot.is(ghost.getItem());
                     }
-                case TOOLTIP:
-                    return real.isEmpty();
-                default:
-                    return true;
+                }
+                case TOOLTIP -> {
+                    // render tooltip only if slot is empty
+                    return slot.isEmpty();
+                }
             }
+            return true;
         });
 
         // still required?
@@ -106,14 +107,15 @@ public class BrewingRecipeBookComponent extends GenericRecipeBookComponent<Brewi
         return inputStack;
     }
 
-    public void showGhostRecipe(BrewableResult result, List<Slot> slots) {
-        this.ghostRecipe.addIngredient(3, Ingredient.of(getIngredient(result.recipe).getItems()[0]), slots.get(3).x, slots.get(3).y);
+    public void setupGhostRecipe(BrewableResult result, List<Slot> slots) {
+        this.ghostRecipe.addIngredient(BrewingStandMenuAccessor.getINGREDIENT_SLOT(), Ingredient.of(getIngredient(result.recipe).getItems()[0]), slots.get(BrewingStandMenuAccessor.getINGREDIENT_SLOT()).x, slots.get(BrewingStandMenuAccessor.getINGREDIENT_SLOT()).y);
 
         assert selectedTab != null;
         ItemStack inputStack = result.inputAsItemStack(selectedTab.getCategory());
-        this.ghostRecipe.addIngredient(0, Ingredient.of(inputStack), slots.get(0).x, slots.get(0).y);
-        this.ghostRecipe.addIngredient(1, Ingredient.of(inputStack), slots.get(1).x, slots.get(1).y);
-        this.ghostRecipe.addIngredient(2, Ingredient.of(inputStack), slots.get(2).x, slots.get(2).y);
+
+        for (int i = BrewingStandMenuAccessor.getBOTTLE_SLOT_START(); i <= BrewingStandMenuAccessor.getBOTTLE_SLOT_END(); i++) {
+            this.ghostRecipe.addIngredient(i, Ingredient.of(inputStack), slots.get(i).x, slots.get(i).y);
+        }
     }
 
     public boolean toggleFiltering() {
@@ -164,11 +166,6 @@ public class BrewingRecipeBookComponent extends GenericRecipeBookComponent<Brewi
     }
 
     @Override
-    protected void renderGhostRecipeTooltip(GuiGraphics gui, int x, int y, int mouseX, int mouseY) {
-        ghostRecipe.renderTooltip(gui, x, y, mouseX, mouseY);
-    }
-
-    @Override
     public Component getRecipeFilterName() {
         return ONLY_CRAFTABLES_TOOLTIP;
     }
@@ -205,7 +202,7 @@ public class BrewingRecipeBookComponent extends GenericRecipeBookComponent<Brewi
         this.ghostRecipe.clear();
 
         if (!result.hasMaterials(this.selectedTab.getCategory(), menu.slots)) {
-            showGhostRecipe(result, menu.slots);
+            setupGhostRecipe(result, menu.slots);
             return;
         }
 
