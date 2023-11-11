@@ -38,10 +38,6 @@ import static marsh.town.brb.brewingstand.PlatformPotionUtil.getIngredient;
 public class BrewingRecipeBookComponent extends GenericRecipeBookComponent<BrewingStandMenu, BrewingRecipeCollection, BrewableResult> implements IPinningComponent<BrewingRecipeCollection> {
     private static final Component ONLY_CRAFTABLES_TOOLTIP = Component.translatable("brb.gui.togglePotions.brewable");
 
-    public void init(int parentWidth, int parentHeight, Minecraft client, boolean narrow, BrewingStandMenu brewingStandScreenHandler, RegistryAccess registryAccess, BRBHelper.Book book) {
-        this.init(parentWidth, parentHeight, client, narrow, brewingStandScreenHandler, null, registryAccess, book);
-    }
-
     @Override
     public void init(int parentWidth, int parentHeight, Minecraft client, boolean narrow, BrewingStandMenu menu, Consumer<ItemStack> onGhostRecipeUpdate, RegistryAccess registryAccess, BRBHelper.Book book) {
         super.init(parentWidth, parentHeight, client, narrow, menu, onGhostRecipeUpdate, registryAccess, book);
