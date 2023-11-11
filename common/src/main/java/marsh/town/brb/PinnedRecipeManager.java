@@ -7,12 +7,10 @@ import marsh.town.brb.generic.GenericRecipe;
 import marsh.town.brb.generic.GenericRecipeBookCollection;
 import marsh.town.brb.generic.pins.Pinnable;
 import marsh.town.brb.mixins.accessors.RecipeBookComponentAccessor;
-import marsh.town.brb.recipe.BRBSmithingRecipe;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.recipebook.RecipeBookComponent;
 import net.minecraft.client.gui.screens.recipebook.RecipeBookPage;
 import net.minecraft.client.gui.screens.recipebook.RecipeCollection;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.crafting.RecipeHolder;
@@ -95,21 +93,6 @@ public class PinnedRecipeManager {
         }
 
         this.pinned.addAll(target.getRecipes().stream().map(R::id).toList());
-        this.store();
-    }
-
-    public void addOrRemoveFavouriteSmithing(BRBSmithingRecipe recipe) {
-        ResourceLocation targetIdentifier = BuiltInRegistries.ITEM.getKey(recipe.getTemplate().getItems()[0].getItem());
-
-        for (ResourceLocation identifier : this.pinned) {
-            if (identifier.equals(targetIdentifier)) {
-                this.pinned.remove(targetIdentifier);
-                this.store();
-                return;
-            }
-        }
-
-        this.pinned.add(targetIdentifier);
         this.store();
     }
 

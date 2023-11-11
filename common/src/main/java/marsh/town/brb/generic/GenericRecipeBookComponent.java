@@ -22,9 +22,11 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.StackedContents;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.lwjgl.glfw.GLFW;
 
 import java.util.Iterator;
 import java.util.List;
@@ -199,6 +201,17 @@ public abstract class GenericRecipeBookComponent<M extends AbstractContainerMenu
             this.searchBox.setFocused(true);
             return true;
         }
+
+        if (i == GLFW.GLFW_KEY_F && BetterRecipeBook.config.enablePinning) {
+            for (GenericRecipeButton<C, R, M> resultButton : this.recipesPage.buttons) {
+                if (resultButton.isHoveredOrFocused()) {
+                    BetterRecipeBook.pinnedRecipeManager.addOrRemoveFavourite(resultButton.getCollection());
+                    this.updateCollections(false);
+                    return true;
+                }
+            }
+        }
+
         return false;
     }
 

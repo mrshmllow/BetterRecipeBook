@@ -27,8 +27,6 @@ import net.minecraft.world.item.PotionItem;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.RecipeHolder;
-import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -168,24 +166,6 @@ public class BrewingRecipeBookComponent extends GenericRecipeBookComponent<Brewi
     @Override
     public BRBHelper.Book getRecipeBookType() {
         return BetterRecipeBook.BREWING;
-    }
-
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        if (super.keyPressed(keyCode, scanCode, modifiers)) {
-            return true;
-        }
-
-        if (keyCode == GLFW.GLFW_KEY_F && BetterRecipeBook.config.enablePinning) {
-            for (GenericRecipeButton<BrewingRecipeCollection, BrewableResult, BrewingStandMenu> resultButton : this.recipesPage.buttons) {
-                if (resultButton.isHoveredOrFocused()) {
-                    BetterRecipeBook.pinnedRecipeManager.addOrRemoveFavourite(resultButton.getCollection());
-                    this.updateCollections(false);
-                    return true;
-                }
-            }
-        }
-
-        return false;
     }
 
     @Override

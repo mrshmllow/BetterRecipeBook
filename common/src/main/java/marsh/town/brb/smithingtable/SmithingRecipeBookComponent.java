@@ -21,7 +21,6 @@ import net.minecraft.world.inventory.SmithingMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.armortrim.ArmorTrim;
 import net.minecraft.world.item.crafting.*;
-import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -74,25 +73,6 @@ public class SmithingRecipeBookComponent extends GenericRecipeBookComponent<Smit
     @Override
     public BRBHelper.Book getRecipeBookType() {
         return BetterRecipeBook.SMITHING;
-    }
-
-    @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        if (super.keyPressed(keyCode, scanCode, modifiers)) {
-            return true;
-        }
-
-        if (keyCode == GLFW.GLFW_KEY_F && BetterRecipeBook.config.enablePinning) {
-            for (GenericRecipeButton<SmithingRecipeCollection, BRBSmithingRecipe, SmithingMenu> resultButton : this.recipesPage.buttons) {
-                if (resultButton.isHoveredOrFocused()) {
-                    BetterRecipeBook.pinnedRecipeManager.addOrRemoveFavouriteSmithing(resultButton.getCollection().getFirst());
-                    this.updateCollections(false);
-                    return true;
-                }
-            }
-        }
-
-        return false;
     }
 
     @Override
