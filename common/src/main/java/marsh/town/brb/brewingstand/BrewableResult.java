@@ -1,7 +1,8 @@
 package marsh.town.brb.brewingstand;
 
+import marsh.town.brb.BetterRecipeBook;
+import marsh.town.brb.api.BRBBookCategories;
 import marsh.town.brb.generic.GenericRecipe;
-import marsh.town.brb.recipe.BRBRecipeBookCategory;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
@@ -35,14 +36,14 @@ public class BrewableResult implements GenericRecipe {
         return false;
     }
 
-    public ItemStack inputAsItemStack(BRBRecipeBookCategory category) {
+    public ItemStack inputAsItemStack(BRBBookCategories.Category category) {
         Potion inputPotion = getFrom(recipe);
 
         ResourceLocation identifier = BuiltInRegistries.POTION.getKey(inputPotion);
         ItemStack inputStack;
-        if (category == BRBRecipeBookCategory.BREWING_SPLASH_POTION) {
+        if (category == BetterRecipeBook.BREWING_SPLASH_POTION) {
             inputStack = new ItemStack(Items.SPLASH_POTION);
-        } else if (category == BRBRecipeBookCategory.BREWING_LINGERING_POTION) {
+        } else if (category == BetterRecipeBook.BREWING_LINGERING_POTION) {
             inputStack = new ItemStack(Items.LINGERING_POTION);
         } else {
             inputStack = new ItemStack(Items.POTION);
@@ -52,7 +53,7 @@ public class BrewableResult implements GenericRecipe {
         return inputStack;
     }
 
-    public boolean hasInput(BRBRecipeBookCategory category, List<Slot> slots) {
+    public boolean hasInput(BRBBookCategories.Category category, List<Slot> slots) {
         ItemStack inputStack = inputAsItemStack(category);
 
         for (Slot slot : slots) {
@@ -66,7 +67,7 @@ public class BrewableResult implements GenericRecipe {
         return false;
     }
 
-    public boolean hasMaterials(BRBRecipeBookCategory category, List<Slot> slots) {
+    public boolean hasMaterials(BRBBookCategories.Category category, List<Slot> slots) {
         boolean hasIngredient = hasIngredient(slots);
         boolean hasInput = hasInput(category, slots);
 

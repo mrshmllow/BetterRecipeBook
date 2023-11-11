@@ -3,6 +3,7 @@ package marsh.town.brb.smithingtable;
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.systems.RenderSystem;
 import marsh.town.brb.BetterRecipeBook;
+import marsh.town.brb.api.BBRBookSettings;
 import marsh.town.brb.recipe.BRBSmithingRecipe;
 import marsh.town.brb.util.BRBTextures;
 import net.minecraft.client.gui.GuiGraphics;
@@ -32,9 +33,8 @@ public class SmithingOverlayRecipeComponent implements Renderable, GuiEventListe
     public void init(SmithingRecipeCollection recipeCollection, int x, int y, RegistryAccess registryAccess) {
         this.collection = recipeCollection;
 
-        boolean isFiltering = BetterRecipeBook.rememberedSmithableToggle;
         List<BRBSmithingRecipe> lockedRecipes = recipeCollection.getDisplayRecipes(true);
-        List<BRBSmithingRecipe> unlockedRecipes = isFiltering ? Collections.emptyList() : recipeCollection.getDisplayRecipes(false);
+        List<BRBSmithingRecipe> unlockedRecipes = BBRBookSettings.isFiltering(BetterRecipeBook.SMITHING) ? Collections.emptyList() : recipeCollection.getDisplayRecipes(false);
         int lockedRecipeCount = lockedRecipes.size();
         int totalRecipeCount = lockedRecipeCount + unlockedRecipes.size();
         int columns = totalRecipeCount <= 16 ? 4 : 5;

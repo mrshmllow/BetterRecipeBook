@@ -3,7 +3,7 @@ package marsh.town.brb.generic;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import marsh.town.brb.BetterRecipeBook;
-import marsh.town.brb.recipe.BRBRecipeBookCategory;
+import marsh.town.brb.api.BRBBookCategories;
 import marsh.town.brb.util.BRBTextures;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -26,7 +26,7 @@ public class GenericRecipePage<M extends AbstractContainerMenu, C extends Generi
     protected List<C> recipeCollections = ImmutableList.of();
     protected C lastClickedRecipeCollection;
     protected R lastClickedRecipe;
-    protected BRBRecipeBookCategory category;
+    protected BRBBookCategories.Category category;
     protected int totalPages;
     protected int currentPage;
     public final List<GenericRecipeButton<C, R, M>> buttons = Lists.newArrayListWithCapacity(20);
@@ -154,7 +154,7 @@ public class GenericRecipePage<M extends AbstractContainerMenu, C extends Generi
         this.forwardButton.render(gui, mouseX, mouseY, delta);
     }
 
-    public void setResults(List<C> recipeCollection, boolean resetCurrentPage, BRBRecipeBookCategory category) {
+    public void setResults(List<C> recipeCollection, boolean resetCurrentPage, BRBBookCategories.Category category) {
         this.recipeCollections = recipeCollection;
         this.category = category;
 

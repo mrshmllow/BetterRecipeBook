@@ -37,15 +37,14 @@ public abstract class BrewingStandScreenMixin extends AbstractContainerScreen<Br
         if (BetterRecipeBook.config.enableBook) {
             this._$widthNarrow = this.width < 379;
             assert this.minecraft != null;
-            this._$recipeBookComponent.init(this.width, this.height, this.minecraft, _$widthNarrow, this.menu, Minecraft.getInstance().getConnection().registryAccess());
+            this._$recipeBookComponent.init(this.width, this.height, this.minecraft, _$widthNarrow, this.menu, Minecraft.getInstance().getConnection().registryAccess(), BetterRecipeBook.BREWING);
 
             if (!BetterRecipeBook.config.keepCentered) {
                 this.leftPos = this._$recipeBookComponent.findLeftEdge(this.width, this.imageWidth);
             }
 
             this.addRenderableWidget(new ImageButton(this.leftPos + 135, this.height / 2 - 50, 20, 18, BRBTextures.RECIPE_BOOK_BUTTON_SPRITES, (button) -> {
-                this._$recipeBookComponent.toggleOpen();
-                BetterRecipeBook.rememberedBrewingOpen = this._$recipeBookComponent.isVisible();
+                this._$recipeBookComponent.toggleVisibility();
                 if (!BetterRecipeBook.config.keepCentered) {
                     this.leftPos = this._$recipeBookComponent.findLeftEdge(this.width, this.imageWidth);
                 }

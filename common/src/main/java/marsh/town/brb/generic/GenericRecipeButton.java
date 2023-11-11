@@ -2,7 +2,7 @@ package marsh.town.brb.generic;
 
 import com.google.common.collect.Lists;
 import marsh.town.brb.BetterRecipeBook;
-import marsh.town.brb.recipe.BRBRecipeBookCategory;
+import marsh.town.brb.api.BRBBookCategories;
 import marsh.town.brb.util.BRBTextures;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -28,7 +28,7 @@ public class GenericRecipeButton<C extends GenericRecipeBookCollection<R, M>, R 
     protected float time;
     protected int currentIndex;
     protected RegistryAccess registryAccess;
-    protected BRBRecipeBookCategory category;
+    protected BRBBookCategories.Category category;
 
     public GenericRecipeButton(RegistryAccess registryAccess, Supplier<Boolean> filteringSupplier) {
         super(0, 0, 25, 25, CommonComponents.EMPTY);
@@ -36,7 +36,7 @@ public class GenericRecipeButton<C extends GenericRecipeBookCollection<R, M>, R 
         this.filteringSupplier = filteringSupplier;
     }
 
-    public void showCollection(C collection, M smithingMenu, BRBRecipeBookCategory category) {
+    public void showCollection(C collection, M smithingMenu, BRBBookCategories.Category category) {
         this.collection = collection;
         this.menu = smithingMenu;
         this.category = category;

@@ -3,7 +3,7 @@ package marsh.town.brb.generic;
 import net.minecraft.stats.RecipeBook;
 import net.minecraft.world.inventory.RecipeBookType;
 
-public abstract class GenericClientRecipeBook extends RecipeBook {
+public class GenericClientRecipeBook extends RecipeBook {
     private boolean filteringCraftable;
 
     public boolean isFilteringCraftable() {

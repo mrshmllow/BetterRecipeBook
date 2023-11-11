@@ -1,7 +1,7 @@
 package marsh.town.brb.generic;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import marsh.town.brb.recipe.BRBRecipeBookCategory;
+import marsh.town.brb.api.BRBBookCategories;
 import marsh.town.brb.util.BRBTextures;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -13,9 +13,9 @@ import net.minecraft.world.item.ItemStack;
 import java.util.List;
 
 public class BRBGroupButtonWidget extends StateSwitchingButton {
-    protected BRBRecipeBookCategory category;
+    protected BRBBookCategories.Category category;
 
-    public BRBGroupButtonWidget(BRBRecipeBookCategory category) {
+    public BRBGroupButtonWidget(BRBBookCategories.Category category) {
         super(0, 0, 35, 27, false);
         this.category = category;
         this.initTextureValues(BRBTextures.RECIPE_BOOK_TAB_SPRITES);
@@ -49,7 +49,7 @@ public class BRBGroupButtonWidget extends StateSwitchingButton {
 
     }
 
-    public BRBRecipeBookCategory getCategory() {
+    public BRBBookCategories.Category getCategory() {
         return this.category;
     }
 }

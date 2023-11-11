@@ -1,9 +1,9 @@
 package marsh.town.brb.brewingstand;
 
 import com.google.common.collect.Lists;
+import marsh.town.brb.api.BRBBookCategories;
 import marsh.town.brb.generic.GenericRecipeBookCollection;
 import marsh.town.brb.generic.pins.Pinnable;
-import marsh.town.brb.recipe.BRBRecipeBookCategory;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
@@ -13,9 +13,9 @@ import net.minecraft.world.inventory.Slot;
 import java.util.List;
 
 public class BrewingRecipeCollection extends GenericRecipeBookCollection<BrewableResult, BrewingStandMenu> implements Pinnable {
-    private final BRBRecipeBookCategory category;
+    private final BRBBookCategories.Category category;
 
-    public BrewingRecipeCollection(List<BrewableResult> list, BrewingStandMenu menu, RegistryAccess registryAccess, BRBRecipeBookCategory category) {
+    public BrewingRecipeCollection(List<BrewableResult> list, BrewingStandMenu menu, RegistryAccess registryAccess, BRBBookCategories.Category category) {
         super(list, menu, registryAccess);
 
         this.category = category;

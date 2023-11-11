@@ -2,10 +2,11 @@ package marsh.town.brb.generic;
 
 import com.google.common.collect.Lists;
 import marsh.town.brb.BetterRecipeBook;
-import marsh.town.brb.enums.BRBRecipeBookType;
+import marsh.town.brb.api.BBRBookSettings;
+import marsh.town.brb.api.BRBBookCategories;
 import marsh.town.brb.interfaces.ISettingsButton;
 import marsh.town.brb.mixins.accessors.RecipeBookComponentAccessor;
-import marsh.town.brb.recipe.BRBRecipeBookCategory;
+import marsh.town.brb.util.BRBHelper;
 import marsh.town.brb.util.BRBTextures;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -30,9 +31,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.function.Consumer;
-import java.util.function.Supplier;
 
-public abstract class GenericRecipeBookComponent<M extends AbstractContainerMenu, B extends GenericClientRecipeBook, C extends GenericRecipeBookCollection<R, M>, R extends GenericRecipe> implements Renderable, NarratableEntry, GuiEventListener, ISettingsButton, RecipeShownListener {
+public abstract class GenericRecipeBookComponent<M extends AbstractContainerMenu, C extends GenericRecipeBookCollection<R, M>, R extends GenericRecipe> implements Renderable, NarratableEntry, GuiEventListener, ISettingsButton, RecipeShownListener {
     protected static final Component SEARCH_HINT = RecipeBookComponentAccessor.getSEARCH_HINT();
     protected static final Component ALL_RECIPES_TOOLTIP = RecipeBookComponentAccessor.getALL_RECIPES_TOOLTIP();
     boolean visible;
@@ -52,10 +52,9 @@ public abstract class GenericRecipeBookComponent<M extends AbstractContainerMenu
     protected final List<BRBGroupButtonWidget> tabButtons = Lists.newArrayList();
     @Nullable
     public BRBGroupButtonWidget selectedTab;
-    protected B book;
+    protected GenericClientRecipeBook book;
     protected RecipeManager recipeManager;
 
-    private final Supplier<? extends B> bookSupplier;
     private boolean doubleRefresh = true;
     protected RegistryAccess registryAccess;
     @Nullable
@@ -63,19 +62,18 @@ public abstract class GenericRecipeBookComponent<M extends AbstractContainerMenu
 
 //    private int timesInventoryChanged;
 
-    protected GenericRecipeBookComponent(Supplier<? extends B> bookSupplier) {
-        this.bookSupplier = bookSupplier;
+    protected GenericRecipeBookComponent() {
     }
 
     abstract public Component getRecipeFilterName();
 
-    abstract public BRBRecipeBookType getRecipeBookType();
+    abstract public BRBHelper.Book getRecipeBookType();
 
-    public void init(int parentWidth, int parentHeight, Minecraft client, boolean narrow, M menu, RegistryAccess registryAccess) {
-        this.init(parentWidth, parentHeight, client, narrow, menu, null, registryAccess);
+    public void init(int parentWidth, int parentHeight, Minecraft client, boolean narrow, M menu, RegistryAccess registryAccess, BRBHelper.Book book) {
+        this.init(parentWidth, parentHeight, client, narrow, menu, null, registryAccess, book);
     }
 
-    public void init(int width, int height, Minecraft minecraft, boolean widthNarrow, M menu, @Nullable Consumer<ItemStack> onGhostRecipeUpdate, RegistryAccess registryAccess) {
+    public void init(int width, int height, Minecraft minecraft, boolean widthNarrow, M menu, @Nullable Consumer<ItemStack> onGhostRecipeUpdate, RegistryAccess registryAccess, BRBHelper.Book book) {
         this.minecraft = minecraft;
         this.width = width;
         this.height = height;
@@ -84,9 +82,9 @@ public abstract class GenericRecipeBookComponent<M extends AbstractContainerMenu
         if (this.minecraft.player == null) return;
         this.minecraft.player.containerMenu = menu;
 
-        this.setVisible(this.selfRecallOpen());
+        this.setVisible(BBRBookSettings.isOpen(this.getRecipeBookType()));
 
-        this.book = bookSupplier.get();
+        this.book = new GenericClientRecipeBook();
         this.registryAccess = registryAccess;
 
         this.ghostRecipe = new GenericGhostRecipe<>(onGhostRecipeUpdate, registryAccess);
@@ -119,12 +117,15 @@ public abstract class GenericRecipeBookComponent<M extends AbstractContainerMenu
         this.settingsButton = createSettingsButton(i, j);
         this.recipesPage.initialize(this.minecraft, i, j, menu, xOffset);
         this.tabButtons.clear();
-        this.book.setFilteringCraftable(this.selfRecallFiltering());
         this.filterButton = new StateSwitchingButton(i + 110, j + 12, 26, 16, this.book.isFilteringCraftable());
         this.updateFilterButtonTooltip();
         this.filterButton.initTextureValues(BRBTextures.RECIPE_BOOK_FILTER_BUTTON_SPRITES);
 
-        for (BRBRecipeBookCategory category : BRBRecipeBookCategory.getCategories(this.getRecipeBookType())) {
+        List<BRBBookCategories.Category> categories = BRBBookCategories.getCategories(this.getRecipeBookType());
+
+        if (categories == null) throw new NullPointerException("Book category not registered");
+
+        for (BRBBookCategories.Category category : categories) {
             this.tabButtons.add(new BRBGroupButtonWidget(category));
         }
 
@@ -235,10 +236,6 @@ public abstract class GenericRecipeBookComponent<M extends AbstractContainerMenu
 
     protected abstract void updateCollections(boolean b);
 
-    protected abstract boolean selfRecallOpen();
-
-    protected abstract boolean selfRecallFiltering();
-
     private void pirateSpeechForThePeople(String string) {
         if ("excitedze".equals(string)) {
             LanguageManager languageManager = this.minecraft.getLanguageManager();
@@ -265,6 +262,7 @@ public abstract class GenericRecipeBookComponent<M extends AbstractContainerMenu
     }
 
     protected void setVisible(boolean visible) {
+        BBRBookSettings.setOpen(getRecipeBookType(), visible);
         this.visible = visible;
     }
 
@@ -346,7 +344,12 @@ public abstract class GenericRecipeBookComponent<M extends AbstractContainerMenu
         return false;
     }
 
-    protected abstract boolean toggleFiltering();
+    protected boolean toggleFiltering() {
+        boolean bl = !BBRBookSettings.isFiltering(this.getRecipeBookType());
+        BBRBookSettings.setFiltering(this.getRecipeBookType(), bl);
+
+        return bl;
+    }
 
     @Override
     public void updateNarration(NarrationElementOutput narrationElementOutput) {
@@ -409,11 +412,13 @@ public abstract class GenericRecipeBookComponent<M extends AbstractContainerMenu
         int l = 0;
 
         for (BRBGroupButtonWidget button : this.tabButtons) {
-            BRBRecipeBookCategory smithingRecipeBookGroup = button.getCategory();
-            if (smithingRecipeBookGroup == BRBRecipeBookCategory.SEARCH) {
+            BRBBookCategories.Category category = button.getCategory();
+            if (category.getType() == BRBBookCategories.Category.Type.SEARCH) {
                 button.visible = true;
             }
             button.setPosition(i, j + 27 * l++);
         }
     }
+
+    protected abstract List<C> getCollectionsForCategory();
 }

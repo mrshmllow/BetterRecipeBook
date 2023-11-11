@@ -1,11 +1,15 @@
 package marsh.town.brb.smithingtable;
 
 import marsh.town.brb.BetterRecipeBook;
-import marsh.town.brb.enums.BRBRecipeBookType;
+import marsh.town.brb.api.BBRBookSettings;
+import marsh.town.brb.api.BRBBookCategories;
 import marsh.town.brb.generic.GenericRecipeBookComponent;
 import marsh.town.brb.generic.GenericRecipeButton;
 import marsh.town.brb.interfaces.IPinningComponent;
 import marsh.town.brb.recipe.BRBSmithingRecipe;
+import marsh.town.brb.recipe.smithing.BRBSmithingTransformRecipe;
+import marsh.town.brb.recipe.smithing.BRBSmithingTrimRecipe;
+import marsh.town.brb.util.BRBHelper;
 import marsh.town.brb.util.ClientInventoryUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -17,9 +21,7 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.inventory.SmithingMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.armortrim.ArmorTrim;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.RecipeHolder;
-import net.minecraft.world.item.crafting.RecipeManager;
+import net.minecraft.world.item.crafting.*;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;
@@ -27,20 +29,16 @@ import java.util.List;
 import java.util.Locale;
 import java.util.function.Consumer;
 
-public class SmithingRecipeBookComponent extends GenericRecipeBookComponent<SmithingMenu, SmithingClientRecipeBook, SmithingRecipeCollection, BRBSmithingRecipe> implements IPinningComponent<SmithingRecipeCollection> {
+public class SmithingRecipeBookComponent extends GenericRecipeBookComponent<SmithingMenu, SmithingRecipeCollection, BRBSmithingRecipe> implements IPinningComponent<SmithingRecipeCollection> {
     private static final MutableComponent ONLY_CRAFTABLES_TOOLTIP = Component.translatable("brb.gui.smithable");
 
-    public SmithingRecipeBookComponent() {
-        super(SmithingClientRecipeBook::new);
-    }
-
-    public void init(int width, int height, Minecraft minecraft, boolean widthNarrow, SmithingMenu menu, Consumer<ItemStack> onGhostRecipeUpdate, RegistryAccess registryAccess, RecipeManager recipeManager) {
-        super.init(width, height, minecraft, widthNarrow, menu, onGhostRecipeUpdate, registryAccess);
+    public void init(int width, int height, Minecraft minecraft, boolean widthNarrow, SmithingMenu menu, Consumer<ItemStack> onGhostRecipeUpdate, RegistryAccess registryAccess, RecipeManager recipeManager, BRBHelper.Book book) {
+        super.init(width, height, minecraft, widthNarrow, menu, onGhostRecipeUpdate, registryAccess, book);
 
         this.recipeManager = recipeManager;
         this.ghostRecipe = new SmithingGhostRecipe(onGhostRecipeUpdate, registryAccess);
         this.ghostRecipe.setDefaultRenderingPredicate(this.menu);
-        this.recipesPage = new SmithingRecipeBookPage(registryAccess, () -> BetterRecipeBook.rememberedSmithableToggle);
+        this.recipesPage = new SmithingRecipeBookPage(registryAccess, () -> BBRBookSettings.isFiltering(getRecipeBookType()));
 
 //        if (this.isVisible()) {
         this.initVisuals();
@@ -53,7 +51,7 @@ public class SmithingRecipeBookComponent extends GenericRecipeBookComponent<Smit
         if (this.searchBox == null) return;
 
         // Create a copy to not mess with the original list
-        List<SmithingRecipeCollection> results = new ArrayList<>(book.getCollectionsForCategory(selectedTab.getCategory(), (SmithingMenu) menu, registryAccess, recipeManager));
+        List<SmithingRecipeCollection> results = new ArrayList<>(this.getCollectionsForCategory());
 
         String string = this.searchBox.getValue();
         if (!string.isEmpty()) {
@@ -70,23 +68,13 @@ public class SmithingRecipeBookComponent extends GenericRecipeBookComponent<Smit
     }
 
     @Override
-    protected boolean selfRecallOpen() {
-        return BetterRecipeBook.rememberedSmithingOpen;
-    }
-
-    @Override
-    protected boolean selfRecallFiltering() {
-        return BetterRecipeBook.rememberedSmithableToggle;
-    }
-
-    @Override
     public Component getRecipeFilterName() {
         return ONLY_CRAFTABLES_TOOLTIP;
     }
 
     @Override
-    public BRBRecipeBookType getRecipeBookType() {
-        return BRBRecipeBookType.SMITHING;
+    public BRBHelper.Book getRecipeBookType() {
+        return BetterRecipeBook.SMITHING;
     }
 
     @Override
@@ -170,11 +158,31 @@ public class SmithingRecipeBookComponent extends GenericRecipeBookComponent<Smit
         return this.ghostRecipe != null && this.ghostRecipe.size() > 0;
     }
 
-    public boolean toggleFiltering() {
-        boolean bl = !this.book.isFilteringCraftable();
-        this.book.setFilteringCraftable(bl);
-        BetterRecipeBook.rememberedSmithableToggle = bl;
-        return bl;
+    @Override
+    protected List<SmithingRecipeCollection> getCollectionsForCategory() {
+        List<RecipeHolder<SmithingRecipe>> recipes = recipeManager.getAllRecipesFor(RecipeType.SMITHING);
+        List<SmithingRecipeCollection> results = new ArrayList<>();
+        BRBBookCategories.Category category = selectedTab.getCategory();
+
+        for (RecipeHolder<SmithingRecipe> recipe : recipes) {
+            SmithingRecipe value = recipe.value();
+
+            if (category == BetterRecipeBook.SMITHING_SEARCH) {
+                if (value instanceof SmithingTransformRecipe) {
+                    results.add(new SmithingRecipeCollection(List.of(BRBSmithingTransformRecipe.from((SmithingTransformRecipe) value, registryAccess)), this.menu, registryAccess));
+                } else if (value instanceof SmithingTrimRecipe) {
+                    results.add(new SmithingRecipeCollection(BRBSmithingTrimRecipe.from((SmithingTrimRecipe) value), this.menu, registryAccess));
+                }
+            } else if (category == BetterRecipeBook.SMITHING_TRANSFORM) {
+                if (value instanceof SmithingTransformRecipe) {
+                    results.add(new SmithingRecipeCollection(List.of(BRBSmithingTransformRecipe.from((SmithingTransformRecipe) value, registryAccess)), this.menu, registryAccess));
+                }
+            } else if (value instanceof SmithingTrimRecipe) {
+                results.add(new SmithingRecipeCollection(BRBSmithingTrimRecipe.from((SmithingTrimRecipe) value), this.menu, registryAccess));
+            }
+        }
+
+        return results;
     }
 
     @Override

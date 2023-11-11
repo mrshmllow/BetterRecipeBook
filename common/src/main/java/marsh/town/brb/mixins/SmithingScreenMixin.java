@@ -43,7 +43,7 @@ public abstract class SmithingScreenMixin extends ItemCombinerScreen<SmithingMen
     void init(CallbackInfo ci) {
         if (BetterRecipeBook.config.enableBook) {
             this._$widthNarrow = this.width < 379;
-            this._$recipeBookComponent.init(this.width, this.height, this.minecraft, _$widthNarrow, this.menu, this::updateArmorStandPreview, Minecraft.getInstance().getConnection().registryAccess(), Minecraft.getInstance().getConnection().getRecipeManager());
+            this._$recipeBookComponent.init(this.width, this.height, this.minecraft, _$widthNarrow, this.menu, this::updateArmorStandPreview, Minecraft.getInstance().getConnection().registryAccess(), Minecraft.getInstance().getConnection().getRecipeManager(), BetterRecipeBook.SMITHING);
 
             if (!BetterRecipeBook.config.keepCentered) {
                 this.leftPos = this._$recipeBookComponent.findLeftEdge(this.width, this.imageWidth);
@@ -52,7 +52,6 @@ public abstract class SmithingScreenMixin extends ItemCombinerScreen<SmithingMen
             // NOTE : width and height are both 0
             this.addRenderableWidget(new ImageButton(this.leftPos + 147, this.height / 2 - 75, 20, 18, BRBTextures.RECIPE_BOOK_BUTTON_SPRITES, (button) -> {
                 this._$recipeBookComponent.toggleVisibility();
-                BetterRecipeBook.rememberedSmithingOpen = this._$recipeBookComponent.isVisible();
                 if (!BetterRecipeBook.config.keepCentered) {
                     this.leftPos = this._$recipeBookComponent.findLeftEdge(this.width, this.imageWidth);
                 }

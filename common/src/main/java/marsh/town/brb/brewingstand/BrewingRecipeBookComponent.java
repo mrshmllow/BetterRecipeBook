@@ -1,13 +1,15 @@
 package marsh.town.brb.brewingstand;
 
 import marsh.town.brb.BetterRecipeBook;
-import marsh.town.brb.enums.BRBRecipeBookType;
+import marsh.town.brb.api.BBRBookSettings;
+import marsh.town.brb.api.BRBBookCategories;
 import marsh.town.brb.generic.GenericRecipeBookComponent;
 import marsh.town.brb.generic.GenericRecipeButton;
 import marsh.town.brb.generic.GenericRecipePage;
 import marsh.town.brb.interfaces.IPinningComponent;
+import marsh.town.brb.loaders.PotionLoader;
 import marsh.town.brb.mixins.accessors.BrewingStandMenuAccessor;
-import marsh.town.brb.recipe.BRBRecipeBookCategory;
+import marsh.town.brb.util.BRBHelper;
 import marsh.town.brb.util.ClientInventoryUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -38,22 +40,18 @@ import static marsh.town.brb.brewingstand.PlatformPotionUtil.getFrom;
 import static marsh.town.brb.brewingstand.PlatformPotionUtil.getIngredient;
 
 @Environment(EnvType.CLIENT)
-public class BrewingRecipeBookComponent extends GenericRecipeBookComponent<BrewingStandMenu, BrewingClientRecipeBook, BrewingRecipeCollection, BrewableResult> implements IPinningComponent<BrewingRecipeCollection> {
+public class BrewingRecipeBookComponent extends GenericRecipeBookComponent<BrewingStandMenu, BrewingRecipeCollection, BrewableResult> implements IPinningComponent<BrewingRecipeCollection> {
     private static final Component ONLY_CRAFTABLES_TOOLTIP = Component.translatable("brb.gui.togglePotions.brewable");
 
-    public BrewingRecipeBookComponent() {
-        super(BrewingClientRecipeBook::new);
-    }
-
-    public void init(int parentWidth, int parentHeight, Minecraft client, boolean narrow, BrewingStandMenu brewingStandScreenHandler, RegistryAccess registryAccess) {
-        this.init(parentWidth, parentHeight, client, narrow, brewingStandScreenHandler, null, registryAccess);
+    public void init(int parentWidth, int parentHeight, Minecraft client, boolean narrow, BrewingStandMenu brewingStandScreenHandler, RegistryAccess registryAccess, BRBHelper.Book book) {
+        this.init(parentWidth, parentHeight, client, narrow, brewingStandScreenHandler, null, registryAccess, book);
     }
 
     @Override
-    public void init(int parentWidth, int parentHeight, Minecraft client, boolean narrow, BrewingStandMenu menu, Consumer<ItemStack> onGhostRecipeUpdate, RegistryAccess registryAccess) {
-        super.init(parentWidth, parentHeight, client, narrow, menu, onGhostRecipeUpdate, registryAccess);
+    public void init(int parentWidth, int parentHeight, Minecraft client, boolean narrow, BrewingStandMenu menu, Consumer<ItemStack> onGhostRecipeUpdate, RegistryAccess registryAccess, BRBHelper.Book book) {
+        super.init(parentWidth, parentHeight, client, narrow, menu, onGhostRecipeUpdate, registryAccess, book);
 
-        this.recipesPage = new GenericRecipePage<>(registryAccess, () -> new BrewableRecipeButton(registryAccess, this::selfRecallFiltering));
+        this.recipesPage = new GenericRecipePage<>(registryAccess, () -> new BrewableRecipeButton(registryAccess, () -> BBRBookSettings.isFiltering(this.getRecipeBookType())));
         // this.cachedInvChangeCount = client.player.getInventory().getChangeCount();
 
 //        if (this.isVisible()) {
@@ -96,9 +94,9 @@ public class BrewingRecipeBookComponent extends GenericRecipeBookComponent<Brewi
         Ingredient ingredient = getIngredient(result.recipe);
         ResourceLocation identifier = BuiltInRegistries.POTION.getKey(inputPotion);
         ItemStack inputStack;
-        if (this.selectedTab.getCategory() == BRBRecipeBookCategory.BREWING_SPLASH_POTION) {
+        if (this.selectedTab.getCategory() == BetterRecipeBook.BREWING_SPLASH_POTION) {
             inputStack = new ItemStack(Items.SPLASH_POTION);
-        } else if (this.selectedTab.getCategory() == BRBRecipeBookCategory.BREWING_LINGERING_POTION) {
+        } else if (this.selectedTab.getCategory() == BetterRecipeBook.BREWING_LINGERING_POTION) {
             inputStack = new ItemStack(Items.LINGERING_POTION);
         } else {
             inputStack = new ItemStack(Items.POTION);
@@ -119,11 +117,26 @@ public class BrewingRecipeBookComponent extends GenericRecipeBookComponent<Brewi
         }
     }
 
-    public boolean toggleFiltering() {
-        boolean bl = !this.book.isFilteringCraftable();
-        this.book.setFilteringCraftable(bl);
-        BetterRecipeBook.rememberedBrewingToggle = bl;
-        return bl;
+    @Override
+    protected List<BrewingRecipeCollection> getCollectionsForCategory() {
+        List<BrewingRecipeCollection> results = new ArrayList<>();
+        BRBBookCategories.Category category = selectedTab.getCategory();
+
+        if (category == BetterRecipeBook.BREWING_POTION) {
+            for (BrewableResult potion : PotionLoader.POTIONS) {
+                results.add(new BrewingRecipeCollection(List.of(potion), menu, registryAccess, category));
+            }
+        } else if (category == BetterRecipeBook.BREWING_SPLASH_POTION) {
+            for (BrewableResult splash : PotionLoader.SPLASHES) {
+                results.add(new BrewingRecipeCollection(List.of(splash), menu, registryAccess, category));
+            }
+        } else if (category == BetterRecipeBook.BREWING_LINGERING_POTION) {
+            for (BrewableResult splash : PotionLoader.LINGERINGS) {
+                results.add(new BrewingRecipeCollection(List.of(splash), menu, registryAccess, category));
+            }
+        }
+
+        return results;
     }
 
     @Override
@@ -132,14 +145,14 @@ public class BrewingRecipeBookComponent extends GenericRecipeBookComponent<Brewi
         if (this.searchBox == null) return;
 
         // Create a copy to not mess with the original list
-        List<BrewingRecipeCollection> results = new ArrayList<>(book.getCollectionsForCategory(selectedTab.getCategory(), this.menu, this.registryAccess));
+        List<BrewingRecipeCollection> results = new ArrayList<>(this.getCollectionsForCategory());
 
         String string = this.searchBox.getValue();
         if (!string.isEmpty()) {
             results.removeIf(itemStack -> !itemStack.getFirst().ingredient.getHoverName().getString().toLowerCase(Locale.ROOT).contains(string.toLowerCase(Locale.ROOT)));
         }
 
-        if (this.book.isFilteringCraftable()) {
+        if (BBRBookSettings.isFiltering(BetterRecipeBook.BREWING)) {
             results.removeIf((result) -> !result.atleastOneCraftable(menu.slots));
         }
 
@@ -148,22 +161,8 @@ public class BrewingRecipeBookComponent extends GenericRecipeBookComponent<Brewi
         this.recipesPage.setResults(results, resetCurrentPage, selectedTab.getCategory());
     }
 
-    @Override
-    protected boolean selfRecallOpen() {
-        return BetterRecipeBook.rememberedBrewingOpen;
-    }
-
-    @Override
-    protected boolean selfRecallFiltering() {
-        return BetterRecipeBook.rememberedBrewingToggle;
-    }
-
     public void renderGhostRecipe(GuiGraphics guiGraphics, int x, int y, boolean bl, float delta) {
         this.ghostRecipe.render(guiGraphics, this.minecraft, x, y, bl, delta);
-    }
-
-    public void toggleOpen() {
-        this.setVisible(!this.isVisible());
     }
 
     @Override
@@ -172,8 +171,8 @@ public class BrewingRecipeBookComponent extends GenericRecipeBookComponent<Brewi
     }
 
     @Override
-    public BRBRecipeBookType getRecipeBookType() {
-        return BRBRecipeBookType.BREWING;
+    public BRBHelper.Book getRecipeBookType() {
+        return BetterRecipeBook.BREWING;
     }
 
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
