@@ -2,8 +2,8 @@ package marsh.town.brb.generic;
 
 import com.google.common.collect.Lists;
 import marsh.town.brb.BetterRecipeBook;
-import marsh.town.brb.api.BBRBookSettings;
 import marsh.town.brb.api.BRBBookCategories;
+import marsh.town.brb.api.BRBBookSettings;
 import marsh.town.brb.interfaces.ISettingsButton;
 import marsh.town.brb.mixins.accessors.RecipeBookComponentAccessor;
 import marsh.town.brb.util.BRBHelper;
@@ -82,7 +82,7 @@ public abstract class GenericRecipeBookComponent<M extends AbstractContainerMenu
         if (this.minecraft.player == null) return;
         this.minecraft.player.containerMenu = menu;
 
-        this.setVisible(BBRBookSettings.isOpen(this.getRecipeBookType()));
+        this.setVisible(BRBBookSettings.isOpen(this.getRecipeBookType()));
 
         this.book = new GenericClientRecipeBook();
         this.registryAccess = registryAccess;
@@ -262,7 +262,7 @@ public abstract class GenericRecipeBookComponent<M extends AbstractContainerMenu
     }
 
     protected void setVisible(boolean visible) {
-        BBRBookSettings.setOpen(getRecipeBookType(), visible);
+        BRBBookSettings.setOpen(getRecipeBookType(), visible);
         this.visible = visible;
     }
 
@@ -345,8 +345,8 @@ public abstract class GenericRecipeBookComponent<M extends AbstractContainerMenu
     }
 
     protected boolean toggleFiltering() {
-        boolean bl = !BBRBookSettings.isFiltering(this.getRecipeBookType());
-        BBRBookSettings.setFiltering(this.getRecipeBookType(), bl);
+        boolean bl = !BRBBookSettings.isFiltering(this.getRecipeBookType());
+        BRBBookSettings.setFiltering(this.getRecipeBookType(), bl);
 
         return bl;
     }

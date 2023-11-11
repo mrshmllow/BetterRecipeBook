@@ -1,8 +1,8 @@
 package marsh.town.brb.brewingstand;
 
 import marsh.town.brb.BetterRecipeBook;
-import marsh.town.brb.api.BBRBookSettings;
 import marsh.town.brb.api.BRBBookCategories;
+import marsh.town.brb.api.BRBBookSettings;
 import marsh.town.brb.generic.GenericRecipeBookComponent;
 import marsh.town.brb.generic.GenericRecipeButton;
 import marsh.town.brb.generic.GenericRecipePage;
@@ -51,7 +51,7 @@ public class BrewingRecipeBookComponent extends GenericRecipeBookComponent<Brewi
     public void init(int parentWidth, int parentHeight, Minecraft client, boolean narrow, BrewingStandMenu menu, Consumer<ItemStack> onGhostRecipeUpdate, RegistryAccess registryAccess, BRBHelper.Book book) {
         super.init(parentWidth, parentHeight, client, narrow, menu, onGhostRecipeUpdate, registryAccess, book);
 
-        this.recipesPage = new GenericRecipePage<>(registryAccess, () -> new BrewableRecipeButton(registryAccess, () -> BBRBookSettings.isFiltering(this.getRecipeBookType())));
+        this.recipesPage = new GenericRecipePage<>(registryAccess, () -> new BrewableRecipeButton(registryAccess, () -> BRBBookSettings.isFiltering(this.getRecipeBookType())));
         // this.cachedInvChangeCount = client.player.getInventory().getChangeCount();
 
 //        if (this.isVisible()) {
@@ -152,7 +152,7 @@ public class BrewingRecipeBookComponent extends GenericRecipeBookComponent<Brewi
             results.removeIf(itemStack -> !itemStack.getFirst().ingredient.getHoverName().getString().toLowerCase(Locale.ROOT).contains(string.toLowerCase(Locale.ROOT)));
         }
 
-        if (BBRBookSettings.isFiltering(BetterRecipeBook.BREWING)) {
+        if (BRBBookSettings.isFiltering(BetterRecipeBook.BREWING)) {
             results.removeIf((result) -> !result.atleastOneCraftable(menu.slots));
         }
 

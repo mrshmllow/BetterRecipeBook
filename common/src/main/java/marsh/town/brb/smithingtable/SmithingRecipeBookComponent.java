@@ -1,8 +1,8 @@
 package marsh.town.brb.smithingtable;
 
 import marsh.town.brb.BetterRecipeBook;
-import marsh.town.brb.api.BBRBookSettings;
 import marsh.town.brb.api.BRBBookCategories;
+import marsh.town.brb.api.BRBBookSettings;
 import marsh.town.brb.generic.GenericRecipeBookComponent;
 import marsh.town.brb.generic.GenericRecipeButton;
 import marsh.town.brb.interfaces.IPinningComponent;
@@ -38,7 +38,7 @@ public class SmithingRecipeBookComponent extends GenericRecipeBookComponent<Smit
         this.recipeManager = recipeManager;
         this.ghostRecipe = new SmithingGhostRecipe(onGhostRecipeUpdate, registryAccess);
         this.ghostRecipe.setDefaultRenderingPredicate(this.menu);
-        this.recipesPage = new SmithingRecipeBookPage(registryAccess, () -> BBRBookSettings.isFiltering(getRecipeBookType()));
+        this.recipesPage = new SmithingRecipeBookPage(registryAccess, () -> BRBBookSettings.isFiltering(getRecipeBookType()));
 
 //        if (this.isVisible()) {
         this.initVisuals();

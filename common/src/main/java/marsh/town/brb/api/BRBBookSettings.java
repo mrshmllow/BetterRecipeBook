@@ -9,10 +9,10 @@ import net.minecraft.stats.RecipeBookSettings;
 import java.util.HashMap;
 import java.util.Map;
 
-public class BBRBookSettings {
+public class BRBBookSettings {
     public static Map<ResourceLocation, RecipeBookSettings.TypeSettings> states = new HashMap<>();
 
-    public BBRBookSettings() {
+    public BRBBookSettings() {
         states = new HashMap<>();
     }
 

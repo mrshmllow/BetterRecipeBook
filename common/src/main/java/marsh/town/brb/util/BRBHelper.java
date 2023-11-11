@@ -1,8 +1,8 @@
 package marsh.town.brb.util;
 
 import com.mojang.datafixers.util.Pair;
-import marsh.town.brb.api.BBRBookSettings;
 import marsh.town.brb.api.BRBBookCategories;
+import marsh.town.brb.api.BRBBookSettings;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
@@ -18,7 +18,7 @@ public class BRBHelper {
                 pair
         );
 
-        BBRBookSettings.registerBook(book);
+        BRBBookSettings.registerBook(book);
 
         return book;
     }
