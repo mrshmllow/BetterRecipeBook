@@ -29,7 +29,7 @@ public class SmithingRecipeBookPage extends GenericRecipePage<SmithingMenu, Smit
 
     @Override
     public void initialize(Minecraft client, int parentLeft, int parentTop, SmithingMenu menu, int leftOffset) {
-        super.initialize(client, parentLeft, parentTop, this.menu, leftOffset);
+        super.initialize(client, parentLeft, parentTop, menu, leftOffset);
 
         // this.recipeBook = client.player.getRecipeBook();
 
