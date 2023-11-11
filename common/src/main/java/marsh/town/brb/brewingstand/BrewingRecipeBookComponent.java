@@ -29,7 +29,6 @@ import net.minecraft.world.item.crafting.Ingredient;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.function.Consumer;
 
 import static marsh.town.brb.brewingstand.PlatformPotionUtil.getFrom;
@@ -133,28 +132,6 @@ public class BrewingRecipeBookComponent extends GenericRecipeBookComponent<Brewi
         }
 
         return results;
-    }
-
-    @Override
-    public void updateCollections(boolean resetCurrentPage) {
-        if (this.selectedTab == null) return;
-        if (this.searchBox == null) return;
-
-        // Create a copy to not mess with the original list
-        List<BrewingRecipeCollection> results = new ArrayList<>(this.getCollectionsForCategory());
-
-        String string = this.searchBox.getValue();
-        if (!string.isEmpty()) {
-            results.removeIf(itemStack -> !itemStack.getFirst().ingredient.getHoverName().getString().toLowerCase(Locale.ROOT).contains(string.toLowerCase(Locale.ROOT)));
-        }
-
-        if (BRBBookSettings.isFiltering(BetterRecipeBook.BREWING)) {
-            results.removeIf((result) -> !result.atleastOneCraftable(menu.slots));
-        }
-
-        this.betterRecipeBook$sortByPinsInPlace(results);
-
-        this.recipesPage.setResults(results, resetCurrentPage, selectedTab.getCategory());
     }
 
     @Override

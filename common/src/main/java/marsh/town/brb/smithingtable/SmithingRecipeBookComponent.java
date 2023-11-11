@@ -4,7 +4,6 @@ import marsh.town.brb.BetterRecipeBook;
 import marsh.town.brb.api.BRBBookCategories;
 import marsh.town.brb.api.BRBBookSettings;
 import marsh.town.brb.generic.GenericRecipeBookComponent;
-import marsh.town.brb.interfaces.IPinningComponent;
 import marsh.town.brb.recipe.BRBSmithingRecipe;
 import marsh.town.brb.recipe.smithing.BRBSmithingTransformRecipe;
 import marsh.town.brb.recipe.smithing.BRBSmithingTrimRecipe;
@@ -23,10 +22,9 @@ import net.minecraft.world.item.crafting.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.function.Consumer;
 
-public class SmithingRecipeBookComponent extends GenericRecipeBookComponent<SmithingMenu, SmithingRecipeCollection, BRBSmithingRecipe> implements IPinningComponent<SmithingRecipeCollection> {
+public class SmithingRecipeBookComponent extends GenericRecipeBookComponent<SmithingMenu, SmithingRecipeCollection, BRBSmithingRecipe> {
     private static final MutableComponent ONLY_CRAFTABLES_TOOLTIP = Component.translatable("brb.gui.smithable");
 
     public void init(int width, int height, Minecraft minecraft, boolean widthNarrow, SmithingMenu menu, Consumer<ItemStack> onGhostRecipeUpdate, RegistryAccess registryAccess, RecipeManager recipeManager, BRBHelper.Book book) {
@@ -40,28 +38,6 @@ public class SmithingRecipeBookComponent extends GenericRecipeBookComponent<Smit
 //        if (this.isVisible()) {
         this.initVisuals();
 //        }
-    }
-
-    @Override
-    public void updateCollections(boolean resetCurrentPage) {
-        if (this.selectedTab == null) return;
-        if (this.searchBox == null) return;
-
-        // Create a copy to not mess with the original list
-        List<SmithingRecipeCollection> results = new ArrayList<>(this.getCollectionsForCategory());
-
-        String string = this.searchBox.getValue();
-        if (!string.isEmpty()) {
-            results.removeIf(collection -> !collection.getFirst().getTemplateType().toLowerCase(Locale.ROOT).contains(string.toLowerCase(Locale.ROOT)));
-        }
-
-        if (this.book.isFilteringCraftable()) {
-            results.removeIf((result) -> !result.atleastOneCraftable(this.menu.slots));
-        }
-
-        this.betterRecipeBook$sortByPinsInPlace(results);
-
-        this.recipesPage.setResults(results, resetCurrentPage, selectedTab.getCategory());
     }
 
     @Override

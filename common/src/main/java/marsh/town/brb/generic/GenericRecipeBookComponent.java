@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import marsh.town.brb.BetterRecipeBook;
 import marsh.town.brb.api.BRBBookCategories;
 import marsh.town.brb.api.BRBBookSettings;
+import marsh.town.brb.interfaces.IPinningComponent;
 import marsh.town.brb.interfaces.ISettingsButton;
 import marsh.town.brb.mixins.accessors.RecipeBookComponentAccessor;
 import marsh.town.brb.util.BRBHelper;
@@ -28,13 +29,10 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-import java.util.Objects;
+import java.util.*;
 import java.util.function.Consumer;
 
-public abstract class GenericRecipeBookComponent<M extends AbstractContainerMenu, C extends GenericRecipeBookCollection<R, M>, R extends GenericRecipe> implements Renderable, NarratableEntry, GuiEventListener, ISettingsButton, RecipeShownListener {
+public abstract class GenericRecipeBookComponent<M extends AbstractContainerMenu, C extends GenericRecipeBookCollection<R, M>, R extends GenericRecipe> implements Renderable, NarratableEntry, GuiEventListener, ISettingsButton, RecipeShownListener, IPinningComponent<C> {
     protected static final Component SEARCH_HINT = RecipeBookComponentAccessor.getSEARCH_HINT();
     protected static final Component ALL_RECIPES_TOOLTIP = RecipeBookComponentAccessor.getALL_RECIPES_TOOLTIP();
     boolean visible;
@@ -119,7 +117,7 @@ public abstract class GenericRecipeBookComponent<M extends AbstractContainerMenu
         this.settingsButton = createSettingsButton(i, j);
         this.recipesPage.initialize(this.minecraft, i, j, menu, xOffset);
         this.tabButtons.clear();
-        this.filterButton = new StateSwitchingButton(i + 110, j + 12, 26, 16, this.book.isFilteringCraftable());
+        this.filterButton = new StateSwitchingButton(i + 110, j + 12, 26, 16, BRBBookSettings.isFiltering(this.getRecipeBookType()));
         this.updateFilterButtonTooltip();
         this.filterButton.initTextureValues(BRBTextures.RECIPE_BOOK_FILTER_BUTTON_SPRITES);
 
@@ -247,7 +245,26 @@ public abstract class GenericRecipeBookComponent<M extends AbstractContainerMenu
         }
     }
 
-    protected abstract void updateCollections(boolean b);
+    protected void updateCollections(boolean b) {
+        if (this.selectedTab == null) return;
+        if (this.searchBox == null) return;
+
+        // Create a copy to not mess with the original list
+        List<C> results = new ArrayList<>(this.getCollectionsForCategory());
+
+        String string = this.searchBox.getValue();
+        if (!string.isEmpty()) {
+            results.removeIf(collection -> !collection.getFirst().getSearchString().toLowerCase(Locale.ROOT).contains(string.toLowerCase(Locale.ROOT)));
+        }
+
+        if (BRBBookSettings.isFiltering(this.getRecipeBookType())) {
+            results.removeIf((result) -> !result.atleastOneCraftable(this.menu.slots));
+        }
+
+        this.betterRecipeBook$sortByPinsInPlace(results);
+
+        this.recipesPage.setResults(results, b, selectedTab.getCategory());
+    }
 
     private void pirateSpeechForThePeople(String string) {
         if ("excitedze".equals(string)) {

@@ -14,4 +14,6 @@ public interface GenericRecipe extends Pinnable {
     }
 
     ItemStack getResult(RegistryAccess registryAccess);
+
+    String getSearchString();
 }

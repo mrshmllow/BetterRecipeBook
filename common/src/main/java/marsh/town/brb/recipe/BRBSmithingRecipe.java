@@ -61,4 +61,9 @@ public interface BRBSmithingRecipe extends SmithingRecipe, GenericRecipe {
     default ResourceLocation id() {
         return BuiltInRegistries.ITEM.getKey(getTemplate().getItems()[0].getItem());
     }
+
+    @Override
+    default String getSearchString() {
+        return this.getTemplateType();
+    }
 }

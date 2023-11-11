@@ -83,4 +83,9 @@ public class BrewableResult implements GenericRecipe {
     public ItemStack getResult(RegistryAccess registryAccess) {
         return ingredient;
     }
+
+    @Override
+    public String getSearchString() {
+        return this.ingredient.getHoverName().getString();
+    }
 }
