@@ -69,11 +69,11 @@ public abstract class GenericRecipeBookComponent<M extends AbstractContainerMenu
 
     abstract public BRBHelper.Book getRecipeBookType();
 
-    public void init(int parentWidth, int parentHeight, Minecraft client, boolean narrow, M menu, RegistryAccess registryAccess, BRBHelper.Book book) {
-        this.init(parentWidth, parentHeight, client, narrow, menu, null, registryAccess, book);
+    public void init(int parentWidth, int parentHeight, Minecraft client, boolean narrow, M menu, RegistryAccess registryAccess) {
+        this.init(parentWidth, parentHeight, client, narrow, menu, null, registryAccess);
     }
 
-    public void init(int width, int height, Minecraft minecraft, boolean widthNarrow, M menu, @Nullable Consumer<ItemStack> onGhostRecipeUpdate, RegistryAccess registryAccess, BRBHelper.Book book) {
+    public void init(int width, int height, Minecraft minecraft, boolean widthNarrow, M menu, @Nullable Consumer<ItemStack> onGhostRecipeUpdate, RegistryAccess registryAccess) {
         this.minecraft = minecraft;
         this.width = width;
         this.height = height;
