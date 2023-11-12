@@ -26,14 +26,15 @@
   "text.autoconfig.brb.option.newRecipes.unlockAll.@Tooltip": "Requires world/server re-join to take effect",
   "text.autoconfig.brb.option.newRecipes.enableBounce": "Enable unlock bounce animation",
   "text.autoconfig.brb.option.newRecipes.enableBounce.@Tooltip": "Enable the little bounce animation when you unlock a new item",
-
-  "brb.gui.pin.add": "Press F to pin this recipe",
-  "brb.gui.pin.remove": "Press F to unpin this recipe",
+  "brb.gui.pin.add": "Press %s pin this recipe",
+  "brb.gui.pin.remove": "Press %s to unpin this recipe",
   "brb.gui.togglePotions.brewable": "Showing Brewable",
   "brb.gui.instantCraft.on": "Instant crafting is on",
   "brb.gui.instantCraft.off": "Instant crafting is off",
   "brb.gui.settings.open": "Open settings",
   "brb.gui.crafting.lockedRecipe": "Craft once to unlock:",
   "brb.gui.furnace.lockedRecipe": "Smelt once to unlock:",
-  "brb.gui.smithable": "Showing Smithable"
+  "brb.gui.smithable": "Showing Smithable",
+  "category.brb": "Better Recipe Book",
+  "key.brb.pin": "Pin Recipe"
 }

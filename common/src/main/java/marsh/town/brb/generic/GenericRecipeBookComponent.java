@@ -27,7 +27,6 @@ import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.lwjgl.glfw.GLFW;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -200,7 +199,7 @@ public abstract class GenericRecipeBookComponent<M extends AbstractContainerMenu
             return true;
         }
 
-        if (i == GLFW.GLFW_KEY_F && BetterRecipeBook.config.enablePinning) {
+        if (BetterRecipeBook.PIN_MAPPING.matches(i, j) && BetterRecipeBook.config.enablePinning) {
             for (GenericRecipeButton<C, R, M> resultButton : this.recipesPage.buttons) {
                 if (resultButton.isHoveredOrFocused()) {
                     BetterRecipeBook.pinnedRecipeManager.addOrRemoveFavourite(resultButton.getCollection());

@@ -10,7 +10,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.recipebook.*;
-import org.lwjgl.glfw.GLFW;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -32,7 +31,7 @@ public abstract class AbstractContainerScreenMixin {
         EditBox searchBox = ((RecipeBookComponentAccessor) book).getSearchBox();
 
         // when F is pressed, handle pinning/unpinning of recipes except when searchBox is consuming input
-        if (keyCode == GLFW.GLFW_KEY_F && !searchBox.canConsumeInput()) {
+        if (BetterRecipeBook.PIN_MAPPING.matches(keyCode, scanCode) && !searchBox.canConsumeInput()) {
             // handle alternatives widget first
             if (alternatesWidget.isVisible()) {
                 for (OverlayRecipeComponent.OverlayRecipeButton alternativeButton : ((OverlayRecipeComponentAccessor) alternatesWidget).getRecipeButtons()) {

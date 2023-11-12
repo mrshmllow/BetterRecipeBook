@@ -3,6 +3,7 @@ package marsh.town.brb.generic;
 import com.google.common.collect.Lists;
 import marsh.town.brb.BetterRecipeBook;
 import marsh.town.brb.api.BRBBookCategories;
+import marsh.town.brb.mixins.accessors.KeyMappingAccessor;
 import marsh.town.brb.util.BRBTextures;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -123,9 +124,9 @@ public class GenericRecipeButton<C extends GenericRecipeBookCollection<R, M>, R 
 
         if (BetterRecipeBook.config.enablePinning) {
             if (BetterRecipeBook.pinnedRecipeManager.has(collection)) {
-                list.add(Component.translatable("brb.gui.pin.remove"));
+                list.add(Component.translatable("brb.gui.pin.remove", ((KeyMappingAccessor) BetterRecipeBook.PIN_MAPPING).getKey().getDisplayName()));
             } else {
-                list.add(Component.translatable("brb.gui.pin.add"));
+                list.add(Component.translatable("brb.gui.pin.add", ((KeyMappingAccessor) BetterRecipeBook.PIN_MAPPING).getKey().getDisplayName()));
             }
         }
     }

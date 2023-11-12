@@ -14,6 +14,7 @@
     "accessors.BrewingStandMenuAccessor",
     "accessors.HolderReferenceAccessor",
     "accessors.InventoryAccessor",
+    "accessors.KeyMappingAccessor",
     "accessors.OverlayRecipeButtonAccessor",
     "accessors.OverlayRecipeComponentAccessor",
     "accessors.RecipeBookComponentAccessor",

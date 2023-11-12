@@ -2,6 +2,7 @@ package marsh.town.brb.mixins.pins;
 
 import marsh.town.brb.BetterRecipeBook;
 import marsh.town.brb.generic.pins.PinnableRecipeCollection;
+import marsh.town.brb.mixins.accessors.KeyMappingAccessor;
 import marsh.town.brb.util.BRBTextures;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -36,9 +37,9 @@ public abstract class RecipeButtonMixin extends AbstractWidget {
         list.add(Component.empty());
 
         if (BetterRecipeBook.pinnedRecipeManager.has(PinnableRecipeCollection.of(this.getCollection()))) {
-            list.add(Component.translatable("brb.gui.pin.remove"));
+            list.add(Component.translatable("brb.gui.pin.remove", ((KeyMappingAccessor) BetterRecipeBook.PIN_MAPPING).getKey().getDisplayName()));
         } else {
-            list.add(Component.translatable("brb.gui.pin.add"));
+            list.add(Component.translatable("brb.gui.pin.add", ((KeyMappingAccessor) BetterRecipeBook.PIN_MAPPING).getKey().getDisplayName()));
         }
     }
 
