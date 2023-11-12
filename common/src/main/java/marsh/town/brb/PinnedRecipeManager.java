@@ -3,16 +3,16 @@ package marsh.town.brb;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
+import marsh.town.brb.generic.GenericRecipe;
+import marsh.town.brb.generic.GenericRecipeBookCollection;
+import marsh.town.brb.generic.pins.Pinnable;
 import marsh.town.brb.mixins.accessors.RecipeBookComponentAccessor;
-import marsh.town.brb.smithingtable.SmithableResult;
-import marsh.town.brb.smithingtable.SmithingRecipeCollection;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.recipebook.RecipeBookComponent;
 import net.minecraft.client.gui.screens.recipebook.RecipeBookPage;
 import net.minecraft.client.gui.screens.recipebook.RecipeCollection;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.alchemy.PotionBrewing;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import org.apache.commons.io.IOUtils;
 
@@ -24,8 +24,6 @@ import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 import java.util.HashSet;
 import java.util.List;
-
-import static marsh.town.brb.brewingstand.PlatformPotionUtil.getTo;
 
 public class PinnedRecipeManager {
     public HashSet<ResourceLocation> pinned;
@@ -39,7 +37,8 @@ public class PinnedRecipeManager {
 
             if (pinsFile.exists()) {
                 reader = new JsonReader(new FileReader(pinsFile.getAbsolutePath()));
-                Type type = new TypeToken<HashSet<ResourceLocation>>() {}.getType();
+                Type type = new TypeToken<HashSet<ResourceLocation>>() {
+                }.getType();
                 pinned = gson.fromJson(reader, type);
             }
         } catch (Throwable var8) {
@@ -82,66 +81,28 @@ public class PinnedRecipeManager {
         this.store();
     }
 
-    public void addOrRemoveFavouritePotion(PotionBrewing.Mix<?> target) {
-        ResourceLocation targetIdentifier = BuiltInRegistries.POTION.getKey(getTo(target));
-
+    public <R extends GenericRecipe, M extends AbstractContainerMenu> void addOrRemoveFavourite(GenericRecipeBookCollection<R, M> target) {
         for (ResourceLocation identifier : this.pinned) {
-            if (identifier.equals(targetIdentifier)) {
-                this.pinned.remove(targetIdentifier);
-                this.store();
-                return;
-            }
-        }
-
-        this.pinned.add(targetIdentifier);
-        this.store();
-    }
-
-    public void addOrRemoveFavouriteSmithing(SmithableResult recipe) {
-        ResourceLocation targetIdentifier = BuiltInRegistries.ITEM.getKey(recipe.template.getItems()[0].getItem());
-
-        for (ResourceLocation identifier : this.pinned) {
-            if (identifier.equals(targetIdentifier)) {
-                this.pinned.remove(targetIdentifier);
-                this.store();
-                return;
-            }
-        }
-
-        this.pinned.add(targetIdentifier);
-        this.store();
-    }
-
-    public boolean has(Object target) {
-        for (ResourceLocation identifier : this.pinned) {
-            for (RecipeHolder<?> recipe : ((RecipeCollection) target).getRecipes()) {
+            for (R recipe : target.getRecipes()) {
                 if (recipe.id().equals(identifier)) {
-                    return true;
+                    this.pinned.remove(identifier);
+                    this.store();
+                    return;
                 }
             }
         }
-        return false;
+
+        this.pinned.addAll(target.getRecipes().stream().map(R::id).toList());
+        this.store();
     }
 
-    public boolean hasPotion(PotionBrewing.Mix<?> target) {
-        ResourceLocation targetIdentifier = BuiltInRegistries.POTION.getKey(getTo(target));
-
+    public boolean has(Pinnable target) {
         for (ResourceLocation identifier : this.pinned) {
-            if (targetIdentifier.equals(identifier)) {
+            if (target.has(identifier)) {
                 return true;
             }
         }
-        return false;
-    }
 
-    public boolean hasSmithing(SmithingRecipeCollection target) {
-        ResourceLocation targetIdentifier = BuiltInRegistries.ITEM.getKey(target.getFirst().template.getItems()[0].getItem());
-
-        for (ResourceLocation identifier : this.pinned) {
-            if (targetIdentifier.equals(identifier)) {
-                return true;
-            }
-        }
         return false;
     }
 

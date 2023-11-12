@@ -1,33 +1,20 @@
 package marsh.town.brb.mixins;
 
 import marsh.town.brb.BetterRecipeBook;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.stats.RecipeBook;
 import net.minecraft.world.item.crafting.RecipeHolder;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
-import org.spongepowered.asm.mixin.Shadow;
-
-import java.util.Set;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(RecipeBook.class)
 public class DisableBounce {
-    @Final @Shadow
-    protected Set<ResourceLocation> highlight;
-
-    /**
-     * @author marshmallow
-     */
-    @Overwrite
-    @Environment(EnvType.CLIENT)
-    public boolean willHighlight(RecipeHolder<?> recipe) {
+    @Inject(method = "willHighlight", at = @At(value = "HEAD"), cancellable = true)
+    public void willHighlight(RecipeHolder<?> recipeHolder, CallbackInfoReturnable<Boolean> cir) {
         if (!BetterRecipeBook.config.newRecipes.enableBounce) {
-            return false;
-        } else {
-            return highlight.contains(recipe.id());
+            cir.setReturnValue(false);
+            cir.cancel();
         }
     }
 }

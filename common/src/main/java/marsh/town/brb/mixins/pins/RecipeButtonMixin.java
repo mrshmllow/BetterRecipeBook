@@ -1,6 +1,7 @@
 package marsh.town.brb.mixins.pins;
 
 import marsh.town.brb.BetterRecipeBook;
+import marsh.town.brb.generic.pins.PinnableRecipeCollection;
 import marsh.town.brb.interfaces.unlockrecipes.IMixinRecipeManager;
 import marsh.town.brb.util.BRBTextures;
 import net.minecraft.ChatFormatting;
@@ -52,8 +53,10 @@ public abstract class RecipeButtonMixin extends AbstractWidget {
                 list.add(0, Component.translatable("brb.gui.crafting.lockedRecipe").withStyle(ChatFormatting.GRAY).withStyle(ChatFormatting.ITALIC));
             }
         }
+  
+        list.add(Component.empty());
 
-        if (BetterRecipeBook.pinnedRecipeManager.has(this.getCollection())) {
+        if (BetterRecipeBook.pinnedRecipeManager.has(PinnableRecipeCollection.of(this.getCollection()))) {
             list.add(Component.translatable("brb.gui.pin.remove"));
         } else {
             list.add(Component.translatable("brb.gui.pin.add"));
@@ -63,7 +66,7 @@ public abstract class RecipeButtonMixin extends AbstractWidget {
     @Inject(method = "renderWidget", at = @At(value = "RETURN", target = "Lnet/minecraft/client/gui/GuiGraphics;renderFakeItem(Lnet/minecraft/world/item/ItemStack;II)V"))
     public void renderWidget_renderFakeItem(GuiGraphics gui, int x, int y, float delta, CallbackInfo ci) {
         // if pins are enabled, and the recipe is pinned, blit the pin texture after the recipe collection is rendered
-        if (BetterRecipeBook.config.enablePinning && BetterRecipeBook.pinnedRecipeManager.has(getCollection())) {
+        if (BetterRecipeBook.config.enablePinning && BetterRecipeBook.pinnedRecipeManager.has(PinnableRecipeCollection.of(getCollection()))) {
             gui.blitSprite(BRBTextures.RECIPE_BOOK_PIN_SPRITE, getX() - 4, getY() - 4, 32, 32);
         }
     }

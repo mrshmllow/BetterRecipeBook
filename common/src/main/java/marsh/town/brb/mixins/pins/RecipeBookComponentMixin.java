@@ -2,6 +2,8 @@ package marsh.town.brb.mixins.pins;
 
 import com.google.common.collect.Lists;
 import marsh.town.brb.BetterRecipeBook;
+import marsh.town.brb.generic.pins.PinnableRecipeCollection;
+import marsh.town.brb.interfaces.IPinningComponent;
 import marsh.town.brb.mixins.accessors.RecipeBookPageAccessor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.screens.recipebook.RecipeBookComponent;
@@ -11,30 +13,36 @@ import net.minecraft.client.gui.screens.recipebook.RecipeCollection;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
 
 import java.util.List;
 
 @Mixin(RecipeBookComponent.class)
-public abstract class RecipeBookComponentMixin {
+public abstract class RecipeBookComponentMixin implements IPinningComponent<PinnableRecipeCollection> {
 
-    @Shadow @Final private RecipeBookPage recipeBookPage;
+    @Shadow
+    @Final
+    private RecipeBookPage recipeBookPage;
 
-    @Inject(method = "updateCollections", locals = LocalCapture.CAPTURE_FAILHARD, at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/recipebook/RecipeBookPage;updateCollections(Ljava/util/List;Z)V"))
-    private void updateCollections(boolean bl, CallbackInfo ci, List<RecipeCollection> list, List<RecipeCollection> list2) {
-        if (!BetterRecipeBook.config.enablePinning) return;
+    @Unique
+    public void betterRecipeBook$sortByPinsInPlaceCollection(List<RecipeCollection> results) {
+        List<RecipeCollection> tempResults = Lists.newArrayList(results);
 
-        List<RecipeCollection> list2copy = Lists.newArrayList(list2);
-
-        for (RecipeCollection collection : list2copy) {
-            if (BetterRecipeBook.pinnedRecipeManager.has(collection)) {
-                list2.remove(collection);
-                list2.add(0, collection);
+        if (BetterRecipeBook.config.enablePinning) {
+            for (RecipeCollection result : tempResults) {
+                if (BetterRecipeBook.pinnedRecipeManager.has(PinnableRecipeCollection.of(result))) {
+                    results.remove(result);
+                    results.add(0, result);
+                }
             }
         }
+    }
+
+    @ModifyArg(method = "updateCollections", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/recipebook/RecipeBookPage;updateCollections(Ljava/util/List;Z)V"))
+    private List<RecipeCollection> updateCollections(List<RecipeCollection> list) {
+        this.betterRecipeBook$sortByPinsInPlaceCollection(list);
 
         if (BetterRecipeBook.instantCraftingManager.on && this.recipeBookPage != null) {
             List<RecipeButton> buttons = ((RecipeBookPageAccessor) recipeBookPage).getButtons();
@@ -42,13 +50,14 @@ public abstract class RecipeBookComponentMixin {
             if (btn != null) {
                 RecipeCollection hoveredCollection = btn.getCollection();
                 int idx = ((RecipeBookPageAccessor) recipeBookPage).getCollections().indexOf(hoveredCollection);
-                if (idx != -1 && idx < list2.size()) {
+                if (idx != -1 && idx < list.size()) {
                     BetterRecipeBook.currentHoveredRecipeCollection = hoveredCollection;
-                    list2.remove(hoveredCollection);
-                    list2.add(idx, hoveredCollection);
+                    list.remove(hoveredCollection);
+                    list.add(idx, PinnableRecipeCollection.of(hoveredCollection));
                 }
             }
         }
-    }
 
+        return list;
+    }
 }

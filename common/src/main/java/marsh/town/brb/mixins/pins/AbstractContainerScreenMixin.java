@@ -2,7 +2,6 @@ package marsh.town.brb.mixins.pins;
 
 import marsh.town.brb.BetterRecipeBook;
 import marsh.town.brb.PinnedRecipeManager;
-import marsh.town.brb.brewingstand.BrewingRecipeBookComponent;
 import marsh.town.brb.mixins.accessors.OverlayRecipeButtonAccessor;
 import marsh.town.brb.mixins.accessors.OverlayRecipeComponentAccessor;
 import marsh.town.brb.mixins.accessors.RecipeBookComponentAccessor;
@@ -31,8 +30,6 @@ public abstract class AbstractContainerScreenMixin {
         OverlayRecipeComponent alternatesWidget = ((RecipeBookPageAccessor) page).getOverlay();
 
         EditBox searchBox = ((RecipeBookComponentAccessor) book).getSearchBox();
-        if (searchBox == null || !book.isVisible() && !(book instanceof BrewingRecipeBookComponent b && b.isOpen()))
-            return;
 
         // when F is pressed, handle pinning/unpinning of recipes except when searchBox is consuming input
         if (keyCode == GLFW.GLFW_KEY_F && !searchBox.canConsumeInput()) {
@@ -48,21 +45,13 @@ public abstract class AbstractContainerScreenMixin {
                 return;
             }
 
-            // handle recipes page
-            if (book instanceof BrewingRecipeBookComponent brewingBook) {
-                // BrewingRecipeBookComponent handles pinning by itself
-                cir.setReturnValue(brewingBook.keyPressed(keyCode, scanCode, modifiers));
-                return;
-            } else {
-                for (RecipeButton button : ((RecipeBookPageAccessor) page).getButtons()) {
-                    if (button.isHoveredOrFocused()) {
-                        PinnedRecipeManager.handlePinRecipe(book, page, button.getRecipe());
-                        cir.setReturnValue(true);
-                        return;
-                    }
+            for (RecipeButton button : ((RecipeBookPageAccessor) page).getButtons()) {
+                if (button.isHoveredOrFocused()) {
+                    PinnedRecipeManager.handlePinRecipe(book, page, button.getRecipe());
+                    cir.setReturnValue(true);
+                    return;
                 }
             }
-
         }
 
         // when <chat key> is pressed, focus recipes component for searchBox

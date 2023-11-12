@@ -1,6 +1,7 @@
-package marsh.town.brb.smithingtable;
+package marsh.town.brb.generic;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import marsh.town.brb.api.BRBBookCategories;
 import marsh.town.brb.util.BRBTextures;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -11,13 +12,13 @@ import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
 
-public class SmithingRecipeGroupButtonWidget extends StateSwitchingButton {
-    private final SmithingRecipeBookGroup group;
+public class BRBGroupButtonWidget extends StateSwitchingButton {
+    protected BRBBookCategories.Category category;
 
-    public SmithingRecipeGroupButtonWidget(SmithingRecipeBookGroup category) {
+    public BRBGroupButtonWidget(BRBBookCategories.Category category) {
         super(0, 0, 35, 27, false);
+        this.category = category;
         this.initTextureValues(BRBTextures.RECIPE_BOOK_TAB_SPRITES);
-        this.group = category;
     }
 
     public void renderWidget(GuiGraphics gui, int mouseX, int mouseY, float delta) {
@@ -37,7 +38,7 @@ public class SmithingRecipeGroupButtonWidget extends StateSwitchingButton {
     }
 
     private void renderIcons(GuiGraphics guiGraphics, ItemRenderer itemRenderer) {
-        List<ItemStack> list = this.group.getIcons();
+        List<ItemStack> list = this.category.getItemIcons();
         int i = this.isStateTriggered ? -2 : 0;
         if (list.size() == 1) {
             guiGraphics.renderFakeItem(list.get(0), getX() + 9 + i, getY() + 5);
@@ -48,7 +49,7 @@ public class SmithingRecipeGroupButtonWidget extends StateSwitchingButton {
 
     }
 
-    public SmithingRecipeBookGroup getGroup() {
-        return this.group;
+    public BRBBookCategories.Category getCategory() {
+        return this.category;
     }
 }

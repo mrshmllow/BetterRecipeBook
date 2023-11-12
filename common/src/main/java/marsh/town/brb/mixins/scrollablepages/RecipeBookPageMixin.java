@@ -6,7 +6,6 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.StateSwitchingButton;
 import net.minecraft.client.gui.screens.recipebook.RecipeBookPage;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -19,8 +18,10 @@ public abstract class RecipeBookPageMixin {
     private int currentPage;
     @Shadow
     private int totalPages;
+
     @Shadow
     protected abstract void updateButtonsForPage();
+
     @Shadow
     private StateSwitchingButton forwardButton;
     @Shadow
@@ -67,17 +68,11 @@ public abstract class RecipeBookPageMixin {
         BetterRecipeBook.queuedScroll = 0;
     }
 
-    /**
-     * @author marshmallow
-     */
-    @Overwrite
-    private void updateArrowButtons() {
+    @Inject(method = "updateArrowButtons", at = @At("RETURN"))
+    private void updateArrowButtons(CallbackInfo ci) {
         if (BetterRecipeBook.config.scrolling.scrollAround && totalPages > 1) {
             forwardButton.visible = true;
             backButton.visible = true;
-        } else {
-            forwardButton.visible = totalPages > 1 && currentPage < totalPages - 1;
-            backButton.visible = totalPages > 1 && currentPage > 0;
         }
     }
 }

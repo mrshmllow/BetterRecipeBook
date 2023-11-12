@@ -1,5 +1,9 @@
 package marsh.town.brb.brewingstand;
 
+import marsh.town.brb.BetterRecipeBook;
+import marsh.town.brb.api.BRBBookCategories;
+import marsh.town.brb.generic.GenericRecipe;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.Slot;
@@ -10,10 +14,9 @@ import net.minecraft.world.item.alchemy.PotionBrewing;
 
 import java.util.List;
 
-import static marsh.town.brb.brewingstand.PlatformPotionUtil.getFrom;
-import static marsh.town.brb.brewingstand.PlatformPotionUtil.getIngredient;
+import static marsh.town.brb.brewingstand.PlatformPotionUtil.*;
 
-public class BrewableResult {
+public class BrewableResult implements GenericRecipe {
     public ItemStack ingredient;
     public PotionBrewing.Mix<?> recipe;
     public ResourceLocation input;
@@ -33,14 +36,14 @@ public class BrewableResult {
         return false;
     }
 
-    public ItemStack inputAsItemStack(BrewingRecipeBookGroup group) {
+    public ItemStack inputAsItemStack(BRBBookCategories.Category category) {
         Potion inputPotion = getFrom(recipe);
 
         ResourceLocation identifier = BuiltInRegistries.POTION.getKey(inputPotion);
         ItemStack inputStack;
-        if (group == BrewingRecipeBookGroup.BREWING_SPLASH_POTION) {
+        if (category == BetterRecipeBook.BREWING_SPLASH_POTION) {
             inputStack = new ItemStack(Items.SPLASH_POTION);
-        } else if (group == BrewingRecipeBookGroup.BREWING_LINGERING_POTION) {
+        } else if (category == BetterRecipeBook.BREWING_LINGERING_POTION) {
             inputStack = new ItemStack(Items.LINGERING_POTION);
         } else {
             inputStack = new ItemStack(Items.POTION);
@@ -50,24 +53,39 @@ public class BrewableResult {
         return inputStack;
     }
 
-    public boolean hasInput(BrewingRecipeBookGroup group, List<Slot> slots) {
-        ItemStack inputStack = inputAsItemStack(group);
+    public boolean hasInput(BRBBookCategories.Category category, List<Slot> slots) {
+        ItemStack inputStack = inputAsItemStack(category);
 
         for (Slot slot : slots) {
             ItemStack itemStack = slot.getItem();
 
             if (inputStack.getTag() == null) return false;
-            if (inputStack.getTag().equals(itemStack.getTag()) && inputStack.getItem().equals(itemStack.getItem())) return true;
+            if (inputStack.getTag().equals(itemStack.getTag()) && inputStack.getItem().equals(itemStack.getItem()))
+                return true;
         }
 
         return false;
     }
 
-    public boolean hasMaterials(BrewingRecipeBookGroup group, List<Slot> slots) {
+    public boolean hasMaterials(BRBBookCategories.Category category, List<Slot> slots) {
         boolean hasIngredient = hasIngredient(slots);
-        boolean hasInput = hasInput(group, slots);
+        boolean hasInput = hasInput(category, slots);
 
         return hasIngredient && hasInput;
     }
 
+    @Override
+    public ResourceLocation id() {
+        return BuiltInRegistries.POTION.getKey(getTo(recipe));
+    }
+
+    @Override
+    public ItemStack getResult(RegistryAccess registryAccess) {
+        return ingredient;
+    }
+
+    @Override
+    public String getSearchString() {
+        return this.ingredient.getHoverName().getString();
+    }
 }
