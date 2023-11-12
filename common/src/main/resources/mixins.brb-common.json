@@ -38,6 +38,7 @@
     "ungroup.RecipeBookComponentMixin",
     "unlockrecipes.ClientPacketListenerMixin",
     "unlockrecipes.MultiPlayerGameModeMixin",
+    "unlockrecipes.RecipeButtonMixin",
     "unlockrecipes.RecipeManagerMixin"
   ],
   "injectors": {
