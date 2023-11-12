@@ -119,7 +119,7 @@ public class GenericRecipeButton<C extends GenericRecipeBookCollection<R, M>, R 
     }
 
     public void addPinTooltip(List<Component> list) {
-        list.add(Component.literal(""));
+        list.add(Component.empty());
 
         if (BetterRecipeBook.config.enablePinning) {
             if (BetterRecipeBook.pinnedRecipeManager.has(collection)) {

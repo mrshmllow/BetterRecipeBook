@@ -33,6 +33,8 @@ public abstract class RecipeButtonMixin extends AbstractWidget {
     public void getTooltip(CallbackInfoReturnable<List<Component>> cir, ItemStack itemStack, List<Component> list) {
         if (!BetterRecipeBook.config.enablePinning) return;
 
+        list.add(Component.empty());
+
         if (BetterRecipeBook.pinnedRecipeManager.has(PinnableRecipeCollection.of(this.getCollection()))) {
             list.add(Component.translatable("brb.gui.pin.remove"));
         } else {
