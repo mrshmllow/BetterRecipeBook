@@ -32,6 +32,7 @@
   "brb.gui.instantCraft.on": "Instant crafting is on",
   "brb.gui.instantCraft.off": "Instant crafting is off",
   "brb.gui.settings.open": "Open settings",
-
+  "brb.gui.crafting.lockedRecipe": "Craft once to unlock:",
+  "brb.gui.furnace.lockedRecipe": "Smelt once to unlock:",
   "brb.gui.smithable": "Showing Smithable"
 }
