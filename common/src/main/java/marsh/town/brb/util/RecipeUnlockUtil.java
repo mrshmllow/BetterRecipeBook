@@ -7,7 +7,7 @@ import net.minecraft.client.gui.screens.recipebook.RecipeUpdateListener;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.item.crafting.RecipeManager;
 
-public class RecipeUnlocker {
+public class RecipeUnlockUtil {
 
     public static void unlockRecipesIfRequired() {
         if (BetterRecipeBook.config.newRecipes.unlockAll) {

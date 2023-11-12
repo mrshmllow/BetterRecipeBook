@@ -37,7 +37,8 @@
     "ungroup.ClientRecipeBookMixin",
     "ungroup.RecipeBookComponentMixin",
     "unlockrecipes.ClientPacketListenerMixin",
-    "unlockrecipes.MultiPlayerGameModeMixin"
+    "unlockrecipes.MultiPlayerGameModeMixin",
+    "unlockrecipes.RecipeManagerMixin"
   ],
   "injectors": {
     "defaultRequire": 1
