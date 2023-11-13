@@ -1,16 +1,14 @@
 package marsh.town.brb.api;
 
 import marsh.town.brb.BetterRecipeBook;
-import marsh.town.brb.mixins.accessors.BookSettingsTypeSettingsAccessor;
 import marsh.town.brb.util.BRBHelper;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.stats.RecipeBookSettings;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class BRBBookSettings {
-    public static Map<ResourceLocation, RecipeBookSettings.TypeSettings> states = new HashMap<>();
+    public static Map<ResourceLocation, TypeSettings> states = new HashMap<>();
 
     public BRBBookSettings() {
         states = new HashMap<>();
@@ -18,28 +16,38 @@ public class BRBBookSettings {
 
     public static void registerBook(BRBHelper.Book book) {
         BetterRecipeBook.LOGGER.info("Registering book {}", book.resourceLocation);
-        states.put(book.resourceLocation, new RecipeBookSettings.TypeSettings(false, false));
+        states.put(book.resourceLocation, new TypeSettings(false, false));
     }
 
     public static boolean isOpen(BRBHelper.Book book) {
-        RecipeBookSettings.TypeSettings settings = states.get(book.resourceLocation);
+        TypeSettings settings = states.get(book.resourceLocation);
 
-        return ((BookSettingsTypeSettingsAccessor) settings).isOpen();
+        return settings.open;
     }
 
     public static void setOpen(BRBHelper.Book book, boolean bl) {
-        ((BookSettingsTypeSettingsAccessor) states.get(book.resourceLocation)).setOpen(bl);
+        states.get(book.resourceLocation).open = bl;
     }
 
     public static boolean isFiltering(BRBHelper.Book book) {
-        return ((BookSettingsTypeSettingsAccessor) states.get(book.resourceLocation)).isFiltering();
+        return states.get(book.resourceLocation).filtering;
     }
 
     public static void setFiltering(BRBHelper.Book book, boolean bl) {
-        ((BookSettingsTypeSettingsAccessor) states.get(book.resourceLocation)).setFiltering(bl);
+        states.get(book.resourceLocation).filtering = bl;
     }
 
     public int hashCode() {
         return states.hashCode();
+    }
+
+    static class TypeSettings {
+        boolean open;
+        boolean filtering;
+
+        public TypeSettings(boolean bl, boolean bl2) {
+            this.open = bl;
+            this.filtering = bl2;
+        }
     }
 }
