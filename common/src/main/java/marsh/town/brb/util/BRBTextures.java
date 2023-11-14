@@ -1,6 +1,5 @@
 package marsh.town.brb.util;
 
-import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.resources.ResourceLocation;
 
 public class BRBTextures {

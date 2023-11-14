@@ -1,5 +1,6 @@
 package marsh.town.brb.mixins.accessors.smithing;
 
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.SmithingTrimRecipe;
 import org.spongepowered.asm.mixin.Mixin;
@@ -15,4 +16,7 @@ public interface SmithingTrimRecipeAccessor {
 
     @Accessor("addition")
     Ingredient getUnderlyingAddition();
+
+    @Accessor("id")
+    ResourceLocation getId();
 }

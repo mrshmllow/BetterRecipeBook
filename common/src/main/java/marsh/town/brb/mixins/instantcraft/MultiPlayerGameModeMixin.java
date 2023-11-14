@@ -3,7 +3,7 @@ package marsh.town.brb.mixins.instantcraft;
 import marsh.town.brb.BetterRecipeBook;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.MultiPlayerGameMode;
-import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.Recipe;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -13,10 +13,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(MultiPlayerGameMode.class)
 public class MultiPlayerGameModeMixin {
-    @Shadow @Final private Minecraft minecraft;
+    @Shadow
+    @Final
+    private Minecraft minecraft;
 
     @Inject(method = "handlePlaceRecipe", at = @At("TAIL"))
-    private void handlePlaceRecipe(int i, RecipeHolder<?> recipe, boolean bl, CallbackInfo ci) {
-        BetterRecipeBook.instantCraftingManager.recipeClicked(recipe.value(), minecraft.level.registryAccess());
+    private void handlePlaceRecipe(int i, Recipe<?> recipe, boolean bl, CallbackInfo ci) {
+        BetterRecipeBook.instantCraftingManager.recipeClicked(recipe, minecraft.level.registryAccess());
     }
 }

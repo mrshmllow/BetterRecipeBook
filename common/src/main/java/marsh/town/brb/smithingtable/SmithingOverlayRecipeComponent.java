@@ -48,10 +48,10 @@ public class SmithingOverlayRecipeComponent implements Renderable, GuiEventListe
 
         for (int index = 0; index < totalRecipeCount; ++index) {
             boolean isCraftable = index < lockedRecipeCount;
-            BRBSmithingRecipe recipeHolder = isCraftable ? lockedRecipes.get(index) : unlockedRecipes.get(index - lockedRecipeCount);
+            BRBSmithingRecipe Recipe = isCraftable ? lockedRecipes.get(index) : unlockedRecipes.get(index - lockedRecipeCount);
             int buttonX = this.x + 4 + 25 * (index % columns);
             int buttonY = this.y + 5 + 25 * (index / columns);
-            this.recipeButtons.add(new OverlayRecipeButton(buttonX, buttonY, recipeHolder, isCraftable, registryAccess));
+            this.recipeButtons.add(new OverlayRecipeButton(buttonX, buttonY, Recipe, isCraftable, registryAccess));
         }
 
         this.lastRecipeClicked = null;
