@@ -2,7 +2,7 @@ package marsh.town.brb.util;
 
 import net.minecraft.recipebook.PlaceRecipe;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.Recipe;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -28,9 +28,9 @@ public class RecipePlacement implements PlaceRecipe<Ingredient> {
         return placement;
     }
 
-    public static List<List<Ingredient>> create(RecipeHolder<?> recipe, int gridWidth, int gridHeight) {
+    public static List<List<Ingredient>> create(Recipe<?> recipe, int gridWidth, int gridHeight) {
         RecipePlacement placer = new RecipePlacement(gridWidth * gridHeight);
-        placer.placeRecipe(gridWidth, gridHeight, -1, recipe, recipe.value().getIngredients().iterator(), 0);
+        placer.placeRecipe(gridWidth, gridHeight, -1, recipe, recipe.getIngredients().iterator(), 0);
         return placer.getPlacement();
     }
 

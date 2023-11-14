@@ -24,19 +24,29 @@ import java.util.List;
 @Mixin(RecipeBookComponent.class)
 public abstract class RecipeBookComponentMixin {
 
-    @Shadow protected Minecraft minecraft;
+    @Shadow
+    protected Minecraft minecraft;
 
-    @Shadow public abstract boolean isVisible();
+    @Shadow
+    public abstract boolean isVisible();
 
-    @Shadow private int height;
-    @Shadow private int width;
-    @Shadow private int xOffset;
+    @Shadow
+    private int height;
+    @Shadow
+    private int width;
+    @Shadow
+    private int xOffset;
 
-    @Shadow @Final private RecipeBookPage recipeBookPage;
+    @Shadow
+    @Final
+    private RecipeBookPage recipeBookPage;
 
-    @Unique protected StateSwitchingButton _$instantCraftButton;
-    @Unique private static final Component TOGGLE_INSTANT_CRAFT_ON_TEXT;
-    @Unique private static final Component TOGGLE_INSTANT_CRAFT_OFF_TEXT;
+    @Unique
+    protected StateSwitchingButton _$instantCraftButton;
+    @Unique
+    private static final Component TOGGLE_INSTANT_CRAFT_ON_TEXT;
+    @Unique
+    private static final Component TOGGLE_INSTANT_CRAFT_OFF_TEXT;
 
     @Unique
     private boolean betterRecipeBook$shouldSkip() {
@@ -57,8 +67,8 @@ public abstract class RecipeBookComponentMixin {
         int i = (this.width - 147) / 2 - this.xOffset;
         int j = (this.height - 166) / 2;
 
-        this._$instantCraftButton = new StateSwitchingButton(i + 110, j + 137, 26, 16 + 2, BetterRecipeBook.instantCraftingManager.on);
-        this._$instantCraftButton.initTextureValues(BRBTextures.RECIPE_BOOK_INSTANT_CRAFT_BUTTON_SPRITES);
+        this._$instantCraftButton = new StateSwitchingButton(i + 110, j + 137, 26, 17, BetterRecipeBook.instantCraftingManager.on);
+        this._$instantCraftButton.initTextureValues(0, 0, 26, 17, BRBTextures.RECIPE_BOOK_INSTANT_CRAFT_BUTTON_SPRITE);
     }
 
     @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/recipebook/RecipeBookPage;render(Lnet/minecraft/client/gui/GuiGraphics;IIIIF)V"))

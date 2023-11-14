@@ -6,6 +6,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.armortrim.*;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -17,8 +18,8 @@ import java.util.Optional;
 public class BRBSmithingTrimRecipe extends SmithingTrimRecipe implements BRBSmithingRecipe {
     private final ItemStack itemStackBase;
 
-    public BRBSmithingTrimRecipe(Ingredient template, Ingredient base, ItemStack itemStackBase, Ingredient addition) {
-        super(template, base, addition);
+    public BRBSmithingTrimRecipe(ResourceLocation resourceLocation, Ingredient template, Ingredient base, ItemStack itemStackBase, Ingredient addition) {
+        super(resourceLocation, template, base, addition);
         this.itemStackBase = itemStackBase;
     }
 
@@ -27,7 +28,7 @@ public class BRBSmithingTrimRecipe extends SmithingTrimRecipe implements BRBSmit
         ArrayList<BRBSmithingTrimRecipe> results = new ArrayList<>();
 
         for (ItemStack base : recipeAccessor.getUnderlyingBase().getItems()) {
-            results.add(new BRBSmithingTrimRecipe(recipeAccessor.getUnderlyingTemplate(), recipeAccessor.getUnderlyingBase(), base, recipeAccessor.getUnderlyingAddition()));
+            results.add(new BRBSmithingTrimRecipe(recipeAccessor.getId(), recipeAccessor.getUnderlyingTemplate(), recipeAccessor.getUnderlyingBase(), base, recipeAccessor.getUnderlyingAddition()));
         }
 
         return results;

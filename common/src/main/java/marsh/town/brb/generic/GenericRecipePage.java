@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import marsh.town.brb.BetterRecipeBook;
 import marsh.town.brb.api.BRBBookCategories;
-import marsh.town.brb.util.BRBTextures;
+import marsh.town.brb.mixins.accessors.RecipeBookComponentAccessor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.StateSwitchingButton;
@@ -48,9 +48,9 @@ public class GenericRecipePage<M extends AbstractContainerMenu, C extends Generi
         this.parentTop = parentTop;
 
         this.forwardButton = new StateSwitchingButton(parentLeft + 93, parentTop + 137, 12, 17, false);
-        this.forwardButton.initTextureValues(BRBTextures.RECIPE_BOOK_PAGE_FORWARD_SPRITES);
+        this.forwardButton.initTextureValues(1, 208, 13, 18, RecipeBookComponentAccessor.getRECIPE_BOOK_LOCATION());
         this.backButton = new StateSwitchingButton(parentLeft + 38, parentTop + 137, 12, 17, true);
-        this.backButton.initTextureValues(BRBTextures.RECIPE_BOOK_PAGE_BACKWARD_SPRITES);
+        this.backButton.initTextureValues(1, 208, 13, 18, RecipeBookComponentAccessor.getRECIPE_BOOK_LOCATION());
 
         for (int k = 0; k < this.buttons.size(); ++k) {
             this.buttons.get(k).setPosition(parentLeft + 11 + 25 * (k % 5), parentTop + 31 + 25 * (k / 5));

@@ -6,7 +6,7 @@ import net.minecraft.client.ClientRecipeBook;
 import net.minecraft.client.RecipeBookCategories;
 import net.minecraft.client.gui.screens.recipebook.RecipeCollection;
 import net.minecraft.stats.RecipeBook;
-import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.Recipe;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -20,7 +20,8 @@ import java.util.Map;
 
 @Mixin(ClientRecipeBook.class)
 public class ClientRecipeBookMixin extends RecipeBook {
-    @Shadow private Map<RecipeBookCategories, List<RecipeCollection>> collectionsByTab;
+    @Shadow
+    private Map<RecipeBookCategories, List<RecipeCollection>> collectionsByTab;
 
     @Inject(method = "getCollection", locals = LocalCapture.CAPTURE_FAILHARD, at = @At("RETURN"), cancellable = true)
     private void split(RecipeBookCategories category, CallbackInfoReturnable<List<RecipeCollection>> cir) {
@@ -30,10 +31,10 @@ public class ClientRecipeBookMixin extends RecipeBook {
 
             for (RecipeCollection recipeResultCollection : list) {
                 if (recipeResultCollection.getRecipes().size() > 1) {
-                    List<RecipeHolder<?>> recipes = recipeResultCollection.getRecipes();
+                    List<Recipe<?>> recipes = recipeResultCollection.getRecipes();
                     list2.remove(recipeResultCollection);
 
-                    for (RecipeHolder<?> recipe : recipes) {
+                    for (Recipe<?> recipe : recipes) {
                         RecipeCollection recipeResultCollection1 = new RecipeCollection(recipeResultCollection.registryAccess(), Collections.singletonList(recipe));
                         recipeResultCollection1.updateKnownRecipes(this);
 

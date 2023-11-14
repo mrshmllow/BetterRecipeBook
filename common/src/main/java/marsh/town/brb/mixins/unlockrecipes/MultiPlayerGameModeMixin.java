@@ -20,7 +20,7 @@ import net.minecraft.world.inventory.AbstractFurnaceMenu;
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.RecipeBookMenu;
 import net.minecraft.world.inventory.Slot;
-import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.Recipe;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -44,7 +44,7 @@ public abstract class MultiPlayerGameModeMixin {
     private int carriedIndex;
 
     @Inject(method = "handlePlaceRecipe", at = @At(value = "HEAD"), cancellable = true)
-    public void onPlaceRecipe(int z, RecipeHolder<?> recipe, boolean shiftKeyDown, CallbackInfo ci) {
+    public void onPlaceRecipe(int z, Recipe<?> recipe, boolean shiftKeyDown, CallbackInfo ci) {
         if (BetterRecipeBook.config.newRecipes.unlockAll && minecraft.player != null && minecraft.gameMode != null && minecraft.getConnection() != null &&
                 minecraft.screen instanceof RecipeUpdateListener rul && minecraft.player.containerMenu instanceof RecipeBookMenu<?> menu) {
             RecipeBookComponent comp = rul.getRecipeBookComponent();
@@ -70,8 +70,8 @@ public abstract class MultiPlayerGameModeMixin {
                 comp.setupGhostRecipe(recipe, menu.slots);
 
                 // don't send recipe requests to the server that we don't have
-                if (!serverUnlockedRecipes.contains(recipe.id())) ci.cancel();
-            } else if (!serverUnlockedRecipes.contains(recipe.id())) { // if the server didn't unlock this recipe for us, manually place the recipe
+                if (!serverUnlockedRecipes.contains(recipe.getId())) ci.cancel();
+            } else if (!serverUnlockedRecipes.contains(recipe.getId())) { // if the server didn't unlock this recipe for us, manually place the recipe
                 MultiPlayerGameMode gameMode = minecraft.gameMode;
 
                 // we are placing the recipe ourselves, don't ask the server to do it.
@@ -123,7 +123,7 @@ public abstract class MultiPlayerGameModeMixin {
                 } else {
                     // if instant craft is enabled, set last craft
                     if (BetterRecipeBook.instantCraftingManager.on && !menu.getSlot(menu.getResultSlotIndex()).getItem().isEmpty()) {
-                        BetterRecipeBook.instantCraftingManager.recipeClicked(recipe.value(), minecraft.level.registryAccess());
+                        BetterRecipeBook.instantCraftingManager.recipeClicked(recipe, minecraft.level.registryAccess());
                     }
                 }
             }

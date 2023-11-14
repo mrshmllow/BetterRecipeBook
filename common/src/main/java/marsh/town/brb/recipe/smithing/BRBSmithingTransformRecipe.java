@@ -4,19 +4,20 @@ import marsh.town.brb.mixins.accessors.smithing.SmithingTransformRecipeAccessor;
 import marsh.town.brb.recipe.BRBSmithingRecipe;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.armortrim.TrimMaterial;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.SmithingTransformRecipe;
 
 public class BRBSmithingTransformRecipe extends SmithingTransformRecipe implements BRBSmithingRecipe {
-    public BRBSmithingTransformRecipe(Ingredient template, Ingredient base, Ingredient addition, ItemStack result) {
-        super(template, base, addition, result);
+    public BRBSmithingTransformRecipe(ResourceLocation resourceLocation, Ingredient template, Ingredient base, Ingredient addition, ItemStack result) {
+        super(resourceLocation, template, base, addition, result);
     }
 
     public static BRBSmithingTransformRecipe from(SmithingTransformRecipe recipe, RegistryAccess registryAccess) {
         SmithingTransformRecipeAccessor recipeAccessor = (SmithingTransformRecipeAccessor) recipe;
-        return new BRBSmithingTransformRecipe(recipeAccessor.getUnderlyingTemplate(), recipeAccessor.getUnderlyingBase(), recipeAccessor.getUnderlyingAddition(), recipe.getResultItem(registryAccess));
+        return new BRBSmithingTransformRecipe(recipeAccessor.getId(), recipeAccessor.getUnderlyingTemplate(), recipeAccessor.getUnderlyingBase(), recipeAccessor.getUnderlyingAddition(), recipe.getResultItem(registryAccess));
     }
 
     @Override

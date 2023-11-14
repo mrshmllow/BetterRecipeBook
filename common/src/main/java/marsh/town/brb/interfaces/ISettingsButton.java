@@ -17,7 +17,7 @@ public interface ISettingsButton {
 
     default ImageButton createSettingsButton(int i, int j) {
         if (BetterRecipeBook.config.settingsButton) {
-            return new ImageButton(i + 11, j + 137, 18, 18, BRBTextures.SETTINGS_BUTTON_SPRITES, button -> {
+            return new ImageButton(i + 11, j + 137, 18, 18, 0, 0, 18, BRBTextures.RECIPE_BOOK_SETTINGS_BUTTON, 18, 36, button -> {
                 Minecraft.getInstance().setScreen(AutoConfig.getConfigScreen(Config.class, Minecraft.getInstance().screen).get());
             });
         }

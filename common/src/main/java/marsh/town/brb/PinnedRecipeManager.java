@@ -13,7 +13,7 @@ import net.minecraft.client.gui.screens.recipebook.RecipeBookPage;
 import net.minecraft.client.gui.screens.recipebook.RecipeCollection;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.Recipe;
 import org.apache.commons.io.IOUtils;
 
 import java.io.File;
@@ -68,8 +68,8 @@ public class PinnedRecipeManager {
 
     public void addOrRemoveFavourite(RecipeCollection target) {
         for (ResourceLocation identifier : this.pinned) {
-            for (RecipeHolder<?> recipe : target.getRecipes()) {
-                if (recipe.id().equals(identifier)) {
+            for (Recipe<?> recipe : target.getRecipes()) {
+                if (recipe.getId().equals(identifier)) {
                     this.pinned.remove(identifier);
                     this.store();
                     return;
@@ -77,7 +77,7 @@ public class PinnedRecipeManager {
             }
         }
 
-        this.pinned.addAll(target.getRecipes().stream().map(RecipeHolder::id).toList());
+        this.pinned.addAll(target.getRecipes().stream().map(Recipe::getId).toList());
         this.store();
     }
 
@@ -106,7 +106,7 @@ public class PinnedRecipeManager {
         return false;
     }
 
-    public static void handlePinRecipe(RecipeBookComponent book, RecipeBookPage page, RecipeHolder<?> recipe) {
+    public static void handlePinRecipe(RecipeBookComponent book, RecipeBookPage page, Recipe<?> recipe) {
         RecipeCollection collection = new RecipeCollection(Minecraft.getInstance().level.registryAccess(), List.of(recipe));
         collection.updateKnownRecipes(page.getRecipeBook());
         BetterRecipeBook.pinnedRecipeManager.addOrRemoveFavourite(collection);

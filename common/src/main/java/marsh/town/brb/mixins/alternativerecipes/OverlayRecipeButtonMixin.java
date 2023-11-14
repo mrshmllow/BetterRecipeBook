@@ -10,7 +10,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.Recipe;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -29,7 +29,7 @@ public abstract class OverlayRecipeButtonMixin extends AbstractWidget {
     private boolean isCraftable;
     @Final
     @Shadow
-    RecipeHolder<?> recipe;
+    Recipe<?> recipe;
 
     @Shadow
     public abstract void renderWidget(GuiGraphics gui, int mouseX, int mouseY, float delta);
@@ -55,10 +55,10 @@ public abstract class OverlayRecipeButtonMixin extends AbstractWidget {
             resourceLocation = BRBTextures.RECIPE_BOOK_CRAFTING_OVERLAY_SPRITE.get(this.isCraftable, isHoveredOrFocused());
         }
 
-        gui.blitSprite(resourceLocation, getX(), getY(), this.width, this.height);
+        gui.blit(resourceLocation, getX(), getY(), 0, 0, this.width, this.height);
         gui.pose().pushPose();
         if (BetterRecipeBook.config.alternativeRecipes.onHover && !this.isHoveredOrFocused()) { // if show alternatives recipe is enabled and recipe is not hovered, show the result item
-            ItemStack recipeOutput = this.recipe.value().getResultItem(field_3113.getRecipeCollection().registryAccess());
+            ItemStack recipeOutput = this.recipe.getResultItem(field_3113.getRecipeCollection().registryAccess());
             gui.renderItem(recipeOutput, getX() + 4, getY() + 4);
         } else { // otherwise display the crafting recipe
             gui.pose().translate(this.getX() + 2, this.getY() + 2, 150.0);
@@ -79,11 +79,11 @@ public abstract class OverlayRecipeButtonMixin extends AbstractWidget {
         gui.pose().popPose();
 
         // blit pin for pinned recipes
-        if (BetterRecipeBook.config.enablePinning && BetterRecipeBook.pinnedRecipeManager.pinned.contains(recipe.id())) {
+        if (BetterRecipeBook.config.enablePinning && BetterRecipeBook.pinnedRecipeManager.pinned.contains(recipe.getId())) {
             gui.pose().pushPose();
             // make sure pin is drawn over the crafting items
             gui.pose().mulPoseMatrix(gui.pose().last().pose());
-            gui.blitSprite(BRBTextures.RECIPE_BOOK_OVERLAY_PIN_SPRITE, getX() - 4, getY() - 4, this.width + 8, this.height + 8);
+            gui.blit(BRBTextures.RECIPE_BOOK_OVERLAY_PIN_SPRITE, getX() - 3, getY() - 3, 0, 0, this.width + 3, this.height + 3, 31, 31);
             gui.pose().popPose();
         }
 

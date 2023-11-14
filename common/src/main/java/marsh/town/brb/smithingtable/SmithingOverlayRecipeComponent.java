@@ -48,10 +48,10 @@ public class SmithingOverlayRecipeComponent implements Renderable, GuiEventListe
 
         for (int index = 0; index < totalRecipeCount; ++index) {
             boolean isCraftable = index < lockedRecipeCount;
-            BRBSmithingRecipe recipeHolder = isCraftable ? lockedRecipes.get(index) : unlockedRecipes.get(index - lockedRecipeCount);
+            BRBSmithingRecipe Recipe = isCraftable ? lockedRecipes.get(index) : unlockedRecipes.get(index - lockedRecipeCount);
             int buttonX = this.x + 4 + 25 * (index % columns);
             int buttonY = this.y + 5 + 25 * (index / columns);
-            this.recipeButtons.add(new OverlayRecipeButton(buttonX, buttonY, recipeHolder, isCraftable, registryAccess));
+            this.recipeButtons.add(new OverlayRecipeButton(buttonX, buttonY, Recipe, isCraftable, registryAccess));
         }
 
         this.lastRecipeClicked = null;
@@ -100,20 +100,19 @@ public class SmithingOverlayRecipeComponent implements Renderable, GuiEventListe
     @Override
     public void render(GuiGraphics guiGraphics, int i, int j, float f) {
         if (this.isVisible) {
+            guiGraphics.pose().popPose();
             this.time += f;
             RenderSystem.enableBlend();
             guiGraphics.pose().pushPose();
-            guiGraphics.pose().translate(0.0F, 0.0F, 1000.0F);
+            guiGraphics.pose().translate(0.0f, 0.0f, 1000.0f);
             int k = this.recipeButtons.size() <= 16 ? 4 : 5;
             int l = Math.min(this.recipeButtons.size(), k);
             int m = Mth.ceil((float) this.recipeButtons.size() / (float) k);
-            guiGraphics.blitSprite(OVERLAY_RECIPE_SPRITE, this.x, this.y, l * 25 + 8, m * 25 + 8);
+            guiGraphics.blitNineSliced(BRBTextures.RECIPE_BOOK_BACKGROUND_TEXTURE, this.x, this.y, l * 25 + 8, m * 25 + 8, 4, 32, 32, 82, 208);
             RenderSystem.disableBlend();
-
             for (OverlayRecipeButton overlayRecipeButton : this.recipeButtons) {
                 overlayRecipeButton.render(guiGraphics, i, j, f);
             }
-
             guiGraphics.pose().popPose();
         }
     }
@@ -141,7 +140,7 @@ public class SmithingOverlayRecipeComponent implements Renderable, GuiEventListe
 
             resourceLocation = BRBTextures.RECIPE_BOOK_PLAIN_OVERLAY_SPRITE.get(this.isCraftable, isHoveredOrFocused());
 
-            guiGraphics.blitSprite(resourceLocation, this.getX(), this.getY(), this.width, this.height);
+            guiGraphics.blit(resourceLocation, this.getX(), this.getY(), 0, 0, this.width, this.height, 24, 24);
             guiGraphics.pose().pushPose();
 //            guiGraphics.pose().translate(this.getX() + 2, this.getY() + 2, 150.0);
 
