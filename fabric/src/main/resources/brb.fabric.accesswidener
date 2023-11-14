@@ -1,2 +1,3 @@
 accessWidener	v1      named
 accessible      class   net/minecraft/world/item/alchemy/PotionBrewing$Mix
+accessible method net/minecraft/world/item/crafting/SmithingTrimRecipe <init> (Lnet/minecraft/world/item/crafting/Ingredient;Lnet/minecraft/world/item/crafting/Ingredient;Lnet/minecraft/world/item/crafting/Ingredient;)V
