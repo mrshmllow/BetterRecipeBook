@@ -25,8 +25,8 @@ public class RecipeButtonMixin {
     @Inject(method = "getOrderedRecipes", at = @At(value = "RETURN"), locals = LocalCapture.CAPTURE_FAILHARD, cancellable = true)
     public void getOrderedRecipes(CallbackInfoReturnable<List<Recipe<?>>> cir, List<Recipe<?>> recipes) {
         // fixes division by zero due to zero list size when keeping instant craft recipes stationary
-        if (this.collection == BetterRecipeBook.currentHoveredRecipeCollection && recipes.isEmpty()) {
-            cir.setReturnValue(new ArrayList<>(collection.getDisplayRecipes(false)));
+        if (recipes.isEmpty()) {
+            cir.setReturnValue(new ArrayList<>(collection.getRecipes()));
         }
     }
 
