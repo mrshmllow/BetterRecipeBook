@@ -1,0 +1,43 @@
+{
+  "text.autoconfig.brb.title": "Better Recipe Book構成",
+
+  "text.autoconfig.brb.category.default": "全般設定",
+  "text.autoconfig.brb.option.keepCentered": "クラフト画面を中央に据え置く",
+  "text.autoconfig.brb.option.enablePinning": "レシピをお気に入りできるようにする",
+  "text.autoconfig.brb.option.darkMode": "暗い色調に適合させる。§oそれ一つで完結しているリソースパックが必要",
+  "text.autoconfig.brb.option.darkMode.@Tooltip": "暗い色調のUIを提供するリソースパック（例: §aVanilla Tweaks§r）に協調します",
+  "text.autoconfig.brb.option.settingsButton.@PrefixText": "§d--- 高度な設定 ---\n§eForge利用者にむけた警告: §7次の2項目を無効にすると，設定画面を再度表示するためにはbrb.tomlを編集しなければなりません！\nFabricを利用している場合は，§bMod Menu§rから再表示できます。",
+  "text.autoconfig.brb.option.settingsButton": "設定ボタンを表示する",
+  "text.autoconfig.brb.option.enableBook": "レシピ本を有効にする",
+
+  "text.autoconfig.brb.category.instantCraft": "即時クラフト設定",
+  "text.autoconfig.brb.option.instantCraft.showButton": "即時クラフト切替えボタンを表示する",
+
+  "text.autoconfig.brb.category.scrolling": "頁送り設定",
+  "text.autoconfig.brb.option.scrolling.scrollAround": "頁送りを循環させる",
+  "text.autoconfig.brb.option.scrolling.scrollAround.@Tooltip": "先頭・末尾の頁において，前・次の頁として末尾・先頭に移動できるようにします（JEI風）",
+  "text.autoconfig.brb.option.scrolling.enableScrolling": "頁送りを有効にする",
+
+  "text.autoconfig.brb.category.alternativeRecipes": "代替レシピ設定",
+  "text.autoconfig.brb.option.alternativeRecipes.onHover": "非注目時の代替レシピ画面にクラフト結果を表示する",
+  "text.autoconfig.brb.option.alternativeRecipes.onHover.@Tooltip": "代替レシピ画面において，詳細なレシピを常に表示するのではなく，非注目時にはクラフト結果のみを表示することで視認性を改善します",
+  "text.autoconfig.brb.option.alternativeRecipes.noGrouped": "代替レシピを纏めて表示しない",
+
+  "text.autoconfig.brb.category.newRecipes": "レシピ解禁設定",
+  "text.autoconfig.brb.option.newRecipes.unlockAll": "全てのレシピを自動的に解禁する",
+  "text.autoconfig.brb.option.newRecipes.unlockAll.@Tooltip": "適用するにはワールド・サーバーへの再入が必要です",
+  "text.autoconfig.brb.option.newRecipes.enableBounce": "解禁時の通知に動きを追加する",
+  "text.autoconfig.brb.option.newRecipes.enableBounce.@Tooltip": "新レシピを解禁したさいの通知画面が飛び跳ねるようにする",
+
+  "brb.gui.pin.add": "%sを押してこのレシピをお気に入りに登録",
+  "brb.gui.pin.remove": "%sを押してこのレシピをお気に入りから削除",
+  "brb.gui.togglePotions.brewable": "醸造可能なレシピを表示中",
+  "brb.gui.instantCraft.on": "即時クラフトが有効",
+  "brb.gui.instantCraft.off": "即時クラフトが無効",
+  "brb.gui.settings.open": "設定を開く",
+  "brb.gui.crafting.lockedRecipe": "最初のクラフトで解禁",
+  "brb.gui.furnace.lockedRecipe": "最初の精錬で解禁",
+  "brb.gui.smithable": "鍛冶可能なアイテムを表示中",
+  "category.brb": "Better Recipe Book",
+  "key.brb.pin": "レシピのお気に入り登録・解除"
+}
