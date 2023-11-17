@@ -47,16 +47,20 @@ public abstract class OverlayRecipeButtonMixin extends AbstractWidget {
 
     @Inject(at = @At("HEAD"), method = "renderWidget", cancellable = true)
     public void renderWidget(GuiGraphics gui, int mouseX, int mouseY, float delta, CallbackInfo ci) {
-        ResourceLocation resourceLocation;
-
-        if (((OverlayRecipeComponentAccessor) field_3113).isFurnaceMenu()) {
-            resourceLocation = BRBTextures.RECIPE_BOOK_PLAIN_OVERLAY_SPRITE.get(this.isCraftable, isHoveredOrFocused());
+        if (((OverlayRecipeComponentAccessor) field_3113).isFurnaceMenu() || !isHoveredOrFocused()) {
+            ResourceLocation resourceLocation = BRBTextures.RECIPE_BOOK_PLAIN_OVERLAY_SPRITE.get(this.isCraftable, isHoveredOrFocused());
+            gui.blit(resourceLocation, getX(), getY(), 0, 0, this.width, this.height, 24, 24);
+            gui.pose().pushPose();
         } else {
-            resourceLocation = BRBTextures.RECIPE_BOOK_CRAFTING_OVERLAY_SPRITE.get(this.isCraftable, isHoveredOrFocused());
+            int k = 152;
+            if (!this.isCraftable) {
+                k += 26;
+            }
+            int l = 78;
+            gui.blit(BRBTextures.RECIPE_BOOK_BACKGROUND_TEXTURE, this.getX(), this.getY(), k, l, this.width, this.height);
+            gui.pose().pushPose();
         }
 
-        gui.blit(resourceLocation, getX(), getY(), 0, 0, this.width, this.height);
-        gui.pose().pushPose();
         if (BetterRecipeBook.config.alternativeRecipes.onHover && !this.isHoveredOrFocused()) { // if show alternatives recipe is enabled and recipe is not hovered, show the result item
             ItemStack recipeOutput = this.recipe.getResultItem(field_3113.getRecipeCollection().registryAccess());
             gui.renderItem(recipeOutput, getX() + 4, getY() + 4);
