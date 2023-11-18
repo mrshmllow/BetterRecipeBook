@@ -32,6 +32,7 @@ dependencies {
     shadowCommon(project(path: ":common", configuration: "transformProductionForge")) { transitive = false }
 
     modApi "me.shedaniel.cloth:cloth-config-forge:${rootProject.cloth_config_version}"
+    include "me.shedaniel.cloth:cloth-config-forge:${rootProject.cloth_config_version}"
 
     modApi "dev.architectury:architectury-forge:${rootProject.architectury_version}"
 }
