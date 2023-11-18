@@ -1,9 +1,9 @@
 {
-  "text.autoconfig.brb.title": "更好的配方手冊（Better Recipe Book）設定",
+  "text.autoconfig.brb.title": "更好的配方手冊｜Better Recipe Book 設定",
   
   "text.autoconfig.brb.category.default": "一般設定",
   "text.autoconfig.brb.option.enableBook": "啟用配方手冊",
-  "text.autoconfig.brb.option.darkMode": "啟用暗色模式的界面變體。§o需要一個完整的資源包",
+  "text.autoconfig.brb.option.darkMode": "啟用暗色模式的介面變體。§o需要一個完整的資源包",
   "text.autoconfig.brb.option.darkMode.@Tooltip": "僅在你使用暗色模式資源包時啟用，像是 §aVanilla Tweaks§r。",
   "text.autoconfig.brb.option.keepCentered": "保持合成置中",
   "text.autoconfig.brb.option.enablePinning": "啟用配方釘選",
@@ -13,10 +13,10 @@
   "text.autoconfig.brb.category.instantCraft": "立即合成設定",
   "text.autoconfig.brb.option.instantCraft.showButton": "顯示立即合成按鈕",
   
-  "text.autoconfig.brb.category.scrolling": "滾動設定",
-  "text.autoconfig.brb.option.scrolling.scrollAround": "以循環方式滾動",
-  "text.autoconfig.brb.option.scrolling.scrollAround.@Tooltip": "當你到達手冊的最後一頁，從頭開始繼續滾動（就像 JEI 一樣） ",
-  "text.autoconfig.brb.option.scrolling.enableScrolling": "啟用配方手冊中的滾動功能。",
+  "text.autoconfig.brb.category.scrolling": "捲動設定",
+  "text.autoconfig.brb.option.scrolling.scrollAround": "以循環方式捲動",
+  "text.autoconfig.brb.option.scrolling.scrollAround.@Tooltip": "當你到達手冊的最後一頁，從頭開始繼續捲動（就像 JEI 一樣） ",
+  "text.autoconfig.brb.option.scrolling.enableScrolling": "啟用配方手冊中的捲動功能。",
   
   "text.autoconfig.brb.category.alternativeRecipes": "替代配方設定",
   "text.autoconfig.brb.option.alternativeRecipes.onHover": "僅在懸停時顯示替代配方",
@@ -33,5 +33,10 @@
   "brb.gui.togglePotions.brewable": "顯示釀造配方",
   "brb.gui.instantCraft.on": "立即合成已開啟",
   "brb.gui.instantCraft.off": "立即合成已關閉",
-  "brb.gui.settings.open": "開啟設定"
+  "brb.gui.settings.open": "開啟設定",
+  "brb.gui.crafting.lockedRecipe": "合成一次以解鎖：",
+  "brb.gui.furnace.lockedRecipe": "熔煉一次以解鎖：",
+  "brb.gui.smithable": "已列出可熔煉項目",
+  "category.brb": "更好的配方手冊｜Better Recipe Book",
+  "key.brb.pin": "釘選配方"
 }
