@@ -28,8 +28,8 @@
   "text.autoconfig.brb.option.newRecipes.enableBounce": "啟用解鎖彈跳動畫。",
   "text.autoconfig.brb.option.newRecipes.enableBounce.@Tooltip": "啟用解鎖新物品時出現的小彈跳動畫",
   
-  "brb.gui.pin.add": "按下 F 以釘選此配方",
-  "brb.gui.pin.remove": "按下 F 以取消釘選此配方",
+  "brb.gui.pin.add": "按下 %s 以釘選此配方",
+  "brb.gui.pin.remove": "按下 %s 以取消釘選此配方",
   "brb.gui.togglePotions.brewable": "顯示釀造配方",
   "brb.gui.instantCraft.on": "立即合成已開啟",
   "brb.gui.instantCraft.off": "立即合成已關閉",
