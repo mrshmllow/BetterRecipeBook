@@ -36,7 +36,7 @@
   "brb.gui.settings.open": "開啟設定",
   "brb.gui.crafting.lockedRecipe": "合成一次以解鎖：",
   "brb.gui.furnace.lockedRecipe": "熔煉一次以解鎖：",
-  "brb.gui.smithable": "已列出可熔煉項目",
+  "brb.gui.smithable": "已列出可鍛造項目",
   "category.brb": "更好的配方手冊｜Better Recipe Book",
   "key.brb.pin": "釘選配方"
 }
