@@ -13,7 +13,6 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
@@ -52,20 +51,25 @@ public class GenericRecipeButton<C extends GenericRecipeBookCollection<R, M>, R 
 
         this.currentIndex = Mth.floor(this.time / 30.0F) % list.size();
 
-        // blit outline texture
-        ResourceLocation outlineTexture = collection.atleastOneCraftable(menu.slots) ?
-                BRBTextures.RECIPE_BOOK_BUTTON_SLOT_CRAFTABLE_SPRITE : BRBTextures.RECIPE_BOOK_BUTTON_SLOT_UNCRAFTABLE_SPRITE;
-        gui.blitSprite(outlineTexture, getX(), getY(), this.width, this.height);
+        int k = 29;
+        if (!this.collection.atleastOneCraftable(menu.slots)) {
+            k += 25;
+        }
+        int l = 206;
+
+        gui.pose().pushPose();
+        gui.blit(BRBTextures.RECIPE_BOOK_BACKGROUND_TEXTURE, this.getX(), this.getY(), k, l, this.width, this.height);
 
         ItemStack result = getCurrentDisplayedRecipe().getResult(registryAccess);
 
         // render ingredient item
         int offset = 4;
         gui.renderFakeItem(result, getX() + offset, getY() + offset);
+        gui.pose().popPose();
 
         // if pinned recipe, blit the pin texture over it
         if (BetterRecipeBook.config.enablePinning && BetterRecipeBook.pinnedRecipeManager.has(collection)) {
-            gui.blitSprite(BRBTextures.RECIPE_BOOK_PIN_SPRITE, getX() - 4, getY() - 4, 32, 32);
+            gui.blit(BRBTextures.RECIPE_BOOK_OVERLAY_PIN_SPRITE, getX() - 3, getY() - 3, 0, 0, this.width + 3, this.height + 3, 31, 31);
         }
     }
 

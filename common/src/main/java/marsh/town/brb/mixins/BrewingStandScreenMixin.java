@@ -43,7 +43,7 @@ public abstract class BrewingStandScreenMixin extends AbstractContainerScreen<Br
                 this.leftPos = this._$recipeBookComponent.findLeftEdge(this.width, this.imageWidth);
             }
 
-            this.addRenderableWidget(new ImageButton(this.leftPos + 135, this.height / 2 - 50, 20, 18, BRBTextures.RECIPE_BOOK_BUTTON_SPRITES, (button) -> {
+            this.addRenderableWidget(new ImageButton(this.leftPos + 135, this.height / 2 - 50, 20, 18, 0, 0, 19, BRBTextures.RECIPE_BUTTON_LOCATION, button -> {
                 this._$recipeBookComponent.toggleVisibility();
                 if (!BetterRecipeBook.config.keepCentered) {
                     this.leftPos = this._$recipeBookComponent.findLeftEdge(this.width, this.imageWidth);

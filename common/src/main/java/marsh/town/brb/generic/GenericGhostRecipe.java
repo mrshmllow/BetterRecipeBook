@@ -103,9 +103,9 @@ public class GenericGhostRecipe<R extends GenericRecipe> {
             int m = ghostIngredient.getY() + j;
             if (shouldRenderBackground) {
                 if (k == 0 && bl) {
-                    guiGraphics.fill(l - 4, m - 4, l + 20, m + 20, 822018048);
+                    guiGraphics.fill(l - 4, m - 4, l + 20, m + 20, 0x30FF0000);
                 } else {
-                    guiGraphics.fill(l, m, l + 16, m + 16, 822018048);
+                    guiGraphics.fill(l, m, l + 16, m + 16, 0x30FF0000);
                 }
             }
 
@@ -115,7 +115,7 @@ public class GenericGhostRecipe<R extends GenericRecipe> {
             }
 
             if (shouldRenderBackground) {
-                guiGraphics.fill(RenderType.guiGhostRecipeOverlay(), l, m, l + 16, m + 16, 822083583);
+                guiGraphics.fill(RenderType.guiGhostRecipeOverlay(), l, m, l + 16, m + 16, 0x30FFFFFF);
             }
 
             if (k == 0) {

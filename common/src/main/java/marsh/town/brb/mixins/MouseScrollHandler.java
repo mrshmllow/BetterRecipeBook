@@ -13,9 +13,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(MouseHandler.class)
 public class MouseScrollHandler {
     @Shadow
-    private double accumulatedScrollY;
+    private double accumulatedDY;
 
-    @Final @Shadow
+    @Final
+    @Shadow
     private Minecraft minecraft;
 
     @Inject(at = @At(value = "RETURN"), method = "onScroll")
@@ -25,7 +26,7 @@ public class MouseScrollHandler {
 
             double d = (this.minecraft.options.discreteMouseScroll().get() ? Math.signum(vertical) : vertical) * this.minecraft.options.mouseWheelSensitivity().get();
 
-            BetterRecipeBook.queuedScroll = (int) -((int) this.accumulatedScrollY + d);
+            BetterRecipeBook.queuedScroll = (int) -((int) this.accumulatedDY + d);
         }
     }
 }

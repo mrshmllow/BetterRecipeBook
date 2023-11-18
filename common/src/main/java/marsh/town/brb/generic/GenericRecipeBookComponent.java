@@ -23,7 +23,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.StackedContents;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -118,7 +118,7 @@ public abstract class GenericRecipeBookComponent<M extends AbstractContainerMenu
         this.tabButtons.clear();
         this.filterButton = new StateSwitchingButton(i + 110, j + 12, 26, 16, BRBBookSettings.isFiltering(this.getRecipeBookType()));
         this.updateFilterButtonTooltip();
-        this.filterButton.initTextureValues(BRBTextures.RECIPE_BOOK_FILTER_BUTTON_SPRITES);
+        this.filterButton.initTextureValues(152, 41, 28, 18, RecipeBookComponentAccessor.getRECIPE_BOOK_LOCATION());
 
         List<BRBBookCategories.Category> categories = BRBBookCategories.getCategories(this.getRecipeBookType());
 
@@ -456,7 +456,7 @@ public abstract class GenericRecipeBookComponent<M extends AbstractContainerMenu
     protected abstract List<C> getCollectionsForCategory();
 
     @Override
-    public void recipesShown(List<RecipeHolder<?>> list) {
+    public void recipesShown(List<Recipe<?>> list) {
 
     }
 }

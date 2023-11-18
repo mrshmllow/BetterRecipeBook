@@ -75,7 +75,7 @@ public class SmithingRecipeBookComponent extends GenericRecipeBookComponent<Smit
                 Minecraft.getInstance().gameMode.handleInventoryMouseClick(menu.containerId, menu.getSlot(slotIndex).index, 0, ClickType.PICKUP, Minecraft.getInstance().player);
                 Minecraft.getInstance().gameMode.handleInventoryMouseClick(menu.containerId, SmithingMenu.TEMPLATE_SLOT, 0, ClickType.PICKUP, Minecraft.getInstance().player);
                 ClientInventoryUtil.storeItem(-1, i -> i > 4);
-            } else if (!placedBase && ArmorTrim.getTrim(registryAccess, itemStack, true).isEmpty() && result.getBase().getItem().equals(itemStack.getItem())) {
+            } else if (!placedBase && ArmorTrim.getTrim(registryAccess, itemStack).isEmpty() && result.getBase().getItem().equals(itemStack.getItem())) {
                 assert Minecraft.getInstance().gameMode != null;
                 ClientInventoryUtil.storeItem(-1, i -> i > 4);
                 Minecraft.getInstance().gameMode.handleInventoryMouseClick(menu.containerId, menu.getSlot(slotIndex).index, 0, ClickType.PICKUP, Minecraft.getInstance().player);
@@ -110,25 +110,23 @@ public class SmithingRecipeBookComponent extends GenericRecipeBookComponent<Smit
 
     @Override
     protected List<SmithingRecipeCollection> getCollectionsForCategory() {
-        List<RecipeHolder<SmithingRecipe>> recipes = recipeManager.getAllRecipesFor(RecipeType.SMITHING);
+        List<SmithingRecipe> recipes = recipeManager.getAllRecipesFor(RecipeType.SMITHING);
         List<SmithingRecipeCollection> results = new ArrayList<>();
         BRBBookCategories.Category category = selectedTab.getCategory();
 
-        for (RecipeHolder<SmithingRecipe> recipe : recipes) {
-            SmithingRecipe value = recipe.value();
-
+        for (SmithingRecipe recipe : recipes) {
             if (category == BetterRecipeBook.SMITHING_SEARCH) {
-                if (value instanceof SmithingTransformRecipe) {
-                    results.add(new SmithingRecipeCollection(List.of(BRBSmithingTransformRecipe.from((SmithingTransformRecipe) value, registryAccess)), this.menu, registryAccess));
-                } else if (value instanceof SmithingTrimRecipe) {
-                    results.add(new SmithingRecipeCollection(BRBSmithingTrimRecipe.from((SmithingTrimRecipe) value), this.menu, registryAccess));
+                if (recipe instanceof SmithingTransformRecipe) {
+                    results.add(new SmithingRecipeCollection(List.of(BRBSmithingTransformRecipe.from((SmithingTransformRecipe) recipe, registryAccess)), this.menu, registryAccess));
+                } else if (recipe instanceof SmithingTrimRecipe) {
+                    results.add(new SmithingRecipeCollection(BRBSmithingTrimRecipe.from((SmithingTrimRecipe) recipe), this.menu, registryAccess));
                 }
             } else if (category == BetterRecipeBook.SMITHING_TRANSFORM) {
-                if (value instanceof SmithingTransformRecipe) {
-                    results.add(new SmithingRecipeCollection(List.of(BRBSmithingTransformRecipe.from((SmithingTransformRecipe) value, registryAccess)), this.menu, registryAccess));
+                if (recipe instanceof SmithingTransformRecipe) {
+                    results.add(new SmithingRecipeCollection(List.of(BRBSmithingTransformRecipe.from((SmithingTransformRecipe) recipe, registryAccess)), this.menu, registryAccess));
                 }
-            } else if (value instanceof SmithingTrimRecipe) {
-                results.add(new SmithingRecipeCollection(BRBSmithingTrimRecipe.from((SmithingTrimRecipe) value), this.menu, registryAccess));
+            } else if (recipe instanceof SmithingTrimRecipe) {
+                results.add(new SmithingRecipeCollection(BRBSmithingTrimRecipe.from((SmithingTrimRecipe) recipe), this.menu, registryAccess));
             }
         }
 
