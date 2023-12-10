@@ -1,12 +1,13 @@
 package marsh.town.brb.mixins.instantcraft;
 
 import marsh.town.brb.BetterRecipeBook;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.recipebook.RecipeBookPage;
 import net.minecraft.client.gui.screens.recipebook.RecipeButton;
 import net.minecraft.client.gui.screens.recipebook.RecipeCollection;
 import net.minecraft.world.item.crafting.Recipe;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -19,20 +20,23 @@ import java.util.List;
 @Mixin(RecipeButton.class)
 public class RecipeButtonMixin {
 
-    @Shadow
-    private RecipeCollection collection;
+    @Shadow private RecipeCollection collection;
 
-    @Inject(method = "getOrderedRecipes", at = @At(value = "RETURN"), locals = LocalCapture.CAPTURE_FAILHARD, cancellable = true)
-    public void getOrderedRecipes(CallbackInfoReturnable<List<Recipe<?>>> cir, List<Recipe<?>> recipes) {
-        // fixes division by zero due to zero list size when keeping instant craft recipes stationary
-        if (recipes.isEmpty()) {
-            cir.setReturnValue(new ArrayList<>(collection.getRecipes()));
+    @Unique private List<Recipe<?>> betterRecipeBook$lastClicked;
+
+    @Inject(method = "getOrderedRecipes", at = @At(value = "RETURN"), cancellable = true, locals = LocalCapture.CAPTURE_FAILSOFT)
+    public void getOrderedRecipes(CallbackInfoReturnable<List<Recipe<?>>> cir, List<Recipe<?>> holders) {
+        if (holders.isEmpty()) {
+            cir.setReturnValue(new ArrayList<>(betterRecipeBook$lastClicked));
         }
     }
 
-    @Inject(method = "renderWidget", at = @At(value = "HEAD"))
-    public void renderWidget(GuiGraphics guiGraphics, int i, int j, float f, CallbackInfo ci) {
-
+    @Inject(method = "init", at = @At(value = "HEAD"))
+    public void init(RecipeCollection collection, RecipeBookPage recipeBookPage, CallbackInfo ci) {
+        if (BetterRecipeBook.instantCraftingManager.lastHoveredCollection == collection) {
+            BetterRecipeBook.instantCraftingManager.lastHoveredCollection = null;
+            betterRecipeBook$lastClicked = List.of(BetterRecipeBook.instantCraftingManager.lastClickedRecipe);
+        }
     }
 
 }
