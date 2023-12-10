@@ -10,6 +10,7 @@
 
   "text.autoconfig.brb.category.instantCraft": "Ustawienia natychmiastowego wytwarzania",
   "text.autoconfig.brb.option.instantCraft.showButton": "Pokaż przycisk natychmiastowego wytwarzania",
+  "text.autoconfig.brb.option.instantCraft.enabled": "Włączona funkcja natychmiastowego rzemiosła",
 
   "text.autoconfig.brb.category.scrolling": "Ustawienia przewijania",
   "text.autoconfig.brb.option.scrolling.scrollAround": "Przewijaj w nieskończoność",

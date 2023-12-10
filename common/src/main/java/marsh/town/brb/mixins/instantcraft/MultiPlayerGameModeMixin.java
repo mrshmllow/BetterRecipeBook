@@ -17,6 +17,6 @@ public class MultiPlayerGameModeMixin {
 
     @Inject(method = "handlePlaceRecipe", at = @At("TAIL"))
     private void handlePlaceRecipe(int i, RecipeHolder<?> recipe, boolean bl, CallbackInfo ci) {
-        BetterRecipeBook.instantCraftingManager.recipeClicked(recipe.value(), minecraft.level.registryAccess());
+        BetterRecipeBook.instantCraftingManager.recipeClicked(recipe, minecraft.level.registryAccess());
     }
 }
