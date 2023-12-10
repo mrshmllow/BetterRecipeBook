@@ -7,9 +7,9 @@ import marsh.town.brb.config.Config;
 import marsh.town.brb.loaders.PotionLoader;
 import marsh.town.brb.util.BRBHelper;
 import me.shedaniel.autoconfig.AutoConfig;
+import me.shedaniel.autoconfig.ConfigHolder;
 import me.shedaniel.autoconfig.serializer.Toml4jConfigSerializer;
 import net.minecraft.client.KeyMapping;
-import net.minecraft.client.gui.screens.recipebook.RecipeCollection;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import org.apache.logging.log4j.LogManager;
@@ -21,9 +21,9 @@ public class BetterRecipeBook {
 
     public static int queuedScroll;
     public static boolean isFilteringNone;
-    public static RecipeCollection currentHoveredRecipeCollection = null;
 
     public static Config config;
+    public static ConfigHolder<Config> configHolder;
 
     public static PinnedRecipeManager pinnedRecipeManager;
     public static InstantCraftingManager instantCraftingManager;
@@ -54,7 +54,8 @@ public class BetterRecipeBook {
 
         AutoConfig.register(Config.class, Toml4jConfigSerializer::new);
 
-        config = AutoConfig.getConfigHolder(Config.class).getConfig();
+        configHolder = AutoConfig.getConfigHolder(Config.class);
+        config = configHolder.getConfig();
 
         pinnedRecipeManager = new PinnedRecipeManager();
         pinnedRecipeManager.read();

@@ -10,7 +10,8 @@
   
     "text.autoconfig.brb.category.instantCraft": "Anında Üretim Ayarları",
     "text.autoconfig.brb.option.instantCraft.showButton": "Anında üretim butonu göster",
-  
+    "text.autoconfig.brb.option.instantCraft.enabled": "Anında Zanaat Etkin",
+
     "text.autoconfig.brb.category.scrolling": "Kaydırma Ayarları",
     "text.autoconfig.brb.option.scrolling.scrollAround": "Daireler içinde kaydır",
     "text.autoconfig.brb.option.scrolling.scrollAround.@Tooltip": "Kitabın sonuna ulaştığında ileri gitmeye çalışırsan en başa ulaş. (JEI gibi)",

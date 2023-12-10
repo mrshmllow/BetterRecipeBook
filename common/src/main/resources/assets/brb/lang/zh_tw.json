@@ -12,7 +12,8 @@
   
   "text.autoconfig.brb.category.instantCraft": "立即合成設定",
   "text.autoconfig.brb.option.instantCraft.showButton": "顯示立即合成按鈕",
-  
+  "text.autoconfig.brb.option.instantCraft.enabled": "實現一鍵式生產",
+
   "text.autoconfig.brb.category.scrolling": "滾動設定",
   "text.autoconfig.brb.option.scrolling.scrollAround": "以循環方式滾動",
   "text.autoconfig.brb.option.scrolling.scrollAround.@Tooltip": "當你到達手冊的最後一頁，從頭開始繼續滾動（就像 JEI 一樣） ",

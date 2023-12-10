@@ -1,12 +1,13 @@
 package marsh.town.brb.mixins.instantcraft;
 
 import marsh.town.brb.BetterRecipeBook;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.recipebook.RecipeButton;
 import net.minecraft.client.gui.screens.recipebook.RecipeCollection;
+import net.minecraft.stats.RecipeBook;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -20,18 +21,25 @@ import java.util.List;
 public class RecipeButtonMixin {
 
     @Shadow private RecipeCollection collection;
+    @Shadow private RecipeBook book;
+
+    @Unique boolean betterRecipeBook$initialHover = false;
 
     @Inject(method = "getOrderedRecipes", at = @At(value = "RETURN"), locals = LocalCapture.CAPTURE_FAILHARD, cancellable = true)
-    public void getOrderedRecipes(CallbackInfoReturnable<List<RecipeHolder<?>>> cir, List<RecipeHolder<?>> recipes) {
-        // fixes division by zero due to zero list size when keeping instant craft recipes stationary
-        if (this.collection == BetterRecipeBook.currentHoveredRecipeCollection && recipes.isEmpty()) {
-            cir.setReturnValue(new ArrayList<>(collection.getDisplayRecipes(false)));
+    public void getOrderedRecipes(CallbackInfoReturnable<List<RecipeHolder<?>>> cir, List<RecipeHolder<?>> list) {
+        if (betterRecipeBook$initialHover && ((RecipeButton) (Object) this).isHovered()) {
+            cir.setReturnValue(new ArrayList<>(List.of(BetterRecipeBook.instantCraftingManager.lastClickedRecipe)));
+        } else {
+            betterRecipeBook$initialHover = false;
+            if (list.isEmpty()) {
+                cir.setReturnValue(collection.getDisplayRecipes(false));
+            }
         }
     }
 
-    @Inject(method = "renderWidget", at = @At(value = "HEAD"))
-    public void renderWidget(GuiGraphics guiGraphics, int i, int j, float f, CallbackInfo ci) {
-
+    @Inject(method = "init", at = @At("HEAD"))
+    public void init(CallbackInfo ci) {
+        betterRecipeBook$initialHover = ((RecipeButton) (Object) this).isHovered();
     }
 
 }

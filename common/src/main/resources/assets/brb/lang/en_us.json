@@ -10,6 +10,7 @@
 
   "text.autoconfig.brb.category.instantCraft": "Instant Crafting Settings",
   "text.autoconfig.brb.option.instantCraft.showButton": "Show instant craft button",
+  "text.autoconfig.brb.option.instantCraft.enabled": "Instant crafting enabled",
 
   "text.autoconfig.brb.category.scrolling": "Scroll Settings",
   "text.autoconfig.brb.option.scrolling.scrollAround": "Scroll in circles",
