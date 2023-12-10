@@ -122,8 +122,8 @@ public abstract class MultiPlayerGameModeMixin {
                     }
                 } else {
                     // if instant craft is enabled, set last craft
-                    if (BetterRecipeBook.instantCraftingManager.on && !menu.getSlot(menu.getResultSlotIndex()).getItem().isEmpty()) {
-                        BetterRecipeBook.instantCraftingManager.recipeClicked(recipe.value(), minecraft.level.registryAccess());
+                    if (BetterRecipeBook.instantCraftingManager.isEnabled() && !menu.getSlot(menu.getResultSlotIndex()).getItem().isEmpty()) {
+                        BetterRecipeBook.instantCraftingManager.recipeClicked(recipe, minecraft.level.registryAccess());
                     }
                 }
             }

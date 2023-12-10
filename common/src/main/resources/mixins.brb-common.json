@@ -25,6 +25,7 @@
     "instantcraft.ClientPacketListenerMixin",
     "instantcraft.MultiPlayerGameModeMixin",
     "instantcraft.RecipeBookComponentMixin",
+    "instantcraft.RecipeBookPageMixin",
     "instantcraft.RecipeButtonMixin",
     "pins.AbstractContainerScreenMixin",
     "pins.RecipeBookComponentMixin",

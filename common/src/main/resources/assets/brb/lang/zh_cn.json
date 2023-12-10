@@ -9,6 +9,7 @@
   "text.autoconfig.brb.option.settingsButton.@PrefixText": "§d--- 高级 ---\n§eForge 警告：§7如果你禁用了以下两个选项，就必须编辑 brb.toml 文件才能再次进入这个设置菜单！\n在 Fabric 上，你仍然可以通过 §bMod Menu§r 打开。",
   "text.autoconfig.brb.category.instantCraft": "一键制作设置",
   "text.autoconfig.brb.option.instantCraft.showButton": "显示一键制作按钮",
+  "text.autoconfig.brb.option.instantCraft.enabled": "启用一键生产",
 
   "text.autoconfig.brb.category.scrolling": "滚动设置",
   "text.autoconfig.brb.option.scrolling.scrollAround": "滚动循环",

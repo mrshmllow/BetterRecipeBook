@@ -11,6 +11,7 @@
   "text.autoconfig.brb.category.instantCraft": "Моментальное создание",
   "text.autoconfig.brb.option.instantCraft.instantCraft": "Создавать моментально по умолчанию",
   "text.autoconfig.brb.option.instantCraft.showButton": "Показывать кнопку моментального крафта",
+  "text.autoconfig.brb.option.instantCraft.enabled": "Мгновенное ремесло активировано",
 
   "text.autoconfig.brb.category.scrolling": "Прокрутка",
   "text.autoconfig.brb.option.scrolling.scrollAround": "Цикличная прокрутка",
