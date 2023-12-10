@@ -3,6 +3,7 @@ package marsh.town.brb;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.StateSwitchingButton;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.gui.screens.recipebook.RecipeCollection;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.inventory.ClickType;
@@ -13,6 +14,8 @@ public class InstantCraftingManager {
 
     // used to signify the last clicked crafted recipe before updateCollections was called
     public RecipeHolder<?> lastClickedRecipe = null;
+    // updated by RecipeBookPageMixin
+    public RecipeCollection lastClickedCollection = null;
 
     public StateSwitchingButton lastInstantCraftButton = null;
 

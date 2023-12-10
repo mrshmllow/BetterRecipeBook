@@ -35,6 +35,7 @@ public class RecipeBookPageMixin {
                         if (idx != -1 && idx < list.size()) {
                             list.remove(hoveredCollection);
                             list.add(idx, hoveredCollection);
+                            BetterRecipeBook.instantCraftingManager.lastClickedCollection = btn.getCollection();
                         }
                     });
         }
