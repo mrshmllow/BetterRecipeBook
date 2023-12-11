@@ -37,7 +37,7 @@ public class BrewableRecipeButton extends GenericRecipeButton<BrewingRecipeColle
         List<Component> list = Lists.newArrayList();
 
         list.add(collection.getFirst().ingredient.getHoverName());
-        PotionUtils.addPotionTooltip(collection.getFirst().ingredient, list, 1);
+        PotionUtils.addPotionTooltip(collection.getFirst().ingredient, list, 1f, 1f);
         list.add(Component.literal(""));
 
         ChatFormatting colour = ChatFormatting.DARK_GRAY;
