@@ -15,8 +15,9 @@ public class InstantCraftingManager {
     // used to signify the last clicked crafted recipe before updateCollections was called
     public RecipeHolder<?> lastClickedRecipe = null;
     // updated by RecipeBookPageMixin
-    public RecipeCollection lastClickedCollection = null;
+    public RecipeCollection lastHoveredCollection = null;
 
+    // used to update toggle state of button when config reloads
     public StateSwitchingButton lastInstantCraftButton = null;
 
     public ItemStack lastCraftResult;
