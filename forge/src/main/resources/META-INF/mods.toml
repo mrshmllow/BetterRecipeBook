@@ -17,7 +17,7 @@ logoFile = "icon.png"
 [[dependencies.brb]]
 modId = "forge"
 mandatory = true
-versionRange = "[41,)"
+versionRange = "[49,)"
 ordering = "NONE"
 side = "BOTH"
 
@@ -31,13 +31,6 @@ side = "BOTH"
 [[dependencies.brb]]
 modId = "architectury"
 mandatory = true
-versionRange = "[10,)"
-ordering = "AFTER"
-side = "BOTH"
-
-[[dependencies.brb]]
-modId = "cloth_config"
-mandatory = true
-versionRange = "[12,)"
+versionRange = "[11,)"
 ordering = "AFTER"
 side = "BOTH"

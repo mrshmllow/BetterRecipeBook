@@ -1,9 +1,9 @@
 {
-  "text.autoconfig.brb.title": "更好的配方手冊（Better Recipe Book）設定",
+  "text.autoconfig.brb.title": "更好的配方手冊｜Better Recipe Book 設定",
   
   "text.autoconfig.brb.category.default": "一般設定",
   "text.autoconfig.brb.option.enableBook": "啟用配方手冊",
-  "text.autoconfig.brb.option.darkMode": "啟用暗色模式的界面變體。§o需要一個完整的資源包",
+  "text.autoconfig.brb.option.darkMode": "啟用暗色模式的介面變體。§o需要一個完整的資源包",
   "text.autoconfig.brb.option.darkMode.@Tooltip": "僅在你使用暗色模式資源包時啟用，像是 §aVanilla Tweaks§r。",
   "text.autoconfig.brb.option.keepCentered": "保持合成置中",
   "text.autoconfig.brb.option.enablePinning": "啟用配方釘選",
@@ -29,10 +29,15 @@
   "text.autoconfig.brb.option.newRecipes.enableBounce": "啟用解鎖彈跳動畫。",
   "text.autoconfig.brb.option.newRecipes.enableBounce.@Tooltip": "啟用解鎖新物品時出現的小彈跳動畫",
   
-  "brb.gui.pin.add": "按下 F 以釘選此配方",
-  "brb.gui.pin.remove": "按下 F 以取消釘選此配方",
+  "brb.gui.pin.add": "按下 %s 以釘選此配方",
+  "brb.gui.pin.remove": "按下 %s 以取消釘選此配方",
   "brb.gui.togglePotions.brewable": "顯示釀造配方",
   "brb.gui.instantCraft.on": "立即合成已開啟",
   "brb.gui.instantCraft.off": "立即合成已關閉",
-  "brb.gui.settings.open": "開啟設定"
+  "brb.gui.settings.open": "開啟設定",
+  "brb.gui.crafting.lockedRecipe": "合成一次以解鎖：",
+  "brb.gui.furnace.lockedRecipe": "熔煉一次以解鎖：",
+  "brb.gui.smithable": "已列出可鍛造項目",
+  "category.brb": "更好的配方手冊｜Better Recipe Book",
+  "key.brb.pin": "釘選配方"
 }

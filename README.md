@@ -52,3 +52,13 @@ Oh... and you can also disable the recipe book entirely, if you'd like.
 | [Architectury API](https://modrinth.com/mod/architectury-api) | [Architectury API](https://modrinth.com/mod/architectury-api) |
 | [Cloth Config API](https://modrinth.com/mod/cloth-config)     | [Cloth Config API](https://modrinth.com/mod/cloth-config)     |
 | [Fabric API](https://modrinth.com/mod/fabric-api)             |                                                               |
+
+## Compatibility
+
+| Version | Support |
+| ------- | --------- |
+| 1.20.4  | ✅ Supported |
+| 1.20.3  | ❌ Unsupported |
+| 1.20.2  | ⏬ Backports |
+| 1.20.1-0 | ⏬ Backports |
+| <= 1.19.4	| ❌ Unspported |

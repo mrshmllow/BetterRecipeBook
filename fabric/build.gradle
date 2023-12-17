@@ -44,6 +44,7 @@ dependencies {
     modApi("me.shedaniel.cloth:cloth-config-fabric:${rootProject.cloth_config_version}") {
         exclude(group: "net.fabricmc.fabric-api")
     }
+    include "me.shedaniel.cloth:cloth-config-fabric:${rootProject.cloth_config_version}"
 }
 
 loom {
@@ -60,17 +61,17 @@ processResources {
 
 shadowJar {
     configurations = [project.configurations.shadowCommon]
-    classifier "dev-shadow"
+    archiveClassifier = "dev-shadow"
 }
 
 remapJar {
     input.set shadowJar.archiveFile
     dependsOn shadowJar
-    classifier null
+    archiveClassifier = null
 }
 
 jar {
-    classifier "dev"
+    archiveClassifier = "dev"
 }
 
 sourcesJar {

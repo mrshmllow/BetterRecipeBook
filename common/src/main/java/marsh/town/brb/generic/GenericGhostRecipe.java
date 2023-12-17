@@ -91,7 +91,7 @@ public class GenericGhostRecipe<R extends GenericRecipe> {
     public void render(GuiGraphics guiGraphics, Minecraft minecraft, int i, int j, boolean bl, float f) {
         if (!Screen.hasControlDown()) {
             this.time += f;
-            if (this.onGhostUpdate != null) this.onGhostUpdate.accept(this.getCurrentResult());
+            if (this.onGhostUpdate != null && this.recipe != null) this.onGhostUpdate.accept(this.getCurrentResult());
         }
 
         for (int k = 0; k < this.ingredients.size(); ++k) {
