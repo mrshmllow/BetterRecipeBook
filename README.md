@@ -24,6 +24,12 @@ Enable to craft with a single click. Hold shift to craft as many as you can.
 
 ![four](https://github.com/mrshmllow/BetterRecipeBook/assets/40532058/cb8f0305-fea7-4547-8e91-ff0c17e25ada)
 
+### View locked recipes
+
+Optionally view recipes you have yet to unlock. Client side!
+
+![image](https://github.com/mrshmllow/BetterRecipeBook/assets/40532058/6a4ebc98-a5ee-4271-97d0-b2af6f13a60a)
+
 ### Un-group Recipes
 
 Great if you like to pin specific recipes!
@@ -40,7 +46,6 @@ Great if you like to pin specific recipes!
 |----------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------|
 | ![now](https://raw.githubusercontent.com/mrshmllow/BetterRecipeBook/main/.github/images/furnace/now.png) | ![then](https://raw.githubusercontent.com/mrshmllow/BetterRecipeBook/main/.github/images/furnace/then.png) |
 
-- Optionally unlock all recipes (Client side).
 - Enable or disable the unlock animation
 
 Oh... and you can also disable the recipe book entirely, if you'd like.
