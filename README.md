@@ -14,7 +14,7 @@ Adds brewing, smithing, and QOL changes to the vanilla recipe book!
 
 ### Pin Commonly Used Recipes
 
-Pin recipes to the top with "F"
+Pin recipes to the top with a keybind.
 
 ![three](https://github.com/mrshmllow/BetterRecipeBook/assets/40532058/aadc51e7-68fa-42a2-9672-6deadd77b91e)
 
