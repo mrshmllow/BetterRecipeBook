@@ -49,17 +49,18 @@ public abstract class RecipeBookPageMixin {
     @Inject(at = @At("HEAD"), method = "render")
     public void render(GuiGraphics gui, int i, int j, int k, int l, float f, CallbackInfo ci) {
         if (BetterRecipeBook.queuedScroll != 0 && BetterRecipeBook.config.scrolling.enableScrolling) {
-            currentPage += BetterRecipeBook.queuedScroll;
-            BetterRecipeBook.queuedScroll = 0;
+            if (totalPages > 1) {
+                currentPage += BetterRecipeBook.queuedScroll;
+                if (currentPage >= totalPages) {
+                    currentPage = BetterRecipeBook.config.scrolling.scrollAround ? currentPage % totalPages : totalPages - 1;
+                } else if (currentPage < 0) {
+                    // required as % is not modulus, it is remainder. we need to force output positive by((currentPage % totalPages) + totalPages)
+                    currentPage = BetterRecipeBook.config.scrolling.scrollAround ? (currentPage % totalPages) + totalPages : 0;
+                }
 
-            if (currentPage >= totalPages) {
-                currentPage = BetterRecipeBook.config.scrolling.scrollAround ? currentPage % totalPages : totalPages - 1;
-            } else if (currentPage < 0) {
-                // required as % is not modulus, it is remainder. we need to force output positive by((currentPage % totalPages) + totalPages)
-                currentPage = BetterRecipeBook.config.scrolling.scrollAround ? (currentPage % totalPages) + totalPages : 0;
+                updateButtonsForPage();
             }
-
-            updateButtonsForPage();
+            BetterRecipeBook.queuedScroll = 0;
         }
     }
 
