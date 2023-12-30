@@ -103,7 +103,7 @@ public class GenericRecipePage<M extends AbstractContainerMenu, C extends Generi
         int i = 20 * this.currentPage;
 
         for (int j = 0; j < this.buttons.size(); ++j) {
-            GenericRecipeButton button = this.buttons.get(j);
+            var button = this.buttons.get(j);
             if (i + j < this.recipeCollections.size()) {
                 C output = this.recipeCollections.get(i + j);
                 button.showCollection(output, menu, this.category);
@@ -122,17 +122,18 @@ public class GenericRecipePage<M extends AbstractContainerMenu, C extends Generi
 
     protected void render(GuiGraphics gui, int blitX, int blitY, int mouseX, int mouseY, float delta) {
         if (BetterRecipeBook.queuedScroll != 0 && BetterRecipeBook.config.scrolling.enableScrolling) {
-            currentPage += BetterRecipeBook.queuedScroll;
-            BetterRecipeBook.queuedScroll = 0;
+            if (totalPages > 1) {
+                currentPage += BetterRecipeBook.queuedScroll;
+                if (currentPage >= totalPages) {
+                    currentPage = BetterRecipeBook.config.scrolling.scrollAround ? currentPage % totalPages : totalPages - 1;
+                } else if (currentPage < 0) {
+                    // required as % is not modulus, it is remainder. we need to force output positive by((currentPage % totalPages) + totalPages)
+                    currentPage = BetterRecipeBook.config.scrolling.scrollAround ? (currentPage % totalPages) + totalPages : 0;
+                }
 
-            if (currentPage >= totalPages) {
-                currentPage = BetterRecipeBook.config.scrolling.scrollAround ? currentPage % totalPages : totalPages - 1;
-            } else if (currentPage < 0) {
-                // required as % is not modulus, it is remainder. we need to force output positive by((currentPage % totalPages) + totalPages)
-                currentPage = BetterRecipeBook.config.scrolling.scrollAround ? (currentPage % totalPages) + totalPages : 0;
+                updateButtonsForPage();
             }
-
-            updateButtonsForPage();
+            BetterRecipeBook.queuedScroll = 0;
         }
 
         if (this.totalPages > 1) {
@@ -143,7 +144,7 @@ public class GenericRecipePage<M extends AbstractContainerMenu, C extends Generi
 
         this.hoveredButton = null;
 
-        for (GenericRecipeButton button : this.buttons) {
+        for (var button : this.buttons) {
             button.render(gui, mouseX, mouseY, delta);
             if (button.visible && button.isHoveredOrFocused()) {
                 this.hoveredButton = button;
