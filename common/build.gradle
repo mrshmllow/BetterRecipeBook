@@ -8,6 +8,10 @@ dependencies {
     modApi("me.shedaniel.cloth:cloth-config-fabric:${rootProject.cloth_config_version}") {
         exclude(group: "net.fabricmc.fabric-api")
     }
+
+    modApi("maven.modrinth:mouse-wheelie:${rootProject.mouse_wheelie_version}") {
+        exclude(group: "net.fabricmc.fabric-api")
+    }
 }
 
 architectury {
