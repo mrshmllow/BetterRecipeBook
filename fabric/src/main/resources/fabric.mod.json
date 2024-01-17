@@ -32,7 +32,8 @@
   },
   "mixins": [
     "mixins.brb.json",
-    "mixins.brb-common.json"
+    "mixins.brb-common.json",
+    "mixins.brb-common-compat.json"
   ],
   "accessWidener": "brb.fabric.accesswidener",
   "depends": {
