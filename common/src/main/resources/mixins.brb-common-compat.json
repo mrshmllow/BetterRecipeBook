@@ -1,0 +1,13 @@
+{
+  "required": false,
+  "minVersion": "0.8",
+  "package": "marsh.town.brb.compat.mixins",
+  "compatibilityLevel": "JAVA_16",
+  "plugin": "marsh.town.brb.compat.CompatMixinPlugin",
+  "client": [
+    "mousewheelie.MixinMWClient"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
