@@ -20,10 +20,12 @@ public abstract class AbstractContainerScreenMixin {
 
     @Inject(method = "keyPressed", at = @At(value = "HEAD"), cancellable = true)
     public void onKeyPressed(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
-        if (!BetterRecipeBook.config.enablePinning || !(this instanceof RecipeUpdateListener rul)) return;
+        if (!(this instanceof RecipeUpdateListener rul)) return;
 
         Minecraft minecraft = Minecraft.getInstance();
         RecipeBookComponent book = rul.getRecipeBookComponent();
+
+        if (!book.isVisible()) return;
 
         RecipeBookPage page = ((RecipeBookComponentAccessor) book).getRecipeBookPage();
         OverlayRecipeComponent alternatesWidget = ((RecipeBookPageAccessor) page).getOverlay();
@@ -31,7 +33,7 @@ public abstract class AbstractContainerScreenMixin {
         EditBox searchBox = ((RecipeBookComponentAccessor) book).getSearchBox();
 
         // when F is pressed, handle pinning/unpinning of recipes except when searchBox is consuming input
-        if (BetterRecipeBook.PIN_MAPPING.matches(keyCode, scanCode) && !searchBox.canConsumeInput()) {
+        if (BetterRecipeBook.config.enablePinning && BetterRecipeBook.PIN_MAPPING.matches(keyCode, scanCode) && !searchBox.canConsumeInput()) {
             // handle alternatives widget first
             if (alternatesWidget.isVisible()) {
                 for (OverlayRecipeComponent.OverlayRecipeButton alternativeButton : ((OverlayRecipeComponentAccessor) alternatesWidget).getRecipeButtons()) {
