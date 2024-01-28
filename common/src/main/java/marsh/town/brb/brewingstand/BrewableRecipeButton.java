@@ -5,6 +5,7 @@ import marsh.town.brb.generic.GenericRecipeButton;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.narration.NarratedElementType;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.core.RegistryAccess;
@@ -37,7 +38,7 @@ public class BrewableRecipeButton extends GenericRecipeButton<BrewingRecipeColle
         List<Component> list = Lists.newArrayList();
 
         list.add(collection.getFirst().ingredient.getHoverName());
-        PotionUtils.addPotionTooltip(collection.getFirst().ingredient, list, 1f, 1f);
+        PotionUtils.addPotionTooltip(collection.getFirst().getResult(registryAccess), list, 1f, Minecraft.getInstance().level.tickRateManager().tickrate());
         list.add(Component.literal(""));
 
         ChatFormatting colour = ChatFormatting.DARK_GRAY;
