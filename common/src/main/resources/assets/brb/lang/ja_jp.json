@@ -12,7 +12,7 @@
 
   "text.autoconfig.brb.category.instantCraft": "即時クラフト設定",
   "text.autoconfig.brb.option.instantCraft.showButton": "即時クラフト切替えボタンを表示する",
-  "text.autoconfig.brb.option.instantCraft.enabled": "インスタント・クラフト有効",
+  "text.autoconfig.brb.option.instantCraft.enabled": "即時クラフトが有効",
 
   "text.autoconfig.brb.category.scrolling": "頁送り設定",
   "text.autoconfig.brb.option.scrolling.scrollAround": "頁送りを循環させる",
