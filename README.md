@@ -50,5 +50,4 @@ Oh... and you can also disable the recipe book entirely, if you'd like.
 | Fabric                                                        | Forge                                                         |
 |---------------------------------------------------------------|---------------------------------------------------------------|
 | [Architectury API](https://modrinth.com/mod/architectury-api) | [Architectury API](https://modrinth.com/mod/architectury-api) |
-| [Cloth Config API](https://modrinth.com/mod/cloth-config)     | [Cloth Config API](https://modrinth.com/mod/cloth-config)     |
 | [Fabric API](https://modrinth.com/mod/fabric-api)             |                                                               |
