@@ -2,6 +2,8 @@
 
 Adds brewing, smithing, and QOL changes to the vanilla recipe book!
 
+https://discord.gg/D7kcXWaZra
+
 ## Features
 
 ### Brewing Stand Recipe Book
