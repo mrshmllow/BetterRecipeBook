@@ -1,5 +1,7 @@
 package marsh.town.brb.loaders;
 
+import dev.architectury.event.events.client.ClientLifecycleEvent;
+import dev.architectury.event.events.common.LifecycleEvent;
 import marsh.town.brb.BetterRecipeBook;
 import marsh.town.brb.brewingstand.BrewableResult;
 import net.minecraft.world.item.ItemStack;
@@ -20,6 +22,13 @@ public class PotionLoader {
     public static List<BrewableResult> LINGERINGS = new ArrayList<>();
 
     public static void init() {
+        ClientLifecycleEvent.CLIENT_LEVEL_LOAD.register((clientLevel) -> PotionLoader.load());
+        LifecycleEvent.SERVER_LEVEL_UNLOAD.register((clientLevel) -> PotionLoader.clear());
+    }
+
+    private static void load() {
+        PotionLoader.clear();
+
         BetterRecipeBook.LOGGER.info("Loading Potions...");
 
         List<PotionBrewing.Mix<Potion>> MIXES = getPotionMixes();
@@ -29,5 +38,12 @@ public class PotionLoader {
             SPLASHES.add(new BrewableResult(PotionUtils.setPotion(new ItemStack(Items.SPLASH_POTION), getTo(potionRecipe)), potionRecipe));
             LINGERINGS.add(new BrewableResult(PotionUtils.setPotion(new ItemStack(Items.LINGERING_POTION), getTo(potionRecipe)), potionRecipe));
         }
+    }
+
+    public static void clear() {
+        BetterRecipeBook.LOGGER.info("Clearing potions...");
+        POTIONS.clear();
+        SPLASHES.clear();
+        LINGERINGS.clear();
     }
 }
