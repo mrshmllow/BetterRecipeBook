@@ -50,6 +50,10 @@ public class GenericRecipeButton<C extends GenericRecipeBookCollection<R, M>, R 
 
         List<R> list = getOrderedRecipes();
 
+        if (list.isEmpty()) {
+            return;
+        }
+
         this.currentIndex = Mth.floor(this.time / 30.0F) % list.size();
 
         // blit outline texture
