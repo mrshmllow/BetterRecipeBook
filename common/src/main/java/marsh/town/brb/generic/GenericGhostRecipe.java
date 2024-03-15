@@ -1,6 +1,7 @@
 package marsh.town.brb.generic;
 
 import com.google.common.collect.Lists;
+import marsh.town.brb.api.BRBBookCategories;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
@@ -51,12 +52,12 @@ public class GenericGhostRecipe<R extends GenericRecipe> {
         });
     }
 
-    public ItemStack getCurrentResult() {
+    public ItemStack getCurrentResult(BRBBookCategories.Category category) {
         if (this.recipe == null) {
             return ItemStack.EMPTY;
         }
 
-        ItemStack itemStack = this.recipe.getResult(registryAccess);
+        ItemStack itemStack = this.recipe.getResult(registryAccess, category);
 
         return itemStack.copy();
     }
@@ -88,10 +89,10 @@ public class GenericGhostRecipe<R extends GenericRecipe> {
         this.recipe = recipe;
     }
 
-    public void render(GuiGraphics guiGraphics, Minecraft minecraft, int i, int j, boolean bl, float f) {
+    public void render(GuiGraphics guiGraphics, Minecraft minecraft, int i, int j, boolean bl, float f, BRBBookCategories.Category category) {
         if (!Screen.hasControlDown()) {
             this.time += f;
-            if (this.onGhostUpdate != null && this.recipe != null) this.onGhostUpdate.accept(this.getCurrentResult());
+            if (this.onGhostUpdate != null && this.recipe != null) this.onGhostUpdate.accept(this.getCurrentResult(category));
         }
 
         for (int k = 0; k < this.ingredients.size(); ++k) {
