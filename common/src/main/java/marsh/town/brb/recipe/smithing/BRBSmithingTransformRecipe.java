@@ -1,5 +1,6 @@
 package marsh.town.brb.recipe.smithing;
 
+import marsh.town.brb.api.BRBBookCategories;
 import marsh.town.brb.mixins.accessors.smithing.SmithingTransformRecipeAccessor;
 import marsh.town.brb.recipe.BRBSmithingRecipe;
 import net.minecraft.core.RegistryAccess;
@@ -20,13 +21,13 @@ public class BRBSmithingTransformRecipe extends SmithingTransformRecipe implemen
     }
 
     @Override
-    public ItemStack getResult(RegistryAccess registryAccess) {
+    public ItemStack getResult(RegistryAccess registryAccess, BRBBookCategories.Category category) {
         return ((SmithingTransformRecipeAccessor) this).getResult();
     }
 
     @Override
-    public ItemStack getResult(ResourceKey<TrimMaterial> trimMaterialResourceKey, RegistryAccess registryAccess) {
-        return getResult(registryAccess);
+    public ItemStack getResult(ResourceKey<TrimMaterial> trimMaterialResourceKey, RegistryAccess registryAccess, BRBBookCategories.Category category) {
+        return getResult(registryAccess, category);
     }
 
     @Override

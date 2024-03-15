@@ -37,8 +37,8 @@ public class BrewableRecipeButton extends GenericRecipeButton<BrewingRecipeColle
     public List<Component> getTooltipText() {
         List<Component> list = Lists.newArrayList();
 
-        list.add(collection.getFirst().ingredient.getHoverName());
-        PotionUtils.addPotionTooltip(collection.getFirst().getResult(registryAccess), list, 1f, Minecraft.getInstance().level.tickRateManager().tickrate());
+        list.add(collection.getFirst().getHoverName(category));
+        PotionUtils.addPotionTooltip(collection.getFirst().getResult(registryAccess, category), list, 1f, Minecraft.getInstance().level.tickRateManager().tickrate());
         list.add(Component.literal(""));
 
         ChatFormatting colour = ChatFormatting.DARK_GRAY;

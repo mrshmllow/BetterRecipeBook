@@ -146,7 +146,9 @@ public class SmithingOverlayRecipeComponent implements Renderable, GuiEventListe
 //            guiGraphics.pose().translate(this.getX() + 2, this.getY() + 2, 150.0);
 
             int offset = 4;
-            guiGraphics.renderFakeItem(recipe.getResult(registryAccess), getX() + offset, getY() + offset);
+            // Currently, the trim does not use the category passed at all. Only brewing uses the category. soooo its
+            // fineeeee to not use the current category. I hate OOP.
+            guiGraphics.renderFakeItem(recipe.getResult(registryAccess, BetterRecipeBook.SMITHING_SEARCH), getX() + offset, getY() + offset);
 
             guiGraphics.pose().popPose();
         }

@@ -61,7 +61,7 @@ public class GenericRecipeButton<C extends GenericRecipeBookCollection<R, M>, R 
                 BRBTextures.RECIPE_BOOK_BUTTON_SLOT_CRAFTABLE_SPRITE : BRBTextures.RECIPE_BOOK_BUTTON_SLOT_UNCRAFTABLE_SPRITE;
         gui.blitSprite(outlineTexture, getX(), getY(), this.width, this.height);
 
-        ItemStack result = getCurrentDisplayedRecipe().getResult(registryAccess);
+        ItemStack result = getCurrentDisplayedRecipe().getResult(registryAccess, category);
 
         // render ingredient item
         int offset = 4;
@@ -116,7 +116,7 @@ public class GenericRecipeButton<C extends GenericRecipeBookCollection<R, M>, R 
     public List<Component> getTooltipText() {
         List<Component> list = Lists.newArrayList();
 
-        list.addAll(getCurrentDisplayedRecipe().getResult(registryAccess).getTooltipLines(Minecraft.getInstance().player, TooltipFlag.NORMAL));
+        list.addAll(getCurrentDisplayedRecipe().getResult(registryAccess, category).getTooltipLines(Minecraft.getInstance().player, TooltipFlag.NORMAL));
 
         this.addPinTooltip(list);
 

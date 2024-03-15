@@ -113,18 +113,8 @@ public class BrewingRecipeBookComponent extends GenericRecipeBookComponent<Brewi
         List<BrewingRecipeCollection> results = new ArrayList<>();
         BRBBookCategories.Category category = selectedTab.getCategory();
 
-        if (category == BetterRecipeBook.BREWING_POTION) {
-            for (BrewableResult potion : PotionLoader.POTIONS) {
-                results.add(new BrewingRecipeCollection(List.of(potion), menu, registryAccess, category));
-            }
-        } else if (category == BetterRecipeBook.BREWING_SPLASH_POTION) {
-            for (BrewableResult splash : PotionLoader.SPLASHES) {
-                results.add(new BrewingRecipeCollection(List.of(splash), menu, registryAccess, category));
-            }
-        } else if (category == BetterRecipeBook.BREWING_LINGERING_POTION) {
-            for (BrewableResult splash : PotionLoader.LINGERINGS) {
-                results.add(new BrewingRecipeCollection(List.of(splash), menu, registryAccess, category));
-            }
+        for (BrewableResult potion : PotionLoader.POTIONS) {
+            results.add(new BrewingRecipeCollection(List.of(potion), menu, registryAccess, category));
         }
 
         return results;
