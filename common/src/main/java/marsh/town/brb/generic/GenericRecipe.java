@@ -1,5 +1,6 @@
 package marsh.town.brb.generic;
 
+import marsh.town.brb.api.BRBBookCategories;
 import marsh.town.brb.generic.pins.Pinnable;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
@@ -13,7 +14,7 @@ public interface GenericRecipe extends Pinnable {
         return (id().equals(identifier));
     }
 
-    ItemStack getResult(RegistryAccess registryAccess);
+    ItemStack getResult(RegistryAccess registryAccess, BRBBookCategories.Category category);
 
-    String getSearchString();
+    String getSearchString(BRBBookCategories.Category category);
 }

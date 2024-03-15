@@ -1,28 +1,26 @@
 package marsh.town.brb.brewingstand;
 
-import marsh.town.brb.BetterRecipeBook;
 import marsh.town.brb.api.BRBBookCategories;
 import marsh.town.brb.generic.GenericRecipe;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionBrewing;
+import net.minecraft.world.item.alchemy.PotionUtils;
 
 import java.util.List;
 
 import static marsh.town.brb.brewingstand.PlatformPotionUtil.*;
 
 public class BrewableResult implements GenericRecipe {
-    public ItemStack ingredient;
     public PotionBrewing.Mix<?> recipe;
     public ResourceLocation input;
 
-    public BrewableResult(ItemStack ingredient, PotionBrewing.Mix<?> recipe) {
-        this.ingredient = ingredient;
+    public BrewableResult(PotionBrewing.Mix<?> recipe) {
         this.recipe = recipe;
         this.input = BuiltInRegistries.POTION.getKey(getFrom(recipe));
     }
@@ -40,14 +38,7 @@ public class BrewableResult implements GenericRecipe {
         Potion inputPotion = getFrom(recipe);
 
         ResourceLocation identifier = BuiltInRegistries.POTION.getKey(inputPotion);
-        ItemStack inputStack;
-        if (category == BetterRecipeBook.BREWING_SPLASH_POTION) {
-            inputStack = new ItemStack(Items.SPLASH_POTION);
-        } else if (category == BetterRecipeBook.BREWING_LINGERING_POTION) {
-            inputStack = new ItemStack(Items.LINGERING_POTION);
-        } else {
-            inputStack = new ItemStack(Items.POTION);
-        }
+        ItemStack inputStack = category.getItemIcons().get(0).copy();
 
         inputStack.getOrCreateTag().putString("Potion", identifier.toString());
         return inputStack;
@@ -79,13 +70,18 @@ public class BrewableResult implements GenericRecipe {
         return BuiltInRegistries.POTION.getKey(getTo(recipe));
     }
 
-    @Override
-    public ItemStack getResult(RegistryAccess registryAccess) {
-        return ingredient;
+    public Component getHoverName(BRBBookCategories.Category category) {
+        var ingredient = PotionUtils.setPotion(category.getItemIcons().get(0).copy(), getTo(recipe));
+        return ingredient.getHoverName();
     }
 
     @Override
-    public String getSearchString() {
-        return this.ingredient.getHoverName().getString();
+    public ItemStack getResult(RegistryAccess registryAccess, BRBBookCategories.Category category) {
+        return PotionUtils.setPotion(category.getItemIcons().get(0).copy(), getTo(recipe));
+    }
+
+    @Override
+    public String getSearchString(BRBBookCategories.Category category) {
+        return getHoverName(category).getString();
     }
 }
