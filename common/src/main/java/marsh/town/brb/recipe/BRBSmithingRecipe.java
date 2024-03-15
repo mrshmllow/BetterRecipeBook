@@ -1,5 +1,6 @@
 package marsh.town.brb.recipe;
 
+import marsh.town.brb.api.BRBBookCategories;
 import marsh.town.brb.generic.GenericRecipe;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.NonNullList;
@@ -18,9 +19,9 @@ import net.minecraft.world.item.crafting.SmithingRecipe;
 import java.util.List;
 
 public interface BRBSmithingRecipe extends SmithingRecipe, GenericRecipe {
-    ItemStack getResult(RegistryAccess registryAccess);
+    ItemStack getResult(RegistryAccess registryAccess, BRBBookCategories.Category category);
 
-    ItemStack getResult(ResourceKey<TrimMaterial> trimMaterialResourceKey, RegistryAccess registryAccess);
+    ItemStack getResult(ResourceKey<TrimMaterial> trimMaterialResourceKey, RegistryAccess registryAccess, BRBBookCategories.Category category);
 
     Ingredient getTemplate();
 
@@ -63,7 +64,7 @@ public interface BRBSmithingRecipe extends SmithingRecipe, GenericRecipe {
     }
 
     @Override
-    default String getSearchString() {
+    default String getSearchString(BRBBookCategories.Category category) {
         return this.getTemplateType();
     }
 }

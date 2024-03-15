@@ -253,7 +253,7 @@ public abstract class GenericRecipeBookComponent<M extends AbstractContainerMenu
 
         String string = this.searchBox.getValue();
         if (!string.isEmpty()) {
-            results.removeIf(collection -> !collection.getFirst().getSearchString().toLowerCase(Locale.ROOT).contains(string.toLowerCase(Locale.ROOT)));
+            results.removeIf(collection -> !collection.getFirst().getSearchString(selectedTab.getCategory()).toLowerCase(Locale.ROOT).contains(string.toLowerCase(Locale.ROOT)));
         }
 
         if (BRBBookSettings.isFiltering(this.getRecipeBookType())) {
@@ -450,7 +450,9 @@ public abstract class GenericRecipeBookComponent<M extends AbstractContainerMenu
     }
 
     public void renderGhostRecipe(GuiGraphics guiGraphics, int x, int y, boolean bl, float delta) {
-        this.ghostRecipe.render(guiGraphics, this.minecraft, x, y, bl, delta);
+        if (selectedTab == null || ghostRecipe == null) return;
+
+        this.ghostRecipe.render(guiGraphics, this.minecraft, x, y, bl, delta, selectedTab.getCategory());
     }
 
     protected abstract List<C> getCollectionsForCategory();

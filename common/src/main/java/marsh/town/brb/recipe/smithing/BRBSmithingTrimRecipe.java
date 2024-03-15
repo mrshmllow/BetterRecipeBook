@@ -1,5 +1,6 @@
 package marsh.town.brb.recipe.smithing;
 
+import marsh.town.brb.api.BRBBookCategories;
 import marsh.town.brb.mixins.accessors.smithing.SmithingTrimRecipeAccessor;
 import marsh.town.brb.recipe.BRBSmithingRecipe;
 import net.minecraft.core.Holder;
@@ -35,12 +36,12 @@ public class BRBSmithingTrimRecipe extends SmithingTrimRecipe implements BRBSmit
     }
 
     @Override
-    public ItemStack getResult(RegistryAccess registryAccess) {
-        return this.getResult(TrimMaterials.REDSTONE, registryAccess);
+    public ItemStack getResult(RegistryAccess registryAccess, BRBBookCategories.Category category) {
+        return this.getResult(TrimMaterials.REDSTONE, registryAccess, category);
     }
 
     @Override
-    public ItemStack getResult(ResourceKey<TrimMaterial> trimMaterialResourceKey, RegistryAccess registryAccess) {
+    public ItemStack getResult(ResourceKey<TrimMaterial> trimMaterialResourceKey, RegistryAccess registryAccess, BRBBookCategories.Category category) {
         Optional<Holder.Reference<TrimMaterial>> material = registryAccess.registryOrThrow(Registries.TRIM_MATERIAL).getHolder(trimMaterialResourceKey);
         Optional<Holder.Reference<TrimPattern>> trim = TrimPatterns.getFromTemplate(registryAccess, this.getTemplate().getItems()[0]);
 

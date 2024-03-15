@@ -1,5 +1,6 @@
 package marsh.town.brb.smithingtable;
 
+import marsh.town.brb.api.BRBBookCategories;
 import marsh.town.brb.generic.GenericGhostRecipe;
 import marsh.town.brb.mixins.accessors.HolderReferenceAccessor;
 import marsh.town.brb.recipe.BRBSmithingRecipe;
@@ -21,13 +22,13 @@ public class SmithingGhostRecipe extends GenericGhostRecipe<BRBSmithingRecipe> {
     }
 
     @Override
-    public ItemStack getCurrentResult() {
+    public ItemStack getCurrentResult(BRBBookCategories.Category category) {
         if (this.recipe == null) {
             return ItemStack.EMPTY;
         }
 
         if (this.recipe instanceof BRBSmithingTransformRecipe) {
-            return this.recipe.getResult(registryAccess);
+            return this.recipe.getResult(registryAccess, category);
         }
 
         ItemStack itemStack = this.recipe.getBase().copy();
