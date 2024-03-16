@@ -23,7 +23,7 @@
   "text.autoconfig.brb.option.alternativeRecipes.noGrouped": "Un-group alternative recipes",
 
   "text.autoconfig.brb.category.newRecipes": "New Recipes Settings",
-  "text.autoconfig.brb.option.newRecipes.unlockAll": "Automatically unlock all recipes",
+  "text.autoconfig.brb.option.newRecipes.unlockAll": "View locked recipes",
   "text.autoconfig.brb.option.newRecipes.unlockAll.@Tooltip": "Requires world/server re-join to take effect",
   "text.autoconfig.brb.option.newRecipes.enableBounce": "Enable unlock bounce animation",
   "text.autoconfig.brb.option.newRecipes.enableBounce.@Tooltip": "Enable the little bounce animation when you unlock a new item",
