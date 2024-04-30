@@ -5,6 +5,7 @@ import marsh.town.brb.mixins.accessors.smithing.SmithingTrimRecipeAccessor;
 import marsh.town.brb.recipe.BRBSmithingRecipe;
 import net.minecraft.core.Holder;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.ItemStack;
@@ -48,7 +49,7 @@ public class BRBSmithingTrimRecipe extends SmithingTrimRecipe implements BRBSmit
 
         if (material.isPresent() && trim.isPresent()) {
             ArmorTrim armorTri = new ArmorTrim(material.get(), trim.get());
-            ArmorTrim.setTrim(registryAccess, itemStack, armorTri);
+            itemStack.set(DataComponents.TRIM, armorTri);
         }
 
         return itemStack;

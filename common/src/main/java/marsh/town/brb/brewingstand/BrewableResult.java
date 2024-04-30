@@ -10,7 +10,7 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionBrewing;
-import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.alchemy.PotionContents;
 
 import java.util.List;
 
@@ -37,11 +37,14 @@ public class BrewableResult implements GenericRecipe {
     public ItemStack inputAsItemStack(BRBBookCategories.Category category) {
         Potion inputPotion = getFrom(recipe);
 
-        ResourceLocation identifier = BuiltInRegistries.POTION.getKey(inputPotion);
+        /*ResourceLocation identifier = BuiltInRegistries.POTION.getKey(inputPotion);
         ItemStack inputStack = category.getItemIcons().get(0).copy();
 
-        inputStack.getOrCreateTag().putString("Potion", identifier.toString());
-        return inputStack;
+        inputStack.getOrCreateTag().putString("Potion", identifier.toString());*/
+
+        //TODO test
+        var potionItem = category.getItemIcons().getFirst().getItem();
+        return PotionContents.createItemStack(potionItem, BuiltInRegistries.POTION.wrapAsHolder(inputPotion));
     }
 
     public boolean hasInput(BRBBookCategories.Category category, List<Slot> slots) {
@@ -50,8 +53,7 @@ public class BrewableResult implements GenericRecipe {
         for (Slot slot : slots) {
             ItemStack itemStack = slot.getItem();
 
-            if (inputStack.getTag() == null) return false;
-            if (inputStack.getTag().equals(itemStack.getTag()) && inputStack.getItem().equals(itemStack.getItem()))
+            if (ItemStack.isSameItemSameComponents(inputStack, itemStack))
                 return true;
         }
 
@@ -71,13 +73,20 @@ public class BrewableResult implements GenericRecipe {
     }
 
     public Component getHoverName(BRBBookCategories.Category category) {
-        var ingredient = PotionUtils.setPotion(category.getItemIcons().get(0).copy(), getTo(recipe));
-        return ingredient.getHoverName();
+        /*var ingredient = PotionUtils.setPotion(category.getItemIcons().get(0).copy(), getTo(recipe));
+        return ingredient.getHoverName();*/
+
+        //TODO test
+        return category.getItemIcons().getFirst().getHoverName();
     }
 
     @Override
     public ItemStack getResult(RegistryAccess registryAccess, BRBBookCategories.Category category) {
-        return PotionUtils.setPotion(category.getItemIcons().get(0).copy(), getTo(recipe));
+        //return PotionUtils.setPotion(category.getItemIcons().get(0).copy(), getTo(recipe));
+        //TODO test
+        var resultPotion = getTo(recipe);
+        var potionItem = category.getItemIcons().getFirst().getItem();
+        return PotionContents.createItemStack(potionItem, BuiltInRegistries.POTION.wrapAsHolder(resultPotion));
     }
 
     @Override

@@ -11,13 +11,13 @@ import marsh.town.brb.util.BRBHelper;
 import marsh.town.brb.util.ClientInventoryUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.inventory.SmithingMenu;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.armortrim.ArmorTrim;
 import net.minecraft.world.item.crafting.*;
 
 import java.util.ArrayList;
@@ -75,7 +75,7 @@ public class SmithingRecipeBookComponent extends GenericRecipeBookComponent<Smit
                 Minecraft.getInstance().gameMode.handleInventoryMouseClick(menu.containerId, menu.getSlot(slotIndex).index, 0, ClickType.PICKUP, Minecraft.getInstance().player);
                 Minecraft.getInstance().gameMode.handleInventoryMouseClick(menu.containerId, SmithingMenu.TEMPLATE_SLOT, 0, ClickType.PICKUP, Minecraft.getInstance().player);
                 ClientInventoryUtil.storeItem(-1, i -> i > 4);
-            } else if (!placedBase && ArmorTrim.getTrim(registryAccess, itemStack, true).isEmpty() && result.getBase().getItem().equals(itemStack.getItem())) {
+            } else if (!placedBase && /*TODO test*/itemStack.get(DataComponents.TRIM) == null && result.getBase().getItem().equals(itemStack.getItem())) {
                 assert Minecraft.getInstance().gameMode != null;
                 ClientInventoryUtil.storeItem(-1, i -> i > 4);
                 Minecraft.getInstance().gameMode.handleInventoryMouseClick(menu.containerId, menu.getSlot(slotIndex).index, 0, ClickType.PICKUP, Minecraft.getInstance().player);

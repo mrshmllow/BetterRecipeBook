@@ -82,7 +82,7 @@ public abstract class OverlayRecipeButtonMixin extends AbstractWidget {
         if (BetterRecipeBook.config.enablePinning && BetterRecipeBook.pinnedRecipeManager.pinned.contains(recipe.id())) {
             gui.pose().pushPose();
             // make sure pin is drawn over the crafting items
-            gui.pose().mulPoseMatrix(gui.pose().last().pose());
+            gui.pose().mulPose(gui.pose().last().pose());
             gui.blitSprite(BRBTextures.RECIPE_BOOK_OVERLAY_PIN_SPRITE, getX() - 4, getY() - 4, this.width + 8, this.height + 8);
             gui.pose().popPose();
         }

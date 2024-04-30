@@ -7,6 +7,7 @@ import marsh.town.brb.recipe.BRBSmithingRecipe;
 import marsh.town.brb.recipe.smithing.BRBSmithingTransformRecipe;
 import net.minecraft.core.Holder;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.armortrim.*;
@@ -47,7 +48,7 @@ public class SmithingGhostRecipe extends GenericGhostRecipe<BRBSmithingRecipe> {
 
         if (trim.isPresent()) {
             ArmorTrim armorTri = new ArmorTrim(material, trim.get());
-            ArmorTrim.setTrim(registryAccess, itemStack, armorTri);
+            itemStack.set(DataComponents.TRIM, armorTri);
         }
 
         return itemStack;
