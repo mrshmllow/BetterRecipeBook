@@ -9,8 +9,6 @@ import java.util.List;
 
 @Mixin(PotionBrewing.class)
 public interface FabricPotionBrewingAccessor {
-    @Accessor("POTION_MIXES")
-    static List<PotionBrewing.Mix<Potion>> getPotionMixes() {
-        throw new AssertionError();
-    }
+    @Accessor("potionMixes")
+    List<PotionBrewing.Mix<Potion>> getPotionMixes();
 }

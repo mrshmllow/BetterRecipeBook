@@ -7,6 +7,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionBrewing;
@@ -44,7 +45,7 @@ public class BrewableResult implements GenericRecipe {
 
         //TODO test
         var potionItem = category.getItemIcons().getFirst().getItem();
-        return PotionContents.createItemStack(potionItem, BuiltInRegistries.POTION.wrapAsHolder(inputPotion));
+        return potionStackFromPotion(potionItem, inputPotion);
     }
 
     public boolean hasInput(BRBBookCategories.Category category, List<Slot> slots) {
@@ -73,24 +74,24 @@ public class BrewableResult implements GenericRecipe {
     }
 
     public Component getHoverName(BRBBookCategories.Category category) {
-        /*var ingredient = PotionUtils.setPotion(category.getItemIcons().get(0).copy(), getTo(recipe));
-        return ingredient.getHoverName();*/
-
-        //TODO test
-        return category.getItemIcons().getFirst().getHoverName();
+        var resultPotion = getTo(recipe);
+        var potionItem = category.getItemIcons().getFirst().getItem();
+        return potionStackFromPotion(potionItem, resultPotion).getHoverName();
     }
 
     @Override
     public ItemStack getResult(RegistryAccess registryAccess, BRBBookCategories.Category category) {
-        //return PotionUtils.setPotion(category.getItemIcons().get(0).copy(), getTo(recipe));
-        //TODO test
         var resultPotion = getTo(recipe);
         var potionItem = category.getItemIcons().getFirst().getItem();
-        return PotionContents.createItemStack(potionItem, BuiltInRegistries.POTION.wrapAsHolder(resultPotion));
+        return potionStackFromPotion(potionItem, resultPotion);
     }
 
     @Override
     public String getSearchString(BRBBookCategories.Category category) {
         return getHoverName(category).getString();
+    }
+
+    public static ItemStack potionStackFromPotion(Item item, Potion pot) {
+        return PotionContents.createItemStack(item, BuiltInRegistries.POTION.wrapAsHolder(pot));
     }
 }
