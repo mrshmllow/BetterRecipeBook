@@ -43,7 +43,7 @@ public interface BRBSmithingRecipe extends SmithingRecipe, GenericRecipe {
 
     default boolean hasBase(List<Slot> slots, RegistryAccess registryAccess) {
         for (Slot slot : slots) {
-            if (/*TODO test*/slot.getItem().get(DataComponents.TRIM) == null && getBase().getItem().equals(slot.getItem().getItem()))
+            if (!slot.getItem().has(DataComponents.TRIM) && getBase().getItem().equals(slot.getItem().getItem()))
                 return true;
         }
         return false;

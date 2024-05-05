@@ -38,12 +38,6 @@ public class BrewableResult implements GenericRecipe {
     public ItemStack inputAsItemStack(BRBBookCategories.Category category) {
         Potion inputPotion = getFrom(recipe);
 
-        /*ResourceLocation identifier = BuiltInRegistries.POTION.getKey(inputPotion);
-        ItemStack inputStack = category.getItemIcons().get(0).copy();
-
-        inputStack.getOrCreateTag().putString("Potion", identifier.toString());*/
-
-        //TODO test
         var potionItem = category.getItemIcons().getFirst().getItem();
         return potionStackFromPotion(potionItem, inputPotion);
     }

@@ -75,7 +75,7 @@ public class SmithingRecipeBookComponent extends GenericRecipeBookComponent<Smit
                 Minecraft.getInstance().gameMode.handleInventoryMouseClick(menu.containerId, menu.getSlot(slotIndex).index, 0, ClickType.PICKUP, Minecraft.getInstance().player);
                 Minecraft.getInstance().gameMode.handleInventoryMouseClick(menu.containerId, SmithingMenu.TEMPLATE_SLOT, 0, ClickType.PICKUP, Minecraft.getInstance().player);
                 ClientInventoryUtil.storeItem(-1, i -> i > 4);
-            } else if (!placedBase && /*TODO test*/itemStack.get(DataComponents.TRIM) == null && result.getBase().getItem().equals(itemStack.getItem())) {
+            } else if (!placedBase && !itemStack.has(DataComponents.TRIM) && result.getBase().getItem().equals(itemStack.getItem())) {
                 assert Minecraft.getInstance().gameMode != null;
                 ClientInventoryUtil.storeItem(-1, i -> i > 4);
                 Minecraft.getInstance().gameMode.handleInventoryMouseClick(menu.containerId, menu.getSlot(slotIndex).index, 0, ClickType.PICKUP, Minecraft.getInstance().player);
