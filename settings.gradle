@@ -9,6 +9,6 @@ pluginManagement {
 
 include("common")
 include("fabric")
-//include("forge") TODO
+include("forge")
 
 rootProject.name = "Better Recipe Book"

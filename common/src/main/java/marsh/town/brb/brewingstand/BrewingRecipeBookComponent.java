@@ -94,8 +94,6 @@ public class BrewingRecipeBookComponent extends GenericRecipeBookComponent<Brewi
             inputStack = new ItemStack(Items.POTION);
         }
 
-        //inputStack.getOrCreateTag().putString("Potion", identifier.toString());
-        //TODO test
         inputStack.set(DataComponents.POTION_CONTENTS, new PotionContents(BuiltInRegistries.POTION.wrapAsHolder(inputPotion)));
         return inputStack;
     }

@@ -18,10 +18,10 @@ import java.util.List;
 import static marsh.town.brb.brewingstand.PlatformPotionUtil.*;
 
 public class BrewableResult implements GenericRecipe {
-    public PotionBrewing.Mix<?> recipe;
+    public PotionBrewing.Mix<Potion> recipe;
     public ResourceLocation input;
 
-    public BrewableResult(PotionBrewing.Mix<?> recipe) {
+    public BrewableResult(PotionBrewing.Mix<Potion> recipe) {
         this.recipe = recipe;
         this.input = BuiltInRegistries.POTION.getKey(getFrom(recipe));
     }
