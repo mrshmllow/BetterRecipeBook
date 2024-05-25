@@ -22,7 +22,7 @@ public class CompatMixinPlugin implements IMixinConfigPlugin {
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
         // mousewheelie compat
         if (mixinClassName.equals("marsh.town.brb.compat.mixins.mousewheelie.MixinMWClient")) {
-            return Platform.isModLoaded("mousewheelie");
+            return Platform.isModLoaded("mousewheelie"); //TODO isModLoaded fails on neoforge
         }
         return false;
     }
