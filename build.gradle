@@ -21,6 +21,13 @@ subprojects {
         // The following line declares the yarn mappings you may select this one as well.
         // mappings "net.fabricmc:yarn:1.18+build.1:v2"
     }
+
+    jar {
+        processResources {
+            // don't include things we don't need at runtime
+            exclude("**/*.ase", "**/*.kra")
+        }
+    }
 }
 
 allprojects {
