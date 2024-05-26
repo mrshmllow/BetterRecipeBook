@@ -4,7 +4,6 @@
   "package": "marsh.town.brb.neoforge.mixins",
   "compatibilityLevel": "JAVA_16",
   "client": [
-    "accessors.NeoForgePotionBrewingAccessor",
-    "accessors.NeoForgePotionBrewingMixAccessor"
+    "accessors.NeoForgePotionBrewingAccessor"
   ]
 }
