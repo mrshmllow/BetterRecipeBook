@@ -25,7 +25,7 @@ public class SmithingOverlayRecipeComponent implements Renderable, GuiEventListe
     private BRBSmithingRecipe lastRecipeClicked;
     private SmithingRecipeCollection collection;
     private boolean isVisible;
-    private static final ResourceLocation OVERLAY_RECIPE_SPRITE = new ResourceLocation("recipe_book/overlay_recipe");
+    private static final ResourceLocation OVERLAY_RECIPE_SPRITE = ResourceLocation.withDefaultNamespace("recipe_book/overlay_recipe");
     float time;
     private int y;
     private int x;

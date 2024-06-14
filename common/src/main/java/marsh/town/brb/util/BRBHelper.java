@@ -8,7 +8,7 @@ import net.minecraft.world.item.ItemStack;
 
 public class BRBHelper {
     public static Book createBook(String mod_id, String name) {
-        ResourceLocation location = new ResourceLocation(mod_id, name);
+        ResourceLocation location = ResourceLocation.fromNamespaceAndPath(mod_id, name);
 
         String hash = location + "#";
         Pair<String, String> pair = new Pair<>(hash + "isGuiOpen", hash + "isFiltering");

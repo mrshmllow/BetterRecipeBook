@@ -5,7 +5,6 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 public class RecipePlacement implements PlaceRecipe<Ingredient> {
@@ -17,8 +16,7 @@ public class RecipePlacement implements PlaceRecipe<Ingredient> {
     }
 
     @Override
-    public void addItemToSlot(Iterator<Ingredient> iterator, int menuSlot, int j, int k, int l) {
-        Ingredient ingredient = iterator.next();
+    public void addItemToSlot(Ingredient ingredient, int menuSlot, int j, int k, int l) {
         if (!ingredient.isEmpty() && menuSlot < placement.size()) {
             placement.get(menuSlot).add(ingredient);
         }
@@ -33,5 +31,4 @@ public class RecipePlacement implements PlaceRecipe<Ingredient> {
         placer.placeRecipe(gridWidth, gridHeight, -1, recipe, recipe.value().getIngredients().iterator(), 0);
         return placer.getPlacement();
     }
-
 }
