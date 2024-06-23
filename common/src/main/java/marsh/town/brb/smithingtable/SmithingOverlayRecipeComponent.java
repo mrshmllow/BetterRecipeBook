@@ -113,7 +113,6 @@ public class SmithingOverlayRecipeComponent implements Renderable, GuiEventListe
             for (OverlayRecipeButton overlayRecipeButton : this.recipeButtons) {
                 overlayRecipeButton.render(guiGraphics, i, j, f);
             }
-            guiGraphics.pose().popPose();
         }
     }
 
