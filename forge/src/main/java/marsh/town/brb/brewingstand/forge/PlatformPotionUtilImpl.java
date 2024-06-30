@@ -2,6 +2,7 @@ package marsh.town.brb.brewingstand.forge;
 
 import marsh.town.brb.forge.Mixins.Accessors.ForgePotionBrewingAccessor;
 import marsh.town.brb.forge.Mixins.Accessors.ForgePotionBrewingMixAccessor;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionBrewing;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -21,7 +22,8 @@ public class PlatformPotionUtilImpl {
         return (Potion) ((ForgePotionBrewingMixAccessor<?>) recipe).getFrom().get();
     }
 
-    public static List<PotionBrewing.Mix<Potion>> getPotionMixes() {
-        return ForgePotionBrewingAccessor.getPotionMixes();
+    public static List<PotionBrewing.Mix<Potion>> getPotionMixes(ClientLevel level) {
+        PotionBrewing brewing = level.potionBrewing();
+        return ((ForgePotionBrewingAccessor) brewing).getPotionMixes();
     }
 }

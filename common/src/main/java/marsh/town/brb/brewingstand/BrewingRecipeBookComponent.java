@@ -14,9 +14,9 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.BrewingStandMenu;
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
@@ -24,11 +24,12 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.PotionItem;
 import net.minecraft.world.item.alchemy.Potion;
-import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.crafting.Ingredient;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 import static marsh.town.brb.brewingstand.PlatformPotionUtil.getFrom;
@@ -60,10 +61,10 @@ public class BrewingRecipeBookComponent extends GenericRecipeBookComponent<Brewi
                     if (ingredient.getContainerSlot() >= BrewingStandMenuAccessor.getBOTTLE_SLOT_START() && ingredient.getContainerSlot() <= BrewingStandMenuAccessor.getBOTTLE_SLOT_END()) {
                         if (!(slot.getItem() instanceof PotionItem)) return true;
 
-                        Potion slotPotion = PotionUtils.getPotion(slot);
-                        Potion ghostPotion = PotionUtils.getPotion(ghost);
+                        var slotPotion = slot.get(DataComponents.POTION_CONTENTS);
+                        var ghostPotion = ghost.get(DataComponents.POTION_CONTENTS);
 
-                        return !slotPotion.equals(ghostPotion);
+                        return !Objects.equals(slotPotion, ghostPotion);
                     } else { // else it's the consumable item
                         return !slot.is(ghost.getItem());
                     }
@@ -83,7 +84,7 @@ public class BrewingRecipeBookComponent extends GenericRecipeBookComponent<Brewi
     public ItemStack getInputStack(BrewableResult result) {
         Potion inputPotion = getFrom(result.recipe);
         Ingredient ingredient = getIngredient(result.recipe);
-        ResourceLocation identifier = BuiltInRegistries.POTION.getKey(inputPotion);
+        //ResourceLocation identifier = BuiltInRegistries.POTION.getKey(inputPotion);
         ItemStack inputStack;
         if (this.selectedTab.getCategory() == BetterRecipeBook.BREWING_SPLASH_POTION) {
             inputStack = new ItemStack(Items.SPLASH_POTION);
@@ -93,7 +94,7 @@ public class BrewingRecipeBookComponent extends GenericRecipeBookComponent<Brewi
             inputStack = new ItemStack(Items.POTION);
         }
 
-        inputStack.getOrCreateTag().putString("Potion", identifier.toString());
+        inputStack.set(DataComponents.POTION_CONTENTS, new PotionContents(BuiltInRegistries.POTION.wrapAsHolder(inputPotion)));
         return inputStack;
     }
 
@@ -151,8 +152,7 @@ public class BrewingRecipeBookComponent extends GenericRecipeBookComponent<Brewi
         for (Slot slot : menu.slots) {
             ItemStack itemStack = slot.getItem();
 
-            assert inputStack.getTag() != null;
-            if (inputStack.getTag().equals(itemStack.getTag()) && inputStack.getItem().equals(itemStack.getItem())) {
+            if (ItemStack.isSameItemSameComponents(inputStack, itemStack)) {
                 if (usedInputSlots <= 2) {
                     assert Minecraft.getInstance().gameMode != null;
                     ClientInventoryUtil.storeItem(-1, i -> i > 4);

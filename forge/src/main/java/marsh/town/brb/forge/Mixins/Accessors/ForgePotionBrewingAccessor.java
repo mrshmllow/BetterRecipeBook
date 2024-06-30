@@ -8,9 +8,7 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 import java.util.List;
 
 @Mixin(PotionBrewing.class)
-public interface ForgePotionBrewingAccessor<T> {
-    @Accessor("POTION_MIXES")
-    static List<PotionBrewing.Mix<Potion>> getPotionMixes() {
-        throw new AssertionError();
-    }
+public interface ForgePotionBrewingAccessor {
+    @Accessor("potionMixes")
+    List<PotionBrewing.Mix<Potion>> getPotionMixes();
 }

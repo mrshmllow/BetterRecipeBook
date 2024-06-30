@@ -16,6 +16,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 
@@ -116,7 +117,8 @@ public class GenericRecipeButton<C extends GenericRecipeBookCollection<R, M>, R 
     public List<Component> getTooltipText() {
         List<Component> list = Lists.newArrayList();
 
-        list.addAll(getCurrentDisplayedRecipe().getResult(registryAccess, category).getTooltipLines(Minecraft.getInstance().player, TooltipFlag.NORMAL));
+        var tipCtx = Item.TooltipContext.of(registryAccess);
+        list.addAll(getCurrentDisplayedRecipe().getResult(registryAccess, category).getTooltipLines(tipCtx, Minecraft.getInstance().player, TooltipFlag.NORMAL));
 
         this.addPinTooltip(list);
 

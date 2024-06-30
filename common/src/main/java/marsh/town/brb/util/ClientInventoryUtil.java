@@ -50,7 +50,7 @@ public class ClientInventoryUtil {
         int count = menu.getCarried().getCount();
         for (Slot slot : slots) {
             if (count <= 0) break;
-            if (indexCheck.test(slot.index) && (ItemStack.isSameItemSameTags(menu.getCarried(), slot.getItem()) || slot.getItem().isEmpty())) {
+            if (indexCheck.test(slot.index) && (ItemStack.isSameItemSameComponents(menu.getCarried(), slot.getItem()) || slot.getItem().isEmpty())) {
                 int slotCount = slot.getItem().getCount();
                 if (slotCount < slot.getMaxStackSize()) {
                     count -= Math.max(0, slot.getMaxStackSize() - slotCount);

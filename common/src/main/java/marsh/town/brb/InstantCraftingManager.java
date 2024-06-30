@@ -58,7 +58,7 @@ public class InstantCraftingManager {
                 || !(client.screen instanceof AbstractContainerScreen<?> screen)) return;
 
         if (lastCraftResult == null
-                || !ItemStack.isSameItemSameTags(itemStack, lastCraftResult)
+                || !ItemStack.isSameItemSameComponents(itemStack, lastCraftResult)
                 || lastContainerId != screen.getMenu().containerId) return;
 
         client.gameMode.handleInventoryMouseClick(screen.getMenu().containerId, 0, 0, ClickType.QUICK_MOVE, client.player);

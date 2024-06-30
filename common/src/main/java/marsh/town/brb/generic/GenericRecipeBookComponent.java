@@ -182,10 +182,12 @@ public abstract class GenericRecipeBookComponent<M extends AbstractContainerMenu
         if (!this.isVisible() || this.minecraft.player != null && this.minecraft.player.isSpectator()) {
             return false;
         }
+        /* causes escape needing to be pressed twice to exit menu.
+        I don't think this was intentional? -Tau
         if (i == 256 && !this.isOffsetNextToMainGUI()) {
             this.setVisible(false);
             return true;
-        }
+        }*/
         if (this.searchBox.keyPressed(i, j, k)) {
             this.checkSearchStringUpdate();
             return true;

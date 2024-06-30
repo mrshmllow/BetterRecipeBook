@@ -7,20 +7,21 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionBrewing;
-import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.alchemy.PotionContents;
 
 import java.util.List;
 
 import static marsh.town.brb.brewingstand.PlatformPotionUtil.*;
 
 public class BrewableResult implements GenericRecipe {
-    public PotionBrewing.Mix<?> recipe;
+    public PotionBrewing.Mix<Potion> recipe;
     public ResourceLocation input;
 
-    public BrewableResult(PotionBrewing.Mix<?> recipe) {
+    public BrewableResult(PotionBrewing.Mix<Potion> recipe) {
         this.recipe = recipe;
         this.input = BuiltInRegistries.POTION.getKey(getFrom(recipe));
     }
@@ -37,11 +38,8 @@ public class BrewableResult implements GenericRecipe {
     public ItemStack inputAsItemStack(BRBBookCategories.Category category) {
         Potion inputPotion = getFrom(recipe);
 
-        ResourceLocation identifier = BuiltInRegistries.POTION.getKey(inputPotion);
-        ItemStack inputStack = category.getItemIcons().get(0).copy();
-
-        inputStack.getOrCreateTag().putString("Potion", identifier.toString());
-        return inputStack;
+        var potionItem = category.getItemIcons().getFirst().getItem();
+        return potionStackFromPotion(potionItem, inputPotion);
     }
 
     public boolean hasInput(BRBBookCategories.Category category, List<Slot> slots) {
@@ -50,8 +48,7 @@ public class BrewableResult implements GenericRecipe {
         for (Slot slot : slots) {
             ItemStack itemStack = slot.getItem();
 
-            if (inputStack.getTag() == null) return false;
-            if (inputStack.getTag().equals(itemStack.getTag()) && inputStack.getItem().equals(itemStack.getItem()))
+            if (ItemStack.isSameItemSameComponents(inputStack, itemStack))
                 return true;
         }
 
@@ -71,17 +68,24 @@ public class BrewableResult implements GenericRecipe {
     }
 
     public Component getHoverName(BRBBookCategories.Category category) {
-        var ingredient = PotionUtils.setPotion(category.getItemIcons().get(0).copy(), getTo(recipe));
-        return ingredient.getHoverName();
+        var resultPotion = getTo(recipe);
+        var potionItem = category.getItemIcons().getFirst().getItem();
+        return potionStackFromPotion(potionItem, resultPotion).getHoverName();
     }
 
     @Override
     public ItemStack getResult(RegistryAccess registryAccess, BRBBookCategories.Category category) {
-        return PotionUtils.setPotion(category.getItemIcons().get(0).copy(), getTo(recipe));
+        var resultPotion = getTo(recipe);
+        var potionItem = category.getItemIcons().getFirst().getItem();
+        return potionStackFromPotion(potionItem, resultPotion);
     }
 
     @Override
     public String getSearchString(BRBBookCategories.Category category) {
         return getHoverName(category).getString();
+    }
+
+    public static ItemStack potionStackFromPotion(Item item, Potion pot) {
+        return PotionContents.createItemStack(item, BuiltInRegistries.POTION.wrapAsHolder(pot));
     }
 }

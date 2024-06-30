@@ -11,6 +11,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.recipebook.RecipeBookComponent;
 import net.minecraft.client.gui.screens.recipebook.RecipeBookPage;
 import net.minecraft.client.gui.screens.recipebook.RecipeCollection;
+import net.minecraft.client.gui.screens.recipebook.RecipeUpdateListener;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.crafting.RecipeHolder;
@@ -111,6 +112,9 @@ public class PinnedRecipeManager {
         collection.updateKnownRecipes(page.getRecipeBook());
         BetterRecipeBook.pinnedRecipeManager.addOrRemoveFavourite(collection);
         ((RecipeBookComponentAccessor) book).updateCollectionsInvoker(false);
+        if (Minecraft.getInstance().screen instanceof RecipeUpdateListener rul) {
+            rul.recipesUpdated();
+        }
     }
 
 }

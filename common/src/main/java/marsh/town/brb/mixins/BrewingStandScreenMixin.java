@@ -56,6 +56,30 @@ public abstract class BrewingStandScreenMixin extends AbstractContainerScreen<Br
     }
 
     @Override
+    public boolean keyPressed(int i, int j, int k) {
+        if (_$recipeBookComponent.keyPressed(i, j, k)) {
+            return true;
+        }
+        return super.keyPressed(i, j, k);
+    }
+
+    @Override
+    public boolean keyReleased(int i, int j, int k) {
+        if (_$recipeBookComponent.keyReleased(i, j, k)) {
+            return true;
+        }
+        return super.keyReleased(i, j, k);
+    }
+
+    @Override
+    public boolean charTyped(char c, int i) {
+        if (_$recipeBookComponent.charTyped(c, i)) {
+            return true;
+        }
+        return super.charTyped(c, i);
+    }
+
+    @Override
     protected void slotClicked(Slot slot, int x, int y, ClickType clickType) {
         // clear ghost recipe if an empty ingredient slot is clicked with no items
         if (slot != null && slot.index < 4 && menu.slots.get(slot.index).getItem().isEmpty()) {

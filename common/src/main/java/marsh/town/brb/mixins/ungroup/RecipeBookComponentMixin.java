@@ -22,7 +22,7 @@ import java.util.Locale;
 public class RecipeBookComponentMixin {
     @Shadow private String lastSearch;
     @Shadow private ClientRecipeBook book;
-    @Shadow protected RecipeBookMenu<?> menu;
+    @Shadow protected RecipeBookMenu<?, ?> menu;
     @Shadow @Final private RecipeBookPage recipeBookPage;
 
     @Inject(method = "updateCollections", locals = LocalCapture.CAPTURE_FAILSOFT, at = @At(value = "INVOKE", target = "Lit/unimi/dsi/fastutil/objects/ObjectLinkedOpenHashSet;<init>(Ljava/util/Collection;)V"), cancellable = true)

@@ -1,6 +1,6 @@
-package marsh.town.brb.brewingstand.fabric;
+package marsh.town.brb.brewingstand.neoforge;
 
-import marsh.town.brb.fabric.Mixins.Accessors.FabricPotionBrewingAccessor;
+import marsh.town.brb.neoforge.mixins.accessors.NeoForgePotionBrewingAccessor;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionBrewing;
@@ -23,6 +23,6 @@ public class PlatformPotionUtilImpl {
 
     public static List<PotionBrewing.Mix<Potion>> getPotionMixes(ClientLevel level) {
         PotionBrewing brewing = level.potionBrewing();
-        return ((FabricPotionBrewingAccessor) brewing).getPotionMixes();
+        return ((NeoForgePotionBrewingAccessor) brewing).getPotionMixes();
     }
 }

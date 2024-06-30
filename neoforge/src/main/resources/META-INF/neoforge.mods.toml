@@ -1,5 +1,5 @@
 modLoader = "javafml"
-loaderVersion = "[51,)"
+loaderVersion = "[2,)"
 issueTrackerURL = "https://github.com/mrshmllow/BetterRecipeBook/issues"
 license = "MIT"
 
@@ -15,22 +15,32 @@ Adds some quality of life changes to the recipe book
 logoFile = "icon.png"
 
 [[dependencies.brb]]
-modId = "forge"
-mandatory = true
-versionRange = "[51,)"
+modId = "neoforge"
+type = "required"
+versionRange = "[21,)"
 ordering = "NONE"
-side = "BOTH"
+side = "CLIENT"
 
 [[dependencies.brb]]
 modId = "minecraft"
-mandatory = true
+type = "required"
 versionRange = "[1.21,)"
 ordering = "NONE"
-side = "BOTH"
+side = "CLIENT"
 
 [[dependencies.brb]]
 modId = "architectury"
-mandatory = true
+type = "required"
 versionRange = "[13,)"
 ordering = "AFTER"
-side = "BOTH"
+side = "CLIENT"
+
+[[mixins]]
+config = "mixins.brb.json"
+
+[[mixins]]
+config = "mixins.brb-common.json"
+
+[[mixins]]
+config = "mixins.brb-common-compat.json"
+
