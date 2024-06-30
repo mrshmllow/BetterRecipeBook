@@ -54,7 +54,7 @@ Oh... and you can also disable the recipe book entirely, if you'd like.
 
 ## Dependencies
 
-| Fabric                                                        | Forge                                                         |
+| Fabric                                                        | NeoForge / Forge                                                         |
 |---------------------------------------------------------------|---------------------------------------------------------------|
 | [Architectury API](https://modrinth.com/mod/architectury-api) | [Architectury API](https://modrinth.com/mod/architectury-api) |
 | [Fabric API](https://modrinth.com/mod/fabric-api)             |                                                               |
