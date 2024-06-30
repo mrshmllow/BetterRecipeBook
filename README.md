@@ -63,8 +63,9 @@ Oh... and you can also disable the recipe book entirely, if you'd like.
 
 | Version | Support |
 | ------- | --------- |
-| 1.20.4  | ✅ Supported |
+| 1.21  | ✅ Supported |
+| 1.20.6-5  | ❌ Unsupported |
+| 1.20.4  | ⏬ Backports |
 | 1.20.3  | ❌ Unsupported |
-| 1.20.2  | ⏬ Backports |
-| 1.20.1-0 | ⏬ Backports |
+| 1.20.2, 1.20.1-0  | ⏬ Backports |
 | <= 1.19.4	| ❌ Unspported |
