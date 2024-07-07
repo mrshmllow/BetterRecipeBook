@@ -36,6 +36,7 @@ jobs:
         with:
           distribution: 'adopt'
           java-version: 21
+          cache-dependency-path: ./gradle.properties
       # - name: Setup Gradle
       #   uses: gradle/actions/setup-gradle@v3
       - name: Build
