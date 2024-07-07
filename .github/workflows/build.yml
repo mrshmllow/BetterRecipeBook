@@ -1,0 +1,50 @@
+name: build
+on:
+  workflow_dispatch:
+  push:
+    braches:
+      - main
+      - 1.20.0-1
+      - 1.20.2
+      - 1.20.4
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - uses: cachix/install-nix-action@v27
+      - name: Flake Check
+        run: nix flake check --impure
+  build:
+    runs-on: ubuntu-latest
+    env:
+      BRANCH_NAME: ${{ github.head_ref || github.ref_name }} 
+    strategy:
+      matrix:
+        loader:
+          - fabric
+          - neoforge
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'adopt'
+          java-version: 21
+      # - name: Setup Gradle
+      #   uses: gradle/actions/setup-gradle@v3
+      - name: Build
+        run: ./gradlew ${{ matrix.loader }}:build
+      - name: Upload Jar Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.BRANCH_NAME }}-${{ matrix.loader }}
+          overwrite: true
+          path: |
+            ${{ matrix.loader }}/build/libs/*.jar
+            !${{ matrix.loader }}/build/libs/*-sources.jar
+            !${{ matrix.loader }}/build/libs/*-shadow.jar
+
